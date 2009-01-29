@@ -1,0 +1,1 @@
+credits.o: credits.s

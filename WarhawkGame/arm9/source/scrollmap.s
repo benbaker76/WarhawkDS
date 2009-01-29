@@ -1,0 +1,358 @@
+#include "warhawk.h"
+#include "system.h"
+#include "video.h"
+#include "background.h"
+#include "dma.h"
+#include "interrupts.h"
+#include "sprite.h"
+#include "ipc.h"
+
+	.arm
+	.align
+	.global scrollMain
+	.global scrollSub
+	.global scrollSFMain
+	.global scrollSFSub
+	.global scrollSBMain
+	.global scrollSBSub
+	.global scrollStars
+	.global levelDrift
+	.global checkEndOfLevel
+
+@------------------------------------
+	
+scrollMain:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0,=levelEnd
+	ldrb r1, [r0]
+	cmp r1,#0
+	bne scrollDone
+	ldr r2,=vofsMain
+	ldrh r1, [r2]					@ Load r2 with the scroll register
+	cmp r1, #0						@ has our scroll register reached zero?
+	beq resetScrollMain				@ Then reset our scroller
+	cmp r1, #512					@ Has our scroller reached 255 lines?
+	beq scrollMapMain				@ If so, time to scroll the map
+	subs r1, r1, #1					@ move up a pixel
+	
+	ldr r3, =REG_BG1VOFS			@ R2 is the memory adress for the main scroll
+	strh r1, [r2]
+	strh r1, [r3]					@ write our scroll counter into REG_BG0VOFS main screen	
+
+	ldr r10,=scrollPixel
+	ldr r9,[r10]
+	sub r9,#1						@ decrement our scroll position
+	str r9,[r10]
+	
+	ldr r10,=scrollBlock			@ count each 32 pixel block as it enters the screen
+	ldrb r9,[r10]
+	add r9,#1
+	cmp r9,#32
+	moveq r9,#0
+	strb r9,[r10]
+	
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+
+resetScrollMain:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =vofsMain
+	ldr r1, =REG_BG1VOFS			@ R1 is the memory adress for the sub screen scroll
+	ldr r2, =255					@ Now lets restore the scroll register back to 255
+	strh r2, [r0]					@ and store in
+	strh r2, [r1]					@ and store in
+	bl scrollMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+scrollMapMain:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =yposMain				@ grab ypos memory adress
+	ldr r1, [r0]					@ r1 = ypos
+	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	
+	strh r1, [r0]					@ and put the value back for later
+	bl drawMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+@---------------------------------
+
+scrollSub:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0,=levelEnd
+	ldrb r1,[r0]
+	cmp r1,#0
+	bne scrollDone
+	ldr r2, =vofsSub
+	ldrh r1, [r2]					@ Load r2 with the scroll register
+	cmp r1, #0						@ has our scroll register reached zero?
+	beq resetScrollSub				@ Then reset our scroller
+	cmp r1, #512					@ Has our scroller reached 255 lines?
+	beq scrollMapSub				@ If so, time to scroll the map
+	subs r1, r1, #1					@ move up a pixel
+	ldr r3, =REG_BG1VOFS_SUB		@ R2 is the memory adress for the main scroll
+	strh r1, [r2]
+	strh r1, [r3]					@ write our scroll counter into REG_BG0VOFS main screen
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+scrollSFMain:
+	stmfd sp!, {r0-r6, lr} 
+
+	ldr r0, =vofsSFMain
+	ldrh r1, [r0]					@ Load r2 with the scroll register
+	cmp r1, #0						@ has our scroll register reached zero?
+	beq resetScrollSFMain			@ Then reset our scroller
+	cmp r1, #512					@ Has our scroller reached 255 lines?
+	beq scrollSFMapMain				@ If so, time to scroll the map
+	subs r1, r1, #1					@ move up a pixel
+	ldr r2, =REG_BG2VOFS			@ R2 is the memory adress for the main scroll
+	strh r1, [r0]
+	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+
+scrollSFSub:
+	stmfd sp!, {r0-r6, lr}	
+
+	ldr r0, =vofsSFSub
+	ldrh r1, [r0]					@ Load r2 with the scroll register
+	cmp r1, #0						@ has our scroll register reached zero?
+	beq resetScrollSFSub			@ Then reset our scroller
+	cmp r1, #512					@ Has our scroller reached 255 lines?
+	beq scrollSFMapSub				@ If so, time to scroll the map
+	subs r1, r1, #1					@ move up a pixel
+	ldr r2, =REG_BG2VOFS_SUB		@ R2 is the memory adress for the main scroll
+	strh r1, [r0]
+	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+scrollSBMain:
+	stmfd sp!, {r0-r6, lr} 	
+
+	ldr r0, =vofsSBMain
+	ldrh r1, [r0]					@ Load r2 with the scroll register
+	cmp r1, #0						@ has our scroll register reached zero?
+	beq resetScrollSBMain			@ Then reset our scroller
+	cmp r1, #512					@ Has our scroller reached 255 lines?
+	beq scrollSBMapMain				@ If so, time to scroll the map
+	subs r1, r1, #1					@ move up a pixel
+	ldr r2, =REG_BG3VOFS			@ R2 is the memory adress for the main scroll
+	strh r1, [r0]
+	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+scrollSBSub:
+	stmfd sp!, {r0-r6, lr}	
+
+	ldr r0, =vofsSBSub
+	ldrh r1, [r0]					@ Load r2 with the scroll register
+	cmp r1, #0						@ has our scroll register reached zero?
+	beq resetScrollSBSub			@ Then reset our scroller
+	cmp r1, #512					@ Has our scroller reached 255 lines?
+	beq scrollSBMapSub				@ If so, time to scroll the map
+	subs r1, r1, #1					@ move up a pixel
+	ldr r2, =REG_BG3VOFS_SUB		@ R2 is the memory adress for the main scroll
+	strh r1, [r0]
+	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+resetScrollSub:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =vofsSub
+	ldr r1, =REG_BG1VOFS_SUB		@ R1 is the memory adress for the sub screen scroll
+	ldr r2, =255					@ Now lets restore the scroll register back to 255
+	strh r2, [r0]					@ and store in
+	strh r2, [r1]					@ and store in
+	bl scrollMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+resetScrollSFMain:
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =vofsSFMain
+	ldr r1, =REG_BG2VOFS			@ R1 is the memory adress for the sub screen scroll
+	ldr r2, =255					@ Now lets restore the scroll register back to 255
+	strh r2, [r0]					@ and store in
+	strh r2, [r1]					@ and store in
+	bl scrollSFMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+
+resetScrollSFSub:
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =vofsSFSub
+	ldr r1, =REG_BG2VOFS_SUB		@ R1 is the memory adress for the sub screen scr
+	ldr r2, =255					@ Now lets restore the scroll register back to 255
+	strh r2, [r0]					@ and store in
+	strh r2, [r1]					@ and store in
+	bl scrollSFMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+
+resetScrollSBMain:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =vofsSBMain
+	ldr r1, =REG_BG3VOFS			@ R1 is the memory adress for the sub screen scroll
+	ldr r2, =255					@ Now lets restore the scroll register back to 255
+	strh r2, [r0]					@ and store in
+	strh r2, [r1]					@ and store in
+	bl scrollSBMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+resetScrollSBSub:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =vofsSBSub
+	ldr r1, =REG_BG3VOFS_SUB		@ R1 is the memory adress for the sub screen scroll
+	ldr r2, =255					@ Now lets restore the scroll register back to 255
+	strh r2, [r0]					@ and store in
+	strh r2, [r1]					@ and store in
+	bl scrollSBMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+scrollMapSub:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =yposSub				@ grab ypos memory adress
+	ldr r1, [r0]					@ r3 = ypos
+	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	strh r1, [r0]					@ and put the value back for later
+	bl drawMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+
+scrollSFMapMain:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =yposSFMain			@ grab ypos memory adress
+	ldr r1, [r0]					@ r3 = ypos
+	
+	cmp r1,#0						@ If we are at the top, lets go back to the
+	moveq r1,#832					@ bottom of the map!
+
+	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	strh r1, [r0]					@ and put the value back for later
+	bl drawSFMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+
+scrollSFMapSub:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =yposSFSub				@ grab ypos memory adress
+	ldr r1, [r0]					@ r3 = ypos
+	
+	cmp r1,#0						@ If we are at the top, lets go back to the
+	moveq r1,#832					@ bottom of the map!
+	
+	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	strh r1, [r0]					@ and put the value back for later
+	bl drawSFMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+scrollSBMapMain:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =yposSBMain				@ grab ypos memory adress
+	ldr r1, [r0]					@ r3 = ypos
+
+	cmp r1,#0						@ If we are at the top, lets go back to the
+	moveq r1,#832					@ bottom of the map!
+
+	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	strh r1, [r0]					@ and put the value back for later
+	bl drawSBMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+scrollSBMapSub:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =yposSBSub				@ grab ypos memory adress
+	ldr r1, [r0]					@ r3 = ypos
+
+	cmp r1,#0						@ If we are at the top, lets go back to the
+	moveq r1,#832					@ bottom of the map!
+
+	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	strh r1, [r0]					@ and put the value back for later
+	bl drawSBMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+scrollDone:
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+scrollStars:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0,=delaySF
+	ldr r1,[r0]						@ Delay Starfront for every other update
+	subs r1, #1
+	bne noScrollSF
+	bl scrollSFMain
+	bl scrollSFSub
+	mov r1,#2
+noScrollSF:
+	ldr r0,=delaySF
+	str r1,[r0]
+	ldr r0,=delaySB					@ Delay Starback for every 4 updates
+	ldr r1,[r0]
+	subs r1,#1
+	bne noScrollSB
+	bl scrollSBMain
+	bl scrollSBSub
+	mov r1,#4
+noScrollSB:
+	ldr r0,=delaySB
+	str r1,[r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+
+levelDrift:
+	ldr r0, =horizDrift
+	ldr r0, [r0]
+	ldr r1, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
+	ldr r2, =REG_BG1HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	strh r0,[r1]
+	strh r0,[r2]
+	mov r15,r14
+	
+checkEndOfLevel:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0,=levelEnd
+	ldrb r1,[r0]
+	cmp r1,#0
+	bne levelPlay
+		ldr r0,=yposSub						@ Ypos is the Y position in the map data
+		ldr r0, [r0]
+		ldr r1,=vofsSub
+		ldr r1, [r1]
+		orr r0, r1
+		cmp r0, #0							@ are we at ZERO - top of the map?
+		bne levelPlay						@ If so, and scroll is 0 also - Stop Main Scroll!
+			ldr r0, =levelEnd
+			mov r1, #1
+			strb r1, [r0]
+	levelPlay:
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	.end

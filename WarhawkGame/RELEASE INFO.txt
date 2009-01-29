@@ -1,0 +1,92 @@
+-= Warhawk Main Game Code =-
+-= Flash & HeadKaze  2009 =-
+V0.16 - FLASH
+- Detect now DETECTS!!! Hurrah... The complicated bit is puting the crater in the correct
+- place in the map data????
+- Changed digits in the font.png to have black surround - easier to see
+- Move the code around in main for execution order as runs out of raster at end level
+- error somewhere in detect code, sometimes bullet passes through
+- hitting bases adds 321 to score
+- sprite is killed if SpriteActive is set to 0
+V0.15 - FLASH
+- Debug drawDigits now accepts r11 as an X coord and displays correct number of digits
+v0.14 - HK
+- Text output now accepts any null terminated string, x, y position, main or sub screen
+
+v0.13 - FLASH
+- Added debug code. This can be passed a value, no digits, and position to display
+- that value on the top screen.
+- Added c64 digits to the font.png file.
+
+v0.12 - HK
+- Moved code into separate .s files (it's so much easier to find code now!)
+- Finished dma.h
+
+v0.11 - FLASH
+- Tried adding detection to background - and failed. The game should halt on collision
+- But misses some and hits invisibles? The colMap data is correct.
+- Found the cause for the end effect missing 8 rasters, it was in waitNovblank (commented)
+- PS - the effect causes some strange errors on a real DS - pixels at left side? They are
+- not part of BG1? strange?
+
+v0.10 - HK
+- Added music and blaster sound
+- Added text renderer
+- Fixed sprite priority problem
+- Added code to find the next free sound channel so multiple samples can play at one time
+- Add 'Get Ready!' at beginning of game
+
+V0.09 - FLASH
+- Added spriteSpeed as a sprite define, this controls fire speed at the moment - only
+- change variable "autoFire" to "powerUp", this now effects shots and ship speed
+
+V0.08 - FLASH
+- Added the (unfinished) sprite code into main for 128 sprites
+- All sprites now must use a differnt coord system as illustrated in coords.png
+- Added fire code to check for fire, and held buttons
+- Added code to enable autofire upon power up
+- Added bullet trigger code and bullet update code
+- Moved this text out of source
+
+V0.07 - HK
+- Fixed sprite movement code (No need to wait for vblank)
+- Fixed end-of-level Wobble effect in No$GBA and hardware
+- Made level taller so the end is just stars
+- Added score digit display
+- Set sprite priority to zero so bg0 is above
+
+V0.06 - FLASH
+- Minor ammendment to BG2 & BG3, now 32x64
+
+V0.05 - FLASH
+- Added code to enable scrolling in the horizonal based on ship position.
+- Added code to stop map scroll at exact end (need a bit more space at top of level)
+- Added code to wrap background scrolls:-
+- 	Spent 2 hours to add 2 lines (Still - you gotta laugh)
+-			cmp r1,#0		
+-			moveq r1,#832
+- 	(turns out I had not drawn the wrap in the pngs correctly - AARGH!)
+- Tidyed code
+- Created InitData - We MUST reset all data at start of level (except bg map scrolls)
+- Added basic wobble effect to end of level (Looks too much like snow IMHO)
+- Cannot get sprites to re-plot, this must be done during Vblank apparently??
+
+v0.04 - HK
+- Fixed bg2 not showing on hardware
+- Added new StarBack / StarFront graphics
+
+v0.03 - FLASH
+- Have used the same palette for all layers
+- Moved init code away from main code
+- Added ship and minor control code
+- Tidy of code
+- added delay to game start
+
+V0.02 - HK
+- Removed BG_PALETTE(n) because there are no macros for them
+- Changed to use adrl
+- Tried to use the -ga and -ps to offset the palettes but didnt work :(
+
+V0.01 - Flash
+- Added 2 backgrounds StarBack and StarFront
+- Duplicated code for the 3 scrollers and init memory for tiles and map data

@@ -52,8 +52,23 @@
 #define ScoreTilesLen				1344
 #define FontTilesLen				3392
 
-#define SpritesTilesLen				20480
+#define SpritesTilesLen				40960
 #define SpritesPalLen				512
 
 #define InGameMusicLen				851393
 #define BlasterSoundLen				5170
+
+#define sptActiveOffs				0
+#define sptXOffs					512
+#define sptYOffs					1024
+#define sptSpdXOffs					1536
+#define sptSpdYOffs					2048
+#define sptSpdDelayXOffs			2560
+#define sptSpdDelayYOffs			3072
+#define sptMaxSpdOffs				3584
+#define sptPhaseOffs				4096
+#define sptTrackXOffs				4608
+#define sptTrackYOffs				5120
+#define sptObjOffs					5632
+#define sptHitsOffs					6144
+#define sptAngleOffs				6656

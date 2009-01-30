@@ -1,5 +1,9 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
+V0.18 - FLASH
+- Modified the sprites to include large explosions for bases
+- added a nice pretty attack wave to give an idea of what can be done.
+- added a little animation to the ships exhaust
 V0.17 - FLASH
 - Have introduced alien code.
 - At the moment we have 2 pattern types, curved and trackers

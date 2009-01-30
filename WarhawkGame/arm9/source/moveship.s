@@ -13,6 +13,13 @@
 
 moveShip:
 	stmfd sp!, {r0-r8, lr}
+	ldr r5,=spriteObj			@ simple bit of animation code for the ship
+	ldr r6,[r5]
+	add r6,#1
+	cmp r6,#3
+	moveq r6,#0
+	str r6,[r5]
+	
 	ldr r5,=spriteY
 	ldr r6,=spriteX
 	ldr r1,=REG_KEYINPUT		@ Read the keys!

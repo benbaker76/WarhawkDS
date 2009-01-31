@@ -33,16 +33,16 @@ drawSprite:
 	@ but, if on crossover, we need to plot 2 ships!!!
 	@ one on each screen in the correct location!!
 	@ Last section best commented!
-	ldr r0,=spriteActive
-	ldr r1,[r0,r8, lsl #2]
-	cmp r1,#1							@ Is sprite active?
-	beq sprites_Drawn					@ if so, draw it!
-	@ Kill sprite
+	ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
+	ldr r1,[r0,r8, lsl #2]				@ add sprite number * 8
+	cmp r1,#0							@ Is sprite active? (anything other than 0)
+	bne sprites_Drawn					@ if so, draw it!
+										@ if not Kill sprite
 		@ Kill sprite on both screens!!!!!
 		@ note: read the setting - daft prat!!!	
 		ldr r0,=BUF_ATTRIBUTE0
 		add r0,r8, lsl #3
-		mov r2,#0
+		mov r2,#0	@ This just stores 0 in the 3 sprite attributes
 		str r2,[r0]
 		add r0,#2
 		str r2,[r0]		
@@ -55,35 +55,36 @@ drawSprite:
 		add r0,#2
 		str r2,[r0]		
 		add r0,#2
-		str r2,[r0]
+		str r2,[r0]	@ All killed
 	b sprites_Done
+
 	sprites_Drawn:
 	
 	ldr r0,=spriteY						@ Load Y coord
 	ldr r1,[r0,r8,lsl #2]				@ add ,rX for offsets
-	ldr r3,=383-32
-	cmp r1,r3
-	bmi sprites_Done
-	ldr r3,=576+32
-	cmp r1,r3
-	bpl spriteY_Main_Done				@ Totally ON MAIN
-	ldr r3,=576-32
+	ldr r3,=383-32						@ if it offscreen?
+	cmp r1,r3							@ if it is less than - then it is in whitespace
+	bmi sprites_Done					@ so, no need to draw it!
+	ldr r3,=576+32						@ now is it on the main screen
+	cmp r1,r3							@ check
+	bpl spriteY_Main_Done				@ if so, we need only draw to main
+	ldr r3,=576-32						@ is it totally on the sub
 	cmp r1,r3						@ Totally ON SUB
 	bmi spriteY_Sub_Done
 
 		@ The sprite is now between 2 screens and needs to be drawn to BOTH!
 		@ Draw Y to MAIN screen (lower)
-		ldr r0,=BUF_ATTRIBUTE0
-		add r0,r8, lsl #3
+		ldr r0,=BUF_ATTRIBUTE0			@ get the sprite attribute0 base
+		add r0,r8, lsl #3				@ add spritenumber *8
 		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
-		ldr r3,=576-32
-		sub r1,r3
-		cmp r1,#32
-		addmi r1,#255
-		sub r1,#32
+		ldr r3,=576-32					@ make r3 the value of top screen -sprite height
+		sub r1,r3						@ subtract our sprites y coord
+		cmp r1,#32						@ check if it is less than sprites height (off top)
+		addmi r1,#255					@ if so, add #255 (make it offscreen)
+		sub r1,#32						@ take our height off
 		and r1,#0xff					@ Y is only 0-255
-		orr r2,r1
-		strh r2,[r0]
+		orr r2,r1						@ or with our attributes from earlier
+		strh r2,[r0]					@ store it in sprite attribute0
 		@ Draw X to MAIN screen
 		ldr r0,=spriteX					@ get X coord mem space
 		ldr r1,[r0,r8,lsl #2]			@ add ,Rx for offsets later!
@@ -92,28 +93,28 @@ drawSprite:
 		sub r1,#64						@ Take 64 off our X
 		sub r1,r4						@ account for maps horizontal position
 		ldr r3,=0x1ff					@ Make sure 0-512 only as higher would affect attributes
-		ldr r0,=BUF_ATTRIBUTE1
-		add r0,r8, lsl #3		
-		ldr r2, =(ATTR1_SIZE_32)
-		and r1,r3
-		orr r2,r1
-		strh r2,[r0]
+		ldr r0,=BUF_ATTRIBUTE1			@ get our ref to attribute1
+		add r0,r8, lsl #3				@ add our sprite number * 8
+		ldr r2, =(ATTR1_SIZE_32)		@ set to 32x32 (we may need to change this later)
+		and r1,r3						@ and sprite y with 0x1ff (keep in region)
+		orr r2,r1						@ orr result with the attribute
+		strh r2,[r0]					@ and store back
 			@ Draw Attributes
-		ldr r0,=BUF_ATTRIBUTE2
-		add r0,r8, lsl #3
-		ldr r2,=spriteObj
-		ldr r3,[r2,r8, lsl #2]
+		ldr r0,=BUF_ATTRIBUTE2			@ load ref to attribute2
+		add r0,r8, lsl #3				@ add sprite number * 8
+		ldr r2,=spriteObj				@ make r2 a ref to our data for the sprites object
+		ldr r3,[r2,r8, lsl #2]			@ r3=spriteobj+ sprite number *4 (stored in words)
 		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY) | ATTR2_PALETTE(0))
-		orr r1,r3, lsl #4	
-		str r1, [r0]
+		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
+		str r1, [r0]					@ store it all back
 
 		ldr r0,=spriteY					@ Load Y coord
-		ldr r1,[r0,r8,lsl #2]	
-	@ Sprite on top screen
+		ldr r1,[r0,r8,lsl #2]			
+	@ DRAW the Sprite on top screen
 	spriteY_Sub_Done:
 		@ Draw sprite to SUB screen (r1 holds Y)
 
-		ldr r0,=BUF_ATTRIBUTE0_SUB
+		ldr r0,=BUF_ATTRIBUTE0_SUB		@ this all works in the same way as other sections
 		add r0,r8, lsl #3
 		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
 		ldr r3,=384
@@ -192,6 +193,12 @@ drawSprite:
 		@ Need to kill same sprite on SUB screen - or do we???
 		@ Seeing that for this to occur, the sprite is offscreen on SUB!
 	sprites_Done:	
+	
+		@ we will need to add code in here to handle the update of explosions
+		@ this is as good a place as any, seeing that we are already going through
+		@ all the sprites!
+	
+	
 	subs r8,#1
 	bpl SLoop
 

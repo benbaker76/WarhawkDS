@@ -155,12 +155,42 @@ move_Aliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	beq no_AlienMove
 	
 	add r1,r7, lsl #2
+	@
+	@	We will need to do checks here for special alien types
+	@	2=mines, 3=hunter
+	@	this will be stored in r0
+	@
 	
 	
 	@ r1 is now offset to start of alien data
 	@ use r0 as offset to this (+512 per field)
 
 	@ Do X Calculations
+	mov r0,#sptSpdYOffs		@ we use Initial Y speed as a variable to tell use what
+	ldr r10,[r1,r0]		@ type of alien to move
+	cmp r10,#1024
+	blne aliensTracker		@ if not 1024 then Tracker
+	bleq aliensLinear		@ if is 1024 then Linear
+	
+	cmp r10,#820			@ check if alien off screen - and kill it
+	bmi alienOK
+		mov r0,#0			@ uh oh - kill time!
+		str r0,[r1]			@ store 0 in sprite active
+	alienOK:
+	no_AlienMove:
+	subs r7,#1
+@	cmp r7,#0
+	bpl moveAlienLoop
+	
+	ldmfd sp!, {r0-r10, pc}
+	
+@-------------- THIS CODE IS ONLY FOR LINEAR ALIENS
+aliensLinear:
+
+	mov r15,r14
+
+@-------------- THIS CODE IS ONLY FOR TRACKING ALIENS
+aliensTracker:
 
 	mov r0,#sptXOffs
 	ldr r10,[r1,r0]				@ x coord
@@ -178,7 +208,6 @@ move_Aliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		notYouX:
 	mov r5,#sptSpdXOffs				@ r5= index to speed x (USED LATER)
 	ldr r3,[r1,r5]					@ r3= speed x (USED LATER)
-
 	
 	mov r0,#sptSpdDelayXOffs		@ Update the speed delay
 	ldr r6,[r1,r0]					@ r6 = speed delay x
@@ -306,11 +335,13 @@ move_Aliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	cmp r11,#9						@ check if ye are tracking you
 	beq noMatch						@ if so, no need to update track points
 
+	@ This bit of code really needs rewriting!!! The checks are too loose!
+
 	mov r0,#sptXOffs
 	ldr r2,[r1,r0]					@ r2=current x COORD
 	mov r0,#sptTrackXOffs
 	ldr r4,[r1,r0]					@ r4=track x COORD
-	add r2,#32
+	add r2,#32						@ a 32 pixel area is too big??
 	cmp r2,r4
 	bmi noMatch
 	sub r2,#32
@@ -361,19 +392,7 @@ move_Aliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	str r4,[r1,r0]			@ store (r4) the new trackY
 	
 	noMatch:
-	
-	cmp r10,#820			@ check if alien off screen - and kill it
-	bmi alienOK
-		mov r0,#0			@ uh oh - kill time!
-		str r0,[r1]			@ store 0 in sprite active
-	alienOK:
-	no_AlienMove:
-	subs r7,#1
-@	cmp r7,#0
-	bpl moveAlienLoop
-	
-	ldmfd sp!, {r0-r10, pc}
-
+	mov r15,r14
 
 init_Alien:				@ This code will find a blank alien sprite and assign it
 	stmfd sp!, {r0-r10, lr}
@@ -727,6 +746,11 @@ alienDescript:	@ These are stored in blocks of 32 words --- for however many we 
 	.word 0,0		@ if not, the pattern will loop forever	
 			
 .end
+Auto KIll
+
+Perhaps adding a track value of 2048 will instantly kill the alien. This could be handy for taking
+an alien off the side of the screen for both trackers and linear?
+
 
 one thing we do need to think about is the other attack types in Warhawk
 we could have seperate code for each, I really do not know how to fit them in at the moment

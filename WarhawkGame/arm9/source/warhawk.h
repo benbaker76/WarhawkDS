@@ -46,7 +46,7 @@
 @ So we can eg. #include "..\build\StarBack.h" instead of copying out these values
 
 #define StarBackPalLen				512
-#define Level1TilesLen				32768
+#define Level1TilesLen				8800
 #define StarFrontTilesLen 			576
 #define StarBackTilesLen			34880
 #define ScoreTilesLen				1344

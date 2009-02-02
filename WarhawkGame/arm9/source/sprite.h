@@ -116,3 +116,15 @@
 #define OBJ_ATTRIBUTE0_SUB(n)		(((n)*0x8) + 0x07000400)
 #define OBJ_ATTRIBUTE1_SUB(n)		(((n)*0x8) + 0x07000402)
 #define OBJ_ATTRIBUTE2_SUB(n)		(((n)*0x8) + 0x07000404)
+
+@ Rotation and Scaling data (maximum of 32)
+
+#define OBJ_ROTATION_HDX(n)			(((n)*0x20) + 0x07000006)
+#define OBJ_ROTATION_HDY(n)			(((n)*0x20) + 0x0700000E)
+#define OBJ_ROTATION_VDX(n)			(((n)*0x20) + 0x07000016)
+#define OBJ_ROTATION_VDY(n)			(((n)*0x20) + 0x0700001E)
+
+#define OBJ_ROTATION_HDX_SUB(n)		(((n)*0x20) + 0x07000406)
+#define OBJ_ROTATION_HDY_SUB(n)		(((n)*0x20) + 0x0700040E)
+#define OBJ_ROTATION_VDX_SUB(n)		(((n)*0x20) + 0x07000416)
+#define OBJ_ROTATION_VDY_SUB(n)		(((n)*0x20) + 0x0700041E)

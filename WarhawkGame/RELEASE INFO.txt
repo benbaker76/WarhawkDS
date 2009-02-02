@@ -1,15 +1,23 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
+
+v0.19 - HK
+- Rewrote scroll code to scroll one line at a time
+- Added NO$GBA debug routines
+- Added new draw map code with routines to draw destructable tiles
+
 V0.18 - FLASH
 - Modified the sprites to include large explosions for bases
 - added a nice pretty attack wave to give an idea of what can be done.
 - added a little animation to the ships exhaust
+
 V0.17 - FLASH
 - Have introduced alien code.
 - At the moment we have 2 pattern types, curved and trackers
 - the code allows 32 on screen at once, though this can easily be increased to 64 if
 - they are needed and if the DS can handle it.
 - added some new defines to make moveAliens code more readable.
+
 V0.16 - FLASH
 - Detect now DETECTS!!! Hurrah... The complicated bit is puting the crater in the correct
 - place in the map data????
@@ -18,6 +26,7 @@ V0.16 - FLASH
 - error somewhere in detect code, sometimes bullet passes through
 - hitting bases adds 321 to score
 - sprite is killed if SpriteActive is set to 0
+
 V0.15 - FLASH
 - Debug drawDigits now accepts r11 as an X coord and displays correct number of digits
 v0.14 - HK

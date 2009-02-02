@@ -38,7 +38,7 @@ initData:
 	mov r1,#31
 	ldr r0,=scrollBlock
 	strb r1,[r0]
-	ldr r1,=3570
+	ldr r1,=3968
 	ldr r0,=scrollPixel
 	str r1,[r0]
 	ldmfd sp!, {r0-r1, pc}

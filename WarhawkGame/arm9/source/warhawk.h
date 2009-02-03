@@ -57,7 +57,7 @@
 
 #define InGameMusicLen				851393
 #define BlasterSoundLen				5170
-#define ExplosionSoundLen			11169
+#define ExplosionSoundLen			6488
 
 #define sptActiveOffs				0
 #define sptXOffs					512

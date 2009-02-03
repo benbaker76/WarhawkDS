@@ -26,30 +26,26 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	ldr r2, [r2, r0, lsl #2]	@ r2=our y coord	
 	sub r2, #384				@ take 384 (top pixel of top screen) off our bullets y pos
 	
-	lsr r2, #5					@ divide y by 32
-	
-	
-	bl debugStuff
-		@----------------- Our detect problem is in here
-	ldr r3,=yposSub				@ DO SCROLL POSITION CONVERSION	
-	ldr r3,[r3]					@ r3 is our exact pixel down the map (0-3968), top of drawn map	
-	lsr r3, #5					@ divide it by 32
-	sub r3, #4					@ Subtract 4 tiles (one line)			
-		@------------------ SOMEWHERE
-	mov r4, #16					@ multiply the result by 16 (we could make each line on the
-	mul r3, r4					@ - colision map 16 bytes to improve speed ie lsl #4)
-	mul r2, r4					@ Multiply BULLET Y by 16 (16 blocks per line)
-	add r2, r1					@ add BULLET X to the result
-	add r3, r2					@ Add the combined result to our converted scroll data above
 
-	bl debugStuff2
+	ldr r3,=yposSub
+	ldr r3,[r3]					@ load the yposSub
+	sub r3,#160					@ take that bloody 160 off
+	add r3,r2					@ add our scroll and bullet y together
+	lsr r3,#5					@ divide by 32 (our blocks)
+
+	lsl r3,#4					@ mul by 16	to convert to our colMap format	
+	add r3,r1					@ add our X, piece of piss!!! :) and we struggled, pah!!!
+	
+@	bl debugStuff
+
+@	bl debugStuff2
 	
 	@ r3 is now an offset to our collision data. Collision data is a long string containing a byte
 	@ for every block on the screen (32x32). so, if r3 is 11, we know that (from the top of the map)
 	@ this is the 3rd 32 block in on the second block down.
 	@ each line is 0-9 10-19 20-29 etc.
-	@ we must be able to use this to locate the map data that we have cached and alter them tiles???
-	@ we need to find the top left tile offset (8x8) and dump the data in a 32x32 block..
+	@ we must be able to use this to locate the map data that we have cached and alter tzhem tiles???
+	@ we need to find the top left tile offset (8x8) and dump the data in a 32x32 bloczk..z
 
 	ldr r4,=colMap
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset

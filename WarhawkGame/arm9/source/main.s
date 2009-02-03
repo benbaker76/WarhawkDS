@@ -51,12 +51,12 @@ main:
 	
 	bl clearBG0
 
-@	mov r1,#0
-@	bl init_Alien
-@	mov r1,#1
-@	bl init_Alien
-@	mov r1,#2
-@	bl init_Alien
+	mov r1,#0
+	bl init_Alien
+	mov r1,#1
+	bl init_Alien
+	mov r1,#2
+	bl init_Alien
 	mov r1,#3
 	bl init_Alien
 	mov r1,#4
@@ -73,7 +73,14 @@ main:
 	bl init_Alien
 	mov r1,#10
 	bl init_Alien
-@----------------------------@	
+	mov r1,#11
+	bl init_Alien
+	mov r1,#12
+	bl init_Alien
+
+
+
+@@----------------------------@	
 @ This is the MAIN game loop @
 @----------------------------@
 gameLoop:
@@ -100,12 +107,6 @@ gameLoop:
 		bl addScore
 		bl drawScore
 		bl drawDebugText
-		
-		ldr r1,=vofsSub
-		ldr r1,[r1]
-		lsr r1,#3
-		mov r0,#8
-		add r1,#0
 		
 		bl drawDamagedBlockMain
 
@@ -152,54 +153,191 @@ move_Aliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	@ to see if we can add more
 	stmfd sp!, {r0-r10, lr}
 
-	mov r7,#31
+	mov r7,#63
 	moveAlienLoop:
 
-	@ calculate r1 to be the alien sprite pointer to use
-	ldr r1,=spriteActive+68		@ add 68 (17*4) for start of aliens
+		@ calculate r1 to be the alien sprite pointer to use
+		ldr r1,=spriteActive+68		@ add 68 (17*4) for start of aliens
 	
-	ldr r0,[r1,r7, lsl #2]
-	cmp r0,#0
-	beq no_AlienMove
+		ldr r0,[r1,r7, lsl #2]
+		cmp r0,#0
+		beq no_AlienMove
 	
-	add r1,r7, lsl #2
+		add r1,r7, lsl #2
 	@
 	@	We will need to do checks here for special alien types
-	@	2=mines, 3=hunter
+	@	2=mines, 3=hunter, 
 	@	this will be stored in r0
 	@
 	
-	
+	@ if alien type is a 1, Carry on from here
+	@ as it must be a linear or tracking alien
 	@ r1 is now offset to start of alien data
 	@ use r0 as offset to this (+512 per field)
 
-	@ Do X Calculations
-	mov r0,#sptSpdYOffs		@ we use Initial Y speed as a variable to tell use what
-	ldr r10,[r1,r0]		@ type of alien to move
-	cmp r10,#1024
-	blne aliensTracker		@ if not 1024 then Tracker
-	bleq aliensLinear		@ if is 1024 then Linear
-	
-	cmp r10,#820			@ check if alien off screen - and kill it
-	bmi alienOK
-		mov r0,#0			@ uh oh - kill time!
-		str r0,[r1]			@ store 0 in sprite active
-	alienOK:
-	no_AlienMove:
-	subs r7,#1
-@	cmp r7,#0
+		mov r0,#sptSpdYOffs		@ we use Initial Y speed as a variable to tell use what
+		ldr r10,[r1,r0]		@ type of alien to move
+		
+		@mov r8, #23					@ y pos
+		@mov r9, #4						@ digits
+		@mov r11, #12					@ x pos
+		@bl drawDigits
+		
+		cmp r10,#1024
+			bne trackTest
+				bl aliensLinear
+				b alienPassed
+			trackTest:
+				bl aliensTracker
+		alienPassed:
+		
+		mov r0,#sptYOffs
+		ldr r10,[r1,r0]		
+		cmp r10,#804			@ check if alien off screen - and kill it
+			bmi alienOK
+			mov r0,#0			@ uh oh - kill time!
+			str r0,[r1]			@ store 0 in sprite active
+		alienOK:
+		no_AlienMove:
+		subs r7,#1
 	bpl moveAlienLoop
 	
 	ldmfd sp!, {r0-r10, pc}
 	
 @-------------- THIS CODE IS ONLY FOR LINEAR ALIENS
 aliensLinear:
+	@ do not touch r7
+	mov r0,#sptTrackXOffs
+	ldr r10,[r1,r0]		@ r10 is now our direction (0-7)
+	mov r0,#sptTrackYOffs
+	ldr r11,[r1,r0]		@ r11 = distance to travel	(1-x)
+	mov r0,#sptSpdXOffs
+	ldr r12,[r1,r0]		@ r12 = speed of travel
+	@ first do our code to move in the direction
+	@ then decrement r11 (distance) and if <0 load new tracking
+	cmp r10,#1	@ up
+		bne linPass1
+			mov r0,#sptYOffs
+			ldr r4,[r1,r0]
+			sub r4,r12
+			str r4,[r1,r0]		
+			b linPass8
+		linPass1:
+	cmp r10,#2	@ up/Right
+		bne linPass2
+			mov r0,#sptYOffs
+			ldr r4,[r1,r0]
+			sub r4,r12
+			str r4,[r1,r0]		
+			mov r0,#sptXOffs
+			ldr r4,[r1,r0]
+			add r4,r12
+			str r4,[r1,r0]		
+			b linPass8
+		linPass2:	
+	cmp r10,#3	@ Right
+		bne linPass3
+			mov r0,#sptXOffs
+			ldr r4,[r1,r0]
+			add r4,r12
+			str r4,[r1,r0]		
+			b linPass8
+		linPass3:
+	cmp r10,#4 @ Right/Down
+		bne linPass4
+			mov r0,#sptXOffs
+			ldr r4,[r1,r0]
+			add r4,r12
+			str r4,[r1,r0]	
+			mov r0,#sptYOffs
+			ldr r4,[r1,r0]
+			add r4,r12
+			str r4,[r1,r0]		
+			b linPass8
+		linPass4:
+	cmp r10,#5 @ Down
+		bne linPass5
+			mov r0,#sptYOffs
+			ldr r4,[r1,r0]
+			add r4,r12
+			str r4,[r1,r0]		
+			b linPass8
+		linPass5:
+	cmp r10,#6 @ Down/Left
+		bne linPass6
+			mov r0,#sptXOffs
+			ldr r4,[r1,r0]
+			sub r4,r12
+			str r4,[r1,r0]	
+			mov r0,#sptYOffs
+			ldr r4,[r1,r0]
+			add r4,r12
+			str r4,[r1,r0]		
+			b linPass8
+		linPass6:
+	cmp r10,#7 @ Left
+		bne linPass7
+			mov r0,#sptXOffs
+			ldr r4,[r1,r0]
+			sub r4,r12
+			str r4,[r1,r0]		
+			b linPass8
+		linPass7:
+				@ Up/Left
+			mov r0,#sptXOffs
+			ldr r4,[r1,r0]
+			sub r4,r12
+			str r4,[r1,r0]	
+			mov r0,#sptYOffs
+			ldr r4,[r1,r0]
+			sub r4,r12
+			str r4,[r1,r0]		
+	linPass8:
+	mov r0,#sptTrackYOffs
+	subs r11,r12		@ take speed off our distance to travel
+	str r11,[r1,r0]	@ store it back
+	cmp r11,#0
+	bmi linearNew		@ if moves done, get another pair of instruction
+ 
+	mov r15,r14	
 
+	linearNew:
+	
+	
+	ldr r2,=spriteInstruct	
+	add r2, r7, lsl #7		@ add sprite number * 128
+	add r2, #32				@ r2 = first instruction in spriteInstruct
+	
+	mov r0,#sptPhaseOffs	@ Now, increase our phase position
+	ldr r3,[r1,r0]			@ r3 = phase number
+	add r3,#1				@ add one to the phase position
+	cmp r3,#24				@ if end of sequence, loop it?
+	moveq r3,#0				@		by setting to 0
+	linInstruct:
+	str r3,[r1,r0]			@ store it back
+	lsl r3,#3				@ multiply by 8 to find offset
+	
+	ldr r4,[r2,r3]			@ r4=next piece of tracking data (the direction)
+	cmp r4,#0
+		moveq r3,#0			@ if direction if 0 = loop pattern
+		beq linInstruct
+		cmp r4,#2048
+		bne linNoKill
+			mov r4,#0
+			str r4,[r0]
+			b noMatchLin
+		linNoKill:
+	mov r0,#sptTrackXOffs
+	str r4,[r1,r0]			@ store (r4) the new trackX
+	add r3,#4				@ add 4 to the spriteInstruct position
+	ldr r4,[r2,r3]			@ r4=next piece of tracking data (distance)
+	mov r0,#sptTrackYOffs
+	str r4,[r1,r0]			@ store (r4) the new distance
+	noMatchLin:
 	mov r15,r14
 
 @-------------- THIS CODE IS ONLY FOR TRACKING ALIENS
 aliensTracker:
-
 	mov r0,#sptXOffs
 	ldr r10,[r1,r0]				@ x coord
 	mov r0,#sptTrackXOffs
@@ -392,6 +530,12 @@ aliensTracker:
 	cmp r4,#0
 		moveq r3,#0			@ if track x if 0 = loop pattern
 		beq loopInstruct
+	cmp r4,#2048
+		bne trackNoKill
+			mov r4,#0
+			str r4,[r0]
+			b noMatch
+		trackNoKill:
 	mov r0,#sptTrackXOffs
 	str r4,[r1,r0]			@ store (r4) the new trackX
 	add r3,#4				@ add 4 to the spriteInstruct position
@@ -410,7 +554,7 @@ init_Alien:				@ This code will find a blank alien sprite and assign it
 								@ now er need to find a blank alien
 
 	ldr r3,=spriteActive+68
-	mov r0,#31	@ SPRITE R0 points to the sprite that will be used for the alien
+	mov r0,#63	@ SPRITE R0 points to the sprite that will be used for the alien
 				@ we need to use a loop here to FIND a spare sprite
 				@ and this will be used to init the alien!!
 	find_Space_Loop:
@@ -418,7 +562,6 @@ init_Alien:				@ This code will find a blank alien sprite and assign it
 		cmp r2,#0
 		beq found_Space
 			subs r0,#1
-@			cmp r0,#32
 	bpl find_Space_Loop
 	
 	ldmfd sp!, {r0-r10, pc}	@ No space for the alien, so lets exit!
@@ -512,243 +655,73 @@ init_Alien:				@ This code will find a blank alien sprite and assign it
 	
 alienDescript:	@ These are stored in blocks of 32 words --- for however many we use?
 
-	.word 90	@ init X
-	.word 340	@ init y
-	.word 0 @ init speed X
-	.word 0	@ init speed y		@ (set to 1024 to signal liner mode?)
-	.word 4 @ init maxSpeed
-	.word 17 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 1	@ init 'fire type' 0=none
-	.word 130,440	@ track x,y 1
-	.word 90,500	@ track x,y 2
-	.word 130,580		@ track x,y 3
-	.word 260,500		@ etc.....
-	.word 130,440		@ make any (trackX 1024 to attack your ship)
-	.word 90,380		@ (in linear mode these are direction, distance, speed y is speed)
-	.word 195,500
-	.word 195,550
-	.word 260,600
-	.word 90,700
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed	
-	@ Full 32 words per Alien Description (128 bytes)
+	.word 90,120,1,1024,0,37,1,1					@ inits
+	.word 5,280,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 120	@ init X
-	.word 340	@ init y
-	.word 0 @ init speed X
-	.word 0	@ init speed y		@ (set to 1024 to signal liner mode?)
-	.word 4 @ init maxSpeed
-	.word 17 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 1	@ init 'fire type' 0=none
-	.word 160,440	@ track x,y 1
-	.word 120,500	@ track x,y 2
-	.word 160,580		@ track x,y 3
-	.word 290,500		@ etc.....
-	.word 160,440		@ make any (trackX 1024 to attack your ship)
-	.word 120,380		@ (in linear mode these are direction, distance, speed y is speed)
-	.word 225,500
-	.word 225,550
-	.word 290,600
-	.word 120,700
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed	
-	@ Full 32 words per Alien Description (128 bytes)
+	.word 90,140,1,1024,0,37,1,1					@ inits
+	.word 5,260,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 280	@ init X
-	.word 300	@ init y
-	.word 0 @ init speed X
-	.word 0	@ init speed y		@ (set to 1024 to signal liner mode?)
-	.word 3 @ init maxSpeed
-	.word 17 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 300,400	@ track x,y 1
-	.word 260,500	@ track x,y 2
-	.word 300,400		@ track x,y 3
-	.word 260,500		@ etc.....
-	.word 300,600		@ make any (trackX 1024 to attack your ship)
-	.word 260,400		@ (in linear mode these are direction, distance, speed y is speed)
-	.word 280,500
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed	
-	@ Full 32 words per Alien Description (128 bytes)
-@ pattern 3
-	.word 100	@ init X
-	.word 300	@ init y
-	.word 0 @ init speed X
-	.word 0	@ init speed y		@ (set to 1024 to signal liner mode?)
-	.word 3 @ init maxSpeed
-	.word 37 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 100,700	@ track x,y 1
-	.word 100,420	@ track x,y 2
-	.word 1024,1024		@ track x,y 3
-	.word 0,0		@ etc.....
-	.word 0,0		@ make any (trackX 1024 to attack your ship)
-	.word 0,0		@ (in linear mode these are direction, distance, speed y is speed)
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed	
-	@ Full 32 words per Alien Description (128 bytes)
-
-@ THESE FROM HERE ARE CORRECTLY COMMENTED
-
-	.word 140	@ init X
-	.word 200	@ init y
-	.word 0 @ init speed X		@ (this is overal speed in linear mode)
-	.word 0	@ init speed y		@ (set to 1024 to signal linear mode)
-	.word 3 @ init maxSpeed		@ (on ones that attack you - 5 is the fastest)
-	.word 37 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 140,700	@ track x,y 1
-	.word 140,420		@ track x,y 2
-	.word 1024,1024		@ track x,y 3
-	.word 0,0		@ etc.....
-	.word 0,0		@ make any track 1024 to attack your ship on that vertices
-	.word 0,0		@ (in linear mode these are direction, distance, speed x is speed)
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed
-	.word 0,0		@ if not, the pattern will loop forever	
-
-	.word 180	@ init X
-	.word 100	@ init y
-	.word 0 @ init speed X		@ (this is overal speed in linear mode)
-	.word 0	@ init speed y		@ (set to 1024 to signal linear mode)
-	.word 3 @ init maxSpeed		@ (on ones that attack you - 5 is the fastest)
-	.word 37 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 180,700	@ track x,y 1
-	.word 180,420		@ track x,y 2
-	.word 1024,1024		@ track x,y 3
-	.word 0,0		@ etc.....
-	.word 0,0		@ make any track 1024 to attack your ship on that vertices
-	.word 0,0		@ (in linear mode these are direction, distance, speed x is speed)
-	.word 0,0		@ you can make them trackers at any time on any axis.. :)
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed
-	.word 0,0		@ if not, the pattern will loop forever	
-
-@ pattern 6
-	.word 314	@ init X
-	.word 300	@ init y
-	.word 0 @ init speed X
-	.word 0	@ init speed y		@ (set to 1024 to signal liner mode?)
-	.word 3 @ init maxSpeed
-	.word 37 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 314,700	@ track x,y 1
-	.word 314,420	@ track x,y 2
-	.word 1024,1024		@ track x,y 3
-	.word 0,0		@ etc.....
-	.word 0,0		@ make any (trackX 1024 to attack your ship)
-	.word 0,0		@ (in linear mode these are direction, distance, speed y is speed)
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed	
-	@ Full 32 words per Alien Description (128 bytes)
-
-@ THESE FROM HERE ARE CORRECTLY COMMENTED
-
-	.word 274	@ init X
-	.word 200	@ init y
-	.word 0 @ init speed X		@ (this is overal speed in linear mode)
-	.word 0	@ init speed y		@ (set to 1024 to signal linear mode)
-	.word 3 @ init maxSpeed		@ (on ones that attack you - 5 is the fastest)
-	.word 37 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 274,700	@ track x,y 1
-	.word 274,420		@ track x,y 2
-	.word 1024,1024		@ track x,y 3
-	.word 0,0		@ etc.....
-	.word 0,0		@ make any track 1024 to attack your ship on that vertices
-	.word 0,0		@ (in linear mode these are direction, distance, speed x is speed)
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed
-	.word 0,0		@ if not, the pattern will loop forever	
-
-	.word 234	@ init X
-	.word 100	@ init y
-	.word 0 @ init speed X		@ (this is overal speed in linear mode)
-	.word 0	@ init speed y		@ (set to 1024 to signal linear mode)
-	.word 3 @ init maxSpeed		@ (on ones that attack you - 5 is the fastest)
-	.word 37 @ init spriteObj
-	.word 1	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 234,700	@ track x,y 1
-	.word 234,420		@ track x,y 2
-	.word 1024,1024		@ track x,y 3
-	.word 0,0		@ etc.....
-	.word 0,0		@ make any track 1024 to attack your ship on that vertices
-	.word 0,0		@ (in linear mode these are direction, distance, speed x is speed)
-	.word 0,0		@ you can make them trackers at any time on any axis.. :)
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed
-	.word 0,0		@ if not, the pattern will loop forever	
+	.word 90,160,1,1024,0,37,1,1					@ inits
+	.word 5,240,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 0	@ init X
-	.word 500	@ init y
-	.word 0 @ init speed X		@ (this is overal speed in linear mode)
-	.word 0	@ init speed y		@ (set to 1024 to signal linear mode)
-	.word 2 @ init maxSpeed		@ (on ones that attack you - 5 is the fastest)
-	.word 37 @ init spriteObj
-	.word 2	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 200,500	@ track x,y 1
-	.word 200,580		@ track x,y 2
-	.word 100,580		@ track x,y 3
-	.word 100,660		@ etc.....
-	.word 200,660		@ make any track 1024 to attack your ship on that vertices
-	.word 185,384		@ (in linear mode these are direction, distance, speed x is speed)
-	.word 1024,1024		@ you can make them trackers at any time on any axis.. :)
-	.word 0,0
-	.word 0,0
-	.word 0,0
-	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed
-	.word 0,0		@ if not, the pattern will loop forever	
+	.word 90,180,1,1024,0,37,1,1					@ inits
+	.word 5,220,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 415	@ init X
-	.word 500	@ init y
-	.word 0 @ init speed X		@ (this is overal speed in linear mode)
-	.word 0	@ init speed y		@ (set to 1024 to signal linear mode)
-	.word 2 @ init maxSpeed		@ (on ones that attack you - 5 is the fastest)
-	.word 37 @ init spriteObj
-	.word 2	@ init hits to kill (1=1 hit)
-	.word 0	@ init 'fire type' 0=none
-	.word 215,500	@ track x,y 1
-	.word 215,580		@ track x,y 2
-	.word 315,580		@ track x,y 3
-	.word 315,660		@ etc.....
-	.word 215,660		@ make any track 1024 to attack your ship on that vertices
-	.word 230,384		@ (in linear mode these are direction, distance, speed x is speed)
-	.word 1024,1024		@ you can make them trackers at any time on any axis.. :)
-	.word 0,0
-	.word 0,0
+	.word 90,200,1,1024,0,37,1,1					@ inits
+	.word 5,200,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+	
+	.word 90,220,1,1024,0,37,1,1					@ inits
+	.word 5,180,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+	
+	.word 90,240,1,1024,0,37,1,1					@ inits
+	.word 5,160,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+	
+	.word 90,260,1,1024,0,37,1,1					@ inits
+	.word 5,140,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+	
+	.word 90,280,1,1024,0,37,1,1					@ inits
+	.word 5,120,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+	
+	.word 90,300,1,1024,0,37,1,1					@ inits
+	.word 5,100,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+	
+	.word 90,320,1,1024,0,37,1,1					@ inits
+	.word 5,80,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+	
+	.word 90,340,1,1024,0,37,1,1					@ inits
+	.word 5,60,4,50,3,50,4,50,5,50,6,50			@ Track points
+	.word 7,10,8,10,1,5,2,5,3,80,5,500
+
+	@ Alien define structure
+
+	.word 164		@ init X				@ initial X coord
+	.word 450		@ init y				@ initial Y coord
+	.word 1 		@ init speed X			@ (this is overal speed in linear mode)
+	.word 1024		@ init speed y			@ (set to 1024 to signal linear mode)
+	.word 1 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
+	.word 56 		@ init spriteObj		@ Sprite to use for image
+	.word 2			@ init hits to kill		@ make massive for indestructable
+	.word 0			@ init 'fire type' 		@ 0=none
+	.word 3,120		@ track x,y 1			@ tracking coordinate (as in coords.png)
+	.word 7,120		@ track x,y 2
+	.word 0,0		@ track x,y 3
+	.word 315,660	@ etc.....
+	.word 215,660	@ make any track 1024 to attack your ship on that vertices
+	.word 230,384	@ (in linear mode these are direction, distance, "speed x" is speed)
+	.word 1024,1024	@ you can make them trackers at any time on any axis.. :)
+	.word 0,0		@ make them 0 and the wave will loop to the begining
+	.word 0,0		@ make them 2048 to kill the alien (spriteActive=0)
 	.word 0,0
 	.word 0,0		@ The last Y coord must be off screen base so alien is destroyed
 	.word 0,0		@ if not, the pattern will loop forever	

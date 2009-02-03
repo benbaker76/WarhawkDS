@@ -14,71 +14,28 @@
 detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A BASE
 								@ AND LATER ALSO CHECK AGAINST ENEMIES
 	stmfd sp!, {r0-r6, lr}
-		push {r0-r4}
-		ldr r1,=575
-		cmp r4,r1
-		bpl bottomS
-		ldr r1,=vofsSub
-		ldr r1,[r1]
-		sub r4,#384
-		add r1,r4
-		lsr r1,#3
-@		lsl r1,#5
-		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
-		ldr r2, [r2, r0, lsl #2]
-		sub r2,#64
-		lsr r2, #3
-		mov r0,r2
-		bl drawDamagedBlockSub
-		b nonono
 
-		bottomS:
-		ldr r1,=vofsSub
-		ldr r1,[r1]
-		sub r4,#576
-		add r1,r4
-		lsr r1,#3
-@		lsl r1,#5
-
-		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
-		ldr r2, [r2, r0, lsl #2]
-	sub r2,#64	
-		lsr r2, #3
-	
-		mov r0,r2
-
-		bl drawDamagedBlockMain
-		@ mian cocks up
-		nonono:
-
-
-		pop {r0-r4}
 	
 	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
 	ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
 	sub r1, #64					@ our sprite starts at 64 (very left of map) + 6 for left bullet
-	add r1, #16					@ our left bullet is right a bit in the sprite
+	add r1, #6					@ our left bullet is right a bit in the sprite
 	lsr r1, #5					@ divide x by 32
 
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 	ldr r2, [r2, r0, lsl #2]	@ r2=our y coord	
-
 	sub r2, #384				@ take 384 (top pixel of top screen) off our bullets y pos
+	
 	lsr r2, #5					@ divide y by 32
 	
 	
 	bl debugStuff
-	
+		@----------------- Our detect problem is in here
 	ldr r3,=scrollPixel			@ DO SCROLL POSITION CONVERSION	
 	ldr r3,[r3]					@ r3 is our exact pixel down the map (0-3968), top of drawn map	
-
-	ldr r4,=scrollBlock			@ r4 is a counter (63-0) that counts each (32x32) block as it
-	ldrb r4,[r4]				@ - appears on the screen. We take this from scroll to calculate a
-	subs r3,r4					@ - a small offset to try and get the bullet as close as possible
-								@ - does not work QUITE??? Strange!		
-								@ perhaps it is not updating in alignent - ish!
 	lsr r3, #5					@ divide it by 32
-	sub r3, #4
+	sub r3, #5					@ NO IDEA WHY THIS WORKS (Sort of)?				
+		@------------------ SOMEWHERE
 	mov r4, #16					@ multiply the result by 16 (we could make each line on the
 	mul r3, r4					@ - colision map 16 bytes to improve speed ie lsl #4)
 	mul r2, r4					@ Multiply BULLET Y by 16 (16 blocks per line)
@@ -102,6 +59,48 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	mov r6, #2
 	strb r6, [r4, r3]
 	
+@-------------- the draw code	
+		push {r0-r4}
+		ldr r4, =spriteY+4			@ DO Y COORD CONVERSION
+		ldr r4, [r4, r0, lsl #2]
+		ldr r1,=575
+		cmp r4,r1
+		bpl bottomS
+			ldr r1,=vofsSub
+			ldr r1,[r1]
+			sub r4,#384
+			add r1,r4
+			lsr r1,#5
+			lsl r1,#2
+			
+			ldr r2, =spriteX+4			@ DO X COORD CONVERSION
+			ldr r2, [r2, r0, lsl #2]
+			sub r2,#58					@ 64 - 6 (bullet offset)
+			lsr r2, #5
+			lsl r2, #2
+			mov r0,r2
+			bl drawDamagedBlockSub
+			b nonono
+
+		bottomS:
+		ldr r1,=vofsSub
+		ldr r1,[r1]
+		sub r4,#576
+		add r1,r4
+		lsr r1,#5
+		lsl r1,#2
+		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
+		ldr r2, [r2, r0, lsl #2]
+		sub r2,#58					@ 64 - 6 (bullet offset)
+		lsr r2, #5
+		lsl r2, #2
+		mov r0,r2
+
+		bl drawDamagedBlockMain
+		nonono:
+		pop {r0-r4}	
+@--------------- end of draw code
+
 		
 @		kill:						@ use this to detect where the collision occurs
 @		b kill

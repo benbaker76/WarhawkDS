@@ -193,12 +193,19 @@ drawSprite:
 		@ Need to kill same sprite on SUB screen - or do we???
 		@ Seeing that for this to occur, the sprite is offscreen on SUB!
 	sprites_Done:	
-	
+		ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
+		ldr r1,[r0,r8, lsl #2]
+		cmp r1,#6
+		bne spinky
+	ldr r0,=spriteY						@ Load Y coord
+	ldr r1,[r0,r8,lsl #2]
+		add r1,#1
+	str r1,[r0,r8,lsl #2]
 		@ we will need to add code in here to handle the update of explosions
 		@ this is as good a place as any, seeing that we are already going through
 		@ all the sprites!
 	
-	
+		spinky:
 	subs r8,#1
 	bpl SLoop
 

@@ -14,6 +14,45 @@
 detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A BASE
 								@ AND LATER ALSO CHECK AGAINST ENEMIES
 	stmfd sp!, {r0-r6, lr}
+		push {r0-r4}
+		ldr r1,=575
+		cmp r4,r1
+		bpl bottomS
+		ldr r1,=vofsSub
+		ldr r1,[r1]
+		sub r4,#384
+		add r1,r4
+		lsr r1,#3
+@		lsl r1,#5
+		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
+		ldr r2, [r2, r0, lsl #2]
+		sub r2,#64
+		lsr r2, #3
+		mov r0,r2
+		bl drawDamagedBlockSub
+		b nonono
+
+		bottomS:
+		ldr r1,=vofsSub
+		ldr r1,[r1]
+		sub r4,#576
+		add r1,r4
+		lsr r1,#3
+@		lsl r1,#5
+
+		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
+		ldr r2, [r2, r0, lsl #2]
+	sub r2,#64	
+		lsr r2, #3
+	
+		mov r0,r2
+
+		bl drawDamagedBlockMain
+		@ mian cocks up
+		nonono:
+
+
+		pop {r0-r4}
 	
 	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
 	ldr r1, [r1, r0, lsl #2]	@ r1=our x coord

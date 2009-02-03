@@ -83,9 +83,13 @@ drawDamagedBlockMain:
 	
 	add r3, r4, lsl #1				@ Add xpos * 2
 	add r2, r5, lsl #7				@ Add ypos * (64*2)
+
+cmp r1,#31
+subgt r1,#32
 	
 	cmp r0, #31						@ If xpos > 31 then we need to jump a screen block
 	addgt r1, #31					@ Yes so add 32 tiles to ypos
+
 	
 	add r3, r0, lsl #1				@ Add xpos * 2
 	add r3, r1, lsl #6				@ Add ypos * 64
@@ -95,7 +99,7 @@ drawDamagedBlockMain:
 	ldr r2, =8						@ 4 * 2 tiles * 2
 	ldr r3, =64						@ 64 tiles
 	bl dmaCopy
-	
+
 	add r0, r3, lsl #1				@ (64 * 2) tiles
 	add r1, r3						@ 64 tiles
 	bl dmaCopy
@@ -125,7 +129,10 @@ drawDamagedBlockSub:
 	
 	add r3, r4, lsl #1				@ Add xpos * 2
 	add r2, r5, lsl #7				@ Add ypos * (64*2)
-	
+
+cmp r1,#31
+subgt r1,#32
+
 	cmp r0, #31						@ If xpos > 31 then we need to jump a screen block
 	addgt r1, #31					@ Yes so add 32 tiles to ypos
 	

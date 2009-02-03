@@ -100,6 +100,14 @@ gameLoop:
 		bl addScore
 		bl drawScore
 		bl drawDebugText
+		
+		ldr r1,=vofsSub
+		ldr r1,[r1]
+		lsr r1,#3
+		mov r0,#8
+		add r1,#0
+		
+		bl drawDamagedBlockMain
 
 @	bl waitforNoblank
 	@---------------------------------------------

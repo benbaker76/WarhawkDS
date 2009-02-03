@@ -171,8 +171,8 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			blgt detectBG				@ if greater than 384, check for collision
 			@ r0=our bullet number
 		
-			
-			
+			@ TEST--------
+
 		bulletDead:
 		subs r0,#1
 		bpl activeBloop	

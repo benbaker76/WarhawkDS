@@ -1,1 +1,2 @@
-sinus.o: c:/devkitPro/source/nds/WarhawkGame/arm9/source/sinus.s
+sinus.o:  \
+ c:/devkitPro/source/nds/WarhawkDS/WarhawkGame/arm9/source/sinus.s

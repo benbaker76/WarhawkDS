@@ -31,10 +31,10 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	
 	bl debugStuff
 		@----------------- Our detect problem is in here
-	ldr r3,=scrollPixel			@ DO SCROLL POSITION CONVERSION	
+	ldr r3,=yposSub				@ DO SCROLL POSITION CONVERSION	
 	ldr r3,[r3]					@ r3 is our exact pixel down the map (0-3968), top of drawn map	
 	lsr r3, #5					@ divide it by 32
-	sub r3, #5					@ NO IDEA WHY THIS WORKS (Sort of)?				
+	sub r3, #4					@ Subtract 4 tiles (one line)			
 		@------------------ SOMEWHERE
 	mov r4, #16					@ multiply the result by 16 (we could make each line on the
 	mul r3, r4					@ - colision map 16 bytes to improve speed ie lsl #4)

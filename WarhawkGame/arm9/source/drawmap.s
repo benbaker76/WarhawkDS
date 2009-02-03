@@ -11,6 +11,8 @@
 	.align
 	.global drawDamagedBlockMain
 	.global drawDamagedBlockSub
+	.global drawMapScreenMain
+	.global drawMapScreenSub
 	.global drawMapMain
 	.global drawMapSub
 	.global drawSFMapMain
@@ -26,11 +28,12 @@ checkDamagedBlockMain:
 	ldr r2, =vofsMain
 
 	ldr r4, [r1]
+	lsr r4, #3						@ Divide by 8 to get tile offset
+	
 	ldr r5, [r2]
 	sub r5, #32						@ One line of tiles offset (for drawing tiles offscreen)
 	
 	lsr r4, #2						@ divide by 4
-	sub r4, #1						@ subtract 1
 	lsl r4, #4						@ multiply by 16
 	
 	mov r6, #0
@@ -84,8 +87,8 @@ drawDamagedBlockMain:
 	add r3, r4, lsl #1				@ Add xpos * 2
 	add r2, r5, lsl #7				@ Add ypos * (64*2)
 
-cmp r1,#31
-subgt r1,#32
+	cmp r1,#31
+	subgt r1,#32
 	
 	cmp r0, #31						@ If xpos > 31 then we need to jump a screen block
 	addgt r1, #31					@ Yes so add 32 tiles to ypos
@@ -98,19 +101,17 @@ subgt r1,#32
 	mov r1, r3
 	ldr r2, =8						@ 4 * 2 tiles * 2
 	ldr r3, =64						@ 64 tiles
+	ldr r4, =3
 	bl dmaCopy
+
+drawDamagedBlockMainLoop:
 
 	add r0, r3, lsl #1				@ (64 * 2) tiles
 	add r1, r3						@ 64 tiles
 	bl dmaCopy
 	
-	add r0, r3, lsl #1				@ (6 * 2) tiles
-	add r1, r3						@ 64 tiles
-	bl dmaCopy
-	
-	add r0, r3, lsl #1				@ (6 * 2) tiles
-	add r1, r3						@ 64 tiles
-	bl dmaCopy
+	subs r4, r4, #1
+	bne drawDamagedBlockMainLoop
 	
 	ldmfd sp!, {r2-r6, pc} 		@ restore registers and return
 	
@@ -130,8 +131,8 @@ drawDamagedBlockSub:
 	add r3, r4, lsl #1				@ Add xpos * 2
 	add r2, r5, lsl #7				@ Add ypos * (64*2)
 
-cmp r1,#31
-subgt r1,#32
+	cmp r1,#31
+	subgt r1,#32
 
 	cmp r0, #31						@ If xpos > 31 then we need to jump a screen block
 	addgt r1, #31					@ Yes so add 32 tiles to ypos
@@ -143,19 +144,17 @@ subgt r1,#32
 	mov r1, r3
 	ldr r2, =8						@ 4 * 2 tiles * 2
 	ldr r3, =64						@ 64 tiles
+	ldr r4, =3
 	bl dmaCopy
 	
+drawDamagedBlockSubLoop:
+
 	add r0, r3, lsl #1				@ (64 * 2) tiles
 	add r1, r3						@ 64 tiles
 	bl dmaCopy
 	
-	add r0, r3, lsl #1				@ (6 * 2) tiles
-	add r1, r3						@ 64 tiles
-	bl dmaCopy
-	
-	add r0, r3, lsl #1				@ (6 * 2) tiles
-	add r1, r3						@ 64 tiles
-	bl dmaCopy
+	subs r4, r4, #1
+	bne drawDamagedBlockSubLoop
 	
 	ldmfd sp!, {r2-r6, pc} 		@ restore registers and return
 	
@@ -169,6 +168,8 @@ drawMapMain:
 	ldr r3, =vofsMain
 	
 	ldr r4, [r2]					@ load y2 with ypos (map reference)
+	lsr r4, #3						@ Divide by 8 to get tile offset
+	
 	ldr r5, [r3]
 	sub r5, #32						@ One line of tiles offset (for drawing tiles offscreen)
 	
@@ -216,6 +217,8 @@ drawMapSub:
 	ldr r3, =vofsSub
 	
 	ldr r4, [r2]					@ load y2 with ypos (map reference)
+	lsr r4, #3						@ Divide by 8 to get tile offset
+	
 	sub r4, #24						@ 24 tiles offset
 	ldr r5, [r3]
 	sub r5, #32						@ One line of tiles offset (for drawing tiles offscreen)
@@ -252,6 +255,119 @@ drawMapSubLoop:
 drawMapSubDone:
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@ -----------------------------------
+	
+	
+drawMapScreenMain:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =Level1Map				@ source
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)	@ destination
+	ldr r2, =yposMain				@
+	
+	ldr r4, [r2]					@ load y2 with ypos (map reference)
+	lsr r4, #3						@ Divide by 8 to get tile offset
+	
+	add r0, r4, lsl #7				@ yposMain * (64*2) added to Level1Map
+	
+	ldr r2, =64						@ 32x2 for a line of tiles
+	mov r4, r1
+	ldr r5, =2048					@ Skip block (32x32x2)
+	bl dmaCopy
+	
+	mov r6, #1
+	
+drawMapScreenMainLoop:
+
+	add r0, r2
+	add r1, r5
+	bl dmaCopy
+	
+	cmp r6, #32						@ Have we drawn 4 rows of tiles?
+	beq drawMapScreenMainDone		@ Yes then lets exit
+
+	mov r1, r4						@ Draw the tiles x > 256 on second screen block
+	add r0, r2
+	mov r3, r2
+	mul r3, r6
+	add r1, r3
+	bl dmaCopy
+	
+	add r6, #1
+	b drawMapScreenMainLoop
+	
+drawMapScreenMainDone:
+
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+
+drawMapScreenSub:
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =Level1Map				@ source
+	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
+	ldr r2, =yposSub				@
+	
+	ldr r4, [r2]					@ load y2 with ypos (map reference)
+	lsr r4, #3						@ Divide by 8 to get tile offset
+	sub r4, #24						@ 24 tiles offset
+	
+	add r0, r4, lsl #7				@ yposMain * (64*2) added to Level1Map
+	
+	ldr r2, =64						@ 32x2 for a line of tiles
+	mov r4, r1
+	ldr r5, =2048					@ Skip block (32x32x2)
+	bl dmaCopy
+	
+	mov r6, #1
+	
+drawMapScreenSubLoop:
+
+	add r0, r2
+	add r1, r5
+	bl dmaCopy
+	
+	cmp r6, #32						@ Have we drawn 4 rows of tiles?
+	beq drawMapScreenSubDone				@ Yes then lets exit
+
+	mov r1, r4						@ Draw the tiles x > 256 on second screen block
+	add r0, r2
+	mov r3, r2
+	mul r3, r6
+	add r1, r3
+	bl dmaCopy
+	
+	add r6, #1
+	b drawMapScreenSubLoop
+	
+drawMapScreenSubDone:
+
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@--------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 drawSFMapMain:
 	stmfd sp!, {r0-r6, lr}

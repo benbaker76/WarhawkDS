@@ -48,6 +48,11 @@ scrollMain:
 	ldr r2, =REG_BG1VOFS			@ Load the address of the scroll register (write only)
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
+	
+	ldr r0, =yposMain				@ grab ypos memory adress
+	ldr r1, [r0]					@ r3 = ypos
+	sub r1, #1						@ lets go up one block (4 tiles) on the map
+	strh r1, [r0]					@ and put the value back for later
 		
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
@@ -58,10 +63,6 @@ scrollMapMain:
 	mov r1, #0
 	strh r1, [r0]
 	
-	ldr r0, =yposMain				@ grab ypos memory adress
-	ldr r1, [r0]					@ r3 = ypos
-	sub r1, #4						@ lets go up one block (4 tiles) on the map
-	strh r1, [r0]					@ and put the value back for later
 	bl drawMapMain
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
@@ -105,10 +106,10 @@ scrollSub:
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
-	ldr r0, =scrollPixel
-	ldrh r1, [r0]
-	sub r1, #1
-	strh r1, [r0]
+	ldr r0, =yposSub				@ grab ypos memory adress
+	ldr r1, [r0]					@ r3 = ypos
+	sub r1, #1						@ lets go up one block (4 tiles) on the map
+	strh r1, [r0]					@ and put the value back for later
 		
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
@@ -119,17 +120,6 @@ scrollMapSub:
 	mov r1, #0
 	strh r1, [r0]
 	
-	ldr r0, =scrollBlock
-	ldr r1, [r0]
-	add r1, #1
-	cmp r1, #64
-	moveq r1, #0
-	strh r1, [r0]
-	
-	ldr r0, =yposSub				@ grab ypos memory adress
-	ldr r1, [r0]					@ r3 = ypos
-	sub r1, #4						@ lets go up one block (4 tiles) on the map
-	strh r1, [r0]					@ and put the value back for later
 	bl drawMapSub
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
@@ -376,10 +366,7 @@ checkEndOfLevel:
 	bne levelPlay
 		ldr r0,=yposSub						@ Ypos is the Y position in the map data
 		ldr r0, [r0]
-		ldr r1,=vofsSub
-		ldr r1, [r1]
-		orr r0, r1
-		cmp r0, #0							@ are we at ZERO - top of the map?
+		cmp r0, #192 - 32					@ are we at 192 - 32 - top of the map?
 		bne levelPlay						@ If so, and scroll is 0 also - Stop Main Scroll!
 			ldr r0, =levelEnd
 			mov r1, #1

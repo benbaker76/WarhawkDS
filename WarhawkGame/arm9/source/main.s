@@ -32,13 +32,16 @@ main:
 	@ and display the ship sprite
 	
 @	bl waitforVblank
-	bl drawMapMain
-	bl drawMapSub
+	bl clearBG0
+	bl clearBG1
+	bl clearBG2
+	bl clearBG3
+	bl drawMapScreenMain
+	bl drawMapScreenSub
 	bl drawSFMapMain
 	bl drawSFMapSub
 	bl drawSBMapMain
 	bl drawSBMapSub
-	bl clearBG0
 	bl drawScore
 	bl drawSprite
 	bl drawGetReadyText
@@ -116,31 +119,6 @@ gameLoop:
 	@ this should give us a bit more time in vblank
 	@---------------------------------------------
 			
-			
-
-		ldr r0, =scrollPixelText		@ Load our text pointer
-		ldr r1, =0						@ x pos
-		ldr r2, =22						@ y pos
-		ldr r3, =1						@ Draw on main screen
-		bl drawText	
-		ldr r0,=scrollPixel
-		ldr r10,[r0]			
-		mov r8, #22						@ y pos
-		mov r9, #4						@ digits
-		mov r11, #12					@ x pos
-		bl drawDigits
-
-@		ldr r0, =scrollBlockText		@ Load our text pointer
-@		ldr r1, =0						@ x pos
-@		ldr r2, =20						@ y pos
-@		ldr r3, =1						@ Draw on main screen
-@		bl drawText	
-@		ldr r0,=scrollBlock
-@		ldr r10,[r0]			
-@		mov r8, #20						@ y pos
-@		mov r9, #2						@ digits
-@		mov r11, #12					@ x pos
-@		bl drawDigits
 
 	b gameLoop			@ our main loop
 	

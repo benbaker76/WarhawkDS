@@ -1,1 +1,2 @@
-divide.o: c:/devkitPro/source/nds/WarhawkGame/arm9/source/divide.s
+divide.o:  \
+ c:/devkitPro/source/nds/WarhawkDS/WarhawkGame/arm9/source/divide.s

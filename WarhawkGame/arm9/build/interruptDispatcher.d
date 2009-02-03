@@ -1,2 +1,2 @@
 interruptDispatcher.o:  \
- c:/devkitPro/source/nds/WarhawkGame/arm9/source/interruptDispatcher.s
+ c:/devkitPro/source/nds/WarhawkDS/WarhawkGame/arm9/source/interruptDispatcher.s

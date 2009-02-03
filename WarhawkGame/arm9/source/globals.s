@@ -63,22 +63,10 @@
 	.global irqTable
 	.global digits
 	
-	.global scrollBlock
-	.global scrollPixel
-	
 	.global pixelOffsetMain
 	.global pixelOffsetSub
 	.global pixelOffsetText
 	
-	.global scrollPixel
-	.global scrollPixelText
-	.global scrollBlock
-	.global scrollBlockText
-
-scrollBlock:
-	.word 0
-scrollPixel:
-	.word 0
 pixelOffsetSub:
 	.word 0
 pixelOffsetMain:
@@ -120,14 +108,16 @@ vofsSBSub:
 	.word 0
 
 yposMain:
-	.word 496						@ 3968 / 8 = 496 tiles high
+	@.word 468						@ (3968 / 8 = 496) - (192 / 8 = 24) - (4) = tiles high
+	.word 3744						@ 3968 - 192 - 32
 yposSFMain:
 	.word 832
 yposSBMain:
 	.word 832
 	
 yposSub:
-	.word 496
+	@.word 468						@ (3968 / 8 = 496) - (192 / 8 = 24) - (4) = tiles high
+	.word 3744						@ 3968 - 192 - 32
 yposSFSub:
 	.word 832
 yposSBSub:

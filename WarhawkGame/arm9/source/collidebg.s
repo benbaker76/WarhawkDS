@@ -52,6 +52,8 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	cmp r6,#1					@ if we find a 1 = it is a hit!
 	bne no_hit
 	
+	bl playExplosionSound
+	
 	mov r6, #2
 	strb r6, [r4, r3]
 	

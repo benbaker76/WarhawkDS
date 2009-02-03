@@ -11,6 +11,7 @@
 	.align
 	.global playInGameMusic
 	.global playBlasterSound
+	.global playExplosionSound
 
 playInGameMusic:
 	stmfd sp!, {r0-r1, lr}
@@ -37,3 +38,17 @@ playBlasterSound:
 	str r1, [r0]					@ Write the value
 	
 	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+	
+playExplosionSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =ExplosionSoundLen		@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =explosion_raw			@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+

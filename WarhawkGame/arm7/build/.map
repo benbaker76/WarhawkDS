@@ -249,11 +249,11 @@ Linker script and memory map
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x15e
+.debug_info     0x00000000      0x14a
  *(.debug_info)
  .debug_info    0x00000000       0x5f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crti.o
- .debug_info    0x0000005f       0xa0 main.o
- .debug_info    0x000000ff       0x5f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crtn.o
+ .debug_info    0x0000005f       0x8c main.o
+ .debug_info    0x000000eb       0x5f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crtn.o
 
 .debug_abbrev   0x00000000       0x38
  *(.debug_abbrev)
@@ -261,11 +261,11 @@ Linker script and memory map
  .debug_abbrev  0x00000012       0x14 main.o
  .debug_abbrev  0x00000026       0x12 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crtn.o
 
-.debug_line     0x00000000      0x168
+.debug_line     0x00000000      0x15e
  *(.debug_line)
  .debug_line    0x00000000       0x49 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crti.o
- .debug_line    0x00000049       0xd6 main.o
- .debug_line    0x0000011f       0x49 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crtn.o
+ .debug_line    0x00000049       0xcc main.o
+ .debug_line    0x00000115       0x49 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crtn.o
 
 .debug_frame
  *(.debug_frame)
@@ -306,7 +306,7 @@ LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/l
 END GROUP
 LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crtend.o
 LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/crtn.o
-OUTPUT(c:/devkitPro/source/nds/WarhawkDS/WarhawkGame/arm7/WarhawkGame.arm7.elf elf32-littlearm)
+OUTPUT(c:/devkitPro/source/nds/WarhawkGame/arm7/WarhawkGame.arm7.elf elf32-littlearm)
 
 .ARM.attributes
                 0x00000000       0x2c

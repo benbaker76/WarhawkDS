@@ -44,7 +44,7 @@ Linker script and memory map
 .plt
  *(.plt)
 
-.text           0x02000310     0x53a4
+.text           0x02000310     0x53c4
  *(EXCLUDE_FILE(*.itcm*) .text)
  .text          0x02000310        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
  .text          0x02000310        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
@@ -57,196 +57,201 @@ Linker script and memory map
  .text          0x02000380        0x0 StarBack.o
  .text          0x02000380        0x0 StarFront.o
  .text          0x02000380        0x0 blaster.o
+ .text          0x02000380        0x0 explosion.o
  .text          0x02000380        0x0 ingame.o
- .text          0x02000380      0x2d0 audio.o
+ .text          0x02000380      0x2f8 audio.o
+                0x02000614                playExplosionSound
                 0x020005d4                playInGameMusic
                 0x020005f4                playBlasterSound
- .text          0x02000650       0x70 bioscalls.o
-                0x02000696                swiDecompressLZSSVram
-                0x0200067e                swiFastCopy
-                0x02000682                swiSqrt
-                0x02000650                swiSoftReset
-                0x02000686                swiCRC16
-                0x0200069a                swiDecompressHuffman
-                0x020006ae                swiSetHaltCR
-                0x02000668                swiRemainder
-                0x0200068e                swiUnpackBits
-                0x02000692                swiDecompressLZSSWram
-                0x020006aa                swiDecodeDelta16
-                0x02000654                swiDelay
-                0x0200066e                swiDivMod
-                0x020006a2                swiDecompressRLEVram
-                0x0200069e                swiDecompressRLEWram
-                0x020006a6                swiDecodeDelta8
-                0x02000664                swiDivide
-                0x0200065c                swiWaitForVBlank
-                0x02000658                swiIntrWait
-                0x0200068a                swiIsDebugger
-                0x02000660                swiWaitForIRQ
-                0x0200067a                swiCopy
- .text          0x020006c0      0x310 clearbg.o
-                0x02000954                clearBG2
-                0x02000914                clearBG0
-                0x02000974                clearBG3
-                0x02000934                clearBG1
- .text          0x020009d0      0x460 collidebg.o
-                0x02000c24                detectBG
- .text          0x02000e30        0x0 colmap1.o
- .text          0x02000e30      0x33c debug.o
-                0x02001094                breakPoint
-                0x020010a0                drawDebugString
-                0x02001084                flushCaches
- .text          0x0200116c       0x38 divide.o
-                0x0200116c                divideNumber
- .text          0x020011a4      0x63c drawmap.o
-                0x02001458                drawDamagedBlockMain
-                0x020014bc                drawDamagedBlockSub
-                0x02001758                drawSBMapSub
-                0x020016ec                drawSFMapMain
-                0x02001520                drawMapMain
-                0x02001618                drawMapScreenMain
-                0x0200159c                drawMapSub
-                0x02001680                drawMapScreenSub
-                0x02001710                drawSFMapSub
-                0x02001734                drawSBMapMain
- .text          0x020017e0      0x340 drawscore.o
-                0x02001ad8                drawScore
-                0x02001a34                addScore
- .text          0x02001b20      0x4dc drawsprite.o
-                0x02001d74                drawSprite
- .text          0x02001ffc      0x450 drawtext.o
-                0x02002308                drawGetReadyText
-                0x02002378                drawDigits
-                0x02002338                drawText
-                0x02002250                drawDebugText
- .text          0x0200244c      0x440 fire.o
-                0x020026d0                fireCheck
-                0x020026a0                waitforFire
-                0x020027e4                moveBullets
- .text          0x0200288c      0x270 globals.o
- .text          0x02002afc      0x2ec initdata.o
-                0x02002d50                initData
- .text          0x02002de8      0x2e8 initsprites.o
-                0x0200303c                initSprites
- .text          0x020030d0      0x534 initvideo.o
-                0x02003324                initVideo
- .text          0x02003604        0x0 interruptDispatcher.o
- .text          0x02003604      0x31c interruptHandler.o
-                0x0200389c                initInterruptHandler
- .text          0x02003920      0xfac main.o
-                0x02003b78                main
-                0x02003b74                initSystem
- .text          0x020048cc      0x3b8 moveship.o
-                0x02004b20                moveShip
- .text          0x02004c84      0x63c scrollmap.o
-                0x020051ec                levelDrift
-                0x02005208                checkEndOfLevel
-                0x02005028                scrollSBMain
-                0x02004ed8                scrollMain
-                0x0200519c                scrollStars
-                0x02004ff8                scrollSFSub
-                0x02004f50                scrollSub
-                0x02005058                scrollSBSub
-                0x02004fc8                scrollSFMain
- .text          0x020052c0        0x0 sinus.o
- .text          0x020052c0      0x318 waitvblank.o
-                0x02005514                waitforVblank
-                0x02005588                waitforNoblank
- .text          0x020055d8       0x88 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
-                0x02005608                __libc_init_array
-                0x020055d8                __libc_fini_array
- .text          0x02005660        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
- .text          0x02005660       0x54 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
-                0x02005660                build_argv
- .text          0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
- .text          0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+ *fill*         0x02000678        0x8 ff
+ .text          0x02000680       0x70 bioscalls.o
+                0x020006c6                swiDecompressLZSSVram
+                0x020006ae                swiFastCopy
+                0x020006b2                swiSqrt
+                0x02000680                swiSoftReset
+                0x020006b6                swiCRC16
+                0x020006ca                swiDecompressHuffman
+                0x020006de                swiSetHaltCR
+                0x02000698                swiRemainder
+                0x020006be                swiUnpackBits
+                0x020006c2                swiDecompressLZSSWram
+                0x020006da                swiDecodeDelta16
+                0x02000684                swiDelay
+                0x0200069e                swiDivMod
+                0x020006d2                swiDecompressRLEVram
+                0x020006ce                swiDecompressRLEWram
+                0x020006d6                swiDecodeDelta8
+                0x02000694                swiDivide
+                0x0200068c                swiWaitForVBlank
+                0x02000688                swiIntrWait
+                0x020006ba                swiIsDebugger
+                0x02000690                swiWaitForIRQ
+                0x020006aa                swiCopy
+ .text          0x020006f0      0x310 clearbg.o
+                0x02000984                clearBG2
+                0x02000944                clearBG0
+                0x020009a4                clearBG3
+                0x02000964                clearBG1
+ .text          0x02000a00      0x450 collidebg.o
+                0x02000c54                detectBG
+ .text          0x02000e50        0x0 colmap1.o
+ .text          0x02000e50      0x33c debug.o
+                0x020010b4                breakPoint
+                0x020010c0                drawDebugString
+                0x020010a4                flushCaches
+ .text          0x0200118c       0x38 divide.o
+                0x0200118c                divideNumber
+ .text          0x020011c4      0x63c drawmap.o
+                0x02001478                drawDamagedBlockMain
+                0x020014dc                drawDamagedBlockSub
+                0x02001778                drawSBMapSub
+                0x0200170c                drawSFMapMain
+                0x02001540                drawMapMain
+                0x02001638                drawMapScreenMain
+                0x020015bc                drawMapSub
+                0x020016a0                drawMapScreenSub
+                0x02001730                drawSFMapSub
+                0x02001754                drawSBMapMain
+ .text          0x02001800      0x340 drawscore.o
+                0x02001af8                drawScore
+                0x02001a54                addScore
+ .text          0x02001b40      0x4dc drawsprite.o
+                0x02001d94                drawSprite
+ .text          0x0200201c      0x450 drawtext.o
+                0x02002328                drawGetReadyText
+                0x02002398                drawDigits
+                0x02002358                drawText
+                0x02002270                drawDebugText
+ .text          0x0200246c      0x440 fire.o
+                0x020026f0                fireCheck
+                0x020026c0                waitforFire
+                0x02002804                moveBullets
+ .text          0x020028ac      0x270 globals.o
+ .text          0x02002b1c      0x2ec initdata.o
+                0x02002d70                initData
+ .text          0x02002e08      0x2e8 initsprites.o
+                0x0200305c                initSprites
+ .text          0x020030f0      0x534 initvideo.o
+                0x02003344                initVideo
+ .text          0x02003624        0x0 interruptDispatcher.o
+ .text          0x02003624      0x31c interruptHandler.o
+                0x020038bc                initInterruptHandler
+ .text          0x02003940      0xfac main.o
+                0x02003b98                main
+                0x02003b94                initSystem
+ .text          0x020048ec      0x3b8 moveship.o
+                0x02004b40                moveShip
+ .text          0x02004ca4      0x63c scrollmap.o
+                0x0200520c                levelDrift
+                0x02005228                checkEndOfLevel
+                0x02005048                scrollSBMain
+                0x02004ef8                scrollMain
+                0x020051bc                scrollStars
+                0x02005018                scrollSFSub
+                0x02004f70                scrollSub
+                0x02005078                scrollSBSub
+                0x02004fe8                scrollSFMain
+ .text          0x020052e0        0x0 sinus.o
+ .text          0x020052e0      0x318 waitvblank.o
+                0x02005534                waitforVblank
+                0x020055a8                waitforNoblank
+ .text          0x020055f8       0x88 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
+                0x02005628                __libc_init_array
+                0x020055f8                __libc_fini_array
+ .text          0x02005680        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
+ .text          0x02005680       0x54 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
+                0x02005680                build_argv
+ .text          0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+ .text          0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
  *(.text.*)
  *(.stub)
  *(.gnu.warning)
  *(.gnu.linkonce.t*)
  *(.glue_7)
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
- .glue_7        0x020056b4        0x0 Font.o
- .glue_7        0x020056b4        0x0 Level1.o
- .glue_7        0x020056b4        0x0 Meter.o
- .glue_7        0x020056b4        0x0 Score.o
- .glue_7        0x020056b4        0x0 Sprites.o
- .glue_7        0x020056b4        0x0 StarBack.o
- .glue_7        0x020056b4        0x0 StarFront.o
- .glue_7        0x020056b4        0x0 blaster.o
- .glue_7        0x020056b4        0x0 ingame.o
- .glue_7        0x020056b4        0x0 audio.o
- .glue_7        0x020056b4        0x0 bioscalls.o
- .glue_7        0x020056b4        0x0 clearbg.o
- .glue_7        0x020056b4        0x0 collidebg.o
- .glue_7        0x020056b4        0x0 colmap1.o
- .glue_7        0x020056b4        0x0 debug.o
- .glue_7        0x020056b4        0x0 divide.o
- .glue_7        0x020056b4        0x0 drawmap.o
- .glue_7        0x020056b4        0x0 drawscore.o
- .glue_7        0x020056b4        0x0 drawsprite.o
- .glue_7        0x020056b4        0x0 drawtext.o
- .glue_7        0x020056b4        0x0 fire.o
- .glue_7        0x020056b4        0x0 globals.o
- .glue_7        0x020056b4        0x0 initdata.o
- .glue_7        0x020056b4        0x0 initsprites.o
- .glue_7        0x020056b4        0x0 initvideo.o
- .glue_7        0x020056b4        0x0 interruptDispatcher.o
- .glue_7        0x020056b4        0x0 interruptHandler.o
- .glue_7        0x020056b4        0x0 main.o
- .glue_7        0x020056b4        0x0 moveship.o
- .glue_7        0x020056b4        0x0 scrollmap.o
- .glue_7        0x020056b4        0x0 sinus.o
- .glue_7        0x020056b4        0x0 waitvblank.o
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
- .glue_7        0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+ .glue_7        0x020056d4        0x0 Font.o
+ .glue_7        0x020056d4        0x0 Level1.o
+ .glue_7        0x020056d4        0x0 Meter.o
+ .glue_7        0x020056d4        0x0 Score.o
+ .glue_7        0x020056d4        0x0 Sprites.o
+ .glue_7        0x020056d4        0x0 StarBack.o
+ .glue_7        0x020056d4        0x0 StarFront.o
+ .glue_7        0x020056d4        0x0 blaster.o
+ .glue_7        0x020056d4        0x0 explosion.o
+ .glue_7        0x020056d4        0x0 ingame.o
+ .glue_7        0x020056d4        0x0 audio.o
+ .glue_7        0x020056d4        0x0 bioscalls.o
+ .glue_7        0x020056d4        0x0 clearbg.o
+ .glue_7        0x020056d4        0x0 collidebg.o
+ .glue_7        0x020056d4        0x0 colmap1.o
+ .glue_7        0x020056d4        0x0 debug.o
+ .glue_7        0x020056d4        0x0 divide.o
+ .glue_7        0x020056d4        0x0 drawmap.o
+ .glue_7        0x020056d4        0x0 drawscore.o
+ .glue_7        0x020056d4        0x0 drawsprite.o
+ .glue_7        0x020056d4        0x0 drawtext.o
+ .glue_7        0x020056d4        0x0 fire.o
+ .glue_7        0x020056d4        0x0 globals.o
+ .glue_7        0x020056d4        0x0 initdata.o
+ .glue_7        0x020056d4        0x0 initsprites.o
+ .glue_7        0x020056d4        0x0 initvideo.o
+ .glue_7        0x020056d4        0x0 interruptDispatcher.o
+ .glue_7        0x020056d4        0x0 interruptHandler.o
+ .glue_7        0x020056d4        0x0 main.o
+ .glue_7        0x020056d4        0x0 moveship.o
+ .glue_7        0x020056d4        0x0 scrollmap.o
+ .glue_7        0x020056d4        0x0 sinus.o
+ .glue_7        0x020056d4        0x0 waitvblank.o
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+ .glue_7        0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
  *(.glue_7t)
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
- .glue_7t       0x020056b4        0x0 Font.o
- .glue_7t       0x020056b4        0x0 Level1.o
- .glue_7t       0x020056b4        0x0 Meter.o
- .glue_7t       0x020056b4        0x0 Score.o
- .glue_7t       0x020056b4        0x0 Sprites.o
- .glue_7t       0x020056b4        0x0 StarBack.o
- .glue_7t       0x020056b4        0x0 StarFront.o
- .glue_7t       0x020056b4        0x0 blaster.o
- .glue_7t       0x020056b4        0x0 ingame.o
- .glue_7t       0x020056b4        0x0 audio.o
- .glue_7t       0x020056b4        0x0 bioscalls.o
- .glue_7t       0x020056b4        0x0 clearbg.o
- .glue_7t       0x020056b4        0x0 collidebg.o
- .glue_7t       0x020056b4        0x0 colmap1.o
- .glue_7t       0x020056b4        0x0 debug.o
- .glue_7t       0x020056b4        0x0 divide.o
- .glue_7t       0x020056b4        0x0 drawmap.o
- .glue_7t       0x020056b4        0x0 drawscore.o
- .glue_7t       0x020056b4        0x0 drawsprite.o
- .glue_7t       0x020056b4        0x0 drawtext.o
- .glue_7t       0x020056b4        0x0 fire.o
- .glue_7t       0x020056b4        0x0 globals.o
- .glue_7t       0x020056b4        0x0 initdata.o
- .glue_7t       0x020056b4        0x0 initsprites.o
- .glue_7t       0x020056b4        0x0 initvideo.o
- .glue_7t       0x020056b4        0x0 interruptDispatcher.o
- .glue_7t       0x020056b4        0x0 interruptHandler.o
- .glue_7t       0x020056b4        0x0 main.o
- .glue_7t       0x020056b4        0x0 moveship.o
- .glue_7t       0x020056b4        0x0 scrollmap.o
- .glue_7t       0x020056b4        0x0 sinus.o
- .glue_7t       0x020056b4        0x0 waitvblank.o
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
- .glue_7t       0x020056b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
-                0x020056b4                . = ALIGN (0x4)
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+ .glue_7t       0x020056d4        0x0 Font.o
+ .glue_7t       0x020056d4        0x0 Level1.o
+ .glue_7t       0x020056d4        0x0 Meter.o
+ .glue_7t       0x020056d4        0x0 Score.o
+ .glue_7t       0x020056d4        0x0 Sprites.o
+ .glue_7t       0x020056d4        0x0 StarBack.o
+ .glue_7t       0x020056d4        0x0 StarFront.o
+ .glue_7t       0x020056d4        0x0 blaster.o
+ .glue_7t       0x020056d4        0x0 explosion.o
+ .glue_7t       0x020056d4        0x0 ingame.o
+ .glue_7t       0x020056d4        0x0 audio.o
+ .glue_7t       0x020056d4        0x0 bioscalls.o
+ .glue_7t       0x020056d4        0x0 clearbg.o
+ .glue_7t       0x020056d4        0x0 collidebg.o
+ .glue_7t       0x020056d4        0x0 colmap1.o
+ .glue_7t       0x020056d4        0x0 debug.o
+ .glue_7t       0x020056d4        0x0 divide.o
+ .glue_7t       0x020056d4        0x0 drawmap.o
+ .glue_7t       0x020056d4        0x0 drawscore.o
+ .glue_7t       0x020056d4        0x0 drawsprite.o
+ .glue_7t       0x020056d4        0x0 drawtext.o
+ .glue_7t       0x020056d4        0x0 fire.o
+ .glue_7t       0x020056d4        0x0 globals.o
+ .glue_7t       0x020056d4        0x0 initdata.o
+ .glue_7t       0x020056d4        0x0 initsprites.o
+ .glue_7t       0x020056d4        0x0 initvideo.o
+ .glue_7t       0x020056d4        0x0 interruptDispatcher.o
+ .glue_7t       0x020056d4        0x0 interruptHandler.o
+ .glue_7t       0x020056d4        0x0 main.o
+ .glue_7t       0x020056d4        0x0 moveship.o
+ .glue_7t       0x020056d4        0x0 scrollmap.o
+ .glue_7t       0x020056d4        0x0 sinus.o
+ .glue_7t       0x020056d4        0x0 waitvblank.o
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+ .glue_7t       0x020056d4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+                0x020056d4                . = ALIGN (0x4)
 
 .vfp11_veneer   0x00000000        0x0
  .vfp11_veneer  0x00000000        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
@@ -260,6 +265,7 @@ Linker script and memory map
  .vfp11_veneer  0x00000000        0x0 StarBack.o
  .vfp11_veneer  0x00000000        0x0 StarFront.o
  .vfp11_veneer  0x00000000        0x0 blaster.o
+ .vfp11_veneer  0x00000000        0x0 explosion.o
  .vfp11_veneer  0x00000000        0x0 ingame.o
  .vfp11_veneer  0x00000000        0x0 audio.o
  .vfp11_veneer  0x00000000        0x0 bioscalls.o
@@ -302,6 +308,7 @@ Linker script and memory map
  .v4_bx         0x00000000        0x0 StarBack.o
  .v4_bx         0x00000000        0x0 StarFront.o
  .v4_bx         0x00000000        0x0 blaster.o
+ .v4_bx         0x00000000        0x0 explosion.o
  .v4_bx         0x00000000        0x0 ingame.o
  .v4_bx         0x00000000        0x0 audio.o
  .v4_bx         0x00000000        0x0 bioscalls.o
@@ -332,230 +339,235 @@ Linker script and memory map
  .v4_bx         0x00000000        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
  .v4_bx         0x00000000        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
 
-.fini           0x020056b4        0xc
+.fini           0x020056d4        0xc
  *(.fini)
- .fini          0x020056b4        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
-                0x020056b4                _fini
- .fini          0x020056b8        0x8 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
-                0x020056c0                __text_end = .
+ .fini          0x020056d4        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
+                0x020056d4                _fini
+ .fini          0x020056d8        0x8 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+                0x020056e0                __text_end = .
 
-.rodata         0x020056c0   0x105584
+.rodata         0x020056e0   0x106f1c
  *(.rodata)
- .rodata        0x020056c0      0xf40 Font.o
-                0x020056c0                FontTiles
-                0x02006400                FontPal
- .rodata        0x02006600    0x11e60 Level1.o
-                0x02018260                Level1Pal
-                0x02008860                Level1Map
-                0x02006600                Level1Tiles
- .rodata        0x02018460      0x2e4 Meter.o
-                0x02018460                MeterTiles
-                0x02018520                MeterMap
-                0x02018544                MeterPal
- .rodata        0x02018744      0x740 Score.o
-                0x02018c84                ScorePal
-                0x02018744                ScoreTiles
- .rodata        0x02018e84     0x8400 Sprites.o
-                0x02021084                SpritesPal
-                0x02018e84                SpritesTiles
- .rodata        0x02021284    0x10240 StarBack.o
-                0x02029ac4                StarBackMap
-                0x020312c4                StarBackPal
-                0x02021284                StarBackTiles
- .rodata        0x020314c4     0x7c40 StarFront.o
-                0x020314c4                StarFrontTiles
-                0x02031704                StarFrontMap
-                0x02038f04                StarFrontPal
- .rodata        0x02039104     0x1438 blaster.o
-                0x0203a538                blaster_raw_size
-                0x02039104                blaster_raw
-                0x0203a536                blaster_raw_end
- .rodata        0x0203a53c    0xcfdc8 ingame.o
-                0x0203a53c                ingame_wav
-                0x0210a2fd                ingame_wav_end
-                0x0210a300                ingame_wav_size
- .rodata        0x0210a304      0x7c0 colmap1.o
-                0x0210a304                colMap
- .rodata        0x0210aac4      0x180 sinus.o
-                0x0210aac4                sinus1
+ .rodata        0x020056e0      0xf40 Font.o
+                0x020056e0                FontTiles
+                0x02006420                FontPal
+ .rodata        0x02006620    0x11e60 Level1.o
+                0x02018280                Level1Pal
+                0x02008880                Level1Map
+                0x02006620                Level1Tiles
+ .rodata        0x02018480      0x2e4 Meter.o
+                0x02018480                MeterTiles
+                0x02018540                MeterMap
+                0x02018564                MeterPal
+ .rodata        0x02018764      0x740 Score.o
+                0x02018ca4                ScorePal
+                0x02018764                ScoreTiles
+ .rodata        0x02018ea4     0x8400 Sprites.o
+                0x020210a4                SpritesPal
+                0x02018ea4                SpritesTiles
+ .rodata        0x020212a4    0x10240 StarBack.o
+                0x02029ae4                StarBackMap
+                0x020312e4                StarBackPal
+                0x020212a4                StarBackTiles
+ .rodata        0x020314e4     0x7c40 StarFront.o
+                0x020314e4                StarFrontTiles
+                0x02031724                StarFrontMap
+                0x02038f24                StarFrontPal
+ .rodata        0x02039124     0x1438 blaster.o
+                0x0203a558                blaster_raw_size
+                0x02039124                blaster_raw
+                0x0203a556                blaster_raw_end
+ .rodata        0x0203a55c     0x1998 explosion.o
+                0x0203a55c                explosion_raw
+                0x0203bef0                explosion_raw_end
+                0x0203bef0                explosion_raw_size
+ .rodata        0x0203bef4    0xcfdc8 ingame.o
+                0x0203bef4                ingame_wav
+                0x0210bcb5                ingame_wav_end
+                0x0210bcb8                ingame_wav_size
+ .rodata        0x0210bcbc      0x7c0 colmap1.o
+                0x0210bcbc                colMap
+ .rodata        0x0210c47c      0x180 sinus.o
+                0x0210c47c                sinus1
  *all.rodata*(*)
  *(.roda)
  *(.rodata.*)
  *(.gnu.linkonce.r*)
-                0x0210ac44                . = ALIGN (0x4)
+                0x0210c5fc                . = ALIGN (0x4)
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x0210ac44                __exidx_start = .
+                0x0210c5fc                __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x0210ac44                __exidx_end = .
-                0x0210ac44                . = ALIGN (0x4)
-                0x0210ac44                PROVIDE (__preinit_array_start, .)
+                0x0210c5fc                __exidx_end = .
+                0x0210c5fc                . = ALIGN (0x4)
+                0x0210c5fc                PROVIDE (__preinit_array_start, .)
 
 .preinit_array
  *(.preinit_array)
-                0x0210ac44                PROVIDE (__preinit_array_end, .)
-                0x0210ac44                PROVIDE (__init_array_start, .)
+                0x0210c5fc                PROVIDE (__preinit_array_end, .)
+                0x0210c5fc                PROVIDE (__init_array_start, .)
 
-.init_array     0x0210ac44        0x4
+.init_array     0x0210c5fc        0x4
  *(.init_array)
- .init_array    0x0210ac44        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
-                0x0210ac48                PROVIDE (__init_array_end, .)
-                0x0210ac48                PROVIDE (__fini_array_start, .)
+ .init_array    0x0210c5fc        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+                0x0210c600                PROVIDE (__init_array_end, .)
+                0x0210c600                PROVIDE (__fini_array_start, .)
 
-.fini_array     0x0210ac48        0x4
+.fini_array     0x0210c600        0x4
  *(.fini_array)
- .fini_array    0x0210ac48        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
-                0x0210ac4c                PROVIDE (__fini_array_end, .)
+ .fini_array    0x0210c600        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+                0x0210c604                PROVIDE (__fini_array_end, .)
 
-.ctors          0x0210ac4c        0x0
+.ctors          0x0210c604        0x0
  *crtbegin.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o) .ctors)
  *(SORT(.ctors.*))
  *(.ctors)
-                0x0210ac4c                . = ALIGN (0x4)
+                0x0210c604                . = ALIGN (0x4)
 
-.dtors          0x0210ac4c        0x0
+.dtors          0x0210c604        0x0
  *crtbegin.o(.dtors)
  *(EXCLUDE_FILE(*crtend.o) .dtors)
  *(SORT(.dtors.*))
  *(.dtors)
-                0x0210ac4c                . = ALIGN (0x4)
+                0x0210c604                . = ALIGN (0x4)
 
-.eh_frame       0x0210ac4c        0x4
+.eh_frame       0x0210c604        0x4
  *(.eh_frame)
- .eh_frame      0x0210ac4c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
- .eh_frame      0x0210ac4c        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
-                0x0210ac50                . = ALIGN (0x4)
+ .eh_frame      0x0210c604        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+ .eh_frame      0x0210c604        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+                0x0210c608                . = ALIGN (0x4)
 
 .gcc_except_table
-                0x0210ac50        0x0
+                0x0210c608        0x0
  *(.gcc_except_table)
-                0x0210ac50                . = ALIGN (0x4)
+                0x0210c608                . = ALIGN (0x4)
 
-.jcr            0x0210ac50        0x4
+.jcr            0x0210c608        0x4
  *(.jcr)
- .jcr           0x0210ac50        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
- .jcr           0x0210ac50        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+ .jcr           0x0210c608        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+ .jcr           0x0210c608        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
 
 .got
  *(.got.plt)
  *(.got)
  *(.rel.got)
 
-.ewram          0x0210ac54        0x0
-                0x0210ac54                __ewram_start = ABSOLUTE (.)
+.ewram          0x0210c60c        0x0
+                0x0210c60c                __ewram_start = ABSOLUTE (.)
  *(.ewram)
  *ewram.*(.text)
-                0x0210ac54                . = ALIGN (0x4)
+                0x0210c60c                . = ALIGN (0x4)
 
-.data           0x0210ac54       0xdc
-                0x0210ac54                __data_start = ABSOLUTE (.)
+.data           0x0210c60c       0xdc
+                0x0210c60c                __data_start = ABSOLUTE (.)
  *(.data)
- .data          0x0210ac54        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
- .data          0x0210ac54        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
- .data          0x0210ac54        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
-                0x0210ac54                __dso_handle
- .data          0x0210ac58        0x0 Font.o
- .data          0x0210ac58        0x0 Level1.o
- .data          0x0210ac58        0x0 Meter.o
- .data          0x0210ac58        0x0 Score.o
- .data          0x0210ac58        0x0 Sprites.o
- .data          0x0210ac58        0x0 StarBack.o
- .data          0x0210ac58        0x0 StarFront.o
- .data          0x0210ac58        0x0 blaster.o
- .data          0x0210ac58        0x0 ingame.o
- .data          0x0210ac58        0x0 audio.o
- .data          0x0210ac58        0x0 bioscalls.o
- .data          0x0210ac58        0x0 clearbg.o
- .data          0x0210ac58        0x0 collidebg.o
- .data          0x0210ac58        0x0 colmap1.o
- .data          0x0210ac58        0x0 debug.o
- .data          0x0210ac58        0x0 divide.o
- .data          0x0210ac58        0x0 drawmap.o
- .data          0x0210ac58        0x0 drawscore.o
- .data          0x0210ac58        0x0 drawsprite.o
- .data          0x0210ac58        0x0 drawtext.o
- .data          0x0210ac58        0x0 fire.o
- .data          0x0210ac58       0xd7 globals.o
-                0x0210ac78                delaySF
-                0x0210acc0                xpos
-                0x0210ac5c                pixelOffsetMain
-                0x0210ac9c                vofsSub
-                0x0210ac74                levelEnd
-                0x0210acb0                yposSBMain
-                0x0210acb4                yposSub
-                0x0210acbc                yposSBSub
-                0x0210ac7c                delaySB
-                0x0210ac6c                powerUp
-                0x0210aca8                yposMain
-                0x0210ac80                score
-                0x0210ac60                pressMe
-                0x0210ac70                powerUpDelay
-                0x0210ace7                vofsSubText
-                0x0210acc6                shipXspeed
-                0x0210acfb                blockXText
-                0x0210aca4                vofsSBSub
-                0x0210acac                yposSFMain
-                0x0210aca0                vofsSFSub
-                0x0210ac64                firePress
-                0x0210ad24                pixelOffsetText
-                0x0210acc7                getReadyText
-                0x0210acdd                spriteYText
-                0x0210ac88                adder
-                0x0210ad04                blockYText
-                0x0210ac90                vofsMain
-                0x0210ac68                horizDrift
-                0x0210acc4                shipX
-                0x0210ac58                pixelOffsetSub
-                0x0210ad0d                tileNumText
-                0x0210acf1                yposSubText
-                0x0210acd3                spriteXText
-                0x0210ac98                vofsSBMain
-                0x0210acc5                shipY
-                0x0210ac94                vofsSFMain
-                0x0210acb8                yposSFSub
- .data          0x0210ad2f        0x0 initdata.o
- .data          0x0210ad2f        0x0 initsprites.o
- .data          0x0210ad2f        0x0 initvideo.o
- .data          0x0210ad2f        0x0 interruptDispatcher.o
- .data          0x0210ad2f        0x0 interruptHandler.o
- .data          0x0210ad2f        0x0 main.o
- .data          0x0210ad2f        0x0 moveship.o
- .data          0x0210ad2f        0x0 scrollmap.o
- .data          0x0210ad2f        0x0 sinus.o
- .data          0x0210ad2f        0x0 waitvblank.o
- .data          0x0210ad2f        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
- .data          0x0210ad2f        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
- .data          0x0210ad2f        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
- .data          0x0210ad2f        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
- .data          0x0210ad2f        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+ .data          0x0210c60c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
+ .data          0x0210c60c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
+ .data          0x0210c60c        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+                0x0210c60c                __dso_handle
+ .data          0x0210c610        0x0 Font.o
+ .data          0x0210c610        0x0 Level1.o
+ .data          0x0210c610        0x0 Meter.o
+ .data          0x0210c610        0x0 Score.o
+ .data          0x0210c610        0x0 Sprites.o
+ .data          0x0210c610        0x0 StarBack.o
+ .data          0x0210c610        0x0 StarFront.o
+ .data          0x0210c610        0x0 blaster.o
+ .data          0x0210c610        0x0 explosion.o
+ .data          0x0210c610        0x0 ingame.o
+ .data          0x0210c610        0x0 audio.o
+ .data          0x0210c610        0x0 bioscalls.o
+ .data          0x0210c610        0x0 clearbg.o
+ .data          0x0210c610        0x0 collidebg.o
+ .data          0x0210c610        0x0 colmap1.o
+ .data          0x0210c610        0x0 debug.o
+ .data          0x0210c610        0x0 divide.o
+ .data          0x0210c610        0x0 drawmap.o
+ .data          0x0210c610        0x0 drawscore.o
+ .data          0x0210c610        0x0 drawsprite.o
+ .data          0x0210c610        0x0 drawtext.o
+ .data          0x0210c610        0x0 fire.o
+ .data          0x0210c610       0xd7 globals.o
+                0x0210c630                delaySF
+                0x0210c678                xpos
+                0x0210c614                pixelOffsetMain
+                0x0210c654                vofsSub
+                0x0210c62c                levelEnd
+                0x0210c668                yposSBMain
+                0x0210c66c                yposSub
+                0x0210c674                yposSBSub
+                0x0210c634                delaySB
+                0x0210c624                powerUp
+                0x0210c660                yposMain
+                0x0210c638                score
+                0x0210c618                pressMe
+                0x0210c628                powerUpDelay
+                0x0210c69f                vofsSubText
+                0x0210c67e                shipXspeed
+                0x0210c6b3                blockXText
+                0x0210c65c                vofsSBSub
+                0x0210c664                yposSFMain
+                0x0210c658                vofsSFSub
+                0x0210c61c                firePress
+                0x0210c6dc                pixelOffsetText
+                0x0210c67f                getReadyText
+                0x0210c695                spriteYText
+                0x0210c640                adder
+                0x0210c6bc                blockYText
+                0x0210c648                vofsMain
+                0x0210c620                horizDrift
+                0x0210c67c                shipX
+                0x0210c610                pixelOffsetSub
+                0x0210c6c5                tileNumText
+                0x0210c6a9                yposSubText
+                0x0210c68b                spriteXText
+                0x0210c650                vofsSBMain
+                0x0210c67d                shipY
+                0x0210c64c                vofsSFMain
+                0x0210c670                yposSFSub
+ .data          0x0210c6e7        0x0 initdata.o
+ .data          0x0210c6e7        0x0 initsprites.o
+ .data          0x0210c6e7        0x0 initvideo.o
+ .data          0x0210c6e7        0x0 interruptDispatcher.o
+ .data          0x0210c6e7        0x0 interruptHandler.o
+ .data          0x0210c6e7        0x0 main.o
+ .data          0x0210c6e7        0x0 moveship.o
+ .data          0x0210c6e7        0x0 scrollmap.o
+ .data          0x0210c6e7        0x0 sinus.o
+ .data          0x0210c6e7        0x0 waitvblank.o
+ .data          0x0210c6e7        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
+ .data          0x0210c6e7        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
+ .data          0x0210c6e7        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
+ .data          0x0210c6e7        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+ .data          0x0210c6e7        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
  *(.data.*)
  *(.gnu.linkonce.d*)
-                0x0210ad30                . = ALIGN (0x4)
- *fill*         0x0210ad2f        0x1 ff
-                0x0210ad30                __data_end = ABSOLUTE (.)
-                0x0210ad30                __dtcm_lma = .
-                0x0210ad30                __bss_vma = .
+                0x0210c6e8                . = ALIGN (0x4)
+ *fill*         0x0210c6e7        0x1 ff
+                0x0210c6e8                __data_end = ABSOLUTE (.)
+                0x0210c6e8                __dtcm_lma = .
+                0x0210c6e8                __bss_vma = .
 
-.dtcm           0x0b000000        0x0 load address 0x0210ad30
+.dtcm           0x0b000000        0x0 load address 0x0210c6e8
  *(.dtcm)
  *(.dtcm.*)
                 0x0b000000                . = ALIGN (0x4)
                 0x0b000000                __dtcm_end = ABSOLUTE (.)
-                0x0210ad30                __itcm_lma = (__dtcm_lma + SIZEOF (.dtcm))
+                0x0210c6e8                __itcm_lma = (__dtcm_lma + SIZEOF (.dtcm))
 
-.itcm           0x01000100       0xc8 load address 0x0210ad30
+.itcm           0x01000100       0xc8 load address 0x0210c6e8
  *(.itcm)
  .itcm          0x01000100       0xc8 interruptDispatcher.o
  *itcm.*(.text)
                 0x010001c8                . = ALIGN (0x4)
                 0x010001c8                __itcm_end = ABSOLUTE (.)
-                0x0210adf8                __vectors_lma = (__itcm_lma + SIZEOF (.itcm))
+                0x0210c7b0                __vectors_lma = (__itcm_lma + SIZEOF (.itcm))
 
-.vectors        0x00000000        0x0 load address 0x0210adf8
+.vectors        0x00000000        0x0 load address 0x0210c7b0
  *(.vectors)
  *vectors.*(.text)
                 0x00000000                . = ALIGN (0x4)
@@ -568,75 +580,76 @@ Linker script and memory map
                 0x0b000000                . = ALIGN (0x4)
                 0x0b000000                __sbss_end = ABSOLUTE (.)
 
-.bss            0x0210ad30     0x6044
-                0x0210ad30                __bss_start = ABSOLUTE (.)
-                0x0210ad30                __bss_start__ = ABSOLUTE (.)
+.bss            0x0210c6e8     0x6044
+                0x0210c6e8                __bss_start = ABSOLUTE (.)
+                0x0210c6e8                __bss_start__ = ABSOLUTE (.)
  *(.dynbss)
  *(.gnu.linkonce.b*)
  *(.bss*)
- .bss           0x0210ad30        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
- .bss           0x0210ad30        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
- .bss           0x0210ad30       0x1c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
- .bss           0x0210ad4c        0x0 Font.o
- .bss           0x0210ad4c        0x0 Level1.o
- .bss           0x0210ad4c        0x0 Meter.o
- .bss           0x0210ad4c        0x0 Score.o
- .bss           0x0210ad4c        0x0 Sprites.o
- .bss           0x0210ad4c        0x0 StarBack.o
- .bss           0x0210ad4c        0x0 StarFront.o
- .bss           0x0210ad4c        0x0 blaster.o
- .bss           0x0210ad4c        0x0 ingame.o
- .bss           0x0210ad4c        0x0 audio.o
- .bss           0x0210ad4c        0x0 bioscalls.o
- .bss           0x0210ad4c        0x0 clearbg.o
- .bss           0x0210ad4c        0x0 collidebg.o
- .bss           0x0210ad4c        0x0 colmap1.o
- .bss           0x0210ad4c        0x0 debug.o
- .bss           0x0210ad4c        0x0 divide.o
- .bss           0x0210ad4c        0x0 drawmap.o
- .bss           0x0210ad4c        0x0 drawscore.o
- .bss           0x0210ad4c        0x0 drawsprite.o
- .bss           0x0210ad4c        0x0 drawtext.o
- .bss           0x0210ad4c        0x0 fire.o
- .bss           0x0210ad4c     0x6020 globals.o
-                0x0210c14c                spriteTrackY
-                0x0210b14c                spriteY
-                0x0210bb4c                spriteMaxSpeed
-                0x0210ad4c                spriteActive
-                0x0210c34c                spriteObj
-                0x0210b54c                spriteSpeedY
-                0x0210c94c                spriteInstruct
-                0x02110d4c                digits
-                0x0211094c                irqTable
-                0x0210bf4c                spriteTrackX
-                0x0210bd4c                spritePhase
-                0x0210af4c                spriteX
-                0x0210c54c                spriteHits
-                0x0210c74c                spriteAngle
-                0x0210b34c                spriteSpeedX
- .bss           0x02110d6c        0x0 initdata.o
- .bss           0x02110d6c        0x0 initsprites.o
- .bss           0x02110d6c        0x0 initvideo.o
- .bss           0x02110d6c        0x0 interruptDispatcher.o
- .bss           0x02110d6c        0x0 interruptHandler.o
- .bss           0x02110d6c        0x0 main.o
- .bss           0x02110d6c        0x0 moveship.o
- .bss           0x02110d6c        0x0 scrollmap.o
- .bss           0x02110d6c        0x0 sinus.o
- .bss           0x02110d6c        0x0 waitvblank.o
- .bss           0x02110d6c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
- .bss           0x02110d6c        0x8 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
-                0x02110d70                fake_heap_start
-                0x02110d6c                fake_heap_end
- .bss           0x02110d74        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
- .bss           0x02110d74        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
- .bss           0x02110d74        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+ .bss           0x0210c6e8        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb/ds_arm9_crt0.o
+ .bss           0x0210c6e8        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
+ .bss           0x0210c6e8       0x1c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtbegin.o
+ .bss           0x0210c704        0x0 Font.o
+ .bss           0x0210c704        0x0 Level1.o
+ .bss           0x0210c704        0x0 Meter.o
+ .bss           0x0210c704        0x0 Score.o
+ .bss           0x0210c704        0x0 Sprites.o
+ .bss           0x0210c704        0x0 StarBack.o
+ .bss           0x0210c704        0x0 StarFront.o
+ .bss           0x0210c704        0x0 blaster.o
+ .bss           0x0210c704        0x0 explosion.o
+ .bss           0x0210c704        0x0 ingame.o
+ .bss           0x0210c704        0x0 audio.o
+ .bss           0x0210c704        0x0 bioscalls.o
+ .bss           0x0210c704        0x0 clearbg.o
+ .bss           0x0210c704        0x0 collidebg.o
+ .bss           0x0210c704        0x0 colmap1.o
+ .bss           0x0210c704        0x0 debug.o
+ .bss           0x0210c704        0x0 divide.o
+ .bss           0x0210c704        0x0 drawmap.o
+ .bss           0x0210c704        0x0 drawscore.o
+ .bss           0x0210c704        0x0 drawsprite.o
+ .bss           0x0210c704        0x0 drawtext.o
+ .bss           0x0210c704        0x0 fire.o
+ .bss           0x0210c704     0x6020 globals.o
+                0x0210db04                spriteTrackY
+                0x0210cb04                spriteY
+                0x0210d504                spriteMaxSpeed
+                0x0210c704                spriteActive
+                0x0210dd04                spriteObj
+                0x0210cf04                spriteSpeedY
+                0x0210e304                spriteInstruct
+                0x02112704                digits
+                0x02112304                irqTable
+                0x0210d904                spriteTrackX
+                0x0210d704                spritePhase
+                0x0210c904                spriteX
+                0x0210df04                spriteHits
+                0x0210e104                spriteAngle
+                0x0210cd04                spriteSpeedX
+ .bss           0x02112724        0x0 initdata.o
+ .bss           0x02112724        0x0 initsprites.o
+ .bss           0x02112724        0x0 initvideo.o
+ .bss           0x02112724        0x0 interruptDispatcher.o
+ .bss           0x02112724        0x0 interruptHandler.o
+ .bss           0x02112724        0x0 main.o
+ .bss           0x02112724        0x0 moveship.o
+ .bss           0x02112724        0x0 scrollmap.o
+ .bss           0x02112724        0x0 sinus.o
+ .bss           0x02112724        0x0 waitvblank.o
+ .bss           0x02112724        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
+ .bss           0x02112724        0x8 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
+                0x02112728                fake_heap_start
+                0x02112724                fake_heap_end
+ .bss           0x0211272c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
+ .bss           0x0211272c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+ .bss           0x0211272c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
  *(COMMON)
-                0x02110d74                . = ALIGN (0x4)
-                0x02110d74                __bss_end = ABSOLUTE (.)
-                0x02110d74                __bss_end__ = __bss_end
-                0x02110d74                _end = __bss_end__
-                0x02110d74                __end__ = __bss_end__
+                0x0211272c                . = ALIGN (0x4)
+                0x0211272c                __bss_end = ABSOLUTE (.)
+                0x0211272c                __bss_end__ = __bss_end
+                0x0211272c                _end = __bss_end__
+                0x0211272c                __end__ = __bss_end__
 
 .stab
  *(.stab)
@@ -728,31 +741,31 @@ Linker script and memory map
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xde2
+.debug_info     0x00000000      0xda6
  *(.debug_info)
  .debug_info    0x00000000       0x5f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
- .debug_info    0x0000005f       0x9f audio.o
- .debug_info    0x000000fe       0xa5 bioscalls.o
- .debug_info    0x000001a3       0x9f clearbg.o
- .debug_info    0x00000242       0x9f collidebg.o
- .debug_info    0x000002e1       0x9f debug.o
- .debug_info    0x00000380       0xa2 divide.o
- .debug_info    0x00000422       0x9f drawmap.o
- .debug_info    0x000004c1       0x9f drawscore.o
- .debug_info    0x00000560       0x9f drawsprite.o
- .debug_info    0x000005ff       0x9f drawtext.o
- .debug_info    0x0000069e       0x9f fire.o
- .debug_info    0x0000073d       0x9f globals.o
- .debug_info    0x000007dc       0x9f initdata.o
- .debug_info    0x0000087b       0x9f initsprites.o
- .debug_info    0x0000091a       0x9f initvideo.o
- .debug_info    0x000009b9       0xaf interruptDispatcher.o
- .debug_info    0x00000a68       0x9f interruptHandler.o
- .debug_info    0x00000b07       0x9f main.o
- .debug_info    0x00000ba6       0x9f moveship.o
- .debug_info    0x00000c45       0x9f scrollmap.o
- .debug_info    0x00000ce4       0x9f waitvblank.o
- .debug_info    0x00000d83       0x5f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+ .debug_info    0x0000005f       0x8b audio.o
+ .debug_info    0x000000ea       0xa5 bioscalls.o
+ .debug_info    0x0000018f       0x9f clearbg.o
+ .debug_info    0x0000022e       0x8b collidebg.o
+ .debug_info    0x000002b9       0x9f debug.o
+ .debug_info    0x00000358       0xa2 divide.o
+ .debug_info    0x000003fa       0x9f drawmap.o
+ .debug_info    0x00000499       0x9f drawscore.o
+ .debug_info    0x00000538       0x9f drawsprite.o
+ .debug_info    0x000005d7       0x8b drawtext.o
+ .debug_info    0x00000662       0x9f fire.o
+ .debug_info    0x00000701       0x9f globals.o
+ .debug_info    0x000007a0       0x9f initdata.o
+ .debug_info    0x0000083f       0x9f initsprites.o
+ .debug_info    0x000008de       0x9f initvideo.o
+ .debug_info    0x0000097d       0xaf interruptDispatcher.o
+ .debug_info    0x00000a2c       0x9f interruptHandler.o
+ .debug_info    0x00000acb       0x9f main.o
+ .debug_info    0x00000b6a       0x9f moveship.o
+ .debug_info    0x00000c09       0x9f scrollmap.o
+ .debug_info    0x00000ca8       0x9f waitvblank.o
+ .debug_info    0x00000d47       0x5f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
 
 .debug_abbrev   0x00000000      0x1c8
  *(.debug_abbrev)
@@ -780,31 +793,31 @@ Linker script and memory map
  .debug_abbrev  0x000001a2       0x14 waitvblank.o
  .debug_abbrev  0x000001b6       0x12 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
 
-.debug_line     0x00000000     0x1e25
+.debug_line     0x00000000     0x1e0b
  *(.debug_line)
  .debug_line    0x00000000       0x49 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o
- .debug_line    0x00000049      0x132 audio.o
- .debug_line    0x0000017b       0xa5 bioscalls.o
- .debug_line    0x00000220      0x144 clearbg.o
- .debug_line    0x00000364      0x199 collidebg.o
- .debug_line    0x000004fd      0x139 debug.o
- .debug_line    0x00000636       0x7d divide.o
- .debug_line    0x000006b3      0x20b drawmap.o
- .debug_line    0x000008be      0x157 drawscore.o
- .debug_line    0x00000a15      0x1b6 drawsprite.o
- .debug_line    0x00000bcb      0x193 drawtext.o
- .debug_line    0x00000d5e      0x18b fire.o
- .debug_line    0x00000ee9      0x112 globals.o
- .debug_line    0x00000ffb      0x13c initdata.o
- .debug_line    0x00001137      0x140 initsprites.o
- .debug_line    0x00001277      0x1a0 initvideo.o
- .debug_line    0x00001417       0xae interruptDispatcher.o
- .debug_line    0x000014c5      0x151 interruptHandler.o
- .debug_line    0x00001616      0x2d2 main.o
- .debug_line    0x000018e8      0x171 moveship.o
- .debug_line    0x00001a59      0x203 scrollmap.o
- .debug_line    0x00001c5c      0x14a waitvblank.o
- .debug_line    0x00001da6       0x7f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+ .debug_line    0x00000049      0x130 audio.o
+ .debug_line    0x00000179       0xa5 bioscalls.o
+ .debug_line    0x0000021e      0x144 clearbg.o
+ .debug_line    0x00000362      0x18b collidebg.o
+ .debug_line    0x000004ed      0x139 debug.o
+ .debug_line    0x00000626       0x7d divide.o
+ .debug_line    0x000006a3      0x20b drawmap.o
+ .debug_line    0x000008ae      0x157 drawscore.o
+ .debug_line    0x00000a05      0x1b6 drawsprite.o
+ .debug_line    0x00000bbb      0x189 drawtext.o
+ .debug_line    0x00000d44      0x18b fire.o
+ .debug_line    0x00000ecf      0x112 globals.o
+ .debug_line    0x00000fe1      0x13c initdata.o
+ .debug_line    0x0000111d      0x140 initsprites.o
+ .debug_line    0x0000125d      0x1a0 initvideo.o
+ .debug_line    0x000013fd       0xae interruptDispatcher.o
+ .debug_line    0x000014ab      0x151 interruptHandler.o
+ .debug_line    0x000015fc      0x2d2 main.o
+ .debug_line    0x000018ce      0x171 moveship.o
+ .debug_line    0x00001a3f      0x203 scrollmap.o
+ .debug_line    0x00001c42      0x14a waitvblank.o
+ .debug_line    0x00001d8c       0x7f c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
 
 .debug_frame
  *(.debug_frame)
@@ -844,6 +857,7 @@ LOAD Sprites.o
 LOAD StarBack.o
 LOAD StarFront.o
 LOAD blaster.o
+LOAD explosion.o
 LOAD ingame.o
 LOAD audio.o
 LOAD bioscalls.o
@@ -876,7 +890,7 @@ LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/l
 END GROUP
 LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
 LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
-OUTPUT(c:/devkitPro/source/nds/WarhawkDS/WarhawkGame/arm9/WarhawkGame.arm9.elf elf32-littlearm)
+OUTPUT(c:/devkitPro/source/nds/WarhawkGame/arm9/WarhawkGame.arm9.elf elf32-littlearm)
 
 .ARM.attributes
                 0x00000000       0x2f
@@ -903,63 +917,65 @@ OUTPUT(c:/devkitPro/source/nds/WarhawkDS/WarhawkGame/arm9/WarhawkGame.arm9.elf e
  .ARM.attributes
                 0x0000012f       0x10 blaster.o
  .ARM.attributes
-                0x0000013f       0x10 ingame.o
+                0x0000013f       0x10 explosion.o
  .ARM.attributes
-                0x0000014f       0x1e audio.o
+                0x0000014f       0x10 ingame.o
  .ARM.attributes
-                0x0000016d       0x1e bioscalls.o
+                0x0000015f       0x1e audio.o
  .ARM.attributes
-                0x0000018b       0x1e clearbg.o
+                0x0000017d       0x1e bioscalls.o
  .ARM.attributes
-                0x000001a9       0x1e collidebg.o
+                0x0000019b       0x1e clearbg.o
  .ARM.attributes
-                0x000001c7       0x1c colmap1.o
+                0x000001b9       0x1e collidebg.o
  .ARM.attributes
-                0x000001e3       0x1e debug.o
+                0x000001d7       0x1c colmap1.o
  .ARM.attributes
-                0x00000201       0x1e divide.o
+                0x000001f3       0x1e debug.o
  .ARM.attributes
-                0x0000021f       0x1e drawmap.o
+                0x00000211       0x1e divide.o
  .ARM.attributes
-                0x0000023d       0x1e drawscore.o
+                0x0000022f       0x1e drawmap.o
  .ARM.attributes
-                0x0000025b       0x1e drawsprite.o
+                0x0000024d       0x1e drawscore.o
  .ARM.attributes
-                0x00000279       0x1e drawtext.o
+                0x0000026b       0x1e drawsprite.o
  .ARM.attributes
-                0x00000297       0x1e fire.o
+                0x00000289       0x1e drawtext.o
  .ARM.attributes
-                0x000002b5       0x1e globals.o
+                0x000002a7       0x1e fire.o
  .ARM.attributes
-                0x000002d3       0x1e initdata.o
+                0x000002c5       0x1e globals.o
  .ARM.attributes
-                0x000002f1       0x1e initsprites.o
+                0x000002e3       0x1e initdata.o
  .ARM.attributes
-                0x0000030f       0x1e initvideo.o
+                0x00000301       0x1e initsprites.o
  .ARM.attributes
-                0x0000032d       0x1e interruptDispatcher.o
+                0x0000031f       0x1e initvideo.o
  .ARM.attributes
-                0x0000034b       0x1e interruptHandler.o
+                0x0000033d       0x1e interruptDispatcher.o
  .ARM.attributes
-                0x00000369       0x1e main.o
+                0x0000035b       0x1e interruptHandler.o
  .ARM.attributes
-                0x00000387       0x1e moveship.o
+                0x00000379       0x1e main.o
  .ARM.attributes
-                0x000003a5       0x1e scrollmap.o
+                0x00000397       0x1e moveship.o
  .ARM.attributes
-                0x000003c3       0x1c sinus.o
+                0x000003b5       0x1e scrollmap.o
  .ARM.attributes
-                0x000003df       0x1e waitvblank.o
+                0x000003d3       0x1c sinus.o
  .ARM.attributes
-                0x000003fd       0x2e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
+                0x000003ef       0x1e waitvblank.o
  .ARM.attributes
-                0x0000042b       0x2c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
+                0x0000040d       0x2e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libg.a(lib_a-init.o)
  .ARM.attributes
-                0x00000457       0x2e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
+                0x0000043b       0x2c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(malloc_vars.o)
  .ARM.attributes
-                0x00000485       0x2c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+                0x00000467       0x2e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/../../../../arm-eabi/lib/thumb\libsysbase.a(build_argv.o)
  .ARM.attributes
-                0x000004b1       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
+                0x00000495       0x2c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtend.o
+ .ARM.attributes
+                0x000004c1       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crtn.o
 
 .debug_ranges   0x00000000       0x40
  .debug_ranges  0x00000000       0x20 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.3.2/thumb/crti.o

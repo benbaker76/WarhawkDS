@@ -66,7 +66,7 @@ drawDebugText:
 	ldr r10,=yposSub				@ Pointer to data
 	ldr r10,[r10]					@ Read value
 	mov r8,#6						@ y pos
-	mov r9,#3						@ Number of digits
+	mov r9,#4						@ Number of digits
 	mov r11, #9						@ x pos
 	bl drawDigits					@ Draw
 

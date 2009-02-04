@@ -11,6 +11,9 @@
 	.align
 	.data
 	
+	.global pixelOffsetMain
+	.global pixelOffsetSub
+	.global pixelOffsetText
 	.global LevelMap
 	.global pressMe
 	.global firePress
@@ -38,6 +41,10 @@
 	.global shipX
 	.global shipY
 	.global shipXspeed
+	.global blockCraterOffset
+	.global blockCraterIndex
+	.global blockCraterCount
+	.global energyLevel
 	.global spriteX
 	.global spriteY
 	.global spriteObj
@@ -62,10 +69,6 @@
 	.global tileNumText
 	.global irqTable
 	.global digits
-	
-	.global pixelOffsetMain
-	.global pixelOffsetSub
-	.global pixelOffsetText
 	
 pixelOffsetSub:
 	.word 0
@@ -108,7 +111,6 @@ vofsSBSub:
 	.word 0
 
 yposMain:
-	@.word 468						@ (3968 / 8 = 496) - (192 / 8 = 24) - (4) = tiles high
 	.word 3744						@ 3968 - 192 - 32
 yposSFMain:
 	.word 832
@@ -116,7 +118,6 @@ yposSBMain:
 	.word 832
 	
 yposSub:
-	@.word 468						@ (3968 / 8 = 496) - (192 / 8 = 24) - (4) = tiles high
 	.word 3744						@ 3968 - 192 - 32
 yposSFSub:
 	.word 832
@@ -126,11 +127,21 @@ yposSBSub:
 xpos:
 	.word 0
 shipX:
-	.byte 0
+	.word 0
 shipY:
-	.byte 0
+	.word 0
 shipXspeed:
-	.byte 0
+	.word 0
+
+blockCraterOffset:
+	.word 0
+blockCraterIndex:
+	.word 0
+blockCraterCount:
+	.word 4
+	
+energyLevel:
+	.word 0, 0, 0, 0, 0, 0, 0, 0, 0
 	
 getReadyText:
 	.string "GET READY!\0"
@@ -191,7 +202,6 @@ spriteAngle:
 spriteInstruct:
 	.space 16384
 	
-
 irqTable:
 	.space 1024					@ 32 entries
 digits:

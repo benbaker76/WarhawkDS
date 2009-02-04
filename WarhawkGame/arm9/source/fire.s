@@ -169,7 +169,7 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			@ we will keep it seperate at the moment for ease
 			cmp r4,#384
 			blgt detectBG				@ if greater than 384, check for collision
-			@ r0=our bullet number
+			@ r0=our bullet numberz
 		
 			@ TEST--------
 

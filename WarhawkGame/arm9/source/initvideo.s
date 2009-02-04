@@ -118,6 +118,16 @@ initVideo:
 	ldr r2, =FontTilesLen
 	bl dmaCopy
 	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
+	add r1, #ScoreTilesLen
+	bl dmaCopy
+	
+	ldr r0, =EnergyTiles
+	ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+	add r1, #(ScoreTilesLen + FontTilesLen)
+	ldr r2, =EnergyTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
+	add r1, #(ScoreTilesLen + FontTilesLen)
 	bl dmaCopy
 
 	@ Our horizontal centre routine

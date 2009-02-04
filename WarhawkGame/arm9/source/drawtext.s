@@ -111,8 +111,7 @@ textLoop:
 	cmp r5, #0						@ Null character?
 	beq textDone					@ Yes so were done
 	sub r5, #32						@ ASCII character - 32 to get tile offset
-	cmp r3, #0						@ Main screen?
-	addeq r5, #42					@ Skip 42 tiles (score digits)
+	add r5, #42						@ Skip 42 tiles (score digits)
 	strh r5, [r4], #2				@ Write the tile number to our 32x32 map and move along
 	bl textLoop
 
@@ -164,7 +163,7 @@ drawDigits:
 
 digitsLoop:
 	ldrb r3,[r1],#1					@ Read r1 [text] and add 1 to [text] offset
-	add r3,#94						@ offset for 0. We only have chars as a tile in sub screen (+94 for our c64 digits)
+	add r3,#136						@ offset for 0. We only have chars as a tile in sub screen (+136 for our c64 digits)
 	strh r3, [r0], #2				@ Write the tile number to our 32x32 map and move along
 	subs r2, #1						@ Move along one
 	bne digitsLoop					@ And loop back until done

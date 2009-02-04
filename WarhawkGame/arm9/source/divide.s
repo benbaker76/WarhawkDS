@@ -9,11 +9,11 @@ divideNumber:
 	stmfd sp!, {r4-r6, lr}
 	
 	mov r0,#0
-	mov r3,#1	@ set bit 0 for test in shift
+	mov r3,#1								@ set bit 0 for test in shift
 	divl1:
 		cmp r2,r1
-		movls r2,r2,lsl #1	@ shift r2 till it is same as r1
-		movls r3,r3,lsl #1	@ shift r3 (this is our count flag)
+		movls r2,r2,lsl #1					@ shift r2 till it is same as r1
+		movls r3,r3,lsl #1					@ shift r3 (this is our count flag)
 	bls divl1
 	divl2:
 		cmp r1,r2

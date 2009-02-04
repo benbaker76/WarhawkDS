@@ -77,7 +77,7 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 			lsr r2, #5
 			lsl r2, #2
 			mov r0,r2
-			bl drawDamagedBlockSub
+			bl drawCraterBlockSub
 			b nonono
 
 		bottomS:
@@ -94,7 +94,7 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 		lsl r2, #2
 		mov r0,r2
 
-		bl drawDamagedBlockMain
+		bl drawCraterBlockMain
 		nonono:
 		pop {r0-r4}	
 @--------------- end of draw code

@@ -9,8 +9,8 @@
 
 	.arm
 	.align
-	.global drawDamagedBlockMain
-	.global drawDamagedBlockSub
+	.global drawCraterBlockMain
+	.global drawCraterBlockSub
 	.global drawMapScreenMain
 	.global drawMapScreenSub
 	.global drawMapMain
@@ -20,7 +20,8 @@
 	.global drawSBMapMain
 	.global drawSBMapSub
 	
-checkDamagedBlockMain:
+checkCraterBlockMain:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =colMap					@ collision map
@@ -39,10 +40,10 @@ checkDamagedBlockMain:
 	mov r6, #0
 	add r0, r4						@ calculate collision map offset
 	
-checkDamagedBlockMainLoop:
+checkCraterBlockMainLoop:
 
 	cmp r6, #16
-	beq checkDamagedBlockMainExit
+	beq checkCraterBlockMainExit
 	
 	ldr r0, =colMap	
 	add r0, r4
@@ -52,13 +53,13 @@ checkDamagedBlockMainLoop:
 	mov r1, r5, lsr #3				@ divide by 8
 	
 	cmp r3, #2						@ is it destructable?	
-	bleq drawDamagedBlockMain
+	bleq drawCraterBlockMain
 	
 	add r6, #1
 	
-	bl checkDamagedBlockMainLoop
+	bl checkCraterBlockMainLoop
 	
-checkDamagedBlockMainExit:
+checkCraterBlockMainExit:
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
@@ -72,7 +73,7 @@ checkDamagedBlockMainExit:
 	
 	
 	
-drawDamagedBlockMain:
+drawCraterBlockMain:
 
 	@ r0 = xpos in VRAM
 	@ r1 = ypos in VRAM
@@ -104,19 +105,19 @@ drawDamagedBlockMain:
 	ldr r4, =3
 	bl dmaCopy
 
-drawDamagedBlockMainLoop:
+drawCraterBlockMainLoop:
 
 	add r0, r3, lsl #1				@ (64 * 2) tiles
 	add r1, r3						@ 64 tiles
 	bl dmaCopy
 	
 	subs r4, r4, #1
-	bne drawDamagedBlockMainLoop
+	bne drawCraterBlockMainLoop
 	
 	ldmfd sp!, {r2-r6, pc} 		@ restore registers and return
 	
 	
-drawDamagedBlockSub:
+drawCraterBlockSub:
 
 	@ r0 = xpos in VRAM
 	@ r1 = ypos in VRAM
@@ -147,14 +148,14 @@ drawDamagedBlockSub:
 	ldr r4, =3
 	bl dmaCopy
 	
-drawDamagedBlockSubLoop:
+drawCraterBlockSubLoop:
 
 	add r0, r3, lsl #1				@ (64 * 2) tiles
 	add r1, r3						@ 64 tiles
 	bl dmaCopy
 	
 	subs r4, r4, #1
-	bne drawDamagedBlockSubLoop
+	bne drawCraterBlockSubLoop
 	
 	ldmfd sp!, {r2-r6, pc} 		@ restore registers and return
 	
@@ -204,11 +205,12 @@ drawMapMainLoop:
 	
 drawMapMainDone:
 
-	bl checkDamagedBlockMain
+	bl checkCraterBlockMain
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 
 drawMapSub:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =Level1Map				@ source
@@ -274,6 +276,7 @@ drawMapSubDone:
 	
 	
 drawMapScreenMain:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =Level1Map				@ source
@@ -316,6 +319,7 @@ drawMapScreenMainDone:
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 
 drawMapScreenSub:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =Level1Map				@ source
@@ -370,6 +374,7 @@ drawMapScreenSubDone:
 	
 
 drawSFMapMain:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =StarFrontMap			@ source
@@ -383,6 +388,7 @@ drawSFMapMain:
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
 drawSFMapSub:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =StarFrontMap			@ source
@@ -396,6 +402,7 @@ drawSFMapSub:
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 
 drawSBMapMain:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =StarBackMap			@ source
@@ -409,6 +416,7 @@ drawSBMapMain:
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 
 drawSBMapSub:
+
 	stmfd sp!, {r0-r6, lr}
 
 	ldr r0, =StarBackMap			@ source

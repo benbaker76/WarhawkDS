@@ -53,6 +53,7 @@ main:
 	str r1,[r0]
 	
 	bl clearBG0
+	bl drawAllEnergyBars
 
 	mov r1,#0
 	bl init_Alien
@@ -111,7 +112,7 @@ gameLoop:
 		bl drawScore
 		bl drawDebugText
 		
-		bl drawDamagedBlockMain
+		bl drawCraterBlockMain
 
 @	bl waitforNoblank
 	@---------------------------------------------

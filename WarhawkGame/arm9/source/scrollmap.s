@@ -145,8 +145,6 @@ scrollMapSub:
 
 
 
-
-
 scrollSFMain:
 	stmfd sp!, {r0-r6, lr} 
 

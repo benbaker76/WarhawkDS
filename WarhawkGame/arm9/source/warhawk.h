@@ -17,11 +17,11 @@
 #define BG3_MAP_BASE				27
 #define BG3_MAP_BASE_SUB			29
 
-#define BG0_TILE_BASE				0
-#define BG0_TILE_BASE_SUB			0
+#define BG0_TILE_BASE				1
+#define BG0_TILE_BASE_SUB			1
 
-#define BG1_TILE_BASE				1
-#define BG1_TILE_BASE_SUB			1
+#define BG1_TILE_BASE				0
+#define BG1_TILE_BASE_SUB			0
 
 #define BG2_TILE_BASE				2
 #define BG2_TILE_BASE_SUB			2
@@ -54,7 +54,7 @@
 #define FontTilesLen				3392
 #define EnergyTilesLen				512
 
-#define SpritesTilesLen				40960
+#define SpritesTilesLen				33280
 #define SpritesPalLen				512
 
 #define InGameMusicLen				851393

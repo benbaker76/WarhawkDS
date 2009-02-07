@@ -58,6 +58,7 @@
 	.global spriteTrackX
 	.global spriteTrackY
 	.global spritePhase
+	.global spriteExplodeDelay
 	.global getReadyText
 	.global spriteXText
 	.global spriteYText
@@ -69,6 +70,7 @@
 	.global tileNumText
 	.global irqTable
 	.global digits
+	.global moveBaseExplosion
 	
 pixelOffsetSub:
 	.word 0
@@ -166,7 +168,7 @@ pixelOffsetText:
 
 	@ sprite table!
 	@ sprite 0 		= ship (spritetile 0)
-	@ sprite 1-4	= Bullets (player spritetile 1)
+	@ sprite 1-2	= Bullets (player spritetile 1)
 	
 	.section .bss
 
@@ -198,9 +200,10 @@ spriteHits:
 	.space 512
 spriteAngle:
 	.space 512
-
+spriteExplodeDelay:
+	.space 512
 spriteInstruct:
-	.space 16384
+	.space 32768
 	
 irqTable:
 	.space 1024					@ 32 entries

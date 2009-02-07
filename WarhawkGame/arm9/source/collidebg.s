@@ -22,10 +22,11 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	add r1, #6					@ our left bullet is right a bit in the sprite
 	lsr r1, #5					@ divide x by 32
 
+
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 	ldr r2, [r2, r0, lsl #2]	@ r2=our y coord	
 	sub r2, #384				@ take 384 (top pixel of top screen) off our bullets y pos
-	
+
 
 	ldr r3,=yposSub
 	ldr r3,[r3]					@ load the yposSub
@@ -53,19 +54,22 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	bne no_hit
 	
 	bl playExplosionSound
-	
+
 	mov r6, #2
-	strb r6, [r4, r3]
+	strb r6, [r4, r3]			@ store CRATER in collmap
+
 	
-@-------------- the draw code	
-		push {r0-r4}
+
+@-------------- the CRATER draw code	
+		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
 		ldr r4, =spriteY+4			@ DO Y COORD CONVERSION
 		ldr r4, [r4, r0, lsl #2]
 		ldr r1,=575
 		cmp r4,r1
 		bpl bottomS
-			ldr r1,=vofsSub
+			ldr r1,=vofsSub	@ Draw Crater on Top Screen
 			ldr r1,[r1]
+			sub r1,#1
 			sub r4,#384
 			add r1,r4
 			lsr r1,#5
@@ -81,12 +85,13 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 			b nonono
 
 		bottomS:
-		ldr r1,=vofsSub
+		ldr r1,=vofsSub	@ Draw crater on Bottom Screen
 		ldr r1,[r1]
 		sub r4,#576
 		add r1,r4
 		lsr r1,#5
 		lsl r1,#2
+		
 		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
 		ldr r2, [r2, r0, lsl #2]
 		sub r2,#58					@ 64 - 6 (bullet offset)
@@ -95,15 +100,15 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 		mov r0,r2
 
 		bl drawCraterBlockMain
+		
 		nonono:
 		pop {r0-r4}	
-@--------------- end of draw code
-
-		
-@		kill:						@ use this to detect where the collision occurs
-@		b kill
+@--------------- end of CRATER draw code
 	
-			
+		mov r10,#6
+		bl initBaseExplode			@ Draw the EXPLOSION
+		@ pass r5 with the offset for the bullet (ie 6)
+		
 		ldr r1, =spriteActive+4		@ Kill the bullet
 		mov r2,#0
 		str r2, [r1, r0, lsl #2]
@@ -121,6 +126,60 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	no_hit:
 
 	ldmfd sp!, {r0-r6, pc}
+	
+@-------------- The init EXPLOSION Code
+@ first find a blank explosion from 113-127
+initBaseExplode:
+	stmfd sp!, {r0-r6, lr}
+	ldr r4,=spriteActive
+	mov r6,#127
+	expFindBase:
+		ldr r5,[r4,r6, lsl #2]
+		cmp r5,#0
+		beq startBaseExp
+		sub r6,#1
+		cmp r6,#111
+	bne expFindBase
+	ldmfd sp!, {r0-r6, pc}
+		
+	startBaseExp:
+		@ r6 is our ref to the explosion sprite
+		@ calculate the x/y to plot explosion
+		ldr r1, =spriteX+4			@ DO X COORD CONVERSION
+		ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
+		add r1, r10					@ our left bullet is right a bit in the sprite
+		lsr r1, #5					@ divide x by 32
+		lsl r1, #5
+					@ somethng wrong in the spriteY code?????
+		ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
+		ldr r2, [r2, r0, lsl #2]	@ r2=our y coord					@ take 384 (top pixel of top screen) off our bullets y pos
+
+		sub r2,#32					@ bullet his before base, so move up to base!
+
+		ldr r3,=pixelOffsetMain		@ this drifts out now and again?
+		ldr r3,[r3]
+@			subs r3,#1				@ we need to adjust the offset - it is out of kink
+@			movmi r3,#31	
+		lsr r2, #5					@ divide by 32	:
+		lsl r2, #5					@ times by 32	: this aligns to a block of 32x32
+		add r2,r3					@ add them together
+	
+								@ r4 is sprite active register already
+	mov r5,#5
+	str r5,[r4,r6, lsl #2]		@ set sprite to "base explosion"
+	ldr r4,=spriteObj
+	mov r5,#12					@ sprite 13-1 as added to
+	str r5,[r4,r6, lsl #2]		@ set object to explosion frame
+	ldr r4,=spriteX
+	str r1,[r4,r6, lsl #2]
+	ldr r4,=spriteY
+	str r2,[r4,r6, lsl #2]
+	ldr r4,=spriteExplodeDelay
+	mov r2,#8					@ Set sprite delay for anim
+	str r2,[r4,r6, lsl #2]
+
+	ldmfd sp!, {r0-r6, pc}
+
 	
 debugStuff:
 	@ moved this here to make it easier to follow the code!!!

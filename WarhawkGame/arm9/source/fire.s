@@ -17,11 +17,10 @@ waitforFire:
 	@ Messy bit just to wait for button to start
 	@ This is a delay that can be skipped by FIRE
 	@ Not great, but serves its purpose for now
-	@ this will need to update music at later stage also
 	
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r4,#200
+	mov r4,#180
 	
 	buttpause:
 	
@@ -96,16 +95,18 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		bpl isbulletPossible
 		ldmfd sp!, {r0-r6, pc}
 	bulletPossible:
+		@ GENERATE BULLET
 		@ ok, all we need to do now is set spriteActive for the bullet r0
 		@ and set the image and coords for the bullet to start
 		@ the bullet code will take care of the rest
+
 		ldr r1,=spriteActive
 		add r1,#4
 		mov r2,#1
 		str r2,[r1,r0, lsl #2]		@ sprite is now active
-
+		
 		ldr r1, =spriteSpeedY
-		add r1, #4
+		add r1,#4
 		mov r2,#4					@ set the bullets speed!
 		str r2,[r1,r0, lsl #2]
 
@@ -128,7 +129,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		ldr r1, =spriteObj
 		add r1, #4
 		str r2,[r1,r0, lsl #2]		@ done
-		
+
 		bl playBlasterSound
 		
 		@ bullet should now be ready to go!!!
@@ -148,10 +149,11 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			@ Ok, this bullet is ACTIVE,
 			@ so, lets move it, all we need to do is sub
 			@ bullets speed from Ypos and check for off screen
+
 			ldr r3,=spriteY
 			add r3,#4
 			ldr r4,[r3,r0, lsl #2]
-			
+
 			ldr r5, =spriteSpeedY		@ Let us load r6 with the bullets speed
 			add r5, #4
 			ldr r6,[r5,r0, lsl #2]		@ this can be used for a power shot
@@ -164,14 +166,9 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 				b bulletDead
 			activeBstill:
 			str r4,[r3, r0, lsl #2]	@ store the new Y pos back
-			
-			@ Now we need to do some detection code!!!
-			@ we will keep it seperate at the moment for ease
+
 			cmp r4,#384
-			blgt detectBG				@ if greater than 384, check for collision
-			@ r0=our bullet numberz
-		
-			@ TEST--------
+			blgt detectBG				@ check if we have hit a base!!!
 
 		bulletDead:
 		subs r0,#1

@@ -168,16 +168,16 @@ drawMapMain:
 	ldr r2, =yposMain				@
 	ldr r3, =vofsMain
 	
-	ldr r4, [r2]					@ load y2 with ypos (map reference)
+	ldr r4, [r2]					@ load r4 with ypos (map reference)
 	lsr r4, #3						@ Divide by 8 to get tile offset
 	
-	ldr r5, [r3]
+	ldr r5, [r3]					@ load r5 with vofsmain
 	sub r5, #32						@ One line of tiles offset (for drawing tiles offscreen)
 	
 	add r0, r4, lsl #7				@ yposMain * (64*2) added to Level1Map
 	add r1, r5, lsl #3				@ vofsMain * 8 pixels per scroll line added to map address
 	
-	ldr r2, =64						@ 32x2 for a line of tiles
+	mov r2, #64						@ 32x2 for a line of tiles
 	mov r4, r1
 	ldr r5, =2048					@ Skip block (32x32x2)
 	bl dmaCopy
@@ -186,7 +186,7 @@ drawMapMain:
 	
 drawMapMainLoop:
 
-	add r0, r2
+	add r0, #64
 	add r1, r5
 	bl dmaCopy
 	
@@ -194,8 +194,8 @@ drawMapMainLoop:
 	beq drawMapMainDone				@ Yes then lets exit
 
 	mov r1, r4						@ Draw the tiles x > 256 on second screen block
-	add r0, r2
-	mov r3, r2
+	add r0, #64
+	mov r3, #64
 	mul r3, r6
 	add r1, r3
 	bl dmaCopy
@@ -206,6 +206,8 @@ drawMapMainLoop:
 drawMapMainDone:
 
 	bl checkCraterBlockMain
+	
+	cmp r1,r1
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 

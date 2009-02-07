@@ -22,8 +22,8 @@ initSystem:
 	bx lr
 
 main:
-	@ Setup the screens and the sprites
-	
+	@ Setup the screens and the sprites	
+
 	bl initVideo
 	bl initSprites
 	bl initData
@@ -93,28 +93,30 @@ gameLoop:
 	@--------------------------------------------
 	@ this code is executed offscreen
 	@--------------------------------------------
-		bl scrollStars		@ Scroll Stars (BG2,BG3)
-		bl levelDrift
 		
-		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
+		bl moveShip
 		
 		bl scrollMain		@ Scroll Level Data
 		bl scrollSub		@ Main + Sub
-	
-		bl drawSprite		@ Move our craft (d-pad and A, perhaps check for pause and shut DS)
+		bl levelDrift
+		bl moveBullets		@ check and then moves bullets
 		bl fireCheck
-		bl moveBullets
 
-		bl moveShip
+
 		bl move_Aliens
 
 		bl addScore
 		bl drawScore
-		bl drawDebugText
+@		bl drawDebugText
 		
-		bl drawCraterBlockMain
+		bl scrollStars		@ Scroll Stars (BG2,BG3)
 
-@	bl waitforNoblank
+
+		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
+
+		bl drawSprite
+	bl waitforNoblank
+	
 	@---------------------------------------------
 	@ this code is executed during refresh
 	@ this should give us a bit more time in vblank
@@ -627,9 +629,26 @@ init_Alien:				@ This code will find a blank alien sprite and assign it
 	
 	ldmfd sp!, {r0-r10, pc}
 	
+moveBaseExplosion:
+
+	ldr r1,=spriteActive
+	mov r0,#113
+		checkBase:
+@		ldr r2,[r1,r0, lsl#2]
+@		cmp r2,#5
+@		bne noBaseHere
+				ldr r2,=spriteY
+				ldr r3,[r2,r0, lsl #2]
+				add r3,r3,#1
+				str r3,[r2,r0, lsl #2]
+		
+		
+		noBaseHere:
+		add r0,#1
+		cmp r0,#128
+		bne checkBase
 	
-	
-	
+mov r15,r14
 	
 	
 alienDescript:	@ These are stored in blocks of 32 words --- for however many we use?
@@ -686,7 +705,7 @@ alienDescript:	@ These are stored in blocks of 32 words --- for however many we 
 
 	.word 164		@ init X				@ initial X coord
 	.word 450		@ init y				@ initial Y coord
-	.word 1 		@ init speed X			@ (this is overal speed in linear mode)
+	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
 	.word 1024		@ init speed y			@ (set to 1024 to signal linear mode)
 	.word 1 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
 	.word 56 		@ init spriteObj		@ Sprite to use for image

@@ -32,16 +32,18 @@ scrollMain:
 	ldr r0, =pixelOffsetMain
 	ldr r1, [r0]
 	cmp r1, #32						@ Has our scroller moved 32 pixels?
-	beq scrollMapMain				@ If so, time to scroll the map
+
+	moveq r1,#0
+	bleq drawMapMain
 	
-	add r1, #1						@ Add one to our scroller
+	add r1,#1
 	strh r1, [r0]					@ Write it back
-	
+
 	ldr r0, =vofsMain
 	ldrh r1, [r0]					@ Load the scroll register
 	
 	cmp r1, #32						@ Has the scroll regsiter reached 32 (32 is a block size)
-	moveq r1, #256+32				@ Yes then set it back to 256+32
+	moveq r1, #288					@ Yes then set it back to 256+32 (288)
 	
 	sub r1, #1						@ move up a pixel
 
@@ -56,26 +58,6 @@ scrollMain:
 		
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
-scrollMapMain:
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =pixelOffsetMain		@ Reset out pixel offset counter
-	mov r1, #0
-	strh r1, [r0]
-	
-	bl drawMapMain
-	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
-	
-
-
-
-
-
-
-
-
-
 @---------------------------------
 
 scrollSub:
@@ -89,8 +71,10 @@ scrollSub:
 	ldr r0, =pixelOffsetSub
 	ldr r1, [r0]
 	cmp r1, #32						@ Has our scroller moved 32 pixels?
-	beq scrollMapSub				@ If so, time to scroll the map
 	
+	moveq r1,#0
+	bleq drawMapSub					@ If so, time to scroll the map
+
 	add r1, #1						@ Add one to our scroller
 	strh r1, [r0]					@ Write it back
 	
@@ -113,33 +97,7 @@ scrollSub:
 		
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
-scrollMapSub:
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =pixelOffsetSub			@ Reset out pixel offset counter
-	mov r1, #0
-	strh r1, [r0]
-	
-	bl drawMapSub
-	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
-
 @---------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

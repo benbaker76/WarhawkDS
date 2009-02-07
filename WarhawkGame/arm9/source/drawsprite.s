@@ -195,18 +195,44 @@ drawSprite:
 	sprites_Done:	
 		ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
 		ldr r1,[r0,r8, lsl #2]
-		cmp r1,#6
-		bne spinky
-	ldr r0,=spriteY						@ Load Y coord
-	ldr r1,[r0,r8,lsl #2]
-		add r1,#1
-	str r1,[r0,r8,lsl #2]
+		cmp r1,#5								@ *** Base explosion
+		bne alienExplodes
+			
+			ldr r0,=spriteY						@ Load Y coord
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#1							@ add 1 and store back
+			str r1,[r0,r8,lsl #2]
+			cmp r1,#768
+			bpl noMoreBase
+			
+			ldr r0,=spriteExplodeDelay
+			ldr r1,[r0,r8,lsl #2]
+			sub r1,#1
+			cmp r1,#0
+			movmi r1,#8
+			str r1,[r0,r8,lsl #2]
+			bne alienExplodes
+			
+			ldr r0,=spriteObj
+			ldr r1,[r0,r8,lsl #2]				@ load anim frame
+			add r1,#1							@ add 1
+			str r1,[r0,r8,lsl #2]				@ store it back
+			cmp r1,#22							@ are we at the end frame?
+			bne noMoreActives
+				noMoreBase:
+				ldr r0,=spriteActive
+				mov r1,#0						@ kill sprite (next update)
+				str r1,[r0,r8,lsl #2]
 		@ we will need to add code in here to handle the update of explosions
 		@ this is as good a place as any, seeing that we are already going through
 		@ all the sprites!
 	
-		spinky:
+		alienExplodes:
+		
+		
+		noMoreActives:
 	subs r8,#1
 	bpl SLoop
 
 	mov r15,r14
+	

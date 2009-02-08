@@ -159,7 +159,7 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			ldr r6,[r5,r0, lsl #2]		@ this can be used for a power shot
 				
 			subs r4,r6					@ using r6 as a speed
-			ldr r5,=383-32
+			ldr r5,=383-64
 			cmp r4,r5					@ this is our exit, so it can slide off the top
 			bgt activeBstill
 				mov r5,#0				@ clear the flag, and -
@@ -170,6 +170,7 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 
 			cmp r4,#384
 			blgt detectBG				@ check if we have hit a base!!!
+			@ now detect against aliens
 
 		bulletDead:
 		subs r0,#1

@@ -24,17 +24,17 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 
 
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
-	ldr r2, [r2, r0, lsl #2]	@ r2=our y coord	
+	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
 
-	sub r2, #250				@ *take 351 off our coord, as in drawsprite.s, we start our offscreen
-	sub r2, #101				@ *check as 383-32 (351) so we must use the same here!
-
+	sub r2, #384				@ *take 384 off our coord, as this is the top of the screen
+lsr r2,#5						@ *
+lsl r2,#5						@ *
 	ldr r3,=yposSub
 	ldr r3,[r3]					@ load the yposSub
+
 	sub r3,#160					@ take that bloody 160 off
 	add r3,r2					@ add our scroll and bullet y together
 	lsr r3,#5					@ divide by 32 (our blocks)
-
 	lsl r3,#4					@ mul by 16	to convert to our colMap format	
 	add r3,r1					@ add our X, piece of piss!!! :) and we struggled, pah!!!
 	
@@ -57,23 +57,22 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	bl playExplosionSound
 
 	mov r6, #2
-	strb r6, [r4, r3]			@ store CRATER in collmap
+@	strb r6, [r4, r3]			@ store CRATER in collmap
 
 	
 
 @-------------- the CRATER draw code	
 		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
 		ldr r4, =spriteY+4			@ DO Y COORD CONVERSION
-
 		ldr r4, [r4, r0, lsl #2]
-		add r4,#32					@ * We need to move down one block, as our check is 32 ahead!
+lsr r4,#5							@ *
+lsl r4,#5							@ *
 
-		ldr r1,=575
+		ldr r1,=575+32
 		cmp r4,r1
 		bpl bottomS
-			ldr r1,=vofsSub	@ Draw Crater on Top Screen
+			ldr r1,=vofsSub			@ Draw Crater on Top Screen
 			ldr r1,[r1]
-			sub r1,#1
 			sub r4,#384
 			add r1,r4
 			lsr r1,#5
@@ -90,9 +89,6 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 
 		bottomS:
 		
-@ we need to draw a crater one the top screen also when we are at a certain position.
-@ so, lets display that pos, so we can work it out! r4 is out y coord
-
 		ldr r1,=vofsSub	@ Draw crater on Bottom Screen
 		ldr r1,[r1]
 		sub r4,#576
@@ -103,11 +99,11 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 @if <=32 draw crater on base of top screen.
 
 @ lets display r1
-			mov r10,r1					@ display our y as a 32x32 horizontal block number (WORKS)
-			mov r8, #10					@ y pos
-			mov r9, #3					@ digits
-			mov r11, #9					@ x pos
-			bl drawDigits
+@			mov r10,r1					@ display our y as a 32x32 horizontal block number (WORKS)
+@			mov r8, #10					@ y pos
+@			mov r9, #3					@ digits
+@			mov r11, #9					@ x pos
+@			bl drawDigits
 
 		
 		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
@@ -171,13 +167,16 @@ initBaseExplode:
 					@ somethng wrong in the spriteY code?????
 		ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 		ldr r2, [r2, r0, lsl #2]	@ r2=our y coord					@ take 384 (top pixel of top screen) off our bullets y pos
-
 		ldr r3,=pixelOffsetMain		@ this drifts out now and again?
 		ldr r3,[r3]
+subs r3,#1	@ try to compensate for pixeloffs being 1-32 (need 0-31)
+cmps r3,#0	@
+movmi r3,#31	
 		lsr r2, #5					@ divide by 32	:
 		lsl r2, #5					@ times by 32	: this aligns to a block of 32x32
 		add r2,r3					@ add them together
-	
+
+sub r2,#32	@ *	
 								@ r4 is sprite active register already
 	mov r5,#5
 	str r5,[r4,r6, lsl #2]		@ set sprite to "base explosion"

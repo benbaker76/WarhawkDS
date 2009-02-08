@@ -209,7 +209,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]
 			sub r1,#1
 			cmp r1,#0
-			movmi r1,#60
+			movmi r1,#4
 			str r1,[r0,r8,lsl #2]
 			bne alienExplodes
 			

@@ -199,9 +199,9 @@ drawSprite:
 		bne alienExplodes
 			
 			ldr r0,=spriteY						@ Load Y coord
-			ldr r1,[r0,r8,lsl #2]
-			add r1,#1							@ add 1 and store back
-			str r1,[r0,r8,lsl #2]
+	@		ldr r1,[r0,r8,lsl #2]
+	@		add r1,#1							@ add 1 and store back
+	@		str r1,[r0,r8,lsl #2]
 			cmp r1,#768
 			bpl noMoreBase
 			
@@ -209,7 +209,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]
 			sub r1,#1
 			cmp r1,#0
-			movmi r1,#8
+			movmi r1,#4
 			str r1,[r0,r8,lsl #2]
 			bne alienExplodes
 			

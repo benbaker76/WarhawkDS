@@ -158,6 +158,7 @@ initBaseExplode:
 
 		ldr r3,=pixelOffsetMain		@ this drifts out now and again?
 		ldr r3,[r3]
+		add r3,#8
 @			subs r3,#1				@ we need to adjust the offset - it is out of kink
 @			movmi r3,#31	
 		lsr r2, #5					@ divide by 32	:

@@ -7,7 +7,7 @@
 #include "sprite.h"
 #include "ipc.h"
 
-#define BUF_ATTRIBUTE0		(0x07000000)
+#define BUF_ATTRIBUTE0		(0x07000000)	@ WE CAN move these back to REAL registers!!
 #define BUF_ATTRIBUTE1		(0x07000002)
 #define BUF_ATTRIBUTE2		(0x07000004)
 #define BUF_ATTRIBUTE0_SUB	(0x07000400)
@@ -186,12 +186,12 @@ drawSprite:
 	sprites_Done:	
 		ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
 		ldr r1,[r0,r8, lsl #2]
-		cmp r1,#5								@ *** Base explosion
+		cmp r1,#5								@ Base explosion
 		bne alienExplodes
 			
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
-			add r1,#2							@ add 1 and store back
+			add r1,#1							@ add 1 and store back
 			str r1,[r0,r8,lsl #2]
 			cmp r1,#768
 			bpl noMoreBase
@@ -202,22 +202,22 @@ drawSprite:
 			cmp r1,#0
 			movmi r1,#4
 			str r1,[r0,r8,lsl #2]
-			bne alienExplodes
+			bne noMoreStuff
 			
 			ldr r0,=spriteObj
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame
 			add r1,#1							@ add 1
 			str r1,[r0,r8,lsl #2]				@ store it back
 			cmp r1,#22							@ are we at the end frame?
-			bne alienExplodes
+			bne noMoreStuff
 				noMoreBase:
 				ldr r0,=spriteActive
 				mov r1,#0						@ kill sprite (next update)
 				str r1,[r0,r8,lsl #2]
-	
+			b noMoreStuff
 		alienExplodes:
-		cmp r1,#4								@ *** Base explosion
-		bne whatNext
+		cmp r1,#4								@ Alien explosion
+		bne noMoreStuff
 			
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
@@ -232,20 +232,24 @@ drawSprite:
 			cmp r1,#0
 			movmi r1,#4
 			str r1,[r0,r8,lsl #2]
-			bne whatNext
+			bne noMoreStuff
 			
 			ldr r0,=spriteObj
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame
 			add r1,#1							@ add 1
 			str r1,[r0,r8,lsl #2]				@ store it back
 			cmp r1,#13							@ are we at the end frame?
-			bne whatNext
+			bne noMoreStuff
 				noMoreAlien:
 				ldr r0,=spriteActive
 				mov r1,#0						@ kill sprite (next update)
 				str r1,[r0,r8,lsl #2]	
-		
+			b noMoreStuff
 		whatNext:
+	
+
+
+		noMoreStuff:
 	subs r8,#1
 	bpl SLoop
 

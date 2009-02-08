@@ -71,6 +71,10 @@
 	.global irqTable
 	.global digits
 	.global moveBaseExplosion
+	.global level
+	
+level:
+	.word 0
 	
 pixelOffsetSub:
 	.word 0

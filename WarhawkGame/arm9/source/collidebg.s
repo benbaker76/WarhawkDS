@@ -26,9 +26,9 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
 
-	sub r2, #384				@ *take 384 off our coord, as this is the top of the screen
-lsr r2,#5						@ *
-lsl r2,#5						@ *
+	sub r2, #384				@ take 384 off our coord, as this is the top of the screen
+	lsr r2,#5					@ convert to a 32 block
+	lsl r2,#5					
 	ldr r3,=yposSub
 	ldr r3,[r3]					@ load the yposSub
 
@@ -37,11 +37,7 @@ lsl r2,#5						@ *
 	lsr r3,#5					@ divide by 32 (our blocks)
 	lsl r3,#4					@ mul by 16	to convert to our colMap format	
 	add r3,r1					@ add our X, piece of piss!!! :) and we struggled, pah!!!
-	
-@	bl debugStuff
 
-@	bl debugStuff2
-	
 	@ r3 is now an offset to our collision data. Collision data is a long string containing a byte
 	@ for every block on the screen (32x32). so, if r3 is 11, we know that (from the top of the map)
 	@ this is the 3rd 32 block in on the second block down.
@@ -65,8 +61,8 @@ lsl r2,#5						@ *
 		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
 		ldr r4, =spriteY+4			@ DO Y COORD CONVERSION
 		ldr r4, [r4, r0, lsl #2]
-lsr r4,#5							@ *
-lsl r4,#5							@ *
+		lsr r4,#5					@ convert to a 32 block
+		lsl r4,#5
 
 		ldr r1,=575+32
 		cmp r4,r1
@@ -95,8 +91,8 @@ lsl r4,#5							@ *
 		add r1,r4
 		lsr r1,#5
 		lsl r1,#2
-@cmp r1,#32
-@if <=32 draw crater on base of top screen.
+					@cmp r1,#32
+					@if <=32 draw crater on base of top screen.
 
 @ lets display r1
 @			mov r10,r1					@ display our y as a 32x32 horizontal block number (WORKS)
@@ -106,9 +102,9 @@ lsl r4,#5							@ *
 @			bl drawDigits
 
 		
-		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
+		ldr r2, =spriteX+4				@ DO Y COORD CONVERSION
 		ldr r2, [r2, r0, lsl #2]
-		sub r2,#58					@ 64 - 6 (bullet offset)
+		sub r2,#58						@ 64 - 6 (bullet offset)
 		lsr r2, #5
 		lsl r2, #2
 		mov r0,r2
@@ -121,7 +117,7 @@ lsl r4,#5							@ *
 	
 		mov r10,#6
 		bl initBaseExplode			@ Draw the EXPLOSION
-		@ pass r5 with the offset for the bullet (ie 6)
+									@ pass r5 with the offset for the bullet (ie 6)
 		
 		ldr r1, =spriteActive+4		@ Kill the bullet
 		mov r2,#0
@@ -157,8 +153,8 @@ initBaseExplode:
 	ldmfd sp!, {r0-r6, pc}
 		
 	startBaseExp:
-		@ r6 is our ref to the explosion sprite
-		@ calculate the x/y to plot explosion
+									@ r6 is our ref to the explosion sprite
+									@ calculate the x/y to plot explosion
 		ldr r1, =spriteX+4			@ DO X COORD CONVERSION
 		ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
 		add r1, r10					@ our left bullet is right a bit in the sprite
@@ -169,75 +165,26 @@ initBaseExplode:
 		ldr r2, [r2, r0, lsl #2]	@ r2=our y coord					@ take 384 (top pixel of top screen) off our bullets y pos
 		ldr r3,=pixelOffsetMain		@ this drifts out now and again?
 		ldr r3,[r3]
-subs r3,#1	@ try to compensate for pixeloffs being 1-32 (need 0-31)
-cmp r3,#0	@
-movmi r3,#31	
+		subs r3,#1					@ try to compensate for pixeloffs being 1-32 (need 0-31)
+		cmp r3,#0	
+		movmi r3,#31	
 		lsr r2, #5					@ divide by 32	:
 		lsl r2, #5					@ times by 32	: this aligns to a block of 32x32
 		add r2,r3					@ add them together
 
-sub r2,#32	@ *	
-								@ r4 is sprite active register already
-	mov r5,#4
-	str r5,[r4,r6, lsl #2]		@ set sprite to "base explosion"
+		sub r2,#32					@ re align	
+									@ r4 is sprite active register already
+	mov r5,#5
+	str r5,[r4,r6, lsl #2]			@ set sprite to "base explosion"
 	ldr r4,=spriteObj
-	mov r5,#4					@ sprite 13-1 as added to
-	str r5,[r4,r6, lsl #2]		@ set object to explosion frame
+	mov r5,#12						@ sprite 13-1 as added to
+	str r5,[r4,r6, lsl #2]			@ set object to explosion frame
 	ldr r4,=spriteX
 	str r1,[r4,r6, lsl #2]
 	ldr r4,=spriteY
 	str r2,[r4,r6, lsl #2]
 	ldr r4,=spriteExplodeDelay
-	mov r2,#4					@ Set sprite delay for anim
+	mov r2,#4						@ Set sprite delay for anim
 	str r2,[r4,r6, lsl #2]
 
-	ldmfd sp!, {r0-r6, pc}
-
-	
-debugStuff:
-	@ moved this here to make it easier to follow the code!!!
-	stmfd sp!, {r0-r6, lr}
-			push { r0-r3 }
-			ldr r0, =blockXText			@ Load out text pointer
-			ldr r1, =0					@ x pos
-			ldr r2, =8					@ y pos
-			ldr r3, =1					@ Draw on Sub screen
-			bl drawText
-			pop { r0-r3 }
-	
-			mov r10, r1					@ display our X as a 32x32 horizontal block number (WORKS)
-			mov r8, #8					@ y pos
-			mov r9, #3					@ digits
-			mov r11, #9					@ x pos
-			bl drawDigits
-			
-			push { r0-r3 }
-			ldr r0, =blockYText			@ Load out text pointer
-			ldr r1, =0					@ x pos
-			ldr r2, =10					@ y pos
-			ldr r3, =1					@ Draw on Sub screen
-			bl drawText
-			pop { r0-r3 }
-
-			mov r10,r2					@ display our y as a 32x32 horizontal block number (WORKS)
-			mov r8, #10					@ y pos
-			mov r9, #3					@ digits
-			mov r11, #9					@ x pos
-			bl drawDigits
-	ldmfd sp!, {r0-r6, pc}
-	
-debugStuff2:
-	stmfd sp!, {r0-r6, lr}
-			push { r0-r3 }
-			ldr r0, =tileNumText		@ Load out text pointer
-			ldr r1, =0					@ x pos
-			ldr r2, =12					@ y pos
-			ldr r3, =1					@ Draw on Sub screen
-			bl drawText
-			pop { r0-r3 }				
-								
-			mov r10,r3
-			mov r8, #12					@ y pos
-			mov r9, #6					@ digits
-			bl drawDigits
 	ldmfd sp!, {r0-r6, pc}

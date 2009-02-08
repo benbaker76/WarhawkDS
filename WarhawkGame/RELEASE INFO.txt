@@ -1,6 +1,12 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
 
+v0.20 - FLASH
+- Craters and explosions now work correctly - thank god
+- alien explosions are now coded
+- aliens now support both linear and curved movement
+- and lots of other stuff that I have forgot!! HK HELP!
+
 v0.19 - HK
 - Rewrote scroll code to scroll one line at a time
 - Added NO$GBA debug routines

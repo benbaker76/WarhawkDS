@@ -35,7 +35,8 @@ moveShip:
 	@ Up code
 		ldr r8,[r5]
 		subs r8,#2
-		movmi r8,#0
+		cmp r8,#576
+		movmi r8,#576
 		str r8,[r5]
 		b dircheck2
 	dircheck1:

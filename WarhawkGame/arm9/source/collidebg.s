@@ -25,8 +25,9 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 	ldr r2, [r2, r0, lsl #2]	@ r2=our y coord	
-	sub r2, #384				@ take 384 (top pixel of top screen) off our bullets y pos
 
+	sub r2, #250				@ *take 351 off our coord, as in drawsprite.s, we start our offscreen
+	sub r2, #101				@ *check as 383-32 (351) so we must use the same here!
 
 	ldr r3,=yposSub
 	ldr r3,[r3]					@ load the yposSub
@@ -63,7 +64,10 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 @-------------- the CRATER draw code	
 		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
 		ldr r4, =spriteY+4			@ DO Y COORD CONVERSION
+
 		ldr r4, [r4, r0, lsl #2]
+		add r4,#32					@ * We need to move down one block, as our check is 32 ahead!
+
 		ldr r1,=575
 		cmp r4,r1
 		bpl bottomS
@@ -85,12 +89,26 @@ detectBG:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A 
 			b nonono
 
 		bottomS:
+		
+@ we need to draw a crater one the top screen also when we are at a certain position.
+@ so, lets display that pos, so we can work it out! r4 is out y coord
+
 		ldr r1,=vofsSub	@ Draw crater on Bottom Screen
 		ldr r1,[r1]
 		sub r4,#576
 		add r1,r4
 		lsr r1,#5
 		lsl r1,#2
+@cmp r1,#32
+@if <=32 draw crater on base of top screen.
+
+@ lets display r1
+			mov r10,r1					@ display our y as a 32x32 horizontal block number (WORKS)
+			mov r8, #10					@ y pos
+			mov r9, #3					@ digits
+			mov r11, #9					@ x pos
+			bl drawDigits
+
 		
 		ldr r2, =spriteX+4			@ DO Y COORD CONVERSION
 		ldr r2, [r2, r0, lsl #2]
@@ -154,13 +172,8 @@ initBaseExplode:
 		ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 		ldr r2, [r2, r0, lsl #2]	@ r2=our y coord					@ take 384 (top pixel of top screen) off our bullets y pos
 
-		sub r2,#32					@ bullet his before base, so move up to base!
-
 		ldr r3,=pixelOffsetMain		@ this drifts out now and again?
 		ldr r3,[r3]
-		add r3,#8
-@			subs r3,#1				@ we need to adjust the offset - it is out of kink
-@			movmi r3,#31	
 		lsr r2, #5					@ divide by 32	:
 		lsl r2, #5					@ times by 32	: this aligns to a block of 32x32
 		add r2,r3					@ add them together

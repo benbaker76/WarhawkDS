@@ -39,23 +39,14 @@ drawSprite:
 	bne sprites_Drawn					@ if so, draw it!
 										@ if not Kill sprite
 		@ Kill sprite on both screens!!!!!
-		@ note: read the setting - daft prat!!!	
+		@ note: read the setting - daft prat!!!
+		mov r1, #ATTR0_DISABLED
 		ldr r0,=BUF_ATTRIBUTE0
 		add r0,r8, lsl #3
-		mov r2,#0	@ This just stores 0 in the 3 sprite attributes
-		str r2,[r0]
-		add r0,#2
-		str r2,[r0]		
-		add r0,#2
-		str r2,[r0]
+		str r1,[r0]
 		ldr r0,=BUF_ATTRIBUTE0_SUB
 		add r0,r8, lsl #3
-		mov r2,#0
-		str r2,[r0]
-		add r0,#2
-		str r2,[r0]		
-		add r0,#2
-		str r2,[r0]	@ All killed
+		str r1,[r0]
 	b sprites_Done
 
 	sprites_Drawn:
@@ -200,7 +191,7 @@ drawSprite:
 			
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
-			add r1,#1							@ add 1 and store back
+			add r1,#2							@ add 1 and store back
 			str r1,[r0,r8,lsl #2]
 			cmp r1,#768
 			bpl noMoreBase
@@ -218,19 +209,43 @@ drawSprite:
 			add r1,#1							@ add 1
 			str r1,[r0,r8,lsl #2]				@ store it back
 			cmp r1,#22							@ are we at the end frame?
-			bne noMoreActives
+			bne alienExplodes
 				noMoreBase:
 				ldr r0,=spriteActive
 				mov r1,#0						@ kill sprite (next update)
 				str r1,[r0,r8,lsl #2]
-		@ we will need to add code in here to handle the update of explosions
-		@ this is as good a place as any, seeing that we are already going through
-		@ all the sprites!
 	
 		alienExplodes:
+		cmp r1,#4								@ *** Base explosion
+		bne whatNext
+			
+			ldr r0,=spriteY						@ Load Y coord
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#2							@ add 1 and store back
+			str r1,[r0,r8,lsl #2]
+			cmp r1,#768
+			bpl noMoreAlien
+			
+			ldr r0,=spriteExplodeDelay
+			ldr r1,[r0,r8,lsl #2]
+			sub r1,#1
+			cmp r1,#0
+			movmi r1,#4
+			str r1,[r0,r8,lsl #2]
+			bne whatNext
+			
+			ldr r0,=spriteObj
+			ldr r1,[r0,r8,lsl #2]				@ load anim frame
+			add r1,#1							@ add 1
+			str r1,[r0,r8,lsl #2]				@ store it back
+			cmp r1,#13							@ are we at the end frame?
+			bne whatNext
+				noMoreAlien:
+				ldr r0,=spriteActive
+				mov r1,#0						@ kill sprite (next update)
+				str r1,[r0,r8,lsl #2]	
 		
-		
-		noMoreActives:
+		whatNext:
 	subs r8,#1
 	bpl SLoop
 

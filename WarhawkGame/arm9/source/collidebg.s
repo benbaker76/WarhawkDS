@@ -57,7 +57,7 @@ lsl r2,#5						@ *
 	bl playExplosionSound
 
 	mov r6, #2
-@	strb r6, [r4, r3]			@ store CRATER in collmap
+	strb r6, [r4, r3]			@ store CRATER in collmap
 
 	
 
@@ -170,7 +170,7 @@ initBaseExplode:
 		ldr r3,=pixelOffsetMain		@ this drifts out now and again?
 		ldr r3,[r3]
 subs r3,#1	@ try to compensate for pixeloffs being 1-32 (need 0-31)
-cmps r3,#0	@
+cmp r3,#0	@
 movmi r3,#31	
 		lsr r2, #5					@ divide by 32	:
 		lsl r2, #5					@ times by 32	: this aligns to a block of 32x32
@@ -178,17 +178,17 @@ movmi r3,#31
 
 sub r2,#32	@ *	
 								@ r4 is sprite active register already
-	mov r5,#5
+	mov r5,#4
 	str r5,[r4,r6, lsl #2]		@ set sprite to "base explosion"
 	ldr r4,=spriteObj
-	mov r5,#12					@ sprite 13-1 as added to
+	mov r5,#4					@ sprite 13-1 as added to
 	str r5,[r4,r6, lsl #2]		@ set object to explosion frame
 	ldr r4,=spriteX
 	str r1,[r4,r6, lsl #2]
 	ldr r4,=spriteY
 	str r2,[r4,r6, lsl #2]
 	ldr r4,=spriteExplodeDelay
-	mov r2,#8					@ Set sprite delay for anim
+	mov r2,#4					@ Set sprite delay for anim
 	str r2,[r4,r6, lsl #2]
 
 	ldmfd sp!, {r0-r6, pc}

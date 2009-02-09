@@ -13,6 +13,12 @@
 	.global drawCraterBlockSub
 	.global drawMapScreenMain
 	.global drawMapScreenSub
+	.global drawMapScreenMain
+	.global drawMapScreenSub
+	.global drawSFMapScreenMain
+	.global drawSFMapScreenSub
+	.global drawSBMapScreenMain
+	.global drawSBMapScreenSub
 	.global drawMapMain
 	.global drawMapSub
 	.global drawSFMapMain
@@ -204,6 +210,8 @@ drawMapMainDone:
 
 	bl checkCraterBlockMain
 	
+	cmp r1,r1
+
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 
 drawMapSub:
@@ -360,8 +368,100 @@ drawMapScreenSubDone:
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
 	@--------------------------------------------------
+
+
+
+
+
 	
 	
+drawSFMapScreenMain:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =StarFrontMap			@ source
+	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)	@ destination
+	ldr r3, =yposSFMain				@ 
+	
+	ldr r2, [r3]					@ load y2 with ypos (map reference)
+	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
+	
+	sub r1, #512					@ 32x8x2
+	
+	ldr r2, =2048					@ 32x8x2
+	
+	bl dmaCopy
+	
+	bl drawSFMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+drawSFMapScreenSub:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =StarFrontMap			@ source
+	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)	@ destination
+	ldr r3, =yposSFSub				@ 
+	
+	ldr r2, [r3]					@ load y2 with ypos (map reference)
+	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
+	
+	sub r0, #1536						@ 24 * 32 * 2 tiles offset
+	
+	sub r1, #512					@ 32x8x2
+	
+	ldr r2, =2048					@ 32x8x2
+	
+	bl dmaCopy
+	
+	bl drawSFMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+
+drawSBMapScreenMain:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =StarBackMap			@ source
+	ldr r1, =BG_MAP_RAM(BG3_MAP_BASE)	@ destination
+	ldr r3, =yposSBMain				@
+
+	ldr r2, [r3]					@ load y2 with ypos (map reference)
+	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
+	
+	sub r1, #512					@ 32x8x2
+	
+	ldr r2, =2048					@ 32x8x2
+	
+	bl dmaCopy
+	
+	bl drawSBMapMain
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+
+drawSBMapScreenSub:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =StarBackMap			@ source
+	ldr r1, =BG_MAP_RAM_SUB(BG3_MAP_BASE_SUB)	@ destination
+	ldr r3, =yposSBSub				@
+	
+	ldr r2, [r3]					@ load y2 with ypos (map reference)
+	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
+	
+	sub r0, #1536						@ 24 * 32 * 2 tiles offset
+	
+	sub r1, #512				@ 32x8x2
+	
+	ldr r2, =2048					@ 32x8x2
+	
+	bl dmaCopy
+	
+	bl drawSBMapSub
+	
+	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
 	
 	
@@ -377,9 +477,20 @@ drawSFMapMain:
 	ldr r0, =StarFrontMap			@ source
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)	@ destination
 	ldr r3, =yposSFMain				@ 
+	ldr r4, =vofsSFMain
+	
 	ldr r2, [r3]					@ load y2 with ypos (map reference)
 	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
-	ldr r2, =4096					@ 32x64x2
+	
+	ldr r2, [r4]
+	cmp r2, #0						@ equal zero
+	addeq r2, #256					@ then add 256
+	add r1, r2, lsl #3
+	
+	sub r1, #512					@ 32x8x2
+	
+	ldr r2, =512					@ 32x8x2
+	
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
@@ -391,9 +502,22 @@ drawSFMapSub:
 	ldr r0, =StarFrontMap			@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)	@ destination
 	ldr r3, =yposSFSub				@ 
+	ldr r4, =vofsSFSub
+	
 	ldr r2, [r3]					@ load y2 with ypos (map reference)
 	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
-	ldr r2, =4096					@ 32x64x2
+	
+	sub r0, #1536						@ 24 * 32 * 2 tiles offset
+	
+	ldr r2, [r4]
+	cmp r2, #0						@ equal zero
+	addeq r2, #256					@ then add 256
+	add r1, r2, lsl #3
+	
+	sub r1, #512					@ 32x8x2
+	
+	ldr r2, =512					@ 32x8x2
+	
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
@@ -405,9 +529,20 @@ drawSBMapMain:
 	ldr r0, =StarBackMap			@ source
 	ldr r1, =BG_MAP_RAM(BG3_MAP_BASE)	@ destination
 	ldr r3, =yposSBMain				@
+	ldr r4, =vofsSBMain
+	
 	ldr r2, [r3]					@ load y2 with ypos (map reference)
 	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
-	ldr r2, =4096					@ 32x64x2
+	
+	ldr r2, [r4]
+	cmp r2, #0						@ equal zero
+	addeq r2, #256					@ then add 256
+	add r1, r2, lsl #3
+	
+	sub r1, #512					@ 32x8x2
+	
+	ldr r2, =512					@ 32x8x2
+	
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
@@ -419,12 +554,25 @@ drawSBMapSub:
 	ldr r0, =StarBackMap			@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG3_MAP_BASE_SUB)	@ destination
 	ldr r3, =yposSBSub				@
+	ldr r4, =vofsSBSub
+	
 	ldr r2, [r3]					@ load y2 with ypos (map reference)
 	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
-	ldr r2, =4096					@ 32x64x2
+	
+	sub r0, #1536						@ 24 * 32 * 2 tiles offset
+	
+	ldr r2, [r4]
+	cmp r2, #0						@ equal zero
+	addeq r2, #256					@ then add 256
+	add r1, r2, lsl #3
+	
+	sub r1, #512					@ 32x8x2
+	
+	ldr r2, =512					@ 32x8x2
+	
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
-
+	
 	.pool
 	.end

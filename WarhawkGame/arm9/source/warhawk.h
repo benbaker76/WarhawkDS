@@ -5,16 +5,16 @@
 @ BG2 - StarFront
 @ BG3 - StarBack
 
-#define BG0_MAP_BASE				15
-#define BG0_MAP_BASE_SUB			17
+#define BG0_MAP_BASE				23
+#define BG0_MAP_BASE_SUB			23
 
-#define BG1_MAP_BASE				19
-#define BG1_MAP_BASE_SUB			21
+#define BG1_MAP_BASE				30
+#define BG1_MAP_BASE_SUB			30
 
-#define BG2_MAP_BASE				23
-#define BG2_MAP_BASE_SUB			25
+#define BG2_MAP_BASE				27
+#define BG2_MAP_BASE_SUB			27
 
-#define BG3_MAP_BASE				27
+#define BG3_MAP_BASE				29
 #define BG3_MAP_BASE_SUB			29
 
 #define BG0_TILE_BASE				2
@@ -23,11 +23,11 @@
 #define BG1_TILE_BASE				0
 #define BG1_TILE_BASE_SUB			0
 
-#define BG2_TILE_BASE				4
+#define BG2_TILE_BASE				3
 #define BG2_TILE_BASE_SUB			3
 
-#define BG3_TILE_BASE				5
-#define BG3_TILE_BASE_SUB			5
+#define BG3_TILE_BASE				4
+#define BG3_TILE_BASE_SUB			4
 
 @ Our background priorities
 

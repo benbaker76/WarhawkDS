@@ -43,7 +43,7 @@ scrollMain:
 	ldrh r1, [r0]					@ Load the scroll register
 	
 	cmp r1, #32						@ Has the scroll regsiter reached 32 (32 is a block size)
-	moveq r1, #288					@ Yes then set it back to 256+32 (288)
+	moveq r1, #256+32				@ Yes then set it back to 256+32 (288)
 	
 	sub r1, #1						@ move up a pixel
 
@@ -100,19 +100,31 @@ scrollSub:
 @---------------------------------
 
 
+
+
+
 scrollSFMain:
-	stmfd sp!, {r0-r6, lr} 
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =pixelOffsetSFMain
+	ldr r1, [r0]
+	cmp r1, #64						@ Has our scroller moved 32 pixels?
+	
+	moveq r1, #0
+	bleq scrollSFMapMain			@ If so, time to scroll the map
+	
+	add r1, #1						@ Add one to our scroller
+	strh r1, [r0]					@ Write it back
 
 	ldr r0, =vofsSFMain
 	ldrh r1, [r0]					@ Load r2 with the scroll register
 	
 	cmp r1, #0						@ has our scroll register reached zero?
-	bleq scrollSFMapMain			@ yes so we need to write the next chunk of map to VRAM
-	ldr r2, =255					@ load 255
-	cmp r1, #0						@ has our scroll register reached zero?
-	moveq r1, r2					@ yes so mov 255 into our scroll register
+	moveq r1, #256					@ yes so mov 255 into our scroll register
 	
-	subs r1, r1, #1					@ move up a pixel
+	sub r1, #1						@ move up a pixel
+	
 	ldr r2, =REG_BG2VOFS			@ R2 is the memory adress for the main scroll
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
@@ -120,18 +132,27 @@ scrollSFMain:
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 
 scrollSFSub:
-	stmfd sp!, {r0-r6, lr}	
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =pixelOffsetSFSub
+	ldr r1, [r0]
+	cmp r1, #64						@ Has our scroller moved 32 pixels?
+	
+	moveq r1, #0
+	bleq scrollSFMapSub				@ If so, time to scroll the map
+	
+	add r1, #1						@ Add one to our scroller
+	strh r1, [r0]					@ Write it back
 
 	ldr r0, =vofsSFSub
 	ldrh r1, [r0]					@ Load r2 with the scroll register
 	
 	cmp r1, #0						@ has our scroll register reached zero?
-	bleq scrollSFMapSub				@ yes so we need to write the next chunk of map to VRAM
-	ldr r2, =255					@ load 255
-	cmp r1, #0						@ has our scroll register reached zero?
-	moveq r1, r2					@ yes so mov 255 into our scroll register
+	moveq r1, #256					@ yes so mov 255 into our scroll register
 	
-	subs r1, r1, #1					@ move up a pixel
+	sub r1, #1						@ move up a pixel
+	
 	ldr r2, =REG_BG2VOFS_SUB		@ R2 is the memory adress for the main scroll
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
@@ -139,18 +160,27 @@ scrollSFSub:
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
 scrollSBMain:
-	stmfd sp!, {r0-r6, lr} 	
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =pixelOffsetSBMain
+	ldr r1, [r0]
+	cmp r1, #64						@ Has our scroller moved 32 pixels?
+	
+	moveq r1, #0
+	bleq scrollSBMapMain			@ If so, time to scroll the map
+	
+	add r1, #1						@ Add one to our scroller
+	strh r1, [r0]					@ Write it back
 
 	ldr r0, =vofsSBMain
 	ldrh r1, [r0]					@ Load r2 with the scroll register
 	
 	cmp r1, #0						@ has our scroll register reached zero?
-	bleq scrollSBMapMain			@ yes so we need to write the next chunk of map to VRAM
-	ldr r2, =255					@ load 255
-	cmp r1, #0						@ has our scroll register reached zero?
-	moveq r1, r2					@ yes so mov 255 into our scroll register
+	moveq r1, #256					@ yes so mov 255 into our scroll register
 	
-	subs r1, r1, #1					@ move up a pixel
+	sub r1, #1						@ move up a pixel
+	
 	ldr r2, =REG_BG3VOFS			@ R2 is the memory adress for the main scroll
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
@@ -158,35 +188,57 @@ scrollSBMain:
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
 scrollSBSub:
-	stmfd sp!, {r0-r6, lr}	
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =pixelOffsetSBSub
+	ldr r1, [r0]
+	cmp r1, #64						@ Has our scroller moved 32 pixels?
+	
+	moveq r1, #0
+	bleq scrollSBMapSub				@ If so, time to scroll the map
+	
+	add r1, #1						@ Add one to our scroller
+	strh r1, [r0]					@ Write it back
 
 	ldr r0, =vofsSBSub
 	ldrh r1, [r0]					@ Load r2 with the scroll register
 	
 	cmp r1, #0						@ has our scroll register reached zero?
-	bleq scrollSBMapSub				@ yes so we need to write the next chunk of map to VRAM
-	ldr r2, =255					@ load 255
-	cmp r1, #0						@ has our scroll register reached zero?
-	moveq r1, r2					@ yes so mov 255 into our scroll register
+	moveq r1, #256					@ yes so mov 255 into our scroll register
 	
-	subs r1, r1, #1					@ move up a pixel
+	sub r1, #1						@ move up a pixel
+	
 	ldr r2, =REG_BG3VOFS_SUB		@ R2 is the memory adress for the main scroll
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
 scrollSFMapMain:
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =yposSFMain				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
 	
-	cmp r1,#0						@ If we are at the top, lets go back to the
-	moveq r1,#832					@ bottom of the map!
+	cmp r1,#48						@ If we are at the top, lets go back to the
+	moveq r1,#736+64				@ bottom of the map!
 
-	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	sub r1, #16						@ lets go up one block (64 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
+	
 	bl drawSFMapMain
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
@@ -197,11 +249,12 @@ scrollSFMapSub:
 	ldr r0, =yposSFSub				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
 	
-	cmp r1,#0						@ If we are at the top, lets go back to the
-	moveq r1,#832					@ bottom of the map!
+	cmp r1,#48						@ If we are at the top, lets go back to the
+	moveq r1,#736+64				@ bottom of the map!
 	
-	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	sub r1, #16						@ lets go up one block (64 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
+	
 	bl drawSFMapSub
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
@@ -212,11 +265,12 @@ scrollSBMapMain:
 	ldr r0, =yposSBMain				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
 
-	cmp r1,#0						@ If we are at the top, lets go back to the
-	moveq r1,#832					@ bottom of the map!
+	cmp r1,#48						@ If we are at the top, lets go back to the
+	moveq r1,#736+64				@ bottom of the map!
 
-	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	sub r1, #16						@ lets go up one block (64 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
+	
 	bl drawSBMapMain
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
@@ -227,18 +281,28 @@ scrollSBMapSub:
 	ldr r0, =yposSBSub				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
 
-	cmp r1,#0						@ If we are at the top, lets go back to the
-	moveq r1,#832					@ bottom of the map!
+	cmp r1,#48						@ If we are at the top, lets go back to the
+	moveq r1,#736+64				@ bottom of the map!
 
-	sub r1, #64						@ lets go up one block (64 tiles) on the map
+	sub r1, #16						@ lets go up one block (64 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
+	
 	bl drawSBMapSub
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
 scrollDone:
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
-	
+
+
+
+
+
+
+
+
+
+
 scrollStars:
 	stmfd sp!, {r0-r6, lr}
 	

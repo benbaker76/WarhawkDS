@@ -1,6 +1,11 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
 
+v0.21 - HK
+- Changed bg2 and bg3 to be 32x32 size maps
+- Rewrote scroll code for star maps
+- Fixed VRAM memory usage issue
+
 v0.20 - FLASH
 - Craters and explosions now work correctly - thank god
 - alien explosions are now coded

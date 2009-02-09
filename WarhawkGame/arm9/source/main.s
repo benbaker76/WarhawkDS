@@ -1,5 +1,5 @@
 @
-@ Release V0.19
+@ Release V0.21
 @
 @ ps. you can kill trackers by swinging them off the bottom of the screen!
 
@@ -38,10 +38,10 @@ main:
 	bl clearBG3
 	bl drawMapScreenMain
 	bl drawMapScreenSub
-	bl drawSFMapMain
-	bl drawSFMapSub
-	bl drawSBMapMain
-	bl drawSBMapSub
+	bl drawSFMapScreenMain
+	bl drawSFMapScreenSub
+	bl drawSBMapScreenMain
+	bl drawSBMapScreenSub
 	bl drawScore
 	bl drawSprite
 	bl drawGetReadyText

@@ -13,6 +13,10 @@
 	
 	.global pixelOffsetMain
 	.global pixelOffsetSub
+	.global pixelOffsetSFMain
+	.global pixelOffsetSFSub
+	.global pixelOffsetSBMain
+	.global pixelOffsetSBSub
 	.global pixelOffsetText
 	.global LevelMap
 	.global pressMe
@@ -76,10 +80,17 @@
 	
 level:
 	.word 0
-	
 pixelOffsetSub:
 	.word 0
 pixelOffsetMain:
+	.word 0
+pixelOffsetSFSub:
+	.word 0
+pixelOffsetSFMain:
+	.word 0
+pixelOffsetSBSub:
+	.word 0
+pixelOffsetSBMain:
 	.word 0
 craterFrame:
 	.word 2
@@ -107,30 +118,30 @@ adder:
 vofsMain:
 	.word 256+32
 vofsSFMain:
-	.word 192
+	.word 256
 vofsSBMain:
-	.word 192
+	.word 256
 
 vofsSub:
 	.word 256+32
 vofsSFSub:
-	.word 0
+	.word 256
 vofsSBSub:
-	.word 0
+	.word 256
 
 yposMain:
 	.word 3744						@ 3968 - 192 - 32
 yposSFMain:
-	.word 832
+	.word 736						@ 3200 - 192 - 64 / 4
 yposSBMain:
-	.word 832
+	.word 736						@ 3200 - 192 - 64 / 4
 	
 yposSub:
 	.word 3744						@ 3968 - 192 - 32
 yposSFSub:
-	.word 832
+	.word 736						@ 3200 - 192 - 64 / 4
 yposSBSub:
-	.word 832
+	.word 736						@ 3200 - 192 - 64 / 4
 
 xpos:
 	.word 0

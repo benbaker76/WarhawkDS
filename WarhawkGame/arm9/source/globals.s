@@ -72,6 +72,7 @@
 	.global digits
 	.global moveBaseExplosion
 	.global level
+	.global craterFrame
 	
 level:
 	.word 0
@@ -80,7 +81,8 @@ pixelOffsetSub:
 	.word 0
 pixelOffsetMain:
 	.word 0
-
+craterFrame:
+	.word 2
 pressMe:
 	.word 0
 firePress:

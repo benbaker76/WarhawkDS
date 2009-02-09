@@ -17,14 +17,14 @@
 #define BG3_MAP_BASE				27
 #define BG3_MAP_BASE_SUB			29
 
-#define BG0_TILE_BASE				1
-#define BG0_TILE_BASE_SUB			1
+#define BG0_TILE_BASE				2
+#define BG0_TILE_BASE_SUB			2
 
 #define BG1_TILE_BASE				0
 #define BG1_TILE_BASE_SUB			0
 
-#define BG2_TILE_BASE				2
-#define BG2_TILE_BASE_SUB			2
+#define BG2_TILE_BASE				4
+#define BG2_TILE_BASE_SUB			3
 
 #define BG3_TILE_BASE				5
 #define BG3_TILE_BASE_SUB			5
@@ -40,13 +40,13 @@
 
 #define SPRITE_PRIORITY				1
 
-@ We should be #include'ing the generated headers for these values
+@ We should be #includeing the generated headers for these values
 @ But it will error out because there is some "C" code
 @ We should ask the author of grit to add an option to output pure asm headers
 @ So we can eg. #include "..\build\StarBack.h" instead of copying out these values
 
 #define StarBackPalLen				512
-#define Level1TilesLen				32768
+#define Level1TilesLen				20000
 #define CraterTilesLen				544
 #define StarFrontTilesLen 			576
 #define StarBackTilesLen			34880

@@ -79,8 +79,8 @@ main:
 	bl init_Alien
 	mov r1,#11
 	bl init_Alien
-	mov r1,#12
-	bl init_Alien
+@	mov r1,#12
+@	bl init_Alien
 
 
 

@@ -169,9 +169,13 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			str r4,[r3, r0, lsl #2]	@ store the new Y pos back
 
 			cmp r4,#384
-			blgt detectBG				@ check if we have hit a base!!!
+			bmi bulletDead
+			bl detectBGL				@ check if we have hit a base!!!
+			bl detectBGR 
+	
 			@ now detect against aliens
-
+			@ bl detectALN
+			
 		bulletDead:
 		subs r0,#1
 		bpl activeBloop	

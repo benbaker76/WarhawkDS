@@ -52,8 +52,9 @@ checkCraterBlockMainLoop:
 	mov r0, r6, lsl #2				@ multiply by 4
 	mov r1, r5, lsr #3				@ divide by 8
 	
-	cmp r3, #2						@ is it destructable?	
-	bleq drawCraterBlockMain
+	cmp r3,#4						@ is it a crater? (anything 4 or over)
+	movpl r9,r3						@ place crater to draw in r9	
+	blpl drawCraterBlockMain		@ blpl = branch if >=
 	
 	add r6, #1
 	
@@ -62,15 +63,6 @@ checkCraterBlockMainLoop:
 checkCraterBlockMainExit:
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
-	
-	
-
-	
-	
-	
-	
-	
-	
 	
 	
 drawCraterBlockMain:
@@ -97,7 +89,9 @@ drawCraterBlockMain:
 	
 	add r3, r0, lsl #1				@ Add xpos * 2
 	add r3, r1, lsl #6				@ Add ypos * 64
-	
+	mov r6,r9						@ r9 is our crater number (4-11)
+	sub r6,#4						@ drop it to 0-7
+	add r2, r6, lsl #3				@ multiply by 8 (8 bytes width per crater) and add to copy position
 	mov r0, r2
 	mov r1, r3
 	ldr r2, =8						@ 4 * 2 tiles * 2
@@ -125,6 +119,7 @@ drawCraterBlockSub:
 	stmfd sp!, {r2-r6, lr}
 	
 	ldr r2, =Level1Map				@ source
+
 	ldr r3, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r4, =0						@ xpos (in the LevelMap)
 	ldr r5, =496					@ ypos (in the LevelMap)
@@ -140,7 +135,9 @@ drawCraterBlockSub:
 	
 	add r3, r0, lsl #1				@ Add xpos * 2
 	add r3, r1, lsl #6				@ Add ypos * 64
-	
+	mov r6,r9
+	sub r6,#4
+	add r2, r6, lsl #3
 	mov r0, r2
 	mov r1, r3
 	ldr r2, =8						@ 4 * 2 tiles * 2
@@ -207,8 +204,6 @@ drawMapMainDone:
 
 	bl checkCraterBlockMain
 	
-	cmp r1,r1
-
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 
 drawMapSub:

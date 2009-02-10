@@ -50,7 +50,7 @@ main:
 	bl waitforFire
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)
 	ldr r0,=powerUp
-	str r1,[r0]
+@	str r1,[r0]
 	
 	bl clearBG0
 	bl drawAllEnergyBars
@@ -105,7 +105,7 @@ gameLoop:
 
 		bl move_Aliens
 
-		bl addScore
+@		bl addScore
 		bl drawScore
 @		bl drawDebugText
 		

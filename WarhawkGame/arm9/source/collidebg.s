@@ -117,15 +117,14 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		ldr r1, =spriteActive+4		@ Kill the bullet
 		mov r2,#0
 		str r2, [r1, r0, lsl #2]
-		ldr r0,=adder+7				@ add 321 to the score
-		mov r1,#1
+		ldr r0,=adder+7				@ add 65 to the score
+		mov r1,#5
 		strb r1,[r0]
 		sub r0,#1
-		mov r1,#2
+		mov r1,#6
 		strb r1,[r0]
 		sub r0,#1
-		mov r1,#3
-		strb r1,[r0]
+		bl addScore
 
 	no_hit:
 
@@ -236,15 +235,14 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		ldr r1, =spriteActive+4		@ Kill the bullet
 		mov r2,#0
 		str r2, [r1, r0, lsl #2]
-		ldr r0,=adder+7				@ add 321 to the score
-		mov r1,#1
+		ldr r0,=adder+7				@ add 65 to the score
+		mov r1,#5
 		strb r1,[r0]
 		sub r0,#1
-		mov r1,#2
+		mov r1,#6
 		strb r1,[r0]
 		sub r0,#1
-		mov r1,#3
-		strb r1,[r0]
+		bl addScore
 
 	no_hitR:
 

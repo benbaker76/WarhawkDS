@@ -96,11 +96,12 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			bl drawCraterBlockMain
 			pop {r0}
 
-			cmp r10,#0
-			bne nonono
+			cmp r4,#33
+			bpl nonono
 				ldr r1,=vofsSub				@ Draw Crater on Top Screen
 				ldr r1,[r1]
 				add r1,#192
+				add r1,r4
 				lsr r1,#5
 				lsl r1,#2	
 				bl drawCraterBlockSub
@@ -214,11 +215,12 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			bl drawCraterBlockMain
 			pop {r0}
 
-			cmp r10,#0
-			bne nononoR
+			cmp r4,#33
+			bpl nononoR
 				ldr r1,=vofsSub				@ Draw Crater on Top Screen
 				ldr r1,[r1]
 				add r1,#192
+				add r1,r4
 				lsr r1,#5
 				lsl r1,#2	
 				bl drawCraterBlockSub

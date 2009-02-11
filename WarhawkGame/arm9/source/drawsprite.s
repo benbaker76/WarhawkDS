@@ -183,7 +183,8 @@ drawSprite:
 		str r1, [r0]				@ Store it all back
 		@ Need to kill same sprite on SUB screen - or do we???
 		@ Seeing that for this to occur, the sprite is offscreen on SUB!
-	sprites_Done:	
+	sprites_Done:
+	
 		ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
 		ldr r1,[r0,r8, lsl #2]
 		cmp r1,#5								@ Base explosion
@@ -246,8 +247,6 @@ drawSprite:
 				str r1,[r0,r8,lsl #2]	
 			b noMoreStuff
 		whatNext:
-	
-
 
 		noMoreStuff:
 	subs r8,#1

@@ -70,6 +70,14 @@ drawDebugText:
 	mov r11, #9						@ x pos
 	bl drawDigits					@ Draw
 
+	ldr r10,=REG_VCOUNT				@ Pointer to data
+	ldrh r10,[r10]					@ Read value
+	mov r8,#20						@ y pos
+	mov r9,#12						@ Number of digits
+	mov r11, #0						@ x pos
+	bl drawDigits					@ Draw
+
+
 	ldmfd sp!, {r0-r10, pc}
 	
 drawGetReadyText:

@@ -105,7 +105,7 @@ gameLoop:
 		bl moveAliens
 
 		bl drawScore
-		bl drawDebugText
+
 		
 		bl scrollStars		@ Scroll Stars (BG2,BG3)
 
@@ -113,6 +113,9 @@ gameLoop:
 		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
 
 		bl drawSprite
+
+		bl drawDebugText
+
 	bl waitforNoblank
 	
 	@---------------------------------------------

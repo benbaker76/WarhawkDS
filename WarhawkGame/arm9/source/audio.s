@@ -15,6 +15,7 @@
 	.global playAlienExplodeSound
 	.global playAlienExplodeScreamSound
 	.global playElecShotSound
+	.global playLaserShotSound
 	.global playShipArmourHit1Sound
 	.global playShipArmourHit2Sound
 
@@ -92,6 +93,19 @@ playElecShotSound:
 	
 	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
 	ldr r1, =elecshot_raw			@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+	
+playLaserShotSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =LaserShotLen			@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =lasershot_raw			@ Get the sample address
 	str r1, [r0]					@ Write the value
 	
 	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return

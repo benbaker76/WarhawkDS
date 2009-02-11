@@ -141,8 +141,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 	stmfd sp!, {r0-r6, lr}
 	mov r0,#15
-	ldr r1, =spriteActive
-	add r1, #4
+	ldr r1, =spriteActive+4
 	activeBloop:
 		ldr r2,[r1,r0, lsl #2]			@ Multiplied by 4 as in words
 		cmp r2,#0						@ check if bullet is active (1=yes)
@@ -175,7 +174,7 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			bl detectBGR 
 	
 			@ now detect against aliens
-			@ bl detectALN
+			bl detectALN
 			
 		bulletDead:
 		subs r0,#1

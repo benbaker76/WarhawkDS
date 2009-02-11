@@ -11,6 +11,7 @@
 	.align
 	.global detectBGL
 	.global detectBGR
+	.global detectALN
 	
 @-------------- DETECT Left BULLET
 detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A BASE
@@ -241,7 +242,6 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		sub r0,#1
 		mov r1,#6
 		strb r1,[r0]
-		sub r0,#1
 		bl addScore
 
 	no_hitR:
@@ -297,3 +297,102 @@ initBaseExplode:
 	str r2,[r4,r6, lsl #2]
 
 	ldmfd sp!, {r0-r6, pc}			@ all done
+	
+@-------------------------------------------------------------------	
+detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH AN ALIEN
+
+	stmfd sp!, {r0-r8, lr}
+	@ First we need to grab the X and Y of the bullet and cycle trough the aliens to find a hit
+	ldr r1, =spriteX+4			
+	ldr r1, [r1, r0, lsl #2]	@ r1= BULLET X
+	ldr r2, =spriteY+4			
+	ldr r2, [r2, r0, lsl #2]	@ r2= BULLET Y
+	
+	mov r3,#63					@ Alien index (sprites 17 - 80 = 64)
+
+	detectAlienLoop:
+		ldr r4,=spriteActive+68		@ add 68 (17*4) for start of aliens
+		ldr r5,[r4,r3, lsl #2]
+		cmp r5,#1
+		bne detectNoAlien
+		
+	
+		@ Found an ALIEN!!
+
+			add r4,r3, lsl #2		@ r4=aliens base offset so we can use the "offs" for data grabbing
+
+			@ Do checks
+			mov r8,#sptXOffs
+			ldr r6,[r4,r8]					@ r2=current Alien X
+			add r6,#24						
+			cmp r6,r1
+			bmi detectNoAlien
+			sub r6,#24
+			add r1,#24
+			cmp r6,r1
+			sub r1,#24
+			bpl detectNoAlien
+
+			mov r8,#sptYOffs
+			ldr r6,[r4,r8]					@ r2=current y COORD
+			add r6,#24
+			cmp r6,r2
+			bmi detectNoAlien
+			sub r6,#24
+			add r2,#24
+			cmp r6,r2
+			sub r2,#24
+			bpl detectNoAlien
+				@ ok, now we need to see how many hits to kill
+				mov r8,#sptHitsOffs
+				ldr r6,[r4,r8]
+				subs r6,#1
+				str r6,[r4,r8]
+				cmp r6,#0
+				bmi detectAlienKill
+
+push {r8-r11}	@ NEVER SHOWN?
+mov r10,r6
+mov r8,#8
+mov r9,#3
+mov r11,#4
+bl drawDigits
+pop {r8-r11}
+
+					@ kill BuLLET
+					mov r6,#0
+					ldr r8,=spriteActive+4
+					str r6, [r8,r0, lsl #2]
+					@ ok, alien not dead yet!!, so, need a "ting" sound
+					@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?
+				b detectNoAlien
+				xxx:
+@				b xxx
+				detectAlienKill:
+				@ explode alien
+				mov r6,#4
+				str r6,[r4]
+				mov r6,#6
+				mov r8,#sptObjOffs
+				str r6,[r4,r8]
+				@ kill BuLLET
+				mov r6,#0
+				ldr r8,=spriteActive+4
+				str r6, [r8,r0, lsl #2]
+				@ add score
+				ldr r8,=adder+7				@ add 65 to the score
+				mov r6,#8
+				strb r6,[r8]
+				sub r8,#1
+				mov r6,#7
+				strb r6,[r8]
+				bl addScore		
+	
+	
+		detectNoAlien:
+		subs r3,#1
+		bpl detectAlienLoop
+	
+	
+	
+	ldmfd sp!, {r0-r8, pc}

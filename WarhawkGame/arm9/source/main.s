@@ -79,8 +79,8 @@ main:
 	bl init_Alien
 	mov r1,#11
 	bl init_Alien
-@	mov r1,#12
-@	bl init_Alien
+	mov r1,#12
+	bl init_Alien
 
 
 
@@ -600,9 +600,16 @@ init_Alien:				@ This code will find a blank alien sprite and assign it
 	add r1,#4
 	add r0,#sptHitsOffs
 	ldr r2,[r4,r1]
-	cmp r2,#0					@ check hits to kill is never 0
-	moveq r2,#1					@ in case we forget to set this
+@mov r2,#2
 	str r2,[r3,r0]				@ store sprites hits to kill
+
+push {r8-r11}
+mov r10,r2
+mov r8,#6
+mov r9,#3
+mov r11,#4
+bl drawDigits
+pop {r8-r11}
 
 	mov r2,#0
 	mov r0,#sptAngleOffs
@@ -629,39 +636,18 @@ init_Alien:				@ This code will find a blank alien sprite and assign it
 	
 	ldmfd sp!, {r0-r10, pc}
 	
-moveBaseExplosion:
-
-	ldr r1,=spriteActive
-	mov r0,#113
-		checkBase:
-@		ldr r2,[r1,r0, lsl#2]
-@		cmp r2,#5
-@		bne noBaseHere
-				ldr r2,=spriteY
-				ldr r3,[r2,r0, lsl #2]
-				add r3,r3,#1
-				str r3,[r2,r0, lsl #2]
-		
-		
-		noBaseHere:
-		add r0,#1
-		cmp r0,#128
-		bne checkBase
-	
-mov r15,r14
-	
 	
 alienDescript:	@ These are stored in blocks of 32 words --- for however many we use?
 
-	.word 90,120,1,1024,0,37,1,1					@ inits
+	.word 90,120,1,1024,0,37,99,1					@ inits
 	.word 5,280,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 90,140,1,1024,0,37,1,1					@ inits
+	.word 90,140,1,1024,0,37,99,1					@ inits
 	.word 5,260,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 90,160,1,1024,0,37,1,1					@ inits
+	.word 90,160,1,1024,0,37,99,1					@ inits
 	.word 5,240,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
@@ -708,9 +694,9 @@ alienDescript:	@ These are stored in blocks of 32 words --- for however many we 
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
 	.word 1024		@ init speed y			@ (set to 1024 to signal linear mode)
 	.word 1 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
-	.word 56 		@ init spriteObj		@ Sprite to use for image
-	.word 2			@ init hits to kill		@ make massive for indestructable
-	.word 0			@ init 'fire type' 		@ 0=none
+	.word 37		@ init spriteObj		@ Sprite to use for image
+	.word 20		@ init hits to kill		@ make massive for indestructable
+	.word 5			@ init 'fire type' 		@ 0=none
 	.word 3,120		@ track x,y 1			@ tracking coordinate (as in coords.png)
 	.word 7,120		@ track x,y 2
 	.word 0,0		@ track x,y 3

@@ -312,20 +312,17 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 
 	detectAlienLoop:
 		ldr r4,=spriteActive+68		@ add 68 (17*4) for start of aliens
-		ldr r5,[r4,r3, lsl #2]
+		add r4,r3, lsl #2			@ r4=aliens base offset so we can use the "offs" for data grabbing
+		ldr r5,[r4]
 		cmp r5,#1
 		bne detectNoAlien
 		
-	
 		@ Found an ALIEN!!
-
-			add r4,r3, lsl #2		@ r4=aliens base offset so we can use the "offs" for data grabbing
-
 			@ Do checks
 			mov r8,#sptXOffs
-			ldr r6,[r4,r8]					@ r2=current Alien X
+			ldr r6,[r4,r8]					@ r6=current Alien X
 			add r6,#24						
-			cmp r6,r1
+			cmp r6,r1						@ r1=Bullet x
 			bmi detectNoAlien
 			sub r6,#24
 			add r1,#24
@@ -334,9 +331,9 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			bpl detectNoAlien
 
 			mov r8,#sptYOffs
-			ldr r6,[r4,r8]					@ r2=current y COORD
+			ldr r6,[r4,r8]					@ r6=current Alien y
 			add r6,#24
-			cmp r6,r2
+			cmp r6,r2						@ r2=bullet y
 			bmi detectNoAlien
 			sub r6,#24
 			add r2,#24
@@ -345,19 +342,19 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			bpl detectNoAlien
 				@ ok, now we need to see how many hits to kill
 				mov r8,#sptHitsOffs
-				ldr r6,[r4,r8]
-				subs r6,#1
-				str r6,[r4,r8]
-				cmp r6,#0
-				bmi detectAlienKill
+@				ldr r6,[r4,r8]
+@				subs r6,#1
+@				str r6,[r4,r8]
+@				cmp r6,#0
+@				bmi detectAlienKill
 
-push {r8-r11}	@ NEVER SHOWN?
-mov r10,r6
-mov r8,#8
-mov r9,#3
-mov r11,#4
-bl drawDigits
-pop {r8-r11}
+@push {r8-r11}	@ NEVER SHOWN?
+@mov r10,r6
+@mov r8,#8
+@mov r9,#3
+@mov r11,#0
+@bl drawDigits
+@pop {r8-r11}
 
 					@ kill BuLLET
 					mov r6,#0
@@ -365,15 +362,19 @@ pop {r8-r11}
 					str r6, [r8,r0, lsl #2]
 					@ ok, alien not dead yet!!, so, need a "ting" sound
 					@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?
-				b detectNoAlien
-				xxx:
-@				b xxx
-				detectAlienKill:
+@				b detectNoAlien
+			@	xxx:
+			@	b xxx
+			
+			detectAlienKill:
 				@ explode alien
 				mov r6,#4
 				str r6,[r4]
 				mov r6,#6
 				mov r8,#sptObjOffs
+				str r6,[r4,r8]
+				mov r6,#4
+				mov r8,#sptExpDelayOffs
 				str r6,[r4,r8]
 				@ kill BuLLET
 				mov r6,#0

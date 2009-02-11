@@ -600,16 +600,8 @@ init_Alien:				@ This code will find a blank alien sprite and assign it
 	add r1,#4
 	add r0,#sptHitsOffs
 	ldr r2,[r4,r1]
-@mov r2,#2
+mov r2,#6
 	str r2,[r3,r0]				@ store sprites hits to kill
-
-push {r8-r11}
-mov r10,r2
-mov r8,#6
-mov r9,#3
-mov r11,#4
-bl drawDigits
-pop {r8-r11}
 
 	mov r2,#0
 	mov r0,#sptAngleOffs
@@ -639,15 +631,15 @@ pop {r8-r11}
 	
 alienDescript:	@ These are stored in blocks of 32 words --- for however many we use?
 
-	.word 90,120,1,1024,0,37,99,1					@ inits
+	.word 90,120,1,1024,0,37,1,1					@ inits
 	.word 5,280,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 90,140,1,1024,0,37,99,1					@ inits
+	.word 90,140,1,1024,0,37,1,1					@ inits
 	.word 5,260,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	
-	.word 90,160,1,1024,0,37,99,1					@ inits
+	.word 90,160,1,1024,0,37,1,1					@ inits
 	.word 5,240,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 	

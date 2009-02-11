@@ -362,8 +362,8 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					mov r6,#5
 					strb r6,[r8]
 					bl addScore	
-					@	bl playTingSound
-				b detectNoAlien
+					bl playShipArmourHit1Sound
+					b detectNoAlien
 			
 			detectAlienKill:
 				@ explode alien
@@ -387,7 +387,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				mov r6,#7
 				strb r6,[r8]
 				bl addScore		
-				@bl playAlienExplosionSound
+				bl playAlienExplodeSound
 	
 		detectNoAlien:
 		subs r3,#1

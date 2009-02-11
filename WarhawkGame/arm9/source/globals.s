@@ -77,6 +77,7 @@
 	.global moveBaseExplosion
 	.global level
 	.global craterFrame
+	.global waveNumber
 	
 level:
 	.word 0
@@ -226,5 +227,8 @@ irqTable:
 	.space 1024					@ 32 entries
 digits:
 	.space 32
+	
+waveNumber:
+	.word 0
 
 	.end

@@ -187,7 +187,7 @@ drawSprite:
 	
 		ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
 		ldr r1,[r0,r8, lsl #2]
-		cmp r1,#5								@ Base explosion
+		cmp r1,#5								@ ---------------- Base explosion
 		bne alienExplodes
 			
 			ldr r0,=spriteY						@ Load Y coord
@@ -199,11 +199,10 @@ drawSprite:
 			
 			ldr r0,=spriteExplodeDelay
 			ldr r1,[r0,r8,lsl #2]
-			sub r1,#1
-			cmp r1,#0
-			movmi r1,#4
+			subs r1,#1
+			movmi r1,#3
 			str r1,[r0,r8,lsl #2]
-			bne noMoreStuff
+			bpl noMoreStuff
 			
 			ldr r0,=spriteObj
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame
@@ -217,23 +216,22 @@ drawSprite:
 				str r1,[r0,r8,lsl #2]
 			b noMoreStuff
 		alienExplodes:
-		cmp r1,#4								@ Alien explosion
+		cmp r1,#4								@ -------------- Alien explosion
 		bne noMoreStuff
 			
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
-			add r1,#4							@ add 1 and store back
+			add r1,#2							@ add 1 and store back
 			str r1,[r0,r8,lsl #2]
 			cmp r1,#768
 			bpl noMoreAlien
 			
-			ldr r0,=spriteExplodeDelay
+			ldr r0,=spriteExplodeDelay			@ check our animation delay
 			ldr r1,[r0,r8,lsl #2]
-			sub r1,#1
-			cmp r1,#0
-			movmi r1,#4
+			subs r1,#1							@ take 1 off the count					
+			movmi r1,#3							@ and reset if <0
 			str r1,[r0,r8,lsl #2]
-			bne noMoreStuff
+			bpl noMoreStuff
 			
 			ldr r0,=spriteObj
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame

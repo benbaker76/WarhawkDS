@@ -58,8 +58,14 @@
 #define SpritesPalLen				512
 
 #define InGameMusicLen				851393
-#define BlasterSoundLen				5170
-#define ExplosionSoundLen			6488
+#define BlasterLen					5170
+#define ExplosionLen				6488
+#define AlienExplodeLen				6709
+#define AlienExplodeScreamLen		8080
+#define ElecShotLen					7916
+#define LaserShotLen				4401
+#define ShipArmourHit1Len			2452
+#define ShipArmourHit2Len			1074
 
 #define sptActiveOffs				0
 #define sptXOffs					512

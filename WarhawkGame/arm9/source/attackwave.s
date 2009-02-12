@@ -39,51 +39,51 @@ alienDescript:
 
 	@ These are stored in blocks of 32 words --- for however many we use?
 @1
-	.word 90,120,1,1024,0,37,0,1					@ inits
+	.word 90,120,1,1024,0,41,0,1					@ inits
 	.word 5,280,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @2	
-	.word 90,140,1,1024,0,37,0,1					@ inits
+	.word 90,140,1,1024,0,41,0,1					@ inits
 	.word 5,260,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @3	
-	.word 90,160,1,1024,0,37,0,1					@ inits
+	.word 90,160,1,1024,0,41,0,1					@ inits
 	.word 5,240,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @4	
-	.word 90,180,1,1024,0,37,0,1					@ inits
+	.word 90,180,1,1024,0,41,0,1					@ inits
 	.word 5,220,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @5	
-	.word 90,200,1,1024,0,37,0,1					@ inits
+	.word 90,200,1,1024,0,41,0,1					@ inits
 	.word 5,200,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @6	
-	.word 90,220,1,1024,0,37,0,1					@ inits
+	.word 90,220,1,1024,0,41,0,1					@ inits
 	.word 5,180,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @7	
-	.word 90,240,1,1024,0,37,0,1					@ inits
+	.word 90,240,1,1024,0,41,0,1					@ inits
 	.word 5,160,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @8	
-	.word 90,260,1,1024,0,37,0,1					@ inits
+	.word 90,260,1,1024,0,41,0,1					@ inits
 	.word 5,140,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @9	
-	.word 90,280,1,1024,0,37,0,1					@ inits
+	.word 90,280,1,1024,0,41,0,1					@ inits
 	.word 5,120,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @10	
-	.word 90,300,1,1024,0,37,0,1					@ inits
+	.word 90,300,1,1024,0,41,0,1					@ inits
 	.word 5,100,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @11	
-	.word 90,320,1,1024,0,37,0,1					@ inits
+	.word 90,320,1,1024,0,41,0,1					@ inits
 	.word 5,80,4,50,3,50,4,50,5,50,6,50				@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @12	
-	.word 90,340,1,1024,0,37,0,1					@ inits
+	.word 90,340,1,1024,0,41,200,1					@ inits
 	.word 5,60,4,50,3,50,4,50,5,50,6,50				@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @13
@@ -94,7 +94,7 @@ alienDescript:
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
 	.word 0			@ init speed y			@ (set to 1024 to signal linear mode)
 	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
-	.word 42		@ init spriteObj		@ Sprite to use for image
+	.word 37		@ init spriteObj		@ Sprite to use for image
 	.word 20		@ init hits to kill		@ make massive for indestructable (0=one shot)
 	.word 5			@ init 'fire type' 		@ 0=none
 	.word 1024,600	@ track x,y 1			@ tracking coordinate (as in coords.png)

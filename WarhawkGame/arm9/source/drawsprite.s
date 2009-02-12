@@ -217,7 +217,7 @@ drawSprite:
 			b noMoreStuff
 		alienExplodes:
 		cmp r1,#4								@ -------------- Alien explosion
-		bne noMoreStuff
+		bne shardAnimates
 			
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
@@ -244,6 +244,38 @@ drawSprite:
 				mov r1,#0						@ kill sprite (next update)
 				str r1,[r0,r8,lsl #2]	
 			b noMoreStuff
+
+		shardAnimates:
+		cmp r1,#6								@ -------------- Alien explosion
+		bne whatNext
+			
+			ldr r0,=spriteY						@ Load Y coord
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#3							@ add 1 and store back
+			str r1,[r0,r8,lsl #2]
+			cmp r1,#768
+			bpl noMoreShard
+			
+			ldr r0,=spriteExplodeDelay			@ check our animation delay
+			ldr r1,[r0,r8,lsl #2]
+			subs r1,#1							@ take 1 off the count					
+			movmi r1,#2							@ and reset if <0
+			str r1,[r0,r8,lsl #2]
+			bpl noMoreStuff
+			
+			ldr r0,=spriteObj
+			ldr r1,[r0,r8,lsl #2]				@ load anim frame
+			add r1,#1							@ add 1
+			str r1,[r0,r8,lsl #2]				@ store it back
+			cmp r1,#26							@ are we at the end frame?
+			bne noMoreStuff
+				noMoreShard:
+				ldr r0,=spriteActive
+				mov r1,#0						@ kill sprite (next update)
+				str r1,[r0,r8,lsl #2]	
+			b noMoreStuff
+
+
 		whatNext:
 
 		noMoreStuff:

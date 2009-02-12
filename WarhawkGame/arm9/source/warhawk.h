@@ -54,7 +54,7 @@
 #define FontTilesLen				3392
 #define EnergyTilesLen				512
 
-#define SpritesTilesLen				33280
+#define SpritesTilesLen				37888
 #define SpritesPalLen				512
 
 #define InGameMusicLen				851393

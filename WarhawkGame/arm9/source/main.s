@@ -1,5 +1,5 @@
 @
-@ Release V0.21
+@ Release V0.22
 @
 @ ps. you can kill trackers by swinging them off the bottom of the screen!
 

@@ -71,7 +71,7 @@ drawSprite:
 		ldr r3,=576-32					@ make r3 the value of top screen -sprite height
 		sub r1,r3						@ subtract our sprites y coord
 		cmp r1,#32						@ check if it is less than sprites height (off top)
-		addmi r1,#255					@ if so, add #255 (make it offscreen)
+		addmi r1,#256					@ if so, add #255 (make it offscreen)
 		sub r1,#32						@ take our height off
 		and r1,#0xff					@ Y is only 0-255
 		orr r2,r1						@ or with our attributes from earlier
@@ -110,7 +110,7 @@ drawSprite:
 		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
 		ldr r3,=384
 		cmp r1,r3
-		addmi r1,#255
+		addmi r1,#256
 		sub r1,r3
 		and r1,#0xff					@ Y is only 0-255
 		orr r2,r1
@@ -151,7 +151,7 @@ drawSprite:
 		ldr r3,=576-32				@ Calculate offsets
 		sub r1,r3					@ R1 is STILL out Y coorrd
 		cmp r1,#32					@ Acound for partial display
-		addmi r1,#255				@ Modify if so (create a wrap)
+		addmi r1,#256				@ Modify if so (create a wrap)
 		sub r1,#32					@ Take our sprite height off
 		and r1,#0xff				@ Y is only 0-255
 		orr r2,r1					@ Orr Y back with data in R2

@@ -73,7 +73,7 @@ drawDebugText:
 	ldr r10,=REG_VCOUNT				@ Pointer to data
 	ldrh r10,[r10]					@ Read value
 	mov r8,#20						@ y pos
-	mov r9,#12						@ Number of digits
+	mov r9,#3						@ Number of digits
 	mov r11, #0						@ x pos
 	bl drawDigits					@ Draw
 

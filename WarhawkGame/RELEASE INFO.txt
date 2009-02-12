@@ -1,6 +1,13 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
-
+v0.22 - FLASH
+- Added "shard" effect to alien hits that still require more shots
+- Sorted a minor bug in drawsprite.s that resulted in slight y drift
+- added some demo attack waves for testing
+- added alien explosions
+- and a few other things
+- HK also has added some more sound code for alien explode and shard
+- effect.
 v0.21 - HK
 - Changed bg2 and bg3 to be 32x32 size maps
 - Rewrote scroll code for star maps

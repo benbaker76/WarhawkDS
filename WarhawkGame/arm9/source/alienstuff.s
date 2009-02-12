@@ -200,7 +200,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		
 		mov r0,#sptYOffs
 		ldr r10,[r1,r0]		
-		cmp r10,#804			@ check if alien off screen - and kill it
+		cmp r10,#800			@ check if alien off screen - and kill it
 			bmi alienOK
 			mov r0,#0			@ uh oh - kill time!
 			str r0,[r1]			@ store 0 in sprite active
@@ -330,7 +330,7 @@ aliensLinear:
 		cmp r4,#2048
 		bne linNoKill
 			mov r4,#0
-			str r4,[r0]
+			str r4,[r1]
 			b noMatchLin
 		linNoKill:
 	mov r0,#sptTrackXOffs

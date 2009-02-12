@@ -359,6 +359,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?
 					mov r8,#sptXOffs
 					ldr r6,[r4,r8]
+					mov r6,r1			@ just test with bullet x (comment out to use alien x)
 					mov r8,#sptYOffs
 					ldr r7,[r4,r8]
 					bl drawShard

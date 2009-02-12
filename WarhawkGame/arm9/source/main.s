@@ -55,36 +55,7 @@ main:
 	bl clearBG0
 	bl drawAllEnergyBars
 
-	@mov r1,#1
-	@bl init_Alien
-	@mov r1,#2
-	@bl init_Alien
-	@mov r1,#3
-	@bl init_Alien
-	@mov r1,#4
-	@bl init_Alien
-	@mov r1,#5
-	@bl init_Alien
-	@mov r1,#6
-	@bl init_Alien
-	@mov r1,#7
-	@bl init_Alien
-	@mov r1,#8
-	@bl init_Alien
-	@mov r1,#9
-	@bl init_Alien
-	@mov r1,#10
-	@bl init_Alien
-	@mov r1,#11
-	@bl init_Alien
-	@mov r1,#12
-	@bl init_Alien
-	@mov r1,#13
-	@bl init_Alien
-
-@
-
-@@----------------------------@	
+@----------------------------@	
 @ This is the MAIN game loop @
 @----------------------------@
 gameLoop:
@@ -114,7 +85,7 @@ gameLoop:
 
 		bl drawSprite
 
-		bl drawDebugText
+@		bl drawDebugText
 
 	bl waitforNoblank
 	

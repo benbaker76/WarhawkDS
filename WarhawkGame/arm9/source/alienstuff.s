@@ -36,11 +36,11 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		add r3,#1					@ add 1 to wave number
 		str r3,[r1]					@ and store it back
 
-				mov r10,r4			@ Read value
-				mov r8,#22			@ y pos
-				mov r9,#3			@ Number of digits
-				mov r11, #0			@ x pos
-				bl drawDigits		@ Display the initilised wave (Bug test)
+@				mov r10,r4			@ Set to display attack wave number
+@				mov r8,#22			@ y pos
+@				mov r9,#3			@ Number of digits
+@				mov r11, #0			@ x pos
+@				bl drawDigits		@ Display the initilised wave (Bug test)
 
 		@ now we need to make r2 the index to the start of attack wave r1
 		ldr r2,=alienWave

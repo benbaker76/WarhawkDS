@@ -246,7 +246,7 @@ drawSprite:
 			b noMoreStuff
 
 		shardAnimates:
-		cmp r1,#6								@ -------------- Alien explosion
+		cmp r1,#6								@ -------------- Shard Animation
 		bne whatNext
 			
 			ldr r0,=spriteY						@ Load Y coord

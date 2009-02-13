@@ -131,11 +131,22 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	ldr r2,[r4,r1]
 	str r2,[r3,r0]				@ store sprites hits to kill
 
+	add r1,#4					@ Move our pointer to the shot setting
+	ldr r2,[r4,r1]
+	and r7,r2,#0xFF				@ r7= shot type (lower 8 bits)
+	mov r0,#sptFireTypeOffs
+	str r7,[r3,r0]				@ store the byte value of the Fire Type
+	sub r2,r7
+	lsr r2,#8					@ r2= shot delay
+	mov r0,#sptFireMaxOffs
+	str r7,[r3,r0]				@ store the fire delay maximum value for use later
+	mov r0,#sptFireDlyOffs
+	str r7,[r3,r0]				@ set our counter to max also, this is our countdown
+
 	mov r2,#0
 	mov r0,#sptAngleOffs
 	str r2,[r3,r0]				@ store sprite angle (0 init)
 
-	mov r0,r6					@ r2 now points to our first tracking
 	mov r0,#sptTrackXOffs		@ coord (X) - need to grab this from alienDescript
 	mov r1,#32
 	ldr r2,[r4,r1]				@ load alien descript +32 = init track x

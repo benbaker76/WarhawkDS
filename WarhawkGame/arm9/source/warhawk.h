@@ -82,3 +82,7 @@
 #define sptHitsOffs					6144
 #define sptAngleOffs				6656
 #define sptExpDelayOffs				7168
+
+#define sptFireTypeOffs				7680
+#define sptFireDlyOffs				8192
+#define sptFireMaxOffs				8704

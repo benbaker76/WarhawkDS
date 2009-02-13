@@ -220,6 +220,14 @@ spriteAngle:
 	.space 512
 spriteExplodeDelay:
 	.space 512
+
+spriteFireType:
+	.space 512
+spriteFireDelay:
+	.space 512
+spriteFireMax:
+	.space 512
+	
 spriteInstruct:
 	.space 32768
 	

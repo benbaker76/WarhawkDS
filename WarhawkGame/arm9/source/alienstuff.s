@@ -133,9 +133,9 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	sub r2,r7
 	lsr r2,#8					@ r2= shot delay
 	mov r0,#sptFireMaxOffs
-	str r7,[r3,r0]				@ store the fire delay maximum value for use later
+	str r2,[r3,r0]				@ store the fire delay maximum value for use later
 	mov r0,#sptFireDlyOffs
-	str r7,[r3,r0]				@ set our counter to max also, this is our countdown
+	str r2,[r3,r0]				@ set our counter to max also, this is our countdown
 
 	mov r2,#0
 	mov r0,#sptAngleOffs
@@ -213,11 +213,12 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 			bmi alienOK
 			mov r0,#0			@ uh oh - kill time!
 			str r0,[r1]			@ store 0 in sprite active
+			b no_AlienMove
 		alienOK:
 		@
 		@	This is where we need to check for alien fire and init if needed
 		@	sptFireTypeOffs = fire type (0=none) this is our first check
-		@
+		
 			mov r0,#sptFireTypeOffs
 			ldr r3,[r1,r0]				@ load fire type (keep r3 as we use it later)
 			cmp r3,#0					@ is it a firing alien?
@@ -229,11 +230,13 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 			ldr r10,[r1,r0]			@ get fire delay
 			subs r10,#1					@ take 1 off the count
 			str r10,[r1,r0]			@ put it back
+
 			bpl no_AlienMove			@ if not 0, no fire mate!
 				mov r2,#sptFireMaxOffs
-				ldr r2,[r1,r2]			@ load the delay max
-				str r2,[r1,r0]			@ and reset the counter
-			bl alienFireInit			@ time to fire, r3=fire type
+				ldr r10,[r1,r2]			@ load the delay max
+				str r10,[r1,r0]			@ and reset the counter
+				
+				bl alienFireInit			@ time to fire, r3=fire type, r1=offset to alien
 
 		no_AlienMove:
 		subs r7,#1

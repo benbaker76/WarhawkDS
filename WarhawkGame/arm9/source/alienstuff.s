@@ -107,8 +107,6 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	mov r2,#12
 	ldr r0,=sptSpdDelayXOffs
 	str r2,[r3,r0]				@ store speed delay x (start at 12) (use for inc/dec on x speed)
-
-	mov r2,#12
 	ldr r0,=sptSpdDelayYOffs
 	str r2,[r3,r0]				@ store speed delay Y (start at 12) (use for inc/dec on y speed)
 
@@ -116,10 +114,6 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	ldr r0,=sptMaxSpdOffs
 	ldr r2,[r4,r1]
 	str r2,[r3,r0]				@ store sprites maximum speed
-
-	mov r2,#0
-	ldr r0,=sptPhaseOffs
-	str r2,[r3,r0]				@ store sprite data phase (always start at 0)	
 
 	add r1,#4
 	mov r0,#sptObjOffs
@@ -145,7 +139,11 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 
 	mov r2,#0
 	mov r0,#sptAngleOffs
-	str r2,[r3,r0]				@ store sprite angle (0 init)
+	str r2,[r3,r0]				@ store sprite angle (0 init) (WILL WE USE THIS?)
+	mov r0,#sptBloomOffs
+	str r2,[r3,r0]				@ make sure the "bloom" is set to 0 (palette number)
+	ldr r0,=sptPhaseOffs
+	str r2,[r3,r0]				@ store sprite data phase (always start at 0)
 
 	mov r0,#sptTrackXOffs		@ coord (X) - need to grab this from alienDescript
 	mov r1,#32
@@ -216,6 +214,27 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 			mov r0,#0			@ uh oh - kill time!
 			str r0,[r1]			@ store 0 in sprite active
 		alienOK:
+		@
+		@	This is where we need to check for alien fire and init if needed
+		@	sptFireTypeOffs = fire type (0=none) this is our first check
+		@
+			mov r0,#sptFireTypeOffs
+			ldr r3,[r1,r0]				@ load fire type (keep r3 as we use it later)
+			cmp r3,#0					@ is it a firing alien?
+			beq no_AlienMove			@ if not, that is it!
+		@	
+		@	Now, we need to update the fire delay to see if it is time to fire
+		@
+			mov r0,#sptFireDlyOffs
+			ldr r10,[r1,r0]			@ get fire delay
+			subs r10,#1					@ take 1 off the count
+			str r10,[r1,r0]			@ put it back
+			bpl no_AlienMove			@ if not 0, no fire mate!
+				mov r2,#sptFireMaxOffs
+				ldr r2,[r1,r2]			@ load the delay max
+				str r2,[r1,r0]			@ and reset the counter
+			bl alienFireInit			@ time to fire, r3=fire type
+
 		no_AlienMove:
 		subs r7,#1
 	bpl moveAlienLoop

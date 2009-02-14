@@ -355,6 +355,13 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					mov r6,#0
 					ldr r8,=spriteActive+4
 					str r6, [r8,r0, lsl #2]
+					
+					mov r8,#sptBloomOffs
+					ldr r6,[r4,r8]			@ load palette number (bloom)
+					cmp r6,#0				@ if it zero
+					moveq r6,#16			@ if so, we can do bloom (we have 11 pallets for this)
+					str r6,[r4,r8]			@ store it back
+		
 					@ ok, alien not dead yet!!, so, play "Hit" sound
 					@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?
 					mov r8,#sptXOffs

@@ -63,6 +63,7 @@
 	.global spriteTrackY
 	.global spritePhase
 	.global spriteExplodeDelay
+	.global spriteBloom
 	.global getReadyText
 	.global spriteXText
 	.global spriteYText
@@ -226,6 +227,9 @@ spriteFireType:
 spriteFireDelay:
 	.space 512
 spriteFireMax:
+	.space 512
+
+spriteBloom:
 	.space 512
 	
 spriteInstruct:

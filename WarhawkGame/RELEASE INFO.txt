@@ -1,5 +1,8 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
+
+v0.49 - FLASH (tied revision to SVN)
+- Added code to compliment Shards with a quick bloom effect!
 v0.22 - FLASH
 - Added "shard" effect to alien hits that still require more shots
 - Sorted a minor bug in drawsprite.s that resulted in slight y drift

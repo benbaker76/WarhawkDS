@@ -47,7 +47,7 @@ main:
 	bl drawGetReadyText
 	@bl playInGameMusic
 
-	bl waitforFire
+	bl waitforFire		@ wait for a short while to start game
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)
 	ldr r0,=powerUp
 	str r1,[r0]
@@ -65,27 +65,29 @@ gameLoop:
 	@ this code is executed offscreen
 	@--------------------------------------------
 		
-		bl moveShip
+		bl moveShip			@ check and move your ship
 		
 		bl scrollMain		@ Scroll Level Data
 		bl scrollSub		@ Main + Sub
-		bl levelDrift
+		bl levelDrift		@ update level with the horizontal drift
 		bl moveBullets		@ check and then moves bullets
-		bl fireCheck
+		bl alienFireMove	@ check and move alien bullets
+		bl fireCheck		@ check for your wish to shoot!
 
-		bl moveAliens
+		bl moveAliens		@ move the aliens and detect colisions with you
 
-		bl drawScore
+		bl drawScore		@ update the score with any changes
 
 		
 		bl scrollStars		@ Scroll Stars (BG2,BG3)
 
-		bl checkWave
+		bl checkWave		@ check if time for another alien attack
+		
 		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
 
-		bl drawSprite
+		bl drawSprite		@ drawsprites and do update bloom effect
 
-@		bl drawDebugText
+@		bl drawDebugText	@ draw some numbers :)
 
 	bl waitforNoblank
 	
@@ -96,6 +98,9 @@ gameLoop:
 			
 
 	b gameLoop			@ our main loop
+	
+	@ we will end up with more code here for game over and death
+	@ also for return to title!
 
 @------------------------------------------------------------------------------
 

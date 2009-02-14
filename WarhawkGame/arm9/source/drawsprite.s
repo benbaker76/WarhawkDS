@@ -50,6 +50,12 @@ drawSprite:
 	b sprites_Done
 
 	sprites_Drawn:
+	@ first, update out BLOOM effect, if bloom is >0 sub 1
+	ldr r0,=spriteBloom
+	ldr r1,[r0,r8,lsl #2]
+	cmp r1,#0
+	subne r1,#1
+	str r1,[r0,r8,lsl #2]
 	
 	ldr r0,=spriteY						@ Load Y coord
 	ldr r1,[r0,r8,lsl #2]				@ add ,rX for offsets
@@ -95,7 +101,10 @@ drawSprite:
 		add r0,r8, lsl #3				@ add sprite number * 8
 		ldr r2,=spriteObj				@ make r2 a ref to our data for the sprites object
 		ldr r3,[r2,r8, lsl #2]			@ r3=spriteobj+ sprite number *4 (stored in words)
-		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY) | ATTR2_PALETTE(0))
+		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY))
+		ldr r2,=spriteBloom				@ get our palette (bloom) number
+		ldr r2,[r2,r8, lsl #2]			@ r2 = valuse
+		orr r1,r2, lsl #12				@ orr it with attribute2 *4096 (to set palette bits)
 		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
 		str r1, [r0]					@ store it all back
 
@@ -134,9 +143,12 @@ drawSprite:
 		add r0,r8, lsl #3
 		ldr r2,=spriteObj
 		ldr r3,[r2,r8, lsl #2]
-		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY) | ATTR2_PALETTE(0))
-		orr r1,r3, lsl #4		
-		str r1, [r0]
+		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY)) @ add palette here *****
+		ldr r2,=spriteBloom
+		ldr r2,[r2,r8, lsl #2]
+		orr r1,r2, lsl #12
+		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
+		str r1, [r0]					@ store it all back
 
 		@ Need to kill same sprite on MAIN screen - or do we???
 		@ Seeing that for this to occur, the sprite is offscreen on MAIN!
@@ -177,10 +189,12 @@ drawSprite:
 		add r0,r8, lsl #3			@ multiply by 8 to find location (in r0)
 		ldr r2,=spriteObj			@ Find our sprite to draw
 		ldr r3,[r2,r8, lsl #2]		@ store in words (*2)
-		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY) | ATTR2_PALETTE(0))	@ Set Palette - do we need to keep doing this?
-		orr r1,r3, lsl #4			@ Orr them together, R3 is mult by 16 (16 tiles in sprite *2)
-		
-		str r1, [r0]				@ Store it all back
+		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY))
+		ldr r2,=spriteBloom
+		ldr r2,[r2,r8, lsl #2]
+		orr r1,r2, lsl #12
+		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
+		str r1, [r0]					@ store it all back
 		@ Need to kill same sprite on SUB screen - or do we???
 		@ Seeing that for this to occur, the sprite is offscreen on SUB!
 	sprites_Done:

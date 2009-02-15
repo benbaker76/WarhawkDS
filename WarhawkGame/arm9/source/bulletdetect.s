@@ -358,8 +358,8 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					
 					mov r8,#sptBloomOffs
 					ldr r6,[r4,r8]			@ load palette number (bloom)
-					cmp r6,#0				@ if it zero
-					moveq r6,#16			@ if so, we can do bloom (we have 11 pallets for this)
+@					cmp r6,#0				@ if it zero
+					mov r6,#16			@ if so, we can do bloom (we have 11 pallets for this)
 					str r6,[r4,r8]			@ store it back
 		
 					@ ok, alien not dead yet!!, so, play "Hit" sound

@@ -100,6 +100,11 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		@ and set the image and coords for the bullet to start
 		@ the bullet code will take care of the rest
 
+		ldr r1,=spriteBloom
+		ldr r2,[r1]
+		mov r2,#8
+		str r2,[r1]					@ set a "Bloom" for a shot
+
 		ldr r1,=spriteActive
 		add r1,#4
 		mov r2,#1

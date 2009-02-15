@@ -96,7 +96,7 @@ alienDescript:
 	.word 5,60,4,50,3,50,4,50,5,50,6,50				@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @13 @	
-	.word 180,300,2,1024,0,48,2048,12804			@ fire is 50 delay and fire left (fire type 4)
+	.word 180,300,2,1024,0,48,2048,12806			@ fire is 50 delay and fire left (fire type 6)
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @14	
@@ -107,24 +107,24 @@ alienDescript:
 	.word 244,300,2,1024,0,50,2048,0					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
-@16	
-	.word 276,300,2,1024,0,51,2048,12802				@ fire is 50 delay and fire right (fire type 2) 00110010 00000010
+@16	@
+	.word 276,300,2,1024,0,51,2048,12805				@ fire is 50 delay and fire right (fire type 5) 00110010 00000101
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @17	
-	.word 180,300,2,1024,0,52,2048,0					@ inits
+	.word 180,300,2,1024,0,52,2048,10249					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @18	
-	.word 212,300,2,1024,0,53,200,10243 			@ fie is 40 delay and fire down (fire type 3) 00101000 00000011
+	.word 212,300,2,1024,0,53,200,10249 			@ fie is 40 delay and fire down (fire type 7) 00101000 00000111
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @19	
-	.word 244,300,2,1024,0,54,200,10243				@ inits
+	.word 244,300,2,1024,0,54,200,10249				@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @20	
-	.word 276,300,2,1024,0,55,200,0					@ inits
+	.word 276,300,2,1024,0,55,200,10249					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @21	

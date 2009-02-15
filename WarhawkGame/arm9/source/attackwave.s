@@ -48,7 +48,7 @@ alienDescript:
 
 	@ These are stored in blocks of 32 words --- for however many we use?
 @1
-	.word 90,120,1,1024,0,41,0,0					@ inits
+	.word 90,120,1,1024,0,41,0,25619					@ inits	01100100 00010011	= type 19, delay 100
 	.word 5,280,4,50,3,50,4,50,5,50,6,50			@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @2	
@@ -112,7 +112,7 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @17	
-	.word 180,300,2,1024,0,52,2048,10249					@ inits
+	.word 180,300,2,1024,0,52,2048,0					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @18	
@@ -124,7 +124,7 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @20	
-	.word 276,300,2,1024,0,55,200,10249					@ inits
+	.word 276,300,2,1024,0,55,200,0					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @21	
@@ -144,7 +144,7 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @25
-	.word 320,360,0,0,3,34,6,10243					@ inits
+	.word 320,360,0,0,3,34,6,20483					@ inits
 	.word 280,400,200,420,200,460,1024,1024,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @26	

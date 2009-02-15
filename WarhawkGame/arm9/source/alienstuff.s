@@ -181,7 +181,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	
 		ldr r0,[r1,r7, lsl #2]
 		cmp r0,#0
-		beq no_AlienMove
+		beq noAlienMove
 	
 		add r1,r7, lsl #2
 	@
@@ -190,7 +190,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	@	this will be stored in r0
 	@
 	cmp r0,#1
-	bne no_AlienMove
+	bne noAlienMove
 	@ if alien type is a 1, Carry on from here
 	@ as it must be a linear or tracking alien
 	@ r1 is now offset to start of alien data
@@ -213,32 +213,34 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 			bmi alienOK
 			mov r0,#0			@ uh oh - kill time!
 			str r0,[r1]			@ store 0 in sprite active
-			b no_AlienMove
+			b noAlienMove
 		alienOK:
 		@
 		@	This is where we need to check for alien fire and init if needed
 		@	sptFireTypeOffs = fire type (0=none) this is our first check
-		
+
 			mov r0,#sptFireTypeOffs
 			ldr r3,[r1,r0]				@ load fire type (keep r3 as we use it later)
 			cmp r3,#0					@ is it a firing alien?
-			beq no_AlienMove			@ if not, that is it!
+			beq noAlienMove				@ if not, that is it!
 		@	
 		@	Now, we need to update the fire delay to see if it is time to fire
 		@
 			mov r0,#sptFireDlyOffs
-			ldr r10,[r1,r0]			@ get fire delay
-			subs r10,#1					@ take 1 off the count
-			str r10,[r1,r0]			@ put it back
+			ldr r9,[r1,r0]				@ get fire delay
+			subs r9,#1					@ take 1 off the count
+			str r9,[r1,r0]				@ put it back
 
-			bpl no_AlienMove			@ if not 0, no fire mate!
+
+			bpl noAlienMove				@ if not 0, no fire mate!
 				mov r2,#sptFireMaxOffs
-				ldr r10,[r1,r2]			@ load the delay max
-				str r10,[r1,r0]			@ and reset the counter
-				
-				bl alienFireInit			@ time to fire, r3=fire type, r1=offset to alien
+				ldr r9,[r1,r2]			@ load the delay max
+				str r9,[r1,r0]			@ and reset the counter
+				cmp r10,#384-48			@ Make sure alien is at least NEARLY on screen before firing
+				bmi noAlienMove			@ if no, just forget it
+				bl alienFireInit		@ time to fire, r3=fire type, r1=offset to alien
 
-		no_AlienMove:
+		noAlienMove:
 		subs r7,#1
 	bpl moveAlienLoop
 	

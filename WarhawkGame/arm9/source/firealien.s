@@ -36,10 +36,10 @@ alienFireInit:
 	ldr r5,[r5]
 	@---------- All our inits follow from here - SEQUENTIALLY ---------@
 	
-	cmp r3,#13					@ check and init standard linear shots types 1-12
+	cmp r3,#19					@ check and init standard linear shots types 1-12
 		blmi initStandardShot
-		b alienFireInitDone
-	@ cmp r3,#13
+	cmp r3,#19
+		bleq initTrackerShot
 	@ etc!
 
 	alienFireInitDone:
@@ -56,6 +56,9 @@ alienFireMove:
 	@ and then return to the main loop!
 		ldr r0,=spriteX
 		ldr r0,[r0]							@ set r0 to player x
+		ldr r1,=horizDrift
+		ldr r1,[r1]
+		add r0,r1							@ and add the horizontal drift value
 		ldr r1,=spriteY
 		ldr r1,[r1]							@ set r1 to player y
 	
@@ -70,9 +73,11 @@ alienFireMove:
 				mov r3,#sptFireTypeOffs
 				ldr r3,[r2,r3]				@ r3= fire type to update
 	
-				cmp r3,#13					@ check for standard shot 1-12
+				cmp r3,#19					@ check for standard shot 1-12
 					blmi moveStandardShot	
-				@ cmp r3,#13
+				cmp r3,#19
+					bleq moveTrackerShot
+				@ ETC
 
 			testSkip:
 			add r4,#1
@@ -100,7 +105,7 @@ findAlienFire:
 			cmp r4,#113
 		bne isAlienFirePossible
 		mov r2,#255					@ set to 255 to signal "NO SPACE FOR FIRE"
-		ldmfd sp!, {pc}
+		ldmfd sp!, {r0,r1,r3,r4,r5,pc}
 		findAlienFireDone:
 		add r2, r4, lsl #2			@ return r2 as pointer to bullet
 	ldmfd sp!, {r0,r1,r3,r4,r5,pc}

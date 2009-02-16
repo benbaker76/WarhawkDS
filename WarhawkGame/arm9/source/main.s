@@ -22,20 +22,24 @@ initSystem:
 	bx lr
 
 main:
+	@ setup actual game data
+	bl initData
 	@ Setup the screens and the sprites	
+bl waitforVblank	@ We need to set up a wipe here and clear it later / but for now, this will just make it CLEAN
 
+	bl initLevel
 	bl initVideo
 	bl initSprites
-	bl initData
-
+	bl initLevel
+	
 	@ firstly, lets draw all the screen data ready for play
 	@ and display the ship sprite
 	
-@	bl waitforVblank
 	bl clearBG0
 	bl clearBG1
 	bl clearBG2
-	bl clearBG3
+	bl clearBG3	
+	
 	bl drawMapScreenMain
 	bl drawMapScreenSub
 	bl drawSFMapScreenMain
@@ -46,6 +50,9 @@ main:
 	bl drawSprite
 	bl drawGetReadyText
 	@bl playInGameMusic
+	
+bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
+
 
 	bl waitforFire		@ wait for a short while to start game
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)

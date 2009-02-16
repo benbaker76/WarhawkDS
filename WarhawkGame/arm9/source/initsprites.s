@@ -41,9 +41,10 @@ initSprites:
 	ldr r1, =OAM_SUB
 	bl dmaFillWords
 	
+	@ wipe all sprite data
 	ldr r0,=0
 	ldr r1,=spriteX
-	ldr r2,=128+128+128+128+128
+	ldr r2,=2432
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}

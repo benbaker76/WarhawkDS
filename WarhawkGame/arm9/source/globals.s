@@ -77,14 +77,20 @@
 	.global digits
 	.global moveBaseExplosion
 	.global level
-	.global levelMap
+	.global LevelMap
+	.global LevelTiles
 	.global craterFrame
 	.global waveNumber
+	.global collideMap
 	
 level:
 	.word 0
-levelMap:
-	.word 1
+LevelMap:
+	.word 0
+collideMap:
+	.word 0
+LevelTiles:
+	.word 0
 pixelOffsetSub:
 	.word 0
 pixelOffsetMain:
@@ -150,10 +156,7 @@ yposSBSub:
 
 xpos:
 	.word 0
-shipX:
-	.word 0
-shipY:
-	.word 0
+
 shipXspeed:
 	.word 0
 

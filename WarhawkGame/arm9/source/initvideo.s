@@ -80,7 +80,8 @@ initVideo:
 	
 	@ Write the tile data to VRAM Level BG1
 
-	ldr r0, =Level1Tiles
+	ldr r0,=LevelTiles
+	ldr r0,[r0]
 	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
 	ldr r2, =Level1TilesLen
 	bl dmaCopy

@@ -41,6 +41,7 @@ initData:
 	ldr r0,=horizDrift
 	strb r1,[r0]			@ Drift on levels horizontal - centre to start level
 	
+	
 	ldmfd sp!, {r0-r1, pc}
 
 	.end

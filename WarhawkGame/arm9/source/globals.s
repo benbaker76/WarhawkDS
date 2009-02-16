@@ -77,11 +77,14 @@
 	.global digits
 	.global moveBaseExplosion
 	.global level
+	.global levelMap
 	.global craterFrame
 	.global waveNumber
 	
 level:
 	.word 0
+levelMap:
+	.word 1
 pixelOffsetSub:
 	.word 0
 pixelOffsetMain:

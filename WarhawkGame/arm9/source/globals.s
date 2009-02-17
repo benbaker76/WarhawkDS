@@ -79,6 +79,7 @@
 	.global level
 	.global LevelMap
 	.global LevelTiles
+	.global StarBack
 	.global craterFrame
 	.global waveNumber
 	.global collideMap
@@ -90,6 +91,8 @@ LevelMap:
 collideMap:
 	.word 0
 LevelTiles:
+	.word 0
+StarBack:
 	.word 0
 pixelOffsetSub:
 	.word 0

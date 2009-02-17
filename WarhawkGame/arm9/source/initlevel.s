@@ -74,6 +74,10 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 		
+		ldr r0,=StarBackPal
+		ldr r1,=StarBack
+		str r0,[r1]
+		
 	level2:
 	cmp r8,#2
 	bne level3
@@ -88,6 +92,10 @@ initLevel:
 		
 		ldr r0,=colMap2
 		ldr r1,=collideMap
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal2
+		ldr r1,=StarBack
 		str r0,[r1]
 
 	level3:
@@ -105,6 +113,10 @@ initLevel:
 		ldr r0,=colMap3
 		ldr r1,=collideMap
 		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=StarBack
+		str r0,[r1]
 	
 	level4:
 	cmp r8,#4
@@ -121,7 +133,11 @@ initLevel:
 		ldr r0,=colMap4
 		ldr r1,=collideMap
 		str r0,[r1]
-	
+
+		ldr r0,=StarBackPal4
+		ldr r1,=StarBack
+		str r0,[r1]	
+		
 	level5:
 	cmp r8,#5
 	bne level6
@@ -137,7 +153,11 @@ initLevel:
 		ldr r0,=colMap5
 		ldr r1,=collideMap
 		str r0,[r1]
-	
+
+		ldr r0,=StarBackPal5
+		ldr r1,=StarBack
+		str r0,[r1]
+		
 	level6:
 	cmp r8,#6
 	bne level7
@@ -153,7 +173,11 @@ initLevel:
 		ldr r0,=colMap6
 		ldr r1,=collideMap
 		str r0,[r1]
-	
+
+		ldr r0,=StarBackPal6
+		ldr r1,=StarBack
+		str r0,[r1]
+
 	level7:
 	cmp r8,#7
 	bne level8
@@ -168,6 +192,10 @@ initLevel:
 		
 		ldr r0,=colMap7
 		ldr r1,=collideMap
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal7
+		ldr r1,=StarBack
 		str r0,[r1]
 	
 	level8:
@@ -185,6 +213,10 @@ initLevel:
 		ldr r0,=colMap8
 		ldr r1,=collideMap
 		str r0,[r1]
+
+		ldr r0,=StarBackPal8
+		ldr r1,=StarBack
+		str r0,[r1]	
 	
 	level9:
 	cmp r8,#9
@@ -202,6 +234,10 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 	
+		ldr r0,=StarBackPal9
+		ldr r1,=StarBack
+		str r0,[r1]
+		
 	level10:
 	cmp r8,#10
 	bne level11
@@ -218,6 +254,10 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 	
+		ldr r0,=StarBackPal10
+		ldr r1,=StarBack
+		str r0,[r1]
+		
 	level11:
 	cmp r8,#11
 	bne levelDone
@@ -233,6 +273,11 @@ initLevel:
 		ldr r0,=colMap11
 		ldr r1,=collideMap
 		str r0,[r1]	
+
+		ldr r0,=StarBackPal11
+		ldr r1,=StarBack
+		str r0,[r1]
+
 	levelDone:
 
 mov r15,r14

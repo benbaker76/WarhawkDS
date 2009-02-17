@@ -83,6 +83,9 @@
 	.global craterFrame
 	.global waveNumber
 	.global collideMap
+	.global energy
+	.global energyText
+	.global youDiedText
 	
 level:
 	.word 0
@@ -93,6 +96,8 @@ collideMap:
 LevelTiles:
 	.word 0
 StarBack:
+	.word 0
+energy:
 	.word 0
 pixelOffsetSub:
 	.word 0
@@ -193,11 +198,10 @@ scrollPixelText:
 	.string "scroll pix:\0"
 pixelOffsetText:
 	.string "pixeloff:\0"
-
-	@ sprite table!
-	@ sprite 0 		= ship (spritetile 0)
-	@ sprite 1-2	= Bullets (player spritetile 1)
-	
+energyText:
+	.string "energy:\0"
+youDiedText:
+	.string "you have died,  tit!\0"
 	.section .bss
 
 spriteActive:

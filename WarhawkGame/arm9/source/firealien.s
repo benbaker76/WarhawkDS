@@ -78,14 +78,58 @@ alienFireMove:
 				cmp r3,#19
 					bleq moveTrackerShot
 				@ ETC
+	
+				@ and from here we need to check if the bullet is on our ship
+				@ and if so, deplete energy, mainloop will act on a 0 and kill us!
+				mov r6,#sptXOffs
+				ldr r6,[r2,r6]
+				mov r7,#sptYOffs
+				ldr r7,[r2,r7]
+				@ r0,r1 = player x/y
+				@ r6,r7 = bullet x/y
+	
 
+				add r6,#16
+				cmp r6,r0						@ r6=Bullet x / r0= your X
+				bmi testSkip
+				sub r6,#16+12
+				cmp r6,r0	
+				bgt testSkip
+
+				add r7,#16
+				cmp r7,r1						@ r7=bullet y / r1= your y
+				bmi testSkip
+				sub r7,#16+12
+				cmp r7,r1
+				bgt testSkip	
+
+					@ Bullet HAS HIT US!!
+					@ kill bullet unless it is tracker
+				
+					ldr r6,=spriteBloom
+					mov r7,#16
+					str r7,[r6]						@ make shp flash
+				
+					@bl ShipHitSound				@ activate sound for ship being hit!
+				
+					ldr r6,=energy					@ Take 1 off your energy
+					ldr r7,[r6]
+					subs r7,#1
+					movmi r7,#0
+					str r7,[r6]
+				
+					cmp r3,#19						@ is it a tracker shot
+					beq testSkip					@ if so, do not destroy
+				
+					mov r6,#sptActiveOffs
+					mov r7,#0
+					str r6,[r2,r7]					@ kill bullet
+					
 			testSkip:
 			add r4,#1
 			cmp r4,#113
-		bne findAlienBullet		
+		bne findAlienBullet			
 	
-	@ and from here we need to check if the bullet is on our ship
-	@ and if so, deplete energy, mainloop will act on a 0 and kill us!
 	
 	ldmfd sp!, {r0-r10, pc}
 	

@@ -7,11 +7,17 @@
 #include "sprite.h"
 #include "ipc.h"
 
+@
+@ This should really just be for detection code!!! (RENAMED)
+@
+
+
 	.arm
 	.align
 	.global detectBGL
 	.global detectBGR
 	.global detectALN
+	.global alienCollideCheck
 	
 @-------------- DETECT Left BULLET
 detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A BASE
@@ -360,8 +366,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					
 					mov r8,#sptBloomOffs
 					ldr r6,[r4,r8]			@ load palette number (bloom)
-@					cmp r6,#0				@ if it zero
-					mov r6,#16			@ if so, we can do bloom (we have 11 pallets for this)
+					mov r6,#16				@ do bloom
 					str r6,[r4,r8]			@ store it back
 		
 					@ ok, alien not dead yet!!, so, play "Hit" sound
@@ -442,3 +447,92 @@ drawShard:
 	mov r3,#2						@ Set sprite delay for anim (once evey 4 updates seems to work nice)
 	str r3,[r1,r2, lsl #2]
 	ldmfd sp!, {r1-r3, pc}
+	
+@----------------------------- Check alien collision with ship (Seemed the best place to put it :) )
+							@	The detection (apart from alien bullet) needs a tidy - too many add and subs
+alienCollideCheck:
+	stmfd sp!, {r0-r8, lr}
+											@ r1 is offset to alien
+
+			ldr r5,=spriteX
+			ldr r3,[r5]						@ r3 is player x
+			ldr r5,=spriteY
+			ldr r4,[r5]						@ r4 is player y
+			ldr r5,=horizDrift
+			ldr r5,[r5]
+			add r3,r5						@ we MUST account for level horizontal movement (player is not tied to level)
+
+			mov r8,#sptXOffs
+			ldr r6,[r1,r8]					@ r6=current Alien X
+
+			@ simple detect code!!!
+			add r6,#16						
+			cmp r6,r3						@ r3=player x
+			bmi noPlayer
+			sub r6,#16
+			add r3,#16
+			cmp r6,r3
+			bpl noPlayer
+
+			mov r8,#sptYOffs
+			ldr r6,[r1,r8]					@ r6=current Alien y
+			add r6,#16
+			cmp r6,r4						@ r4=player y
+			bmi noPlayer
+			sub r6,#16
+			add r4,#16
+			cmp r6,r4
+			bpl noPlayer
+				ldr r6,=spriteBloom
+				mov r7,#16
+				str r7,[r6]						@ make shp flash
+			
+				@bl ShipHitAlienSound			@ activate sound for YOUR ship being hit!
+			
+				ldr r6,=energy					@ Take 1 off your energy
+				ldr r7,[r6]
+				subs r7,#1						@ -1
+				movmi r7,#0						@ if less than 0 make 0
+				str r7,[r6]
+				
+				ldr r6,=sptHitsOffs				@ get alien hit points
+				ldr r7,[r1,r6]
+				subs r7,#1						@ take one off
+				str r7,[r1,r6]
+				cmp r7,#0						@ if alien dead?
+				bmi acDestroy					@ yes!, DESTROY it
+					mov r8,#sptBloomOffs		@ ok, alien not dead, so lets make him flash
+					mov r6,#16					@ do bloom
+					str r6,[r1,r8]				@ store it back
+					bl playShipArmourHit1Sound	@ make that "TING" sound
+					b acNoDestroy				@ jump out of what we are doing
+				acDestroy:
+						
+					bl playAlienExplodeSound	@ make a noise!!!
+					
+					@ explode alien
+					mov r6,#4					@ set alien to an explosion
+					str r6,[r1]
+				
+					mov r6,#6					@ set the initial explosion frame
+					mov r8,#sptObjOffs			
+					str r6,[r1,r8]
+					mov r6,#4					@ reset the explode delay
+					mov r8,#sptExpDelayOffs
+					str r6,[r1,r8]
+			
+					@ add score
+					ldr r8,=adder+7				@ add 21 to the score (THAT IS ALL YOU GET FOR CRASHING)
+					mov r6,#1					@ first a 1
+					strb r6,[r8]
+					sub r8,#1
+					mov r6,#2					@ then a 2
+					strb r6,[r8]
+					bl addScore		
+					bl playAlienExplodeSound
+
+				acNoDestroy:
+			noPlayer:
+	
+	
+	ldmfd sp!, {r0-r8, pc}

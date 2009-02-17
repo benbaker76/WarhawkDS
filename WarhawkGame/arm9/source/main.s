@@ -57,7 +57,7 @@ bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
 	bl waitforFire		@ wait for a short while to start game
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)
 	ldr r0,=powerUp
-	str r1,[r0]
+@	str r1,[r0]
 	
 	bl clearBG0
 	bl drawAllEnergyBars
@@ -96,6 +96,22 @@ gameLoop:
 
 @		bl drawDebugText	@ draw some numbers :)
 
+
+	ldr r0, =energyText			@ Load out text pointer
+	ldr r1, =0						@ x pos
+	ldr r2, =23						@ y pos
+	ldr r3, =1						@ Draw on Sub screen
+	bl drawText
+	
+	ldr r10,=energy				@ Pointer to data
+	ldr r10,[r10]					@ Read value
+	mov r8,#23						@ y pos
+	mov r9,#2						@ Number of digits
+	mov r11, #8						@ x pos
+	bl drawDigits					@ Draw
+
+	cmp r10,#0
+	beq youDied
 	bl waitforNoblank
 	
 	@---------------------------------------------
@@ -108,6 +124,18 @@ gameLoop:
 	
 	@ we will end up with more code here for game over and death
 	@ also for return to title!
+	
+	
+	youDied:
+	
+	ldr r0, =youDiedText			@ Load out text pointer
+	ldr r1, =6						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =1						@ Draw on main screen
+	bl drawText
+	
+	stopit:
+	b stopit
 
 @------------------------------------------------------------------------------
 

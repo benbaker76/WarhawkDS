@@ -196,8 +196,9 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	@ r1 is now offset to start of alien data
 	@ use r0 as offset to this (+512 per field)
 
+
 		mov r0,#sptSpdYOffs		@ we use Initial Y speed as a variable to tell use what
-		ldr r10,[r1,r0]		@ type of alien to move
+		ldr r10,[r1,r0]		@ type of alien to move (Linear or curved/tracker)
 		
 		cmp r10,#1024
 			bne trackTest
@@ -207,14 +208,15 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 				bl aliensTracker
 		alienPassed:
 		
+		
 		mov r0,#sptYOffs
 		ldr r10,[r1,r0]		
 		cmp r10,#800			@ check if alien off screen - and kill it
 			bmi alienOK
-			mov r0,#0			@ uh oh - kill time!
-			str r0,[r1]			@ store 0 in sprite active
-			b noAlienMove
-		alienOK:
+				mov r0,#0			@ uh oh - kill time!
+				str r0,[r1]			@ store 0 in sprite active
+				b doDetect
+			alienOK:
 		@
 		@	This is where we need to check for alien fire and init if needed
 		@	sptFireTypeOffs = fire type (0=none) this is our first check
@@ -222,7 +224,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 			mov r0,#sptFireTypeOffs
 			ldr r3,[r1,r0]				@ load fire type (keep r3 as we use it later)
 			cmp r3,#0					@ is it a firing alien?
-			beq noAlienMove				@ if not, that is it!
+			beq doDetect				@ if not, that is it!
 		@	
 		@	Now, we need to update the fire delay to see if it is time to fire
 		@
@@ -232,13 +234,20 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 			str r9,[r1,r0]				@ put it back
 
 
-			bpl noAlienMove				@ if not 0, no fire mate!
+			bpl doDetect				@ if not 0, no fire mate!
 				mov r2,#sptFireMaxOffs
 				ldr r9,[r1,r2]			@ load the delay max
 				str r9,[r1,r0]			@ and reset the counter
 				cmp r10,#384-48			@ Make sure alien is at least NEARLY on screen before firing
-				bmi noAlienMove			@ if no, just forget it
+				bmi doDetect			@ if no, just forget it
 				bl alienFireInit		@ time to fire, r3=fire type, r1=offset to alien
+			
+
+			doDetect:
+				@ ok, now we need to check if an alien has hit YOU!!
+				@ r1 is alien base offset!
+			
+				bl alienCollideCheck		
 
 		noAlienMove:
 		subs r7,#1
@@ -248,7 +257,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	
 @-------------- THIS CODE IS ONLY FOR LINEAR ALIENS
 aliensLinear:
-	@ do not touch r7
+	@ do not touch r7 or r1
 	mov r0,#sptTrackXOffs
 	ldr r10,[r1,r0]		@ r10 is now our direction (0-7)
 	mov r0,#sptTrackYOffs

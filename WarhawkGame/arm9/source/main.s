@@ -97,17 +97,17 @@ gameLoop:
 @		bl drawDebugText	@ draw some numbers :)
 
 
-	ldr r0, =energyText			@ Load out text pointer
+	ldr r0, =energyText				@ Load out text pointer
 	ldr r1, =0						@ x pos
-	ldr r2, =23						@ y pos
+	ldr r2, =0						@ y pos
 	ldr r3, =1						@ Draw on Sub screen
 	bl drawText
-	
-	ldr r10,=energy				@ Pointer to data
+		
+	ldr r10,=energy					@ Pointer to data
 	ldr r10,[r10]					@ Read value
-	mov r8,#23						@ y pos
+	mov r8,#0						@ y pos
 	mov r9,#2						@ Number of digits
-	mov r11, #8						@ x pos
+	mov r11,#7						@ x pos
 	bl drawDigits					@ Draw
 
 	cmp r10,#0

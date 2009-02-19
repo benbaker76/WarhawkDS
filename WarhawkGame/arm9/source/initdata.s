@@ -16,7 +16,7 @@ initData:
 	stmfd sp!, {r0-r1, lr}
 
 	ldr r1,=level
-	mov r0,#2
+	mov r0,#1
 	str r0,[r1]
 
 
@@ -25,6 +25,8 @@ initData:
 
 	.end
 	
+@ These below need to be inited at game start - not per level
+
 pixelOffsetSFSub:
 	.word 0
 pixelOffsetSFMain:

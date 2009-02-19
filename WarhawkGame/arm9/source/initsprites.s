@@ -16,9 +16,9 @@ initSprites:
 
 	@ Load the palette into the palette subscreen area and main
 
-	ldr r0, =SpritesPal
+	ldr r0, =SpritePal
 	ldr r1, =SPRITE_PALETTE
-	ldr r2, =SpritesPalLen
+	ldr r2, =512
 	bl dmaCopy
 	ldr r1, =SPRITE_PALETTE_SUB
 	bl dmaCopy

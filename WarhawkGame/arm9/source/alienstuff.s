@@ -670,12 +670,11 @@ initHunterMine:
 						@ r8 is now a random 32 bit number that we need to convert to 0-351 (HOW THE HELL)
 						@ do convert code here!!!
 						@ r8 is 0-4294967295	- BUGGER!
-						
-						sub r8,#1536
-						lsr r8,#23
-						cmp r8,#384
-						bpl tryAgain
-						@ this should make it 0-255 - it doesnt?
+						ldr r1,=511
+						and r8,r1
+						cmp r8,#129
+						subpl r8,#129
+						@ this should make it 0-383
 	
 					mov r1,r8				@ set x coord (RANDOM)
 					str r1,[r3,r0]
@@ -686,7 +685,7 @@ initHunterMine:
 					mov r1,#3				@ set y speed (change based on LEVEL) (2 is good for early levels)
 					str r1,[r3,r0]
 					mov r0,#sptObjOffs
-					mov r1,#34
+					mov r1,#36
 					str r1,[r3,r0]			@ set sprite to display
 					mov r0,#sptHitsOffs
 					mov r1,#4096			@ set number of hits HIGH

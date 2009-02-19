@@ -46,17 +46,22 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	cmp r4,#8192					@ Check for a "MINE FIELD" request
 	bne noMines
 				ldr r4,=mineCount
-				mov r6,#75			@ set number of mines to init (Base this on LEVEL)
+				mov r6,#75									@ set number of mines to init (Base this on LEVEL)
 				str r6,[r4]
 				ldr r4,=mineDelay
 				mov r6,#0
-				str r6,[r4]			@ set delay to 0 (the mine code handles the rest)
+				str r6,[r4]									@ set delay to 0 (the mine code handles the rest)
 				b initWaveAliensDone
 	noMines:
 	cmp r4,#16384					@ Check for a "HUNTER" request
 	bne noHunter
-	
-	
+				ldr r4,=hunterCount
+				mov r6,#25									@ set number of hunters to init (Base this on LEVEL)
+				str r6,[r4]
+				ldr r4,=hunterDelay
+				mov r6,#0
+				str r6,[r4]									@ set delay to 0 (the hunter code handles the rest)
+				b initWaveAliensDone	
 	noHunter:
 	@ from here on in, we know that it is a normal attack
 
@@ -220,8 +225,12 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		b haveWeCrashed			@ and we are done
 		
 	mineNot:
-	@cmp r0,#3					@ check if this is a tracker?
+	cmp r0,#3					@ check if this is a tracker?
+		bne hunterNot
+		bl moveHunter
+		b haveWeCrashed
 	
+	hunterNot:
 	cmp r0,#1
 	bne noAlienMove
 
@@ -641,7 +650,7 @@ initHunterMine:
 	str r1,[r0]
 	cmp r1,#0
 	bpl initHunter			@ not time yet
-		mov r1,#10			@ reset the timer	(Change based on LEVEL)
+		mov r1,#5																	@ reset the timer	(Change based on LEVEL)
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#63					@ R0 points to the sprite that will be used for the mine
@@ -655,9 +664,8 @@ initHunterMine:
 					foundMine:
 					add r3,r0, lsl #2		@ r3 is now offset to mine sprite
 					mov r1,#2
-					str r1,[r3]				@ activate as active 4
+					str r1,[r3]				@ activate as activeSprite 2
 					mov r0,#sptXOffs
-						tryAgain:
 						@ GENERATE A RANDOM NUMBER
 						ldr     ip, seedpointer
 						ldmia   ip, {r8, r9}
@@ -668,12 +676,11 @@ initHunterMine:
 						eor     r8, r2, r2, lsr #20		@ de-concentate
 						stmia   ip, {r8, r9} 
 						@ r8 is now a random 32 bit number that we need to convert to 0-351 (HOW THE HELL)
-						@ do convert code here!!!
-						@ r8 is 0-4294967295	- BUGGER!
-						ldr r1,=511
-						and r8,r1
-						cmp r8,#129
-						subpl r8,#129
+						@ do convert code here!!
+						ldr r2,=0x1ff
+						and r9,r8,r2
+						add r8,r9,r9,lsl #1
+						mov r8,r8,lsr #2
 						@ this should make it 0-383
 	
 					mov r1,r8				@ set x coord (RANDOM)
@@ -682,7 +689,7 @@ initHunterMine:
 					mov r1,#384-32			@ set y coord
 					str r1,[r3,r0]
 					mov r0,#sptSpdYOffs
-					mov r1,#3				@ set y speed (change based on LEVEL) (2 is good for early levels)
+					mov r1,#3				@ set y speed (change based on LEVEL) (3 is good for early levels)
 					str r1,[r3,r0]
 					mov r0,#sptObjOffs
 					mov r1,#36
@@ -700,9 +707,77 @@ initHunterMine:
 					movmi r1,#0
 					str r1,[r0]				@ store it back
 
-	initHunter:
+	initHunter:								@ DO THE "HUNTER" INIT
+
+	ldr r0,=hunterCount
+	ldr r1,[r0]
+	cmp r1,#0				@ is is active??
+	bne checkHunterTimer		@ yes!!
+		b initNothing		@ no :( so let us check for a hunter
+	checkHunterTimer:
+	ldr r0,=hunterDelay
+	ldr r1,[r0]
+	sub r1,#1				@ count down the timer
+	str r1,[r0]
+	cmp r1,#0
+	bpl initNothing			@ not time yet
+		mov r1,#50																	@ reset the timer	(Change based on LEVEL)
+		str r1,[r0]
+			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
+			mov r0,#63					@ R0 points to the sprite that will be used for the mine
+				findHunterLoop:
+				ldr r2,[r3,r0, lsl #2]
+				cmp r2,#0
+				beq foundHunter
+					subs r0,#1
+				bpl findHunterLoop
+				b initHunterMineFail
+					foundHunter:
+					add r3,r0, lsl #2		@ r3 is now offset to mine sprite
+					mov r1,#3
+					str r1,[r3]				@ activate as activeSprite 3
+					mov r0,#sptXOffs
+						@ GENERATE A RANDOM NUMBER
+						ldr     ip, seedpointer
+						ldmia   ip, {r8, r9}
+						tst     r9, r9, lsr #1				@ to bit into carry
+						movs    r2, r8, rrx					@ 33-bit rotate right
+						adc     r9, r9, r9					@ carry into LSB of r2
+						eor     r2, r2, r8, lsl #12		@ concenate the 38 bit value
+						eor     r8, r2, r2, lsr #20		@ de-concentate
+						stmia   ip, {r8, r9} 
+						@ r8 is now a random 32 bit number that we need to convert to 0-351 (HOW THE HELL)
+						@ do convert code here!!!
+						ldr r2,=0x1ff
+						and r9,r8,r2
+						add r8,r9,r9,lsl #1
+						mov r8,r8,lsr #2
+						@ this should make it 0-383
 	
-	
+					mov r1,r8				@ set x coord (RANDOM)
+					str r1,[r3,r0]
+					mov r0,#sptYOffs
+					mov r1,#384-32			@ set y coord
+					str r1,[r3,r0]
+					mov r0,#sptSpdYOffs
+					mov r1,#2				@ set y speed (change based on LEVEL) (2 is good for early levels)
+					str r1,[r3,r0]
+					mov r0,#sptObjOffs
+					mov r1,#30
+					str r1,[r3,r0]			@ set sprite to display
+					mov r0,#sptHitsOffs
+					mov r1,#0				@ set number of hits a single shot (for now)
+					str r1,[r3,r0]
+					mov r0,#sptFireTypeOffs
+					mov r1,#0				@ set it to never fire (for now)
+					str r1,[r3,r0]
+
+					ldr r0,=hunterCount		@ decrement the mine counter
+					ldr r1,[r0]
+					subs r1,#1
+					movmi r1,#0
+					str r1,[r0]				@ store it back
+	initNothing:
 	initHunterMineFail:
 	mov r15,r14
 	
@@ -726,10 +801,115 @@ moveMine:
 		str r2,[r1]
 	mineOnScreen:
 	
+	mov r15,r14
 	
-	
-	
-	
+moveHunter:
+	@ do not use r0,r1 or r7 here to write to!
+	@ in a hunter, we use sptObjOffs to tell use which way it is moving
+	@ 30=down 31=up 32=left 33=rght
+	ldr r2,=level
+	ldr r8,[r2]										@ r8 = current level
+	mov r2,#sptObjOffs
+	ldr r4,[r1,r2]									@ r4 = current direction
+	ldr r3,=spriteY
+	ldr r3,[r3]										@ r3 = your Y pos
+	ldr r9,=spriteX
+	ldr r9,[r9]										@ r9 = your X pos	
+	ldr r5,=horizDrift
+	ldr r5,[r5]
+	add r9,r5
+		cmp r4,#30
+		bne hunt1									@ GOING DOWN
+			mov r2,#sptSpdYOffs
+			ldr r5,[r1,r2]							@ r5 = the hunters speed
+			mov r2,#sptYOffs
+			ldr r6,[r1,r2]							@ r6 = the mines Y coord
+			add r6,r5
+			str r6,[r1,r2]
+			cmp r6,#768
+			bpl hunterKill
+			cmp r6,r3								@ is the Hunter level with your Y?
+			bmi	hunterDone							@ if not, we are done
+				ldr r3,=spriteX
+				ldr r3,[r3]							@ r3 = your Y pos
+				mov r2,#sptXOffs
+				ldr r5,[r1,r2]						@ r5 = Hunters X
+				cmp r5,r3
+				bpl hunterLeft
+					mov r2,#sptObjOffs				@ Turn Hunter Right
+					mov r5,#33
+					str r5,[r1,r2]
+					b hunterDone
+				hunterLeft:
+					mov r2,#sptObjOffs				@ Turn Hunter Left
+					mov r5,#32
+					str r5,[r1,r2]
+					b hunterDone			
+		hunt1:
+		cmp r4,#32									@ GOING LEFT
+		bne hunt2									@ we need to move and check for X IF level is >3
+			mov r2,#sptSpdYOffs
+			ldr r5,[r1,r2]							@ r5 = the hunters speed (we will use Y speed globally)
+			mov r2,#sptXOffs
+			ldr r6,[r1,r2]							@ r6 = the hunters X coord
+			sub r6,r5
+			str r6,[r1,r2]
+			cmp r6,#0
+			bmi hunterKill
+			cmp r8,#4								@ if we are on level 1-3, no need to do more
+			bmi hunterDone
+			cmp r6,r9								@ is the Hunter (r6) near you (r9)								
+			bpl hunterDone							@ if not, dont do anything
+					mov r2,#sptYOffs
+					ldr r5,[r1,r2]					@ r5 = Hunter Y
+					cmp r5,r3						@ if you are below it, dont bother going up!
+					bmi hunterDone
+					mov r2,#sptObjOffs				@ Turn Hunter Up
+					mov r5,#31
+					str r5,[r1,r2]
+					b hunterDone
+		
+		hunt2:
+		cmp r4,#33									@ GOING RIGHT
+		bne hunt3
+			mov r2,#sptSpdYOffs
+			ldr r5,[r1,r2]							@ r5 = the hunters speed (we will use Y speed globally)
+			mov r2,#sptXOffs
+			ldr r6,[r1,r2]							@ r6 = the hunters X coord
+			add r6,r5
+			str r6,[r1,r2]
+			cmp r6,#384
+			bpl hunterKill	
+			cmp r8,#4								@ if we are on level 1-3, no need to do more
+			bmi hunterDone
+			cmp r6,r9								@ is the Hunter (r6) near you (r9)								
+			bmi hunterDone							@ if not, dont do anything
+					mov r2,#sptYOffs
+					ldr r5,[r1,r2]					@ r5 = Hunter Y
+					cmp r5,r3						@ if you are below it, dont bother going up!
+					bmi hunterDone
+					mov r2,#sptObjOffs				@ Turn Hunter Up
+					mov r5,#31
+					str r5,[r1,r2]
+					b hunterDone		
+		
+		hunt3:									
+		cmp r4,#31									@ GOING UP
+		bne hunterDone
+			mov r2,#sptSpdYOffs
+			ldr r5,[r1,r2]							@ r5 = the hunters speed (we will use Y speed globally)
+			mov r2,#sptYOffs
+			ldr r6,[r1,r2]							@ r6 = the hunters X coord
+			sub r6,r5
+			str r6,[r1,r2]	
+			cmp r6,#384-32
+			bmi hunterKill
+			
+		hunterDone:
+		mov r15,r14
+	hunterKill:
+		mov r2,#0
+		str r2,[r1]									@ kill that nasty hunter!! :)
 	mov r15,r14
 	
 	

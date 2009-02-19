@@ -12,6 +12,7 @@
 	.text
 	.global checkWave
 	.global moveAliens
+	.global initHunterMine
 
 checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	stmfd sp!, {r0-r4, lr}
@@ -32,15 +33,32 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	
 	initWave:
 		add r2,#4					@ ok, add 4 (1 word) to r2
-		ldr r4,[r2, r3, lsl #3] 	@ r1 is now the attack wave number to init	
+		ldr r4,[r2, r3, lsl #3] 	@ r4 is now the attack wave number to init	
 		add r3,#1					@ add 1 to wave number
 		str r3,[r1]					@ and store it back
 
-@				mov r10,r4			@ Set to display attack wave number
-@				mov r8,#22			@ y pos
-@				mov r9,#3			@ Number of digits
-@				mov r11, #0			@ x pos
-@				bl drawDigits		@ Display the initilised wave (Bug test)
+				mov r10,r4			@ Set to display attack wave number
+				mov r8,#23			@ y pos
+				mov r9,#5			@ Number of digits
+				mov r11, #0			@ x pos
+				bl drawDigits		@ Display the initilised wave (Bug test)
+
+	cmp r4,#8192					@ Check for a "MINE FIELD" request
+	bne noMines
+				ldr r4,=mineCount
+				mov r6,#75			@ set number of mines to init (Base this on LEVEL)
+				str r6,[r4]
+				ldr r4,=mineDelay
+				mov r6,#0
+				str r6,[r4]			@ set delay to 0 (the mine code handles the rest)
+				b initWaveAliensDone
+	noMines:
+	cmp r4,#16384					@ Check for a "HUNTER" request
+	bne noHunter
+	
+	
+	noHunter:
+	@ from here on in, we know that it is a normal attack
 
 		@ now we need to make r2 the index to the start of attack wave r1
 		ldr r2,=alienWave
@@ -180,7 +198,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		ldr r1,=spriteActive+68		@ add 68 (17*4) for start of aliens
 	
 		ldr r0,[r1,r7, lsl #2]
-		cmp r0,#0
+		cmp r0,#0					@ r0 = spriteActive Value
 		beq noAlienMove
 	
 		add r1,r7, lsl #2
@@ -189,13 +207,23 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	@	2=mines, 3=hunter, 
 	@	this will be stored in r0
 	@
-	cmp r0,#1
-	bne noAlienMove
+	cmp r0,#0
+	beq noAlienMove
 	@ if alien type is a 1, Carry on from here
 	@ as it must be a linear or tracking alien
 	@ r1 is now offset to start of alien data
 	@ use r0 as offset to this (+512 per field)
-
+	
+	cmp r0,#2					@ check if this is a mine?
+		bne mineNot				@ if not, carry on
+		bl moveMine				@ move the mine based on y speed
+		b haveWeCrashed			@ and we are done
+		
+	mineNot:
+	@cmp r0,#3					@ check if this is a tracker?
+	
+	cmp r0,#1
+	bne noAlienMove
 
 		mov r0,#sptSpdYOffs		@ we use Initial Y speed as a variable to tell use what
 		ldr r10,[r1,r0]		@ type of alien to move (Linear or curved/tracker)
@@ -242,7 +270,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 				bmi doDetect			@ if no, just forget it
 				bl alienFireInit		@ time to fire, r3=fire type, r1=offset to alien
 			
-
+			haveWeCrashed:
 			doDetect:
 				@ ok, now we need to check if an alien has hit YOU!!
 				@ r1 is alien base offset!
@@ -595,5 +623,122 @@ aliensTracker:
 	
 	noMatch:
 	mov r15,r14
+	
+	
+initHunterMine:
+@-------------- THIS CODE IS ONLY FOR INITIALISING HUNTERS AND MINES
+@ first, lets check if mines are active?
+@ we can use mineCount for this, if 0 = then sadly no mines
+	ldr r0,=mineCount
+	ldr r1,[r0]
+	cmp r1,#0				@ is is active??
+	bne checkMineTimer		@ yes!!
+		b initHunter		@ no :( so let us check for a hunter
+	checkMineTimer:
+	ldr r0,=mineDelay
+	ldr r1,[r0]
+	sub r1,#1				@ count down the timer
+	str r1,[r0]
+	cmp r1,#0
+	bpl initHunter			@ not time yet
+		mov r1,#10			@ reset the timer	(Change based on LEVEL)
+		str r1,[r0]
+			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
+			mov r0,#63					@ R0 points to the sprite that will be used for the mine
+				findMineLoop:
+				ldr r2,[r3,r0, lsl #2]
+				cmp r2,#0
+				beq foundMine
+					subs r0,#1
+				bpl findMineLoop
+				b initHunterMineFail
+					foundMine:
+					add r3,r0, lsl #2		@ r3 is now offset to mine sprite
+					mov r1,#2
+					str r1,[r3]				@ activate as active 4
+					mov r0,#sptXOffs
+						tryAgain:
+						@ GENERATE A RANDOM NUMBER
+						ldr     ip, seedpointer
+						ldmia   ip, {r8, r9}
+						tst     r9, r9, lsr #1				@ to bit into carry
+						movs    r2, r8, rrx					@ 33-bit rotate right
+						adc     r9, r9, r9					@ carry into LSB of r2
+						eor     r2, r2, r8, lsl #12		@ concenate the 38 bit value
+						eor     r8, r2, r2, lsr #20		@ de-concentate
+						stmia   ip, {r8, r9} 
+						@ r8 is now a random 32 bit number that we need to convert to 0-351 (HOW THE HELL)
+						@ do convert code here!!!
+						@ r8 is 0-4294967295	- BUGGER!
+						
+						sub r8,#1536
+						lsr r8,#23
+						cmp r8,#384
+						bpl tryAgain
+						@ this should make it 0-255 - it doesnt?
+	
+					mov r1,r8				@ set x coord (RANDOM)
+					str r1,[r3,r0]
+					mov r0,#sptYOffs
+					mov r1,#384-32			@ set y coord
+					str r1,[r3,r0]
+					mov r0,#sptSpdYOffs
+					mov r1,#3				@ set y speed (change based on LEVEL) (2 is good for early levels)
+					str r1,[r3,r0]
+					mov r0,#sptObjOffs
+					mov r1,#34
+					str r1,[r3,r0]			@ set sprite to display
+					mov r0,#sptHitsOffs
+					mov r1,#4096			@ set number of hits HIGH
+					str r1,[r3,r0]
+					mov r0,#sptFireTypeOffs
+					mov r1,#0				@ set it to never fire
+					str r1,[r3,r0]
 
+					ldr r0,=mineCount		@ decrement the mine counter
+					ldr r1,[r0]
+					subs r1,#1
+					movmi r1,#0
+					str r1,[r0]				@ store it back
+
+	initHunter:
+	
+	
+	initHunterMineFail:
+	mov r15,r14
+	
+	
+	
+moveMine:
+	@ this is just a little bit of code to move our "MINES", that is all we have to do
+	@ all our other code will take care of the rest!
+	@ r1 is an offset pointer to our mine sprites
+	@ do not use r0,r1 or r7 here to write to!
+	mov r2,#sptSpdYOffs
+	ldr r5,[r1,r2]							@ r5 = the mines speed
+	mov r2,#sptYOffs
+	ldr r6,[r1,r2]							@ r6 = the mines Y coord
+	
+	add r6,r5
+	str r6,[r1,r2]
+	cmp r6,#768
+	bmi mineOnScreen
+		mov r2,#0
+		str r2,[r1]
+	mineOnScreen:
+	
+	
+	
+	
+	
+	mov r15,r14
+	
+	
+seedpointer: 
+        .long    seed  
+seed: 
+        .long    0x55555555 
+        .long    0x55555555
+	
+	
 .end

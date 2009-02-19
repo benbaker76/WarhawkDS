@@ -12,10 +12,14 @@ alienLevel:
 	@ these are pairs, first is "ypossub" and second is "alienWave"
 	@ "ypossub" starts at 3744 and ends at 160
 	@ the "scroll pos" MUST work backwards, ie. start at level base
-	.word 3650,1,3450,1,3060,3,3060-16,2,3060-32,2,3060-48,2,3060-64,2,3060-80,2,3060-96,2,3060-112,4,2600,5,2550,5,2500,5,2450,5,2400,5,2350,5
+	.word 3650,1,3450,1,3060,3,3060-16,2,3060-32,2,3060-48,2,3060-64,2,3060-80,2,3060-96,2,3060-112,4,2600,8192,2550,5,2500,5,2450,5,2400,5,2350,5
 	.word 2150,6,2000,7,1950,7,1900,7,1850,7,1600,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	@ to init a mine
+	@ set "scroll Pos" as usual, then set the wave to #8192
+	@ to init a hunter
+	@ set "scroll Pos" as usual, then set the wave to #16384	
 	
 alienWave:
 	@ These blocks define what alienDescripts create a attack wave
@@ -144,7 +148,7 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @25
-	.word 320,360,0,0,3,34,6,20483					@ inits
+	.word 320,360,0,0,3,46,6,20483					@ inits
 	.word 280,400,200,420,200,460,1024,1024,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @26	
@@ -164,7 +168,7 @@ alienDescript:
 	.word 7,383,2048,2048,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @30
-	.word 63+32,360,0,0,3,34,6,0						@ inits
+	.word 63+32,360,0,0,3,46,6,0						@ inits
 	.word 103+32,400,183+32,420,183+32,460,1024,1024,0,0,0,0	@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 

@@ -17,6 +17,7 @@
 	.global initSystem
 	.global main
 	.global debugDigits
+	.global randomNumber
 
 initSystem:
 	bx lr
@@ -89,6 +90,7 @@ gameLoop:
 		bl scrollStars		@ Scroll Stars (BG2,BG3)
 
 		bl checkWave		@ check if time for another alien attack
+		bl initHunterMine	@ check if we should chuck another mine or hunter into the mix
 		
 		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
 
@@ -111,7 +113,7 @@ gameLoop:
 	bl drawDigits					@ Draw
 
 	cmp r10,#0
-	beq youDied
+@	beq youDied
 	bl waitforNoblank
 	
 	@---------------------------------------------
@@ -138,4 +140,6 @@ gameLoop:
 	b stopit
 
 @------------------------------------------------------------------------------
+
+
 

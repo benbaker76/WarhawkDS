@@ -86,6 +86,20 @@
 	.global energy
 	.global energyText
 	.global youDiedText
+	.global mineDelay
+	.global hunterDelay
+	.global mineCount
+	.global hunterCount
+	
+	
+mineDelay:
+	.word 0
+mineCount:
+	.word 0
+hunterDelay:
+	.word 0
+hunterCount:
+	.word 0
 	
 level:
 	.word 0

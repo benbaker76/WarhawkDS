@@ -21,7 +21,13 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	@ waveNumber is the digit we need to use to pull the data
 	ldr r1,=waveNumber
 	ldr r3,[r1]						@ r3=current wave number to look for
-	ldr r2,=alienLevel			
+	ldr r2,=alienLevel
+
+	ldr r4,=level					@ we need to modify alienLevel based on game level
+	ldr r4,[r4]						@ r4=current level
+	sub r4,#1
+	add r2,r4, lsl #9				@ add to alienLevel, LEVEL*512 (128 words)
+	
 	ldr r5,[r2, r3, lsl #3]		@ r5=current alien level scroll used to generate
 	cmp r5,#0						@ if the wave is 0, then All done!
 	beq initWaveAliensDone
@@ -82,6 +88,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	
 initAlien:	@ ----------------This code will find a blank alien sprite and assign it
 	stmfd sp!, {r0-r10, lr}
+
 								@ set r1 to the alien movement number you wish to activate
 	ldr r4,=alienDescript		@ r4=LOCATION OF ALIEN DESCRIPTION
 	add r4,r1, lsl #7			@ add it to aliendescrip so we know where to grab from
@@ -100,6 +107,7 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 		ldmfd sp!, {r0-r10, pc}@ No space for the alien, so lets exit!
 	
 	foundSpace:
+
 	mov r5,r0					@ store the sprite number for later retrieval
 	
 	add r3,r0, lsl #2
@@ -747,14 +755,15 @@ initHunterMine:
 						eor     r8, r2, r2, lsr #20		@ de-concentate
 						stmia   ip, {r8, r9} 
 						@ r8 is now a random 32 bit number that we need to convert to 0-351 (HOW THE HELL)
-						@ do convert code here!!!
+						@ do convert code here!!					
+						
 						ldr r2,=0x1ff
 						and r9,r8,r2
 						add r8,r9,r9,lsl #1
 						mov r8,r8,lsr #2
 						@ this should make it 0-383
 	
-					mov r1,r8				@ set x coord (RANDOM)
+					mov r1,r4				@ set x coord (RANDOM)
 					str r1,[r3,r0]
 					mov r0,#sptYOffs
 					mov r1,#384-32			@ set y coord
@@ -830,11 +839,9 @@ moveHunter:
 			bpl hunterKill
 			cmp r6,r3								@ is the Hunter level with your Y?
 			bmi	hunterDone							@ if not, we are done
-				ldr r3,=spriteX
-				ldr r3,[r3]							@ r3 = your Y pos
 				mov r2,#sptXOffs
 				ldr r5,[r1,r2]						@ r5 = Hunters X
-				cmp r5,r3
+				cmp r5,r9
 				bpl hunterLeft
 					mov r2,#sptObjOffs				@ Turn Hunter Right
 					mov r5,#33
@@ -852,7 +859,7 @@ moveHunter:
 			ldr r5,[r1,r2]							@ r5 = the hunters speed (we will use Y speed globally)
 			mov r2,#sptXOffs
 			ldr r6,[r1,r2]							@ r6 = the hunters X coord
-			sub r6,r5
+			subs r6,r5
 			str r6,[r1,r2]
 			cmp r6,#0
 			bmi hunterKill
@@ -882,6 +889,7 @@ moveHunter:
 			bpl hunterKill	
 			cmp r8,#4								@ if we are on level 1-3, no need to do more
 			bmi hunterDone
+			add r6,#32
 			cmp r6,r9								@ is the Hunter (r6) near you (r9)								
 			bmi hunterDone							@ if not, dont do anything
 					mov r2,#sptYOffs

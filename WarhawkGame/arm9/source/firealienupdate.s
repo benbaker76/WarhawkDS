@@ -9,6 +9,7 @@
 
 	.global moveStandardShot
 	.global moveTrackerShot
+	.global	moveAccelShot
 
 	.arm
 	.align
@@ -183,6 +184,44 @@
 
 	ldmfd sp!, {r0-r10, pc}
 	
+	
+@
+@ "MOVE" - "Acceleration shot 20"		@ a shot that accelerates on fire (Nasty!)
+	moveAccelShot:
+	stmfd sp!, {r0-r10, lr}
+	@ first, sheck the bullets coord in relation to your x (r0)
+		mov r6,#sptSpdYOffs
+		ldr r8,[r2,r6]
+		mov r6,#sptSpdDelayYOffs		@ r6 is index to bullex y delay
+		ldr r7,[r2,r6]					@ r7 is the bullets current delay
+		add r7,#1
+		str r7,[r2,r6]
+		mov r5,#12						@ All we are doing here is using Y speed
+		sub r5,r8,lsl #1				@ to make the delay exponetial :)
+		cmp r7,r5						@ if > then accelerate shot
+		bmi accShotUpdate
+			mov r7,#0					@ reset delay
+			str r7,[r2,r6]
+			mov r6,#sptSpdYOffs
+			ldr r7,[r2,r6]
+			add r7,#1					@ add 1 to y speed
+			cmp r7,#16					@ if >, keep the same
+			moveq r7,#16
+			str r7,[r2,r6]				@ store speed back
+		accShotUpdate:
+			mov r6,#sptSpdYOffs
+			ldr r7,[r2,r6]	
+			mov r4,#sptYOffs			
+			ldr r5,[r2,r4]					@ load our bullet Y pos
+			add r5,r7						@ add/sub our speed
+			str r5,[r2,r4]					@ store it back
+			cmp r5,#768
+			bmi accShotActive
+				mov r1,#0
+				str r1,[r2]					@ kill bullet if off screen
+		accShotActive:
+
+	ldmfd sp!, {r0-r10, pc}
 	
 	
 	

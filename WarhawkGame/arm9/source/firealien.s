@@ -40,6 +40,8 @@ alienFireInit:
 		blmi initStandardShot
 	cmp r3,#19
 		bleq initTrackerShot
+	cmp r3,#20
+		bleq initAccelShot
 	@ etc!
 
 	alienFireInitDone:
@@ -77,6 +79,8 @@ alienFireMove:
 					blmi moveStandardShot	
 				cmp r3,#19
 					bleq moveTrackerShot
+				cmp r3,#20
+					bleq moveAccelShot
 				@ ETC
 	
 				@ and from here we need to check if the bullet is on our ship

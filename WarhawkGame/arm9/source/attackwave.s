@@ -9,17 +9,36 @@
 	
 alienLevel:
 	@ These blocks define what alienWave appears and when on each level
+	@ 128 words per level
 	@ these are pairs, first is "ypossub" and second is "alienWave"
 	@ "ypossub" starts at 3744 and ends at 160
 	@ the "scroll pos" MUST work backwards, ie. start at level base
-	.word 3650,1,3450,1,3060,3,3060-16,2,3060-32,2,3060-48,2,3060-64,2,3060-80,2,3060-96,2,3060-112,4,2600,8192,2550,5,2500,5,2450,5,2400,5,2350,5
-	.word 2150,6,2000,7,1950,7,1900,7,1850,7,1600,1,1500,16384,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@ to init a mine
 	@ set "scroll Pos" as usual, then set the wave to #8192
 	@ to init a hunter
-	@ set "scroll Pos" as usual, then set the wave to #16384	
+	@ set "scroll Pos" as usual, then set the wave to #16384
+@lev1
+	.word 3650,16384,3450,1,3060,3,3060-16,2,3060-32,2,3060-48,2,3060-64,2,3060-80,2,3060-96,2,3060-112,4,2600,8192,2550,5,2500,5,2450,5,2400,5,2350,5
+	.word 2150,6,2000,7,1950,7,1900,7,1850,7,1600,1,1500,16384,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+@lev2	
+	.word 3650,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+@Lev3
+.space 512
+@lev4	
+.space 512
+.space 512
+.space 512
+.space 512
+.space 512
+.space 512
+.space 512
+.space 512
+.space 512
 	
 alienWave:
 	@ These blocks define what alienDescripts create a attack wave
@@ -42,6 +61,8 @@ alienWave:
 	.word 26,27,28,29,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@ wave 7
 	.word 30,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	@ wave 8
+	.word 31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@ wave ETC...
 	
 alienDescript:
@@ -160,35 +181,38 @@ alienDescript:
 	.word 3,383,2048,2048,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @28	
-	.word 383,576+44,2,1024,0,42,0,0					@ inits
-	.word 7,383,2048,2048,0,0,0,0,0,0,0,0					@ Track points
+	.word 383,576+44,2,1024,0,42,0,0							@ inits
+	.word 7,383,2048,2048,0,0,0,0,0,0,0,0						@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @29	
-	.word 383,576+66,1,1024,0,42,0,0					@ inits
-	.word 7,383,2048,2048,0,0,0,0,0,0,0,0					@ Track points
+	.word 383,576+66,1,1024,0,42,0,0							@ inits
+	.word 7,383,2048,2048,0,0,0,0,0,0,0,0						@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @30
-	.word 63+32,360,0,0,3,46,6,0						@ inits
+	.word 63+32,360,0,0,3,46,6,0								@ inits
 	.word 103+32,400,183+32,420,183+32,460,1024,1024,0,0,0,0	@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
+@31	-	Accellerator bullet tester
+	.word 200,450,0,1024,0,43,20,19220							@ inits
+	.word 0,0,0,0,0,0,0,0,0,0,0,0								@ Track points
+	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 
-
-@31
+@32
 	@ Alien define structure
 
 	.word 180		@ init X				@ initial X coord
-	.word 50		@ init y				@ initial Y coord
+	.word 450		@ init y				@ initial Y coord
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
-	.word 0			@ init speed y			@ (set to 1024 to signal linear mode)
+	.word 1024			@ init speed y			@ (set to 1024 to signal linear mode)
 	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
-	.word 37		@ init spriteObj		@ Sprite to use for image
+	.word 35		@ init spriteObj		@ Sprite to use for image
 	.word 20		@ init hits to kill		@ make massive for indestructable (0=one shot)
-	.word 5			@ init 'fire type' 		@ Lower 8 bits = type, 0=none
+	.word 19220			@ init 'fire type' 		@ Lower 8 bits = type, 0=none
 											@ the rest is delay (shifted 8 left)
-	.word 1024,600	@ track x,y 1			@ tracking coordinate (as in coords.png)
+	.word 0,0		@ track x,y 1			@ tracking coordinate (as in coords.png)
 	.word 0,0		@ track x,y 2
 	.word 0,0		@ track x,y 3
-	.word 315,660	@ etc.....
+	.word 0,0		@ etc.....
 	.word 215,660	@ make any track 1024 to attack your ship on that vertices
 	.word 230,384	@ (in linear mode these are direction, distance, "speed x" is speed)
 	.word 1024,1024	@ you can make them trackers at any time on any axis.. :)

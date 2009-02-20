@@ -10,7 +10,7 @@
 	.global moveStandardShot
 	.global moveTrackerShot
 	.global	moveAccelShot
-
+	.global	moveRippleShot
 	.arm
 	.align
 
@@ -223,6 +223,37 @@
 
 	ldmfd sp!, {r0-r10, pc}
 	
-	
+@
+@ "MOVE" - "Ripple shot 21"		@ a shot that "wibbles" on fire
+	moveRippleShot:
+	stmfd sp!, {r0-r10, lr}
+		mov r4,#sptSpdDelayXOffs
+		ldr r5,[r2,r4]					@ load our BACKUP X coord inot R5 (modify this and store in ACTUAL)
+			
+		mov r6,#sptSpdXOffs				@ speed X is the possiion in the sine data
+		ldr r8,[r2,r6]					@ r8 = sine number, now load it from ripple sine
+		ldr r9,=fireRippleSine
+		ldrsb r4,[r9,r8]				@ r4 = value in sine at r9 + r8
+		adds r5,r4						@ add current sine to X pos BACKUP (starts at 0)
+		mov r4,#sptXOffs
+		str r5,[r2,r4]					@ store it back in our ACTUAL X coord
+			
+		add r8,#1						@ add to sine offset
+		cmp r8,#48						@ we have 48 units in sine (0-47)
+		moveq r8,#0						@ so, if we excede - loop!
+		str r8,[r2,r6]					@ and put the little bugger back
+		
+		mov r6,#sptYOffs				@ get y coord
+		ldr r5,[r2,r6]
+		add r5,#2						@ add 2
+		str r5,[r2,r6]					@ put it back!
+		cmp r5,#768
+		bmi ripShotActive
+			mov r1,#0
+			str r1,[r2]
+		ripShotActive:
+		
+	ldmfd sp!, {r0-r10, pc}
+		
 	
 	

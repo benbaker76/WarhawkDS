@@ -42,6 +42,8 @@ alienFireInit:
 		bleq initTrackerShot
 	cmp r3,#20
 		bleq initAccelShot
+	cmp r3,#21
+		bleq initRippleShot
 	@ etc!
 
 	alienFireInitDone:
@@ -81,6 +83,8 @@ alienFireMove:
 					bleq moveTrackerShot
 				cmp r3,#20
 					bleq moveAccelShot
+				cmp r3,#21
+					bleq moveRippleShot
 				@ ETC
 	
 				@ and from here we need to check if the bullet is on our ship

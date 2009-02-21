@@ -58,7 +58,7 @@ bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
 	bl waitforFire		@ wait for a short while to start game
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)
 	ldr r0,=powerUp
-@	str r1,[r0]
+	str r1,[r0]
 	
 	bl clearBG0
 	bl drawAllEnergyBars

@@ -62,7 +62,7 @@ alienWave:
 	@ wave 7
 	.word 30,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@ wave 8	-	Bullet test wave
-	.word 31,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 31,32,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@ wave ETC...
 	
 alienDescript:
@@ -197,11 +197,14 @@ alienDescript:
 	.word 7,50,3,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @32	-	Ripple shot bullet tester
-	.word 250,450,1,1024,0,44,20,5141							@ inits	- bullet 10100 00010101
+	.word 250,450,1,1024,0,44,20,5142							@ inits	- bullet 10100 00010101
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
-
-@33
+@33	-	Mine shot bullet tester
+	.word 200,400,1,1024,0,44,20,25623							@ inits	- bullet 10100 00010101
+	.word 3,60,7,120,3,60,0,0,0,0,0,0								@ Track points
+	.word 0,0,0,0,0,0,0,0,0,0,0,0
+@34
 	@ Alien define structure
 
 	.word 180		@ init X				@ initial X coord

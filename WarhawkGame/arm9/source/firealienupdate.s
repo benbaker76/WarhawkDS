@@ -11,6 +11,8 @@
 	.global moveTrackerShot
 	.global	moveAccelShot
 	.global	moveRippleShot
+	.global moveMineShot
+	
 	.arm
 	.align
 
@@ -254,6 +256,66 @@
 		ripShotActive:
 		
 	ldmfd sp!, {r0-r10, pc}
+
+@
+@ "MOVE" - "Mine shot 23"		@ a shot that launches, sits, and explodes!
+	moveMineShot:
+
+	stmfd sp!, {r0-r10, lr}
+
+		mov r6,#sptSpdYOffs
+		ldr r7,[r2,r6]					@ r7 = y speed and r6 is offset
+
+		@ First we need to slow the mine down
+		mov r8,#sptSpdDelayYOffs
+		ldr r5,[r2,r8]					@ load our delay
+		add r5,#1						@ add 1
+		cmp r5,#12						@ check if it is time to slow
+		moveq r5,#0						@ zero delay
+		str r5,[r2,r8]					@ put it back
+		bne iMineNot					@ if not...
+			subs r7,#1					@ take one off our Y speed
+			movmi r7,#0					@ no negatives here!
+			str r7,[r2,r6]				@ put it back!
+		iMineNot:
 		
+		mov r6,#sptSpdDelayXOffs
+		ldr r5,[r2,r6]					@ load our EXPLODE delay
+		sub r5,#1
+		str r5,[r2,r6]
+		cmp r5,#15
+		bne mineBloomPass
+			mov r6,#sptBloomOffs
+			mov r5,#16					@ set a little bloom for when nearly EXPLODED
+			str r5,[r2,r6]
+		mineBloomPass:
+		cmp r5,#0
+		bne mineNoExplode
+			bl playAlienExplodeScreamSound
+			mov r6,#sptBloomOffs
+			mov r5,#16					@ set a little bloom to whiten initial explosion
+			str r5,[r2,r6]
+			mov r6,#5					@ set mine to an explosion
+			str r6,[r2]
+			mov r6,#14					@ set the initial explosion frame
+			mov r8,#sptObjOffs			
+			str r6,[r2,r8]
+			mov r6,#4					@ reset the explode delay
+			mov r8,#sptExpDelayOffs
+			str r6,[r2,r8]
+			b mineShotActive
+		mineNoExplode:
+		mov r6,#sptYOffs				
+		ldr r5,[r2,r6]					@ r5 = y coord
+		add r5,r7						@ add our speed
+		str r5,[r2,r6]					@ put it back
+		cmp r5,#768						@ check if off screen
+		bmi mineShotActive
+			mov r1,#0
+			str r1,[r2]
+		mineShotActive:
+		
+	
+	ldmfd sp!, {r0-r10, pc}		
 	
 	

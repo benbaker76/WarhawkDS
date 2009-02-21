@@ -689,6 +689,8 @@ initHunterMine:
 						and r9,r8,r2
 						add r8,r9,r9,lsl #1
 						mov r8,r8,lsr #2
+						cmp r8,#384-32
+						subpl r8,#32
 						@ this should make it 0-383
 	
 					mov r1,r8				@ set x coord (RANDOM)
@@ -761,9 +763,11 @@ initHunterMine:
 						and r9,r8,r2
 						add r8,r9,r9,lsl #1
 						mov r8,r8,lsr #2
+						cmp r8,#384-32
+						subpl r8,#32
 						@ this should make it 0-383
 	
-					mov r1,r4				@ set x coord (RANDOM)
+					mov r1,r8				@ set x coord (RANDOM)
 					str r1,[r3,r0]
 					mov r0,#sptYOffs
 					mov r1,#384-32			@ set y coord

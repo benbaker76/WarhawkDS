@@ -90,6 +90,7 @@
 	.global hunterDelay
 	.global mineCount
 	.global hunterCount
+	.global spriteIdent
 	
 	
 mineDelay:
@@ -257,6 +258,8 @@ spriteFireMax:
 	.space 512
 
 spriteBloom:
+	.space 512
+spriteIdent:
 	.space 512
 	
 spriteInstruct:

@@ -81,7 +81,10 @@ gameLoop:
 		bl alienFireMove	@ check and move alien bullets
 		bl fireCheck		@ check for your wish to shoot!
 
+
 		bl moveAliens		@ move the aliens and detect colisions with you
+
+		bl drawSprite		@ drawsprites and do update bloom effect
 
 		bl drawScore		@ update the score with any changes
 
@@ -92,8 +95,6 @@ gameLoop:
 		bl initHunterMine	@ check if we should chuck another mine or hunter into the mix
 		
 		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
-
-		bl drawSprite		@ drawsprites and do update bloom effect
 
 @		bl drawDebugText	@ draw some numbers :)
 

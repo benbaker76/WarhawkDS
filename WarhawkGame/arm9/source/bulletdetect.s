@@ -364,10 +364,39 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					ldr r8,=spriteActive+4
 					str r6, [r8,r0, lsl #2]
 					
+					@ ok, if the alien has an ident, we need to bloom all with the same ident!!
+					mov r8,#sptIdentOffs
+					ldr r6,[r4,r8]
+					cmp r6,#2
+					bmi alienNoIdent
+					cmp r6,#4
+					beq alienNoIdent
+					cmp r6,#5
+					beq alienNoIdent
+						@ ok, for this ident, we need to flash all matching
+					
+						mov r7,#63
+						ldr r5,=spriteIdent+68
+						fireBloomLoop:
+							ldr r3,[r5,r7,lsl #2]
+							cmp r3,r6
+							bne fireBloomNot
+								@ ok, we have found a matching ident
+								ldr r2,=spriteBloom+68
+								mov r3,#16
+								str r3,[r2,r7,lsl #2]	@ make it FLASH		
+							fireBloomNot:
+							subs r7,#1
+						bpl fireBloomLoop
+					b alienBloomed
+					
+					
+					alienNoIdent:
 					mov r8,#sptBloomOffs
-					ldr r6,[r4,r8]			@ load palette number (bloom)
 					mov r6,#16				@ do bloom
 					str r6,[r4,r8]			@ store it back
+		
+					alienBloomed:
 		
 					@ ok, alien not dead yet!!, so, play "Hit" sound
 					@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?

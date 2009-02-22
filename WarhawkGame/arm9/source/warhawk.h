@@ -88,3 +88,5 @@
 #define sptFireMaxOffs				8704
 
 #define sptBloomOffs				9216
+
+#define sptIdentOffs				9728

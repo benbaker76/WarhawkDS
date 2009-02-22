@@ -28,7 +28,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	sub r4,#1
 	add r2,r4, lsl #9				@ add to alienLevel, LEVEL*512 (128 words)
 	
-	ldr r5,[r2, r3, lsl #3]		@ r5=current alien level scroll used to generate
+	ldr r5,[r2, r3, lsl #3]			@ r5=current alien level scroll used to generate
 	cmp r5,#0						@ if the wave is 0, then All done!
 	beq initWaveAliensDone
 	ldr r4,=yposSub				
@@ -42,14 +42,28 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		ldr r4,[r2, r3, lsl #3] 	@ r4 is now the attack wave number to init	
 		add r3,#1					@ add 1 to wave number
 		str r3,[r1]					@ and store it back
-
-				mov r10,r4			@ Set to display attack wave number
+		@ we need to strip the ident from r4
+		
+		ldr r5,=0xffff
+		and r7,r4,r5				@ r7= alien type (lower 16 bits)
+		sub r4,r7
+		lsr r4,#16					@ r4= ident
+		mov r6,r4					@ move to r6 for later
+		
+				mov r10,r7			@ Set to display attack wave number
 				mov r8,#23			@ y pos
 				mov r9,#5			@ Number of digits
 				mov r11, #0			@ x pos
 				bl drawDigits		@ Display the initilised wave (Bug test)
+				mov r10,r6			@ Set to display attack wave number
+				mov r8,#22			@ y pos
+				mov r9,#5			@ Number of digits
+				mov r11, #0			@ x pos
+				bl drawDigits		@ Display the initilised wave (Bug test)
 
-	cmp r4,#8192					@ Check for a "MINE FIELD" request
+
+
+	cmp r7,#8192					@ Check for a "MINE FIELD" request
 	bne noMines
 				ldr r4,=mineCount
 				mov r6,#75									@ set number of mines to init (Base this on LEVEL)
@@ -59,7 +73,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				str r6,[r4]									@ set delay to 0 (the mine code handles the rest)
 				b initWaveAliensDone
 	noMines:
-	cmp r4,#16384					@ Check for a "HUNTER" request
+	cmp r7,#16384					@ Check for a "HUNTER" request
 	bne noHunter
 				ldr r4,=hunterCount
 				mov r6,#25									@ set number of hunters to init (Base this on LEVEL)
@@ -70,10 +84,11 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				b initWaveAliensDone	
 	noHunter:
 	@ from here on in, we know that it is a normal attack
+	
 
 		@ now we need to make r2 the index to the start of attack wave r1
 		ldr r2,=alienWave
-		add r2, r4, lsl #7				@ add r2=r1*128 (each wave is 32 words)
+		add r2, r7, lsl #7				@ add r2=r1*128 (each wave is 32 words)
 		mov r3,#0						@ counter to get the data an init them
 		initWaveAliens:					@ we need to pass r1 to initAliens to start them
 			ldr r1,[r2,r3, lsl #2]		@ r1+alien number*4 (one word each)
@@ -94,6 +109,10 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	add r4,r1, lsl #7			@ add it to aliendescrip so we know where to grab from
 								@ now er need to find a blank alien
 	ldr r3,=spriteActive+68
+
+cmp r6,#5
+bpl initReversed
+
 	mov r0,#63					@ SPRITE R0 points to the sprite that will be used for the alien
 								@ we need to use a loop here to FIND a spare sprite
 								@ and this will be used to init the alien!!
@@ -105,7 +124,21 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	bpl findSpaceLoop
 	
 		ldmfd sp!, {r0-r10, pc}@ No space for the alien, so lets exit!
+
+initReversed:	
+	mov r0,#0					@ SPRITE R0 points to the sprite that will be used for the alien
+								@ we need to use a loop here to FIND a spare sprite
+								@ and this will be used to init the alien!!
+	findSpaceLoopRev:
+		ldr r2,[r3,r0, lsl #2]
+		cmp r2,#0
+		beq foundSpace
+			add r0,#1
+			cmp r0,#64
+	bne findSpaceLoopRev
 	
+		ldmfd sp!, {r0-r10, pc}@ No space for the alien, so lets exit!	
+		
 	foundSpace:
 
 	mov r5,r0					@ store the sprite number for later retrieval
@@ -113,7 +146,10 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	add r3,r0, lsl #2
 	mov r2,#1
 	str r2,[r3]					@ activate Sprite
-	
+
+	mov r0,#sptIdentOffs
+	str r6,[r3,r0]				@ store the sprite ident (r6 set earlier)
+
 	mov r1,#0					@ r1=REF to alienDescript data (just add to this)
 								@ Now we will dump the data in our sprite table
 	ldr r0,=sptXOffs

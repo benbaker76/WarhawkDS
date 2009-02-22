@@ -30,7 +30,7 @@ initVideo:
 	strb r1, [r0]
 
 	ldr r0, =VRAM_B_CR				@ Use this for sprite data
-	ldr r1, =(VRAM_ENABLE | VRAM_A_MAIN_SPRITE)
+	ldr r1, =(VRAM_ENABLE | VRAM_E_MAIN_SPRITE)
 	strb r1, [r0]
 	
 	ldr r0, =VRAM_C_CR				@ Set VRAM C to be sub bg address 0x06200000
@@ -71,8 +71,8 @@ initVideo:
 	
 	@ Load the palette into the palette subscreen area and main
 
-	ldr r0, =StarBack
-	ldr r0,[r0]
+	ldr r0, =Level1Pal
+@	ldr r0,[r0]
 	ldr r1, =BG_PALETTE
 	ldr r2, =StarBackPalLen
 	bl dmaCopy

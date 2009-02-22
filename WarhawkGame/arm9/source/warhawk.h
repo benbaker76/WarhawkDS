@@ -5,29 +5,29 @@
 @ BG2 - StarFront
 @ BG3 - StarBack
 
-#define BG0_MAP_BASE				23
-#define BG0_MAP_BASE_SUB			23
+#define BG0_MAP_BASE				27
+#define BG0_MAP_BASE_SUB			27
 
 #define BG1_MAP_BASE				30
 #define BG1_MAP_BASE_SUB			30
 
-#define BG2_MAP_BASE				27
-#define BG2_MAP_BASE_SUB			27
+#define BG2_MAP_BASE				29
+#define BG2_MAP_BASE_SUB			29
 
-#define BG3_MAP_BASE				29
-#define BG3_MAP_BASE_SUB			29
+#define BG3_MAP_BASE				28
+#define BG3_MAP_BASE_SUB			28
 
-#define BG0_TILE_BASE				2
-#define BG0_TILE_BASE_SUB			2
+#define BG0_TILE_BASE				3
+#define BG0_TILE_BASE_SUB			3
 
 #define BG1_TILE_BASE				0
 #define BG1_TILE_BASE_SUB			0
 
-#define BG2_TILE_BASE				3
-#define BG2_TILE_BASE_SUB			3
+#define BG2_TILE_BASE				5
+#define BG2_TILE_BASE_SUB			5
 
-#define BG3_TILE_BASE				4
-#define BG3_TILE_BASE_SUB			4
+#define BG3_TILE_BASE				5
+#define BG3_TILE_BASE_SUB			5
 
 @ Our background priorities
 
@@ -46,10 +46,10 @@
 @ So we can eg. #include "..\build\StarBack.h" instead of copying out these values
 
 #define StarBackPalLen				512
-#define Level1TilesLen				32768
+#define Level1TilesLen				48960
 #define CraterTilesLen				544
 #define StarFrontTilesLen 			576
-#define StarBackTilesLen			34880
+#define StarBackTilesLen			15008
 #define ScoreTilesLen				1344
 #define FontTilesLen				3392
 #define EnergyTilesLen				512

@@ -33,7 +33,7 @@ initLevel:
 	str r1,[r0]
 	ldr r0,=vofsSub
 	str r1,[r0]
-	mov r1,#3744	@ 3968 - 192 - 32
+	mov r1,#3744			@ 3968 - 192 - 32
 	ldr r0,=yposMain
 	str r1,[r0]
 	ldr r0,=yposSub

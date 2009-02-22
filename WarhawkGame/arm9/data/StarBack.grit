@@ -16,9 +16,14 @@
 #-------------------------------------------------------
 # graphics bit depth is 4 (16 color)
 #-------------------------------------------------------
--gB8
+-gB4
 
 #-------------------------------------------------------
 # Map layout for regular backgrounds. 16-bit entries, broken down into screenblocks. 
 #-------------------------------------------------------
 -mLs
+
+#-------------------------------------------------------
+# Tile index offset (non-zero indices only). Useful if you intend to load the tiles at an offset.
+#-------------------------------------------------------
+-ma18

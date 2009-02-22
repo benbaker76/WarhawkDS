@@ -27,7 +27,6 @@ main:
 	bl initData
 	@ Setup the screens and the sprites	
 bl waitforVblank	@ We need to set up a wipe here and clear it later / but for now, this will just make it CLEAN
-
 	bl initLevel
 	bl initVideo
 	bl initSprites

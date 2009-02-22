@@ -32,7 +32,7 @@ clearBG1:
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)
-	ldr r2, =1024
+	ldr r2, =2048
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)
 	bl dmaFillWords
@@ -44,7 +44,7 @@ clearBG2:
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)
-	ldr r2, =2048
+	ldr r2, =1024
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)
 	bl dmaFillWords
@@ -56,7 +56,7 @@ clearBG3:
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG3_MAP_BASE)
-	ldr r2, =2048
+	ldr r2, =1024
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG3_MAP_BASE_SUB)
 	bl dmaFillWords

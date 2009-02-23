@@ -74,7 +74,7 @@ alienFireMove:
 		mov r4, #81							@ alien bullet are 81-112 (32)
 		findAlienBullet:
 			ldr r3,[r5,r4, lsl #2]			@ Multiplied by 4 as in words
-			cmp r3,#0
+			cmp r3,#0						@ if 0 = no active bullet
 			beq testSkip
 				mov r2,r5					@ mov r5 into r2 as bullet base
 				add r2,r4, lsl #2			@ Set r2 to bullets offset
@@ -82,7 +82,7 @@ alienFireMove:
 				ldr r3,[r2,r3]				@ r3= fire type to update
 	
 				cmp r3,#19					@ check for standard shot 1-12
-					blmi moveStandardShot	
+					blmi moveStandardShot
 				cmp r3,#19
 					bleq moveTrackerShot
 				cmp r3,#20
@@ -105,14 +105,14 @@ alienFireMove:
 				add r6,#16
 				cmp r6,r0						@ r6=Bullet x / r0= your X
 				bmi testSkip
-				sub r6,#16+10
+				sub r6,#16+12
 				cmp r6,r0	
 				bgt testSkip
 
 				add r7,#16
 				cmp r7,r1						@ r7=bullet y / r1= your y
 				bmi testSkip
-				sub r7,#16+10
+				sub r7,#16+12
 				cmp r7,r1
 				bgt testSkip	
 
@@ -139,16 +139,16 @@ alienFireMove:
 						mov r7,#16					@ flash it, and do not destroy
 						str r7,[r2,r6]
 				
+					@ THIS BIT SHOULD JUST KILL THE BULLET???
+				
 					b testSkip
 					killAlienBullet:
 					mov r7,#0
 					str r7,[r2]					@ kill bullet
 					
-					mov r6,#sptXOffs
-					mov r7,#128
-					str r7,[r2,r6]
-					mov r6,#sptYOffs
-					str r7,[r2,r6]
+@					mov r6,#sptXOffs		@ put bullet X off screen, only works if kill bullet
+@					mov r7,#512				@ above is disabled? MADNESS!!
+@					str r7,[r2,r6]
 
 					
 			testSkip:

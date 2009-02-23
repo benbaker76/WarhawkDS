@@ -41,13 +41,15 @@ drawSprite:
 		@ Kill sprite on both screens!!!!!
 		@ note: read the setting - daft prat!!!
 		
-		mov r1, #ATTR0_DISABLED
-		ldr r0,=BUF_ATTRIBUTE0
-		str r1,[r0,r8,lsl #3]
+		mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
+		ldr r0,=BUF_ATTRIBUTE0			@ if does not for some reason???
+		add r0,r8, lsl #3
+		strh r1,[r0]
 		ldr r0,=BUF_ATTRIBUTE0_SUB
-		str r1,[r0,r8,lsl #3]
+		add r0,r8, lsl #3
+		strh r1,[r0]
 
-	b sprites_Done
+		b sprites_Done
 
 	sprites_Drawn:
 	@ first, update out BLOOM effect, if bloom is >0 sub 1
@@ -159,9 +161,9 @@ drawSprite:
 	
 	
 @ HK HK HK -	This should only disable sprites on the sub screen - it doesnt????
-		mov r1, #ATTR0_DISABLED
-		ldr r0,=BUF_ATTRIBUTE0_SUB
-		str r1,[r0, r8, lsl#3]	
+@		mov r1, #ATTR0_DISABLED
+@		ldr r0,=BUF_ATTRIBUTE0_SUB
+@		str r1,[r0, r8, lsl#3]	
 @ HK HK HK -
 		@ Draw sprite to MAIN
 		ldr r0,=BUF_ATTRIBUTE0

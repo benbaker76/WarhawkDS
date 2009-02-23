@@ -97,7 +97,7 @@ gameLoop:
 
 
 
-@		bl drawDebugText	@ draw some numbers :)
+		bl drawDebugText	@ draw some numbers :)
 
 
 	ldr r0, =energyText				@ Load out text pointer

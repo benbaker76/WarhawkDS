@@ -102,27 +102,26 @@ alienFireMove:
 				@ r0,r1 = player x/y
 				@ r6,r7 = bullet x/y
 	
-
 				add r6,#16
 				cmp r6,r0						@ r6=Bullet x / r0= your X
 				bmi testSkip
-				sub r6,#16+12
+				sub r6,#16+10
 				cmp r6,r0	
 				bgt testSkip
 
 				add r7,#16
 				cmp r7,r1						@ r7=bullet y / r1= your y
 				bmi testSkip
-				sub r7,#16+12
+				sub r7,#16+10
 				cmp r7,r1
 				bgt testSkip	
 
 					@ Bullet HAS HIT US!!
-					@ kill bullet unless it is tracker
+					@ kill bullet unless it is tracker/mine type!!
 				
 					ldr r6,=spriteBloom
 					mov r7,#16
-					str r7,[r6]						@ make shp flash
+					str r7,[r6]						@ make ship flash
 				
 					@bl ShipHitSound				@ activate sound for ship being hit!
 				
@@ -131,19 +130,31 @@ alienFireMove:
 					subs r7,#1
 					movmi r7,#0
 					str r7,[r6]
+						
+					mov r6,#sptObjOffs
+					ldr r6,[r2,r6]
+					cmp r6,#26						@ 26 is the sprite we use for mine/tracker
+					bne killAlienBullet
+						mov r6,#sptBloomOffs		@ if it is obj 26
+						mov r7,#16					@ flash it, and do not destroy
+						str r7,[r2,r6]
 				
-					cmp r3,#19						@ is it a tracker shot
-					beq testSkip					@ if so, do not destroy
-				
-					mov r6,#sptActiveOffs
+					b testSkip
+					killAlienBullet:
 					mov r7,#0
-					str r6,[r2,r7]					@ kill bullet
+					str r7,[r2]					@ kill bullet
+					
+					mov r6,#sptXOffs
+					mov r7,#128
+					str r7,[r2,r6]
+					mov r6,#sptYOffs
+					str r7,[r2,r6]
+
 					
 			testSkip:
 			add r4,#1
 			cmp r4,#113
-		bne findAlienBullet			
-	
+		bne findAlienBullet				
 	
 	ldmfd sp!, {r0-r10, pc}
 	

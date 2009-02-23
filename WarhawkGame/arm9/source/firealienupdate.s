@@ -230,7 +230,7 @@
 	moveRippleShot:
 	stmfd sp!, {r0-r10, lr}
 		mov r4,#sptSpdDelayXOffs
-		ldr r5,[r2,r4]					@ load our BACKUP X coord inot R5 (modify this and store in ACTUAL)
+		ldr r5,[r2,r4]					@ load our BACKUP X coord into R5 (modify this and store in ACTUAL)
 			
 		mov r6,#sptSpdXOffs				@ speed X is the possiion in the sine data
 		ldr r8,[r2,r6]					@ r8 = sine number, now load it from ripple sine

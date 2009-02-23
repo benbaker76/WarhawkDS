@@ -516,7 +516,7 @@ alienCollideCheck:
 				mov r7,#16
 				str r7,[r6]						@ make shp flash
 			
-				@bl ShipHitAlienSound			@ activate sound for YOUR ship being hit!
+				@bl playPlayerHitSound			@ activate sound for YOUR ship being hit!
 			
 				ldr r6,=energy					@ Take 1 off your energy
 				ldr r7,[r6]
@@ -530,6 +530,37 @@ alienCollideCheck:
 				str r7,[r1,r6]
 				cmp r7,#0						@ if alien dead?
 				bmi acDestroy					@ yes!, DESTROY it
+				
+					bl playShipArmourHit1Sound		@ activate sound for YOUR ship hitting alien!
+					mov r6,#sptIdentOffs
+					ldr r7,[r1,r6]
+					cmp r7,#2
+					bmi alienSingleBloom
+					cmp r7,#4
+					beq alienSingleBloom
+					cmp r7,#5
+					beq alienSingleBloom
+						@ ok, for this ident, we need to flash all matching
+					
+						mov r8,#63
+						ldr r6,=spriteIdent+68
+						alienBloomLoop:
+							ldr r3,[r6,r8,lsl #2]
+							cmp r3,r7
+							bne alienBloomNot
+								@ ok, we have found a matching ident
+								ldr r2,=spriteBloom+68
+								mov r3,#16
+								str r3,[r2,r8,lsl #2]	@ make it FLASH		
+							alienBloomNot:
+							subs r8,#1
+						bpl alienBloomLoop
+					b acNoDestroy				
+				
+				
+				
+				
+					alienSingleBloom:
 					mov r8,#sptBloomOffs		@ ok, alien not dead, so lets make him flash
 					mov r6,#16					@ do bloom
 					str r6,[r1,r8]				@ store it back

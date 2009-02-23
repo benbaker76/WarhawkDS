@@ -68,7 +68,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		ldr r4,=powerUpDelay
 		ldr r3,[r4]					@ r3=our delay
 		add r3,#1					@ increment out counter
-		cmp r3,#6					@ wait 8 refreshes before another bullet
+		cmp r3,#8					@ wait 8 refreshes before another bullet
 		moveq r3,#0					@ if it is 8, zero the delay
 		str r3,[r4]					@ put the result back
 		beq initFire				@ ok, lets "fire one off"

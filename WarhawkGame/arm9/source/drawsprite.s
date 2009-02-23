@@ -19,7 +19,7 @@
 	.global drawSprite
 
 drawSprite:
-	mov r8,#127				@ our counter for 128 sprites, do not think we need them all though
+	mov r8,#127 			@ our counter for 128 sprites, do not think we need them all though
 	ldr r4,=horizDrift	 	@ here we will set r4 as an adder for sprite offset
 	ldr r4,[r4]				@ against our horizontal scroll
 	
@@ -34,19 +34,19 @@ drawSprite:
 	@ one on each screen in the correct location!!
 	@ Last section best commented!
 	ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
-	ldr r1,[r0,r8, lsl #2]				@ add sprite number * 8
+	ldr r1,[r0,r8, lsl #2]				@ add sprite number * 4
 	cmp r1,#0							@ Is sprite active? (anything other than 0)
 	bne sprites_Drawn					@ if so, draw it!
 										@ if not Kill sprite
 		@ Kill sprite on both screens!!!!!
 		@ note: read the setting - daft prat!!!
+		
 		mov r1, #ATTR0_DISABLED
 		ldr r0,=BUF_ATTRIBUTE0
-		add r0,r8, lsl #3
-		str r1,[r0]
+		str r1,[r0,r8,lsl #3]
 		ldr r0,=BUF_ATTRIBUTE0_SUB
-		add r0,r8, lsl #3
-		str r1,[r0]
+		str r1,[r0,r8,lsl #3]
+
 	b sprites_Done
 
 	sprites_Drawn:
@@ -156,6 +156,13 @@ drawSprite:
 		b sprites_Done
 	
 	spriteY_Main_Done:
+	
+	
+@ HK HK HK -	This should only disable sprites on the sub screen - it doesnt????
+		mov r1, #ATTR0_DISABLED
+		ldr r0,=BUF_ATTRIBUTE0_SUB
+		str r1,[r0, r8, lsl#3]	
+@ HK HK HK -
 		@ Draw sprite to MAIN
 		ldr r0,=BUF_ATTRIBUTE0
 		add r0,r8, lsl #3

@@ -18,9 +18,9 @@ alienLevel:
 	@ to init a hunter
 	@ set "scroll Pos" as usual, then set the wave to #16384
 	@ the upper 16 bits of a wave demote its ident
-	@ 0		= no ident
-	@ 1-4	= low priority ident
-	@ 5+	= low ident
+	@ 0		= no ident				(non tied)
+	@ 1-4	= low priority ident 	(1 non tied)
+	@ 5+	= low ident				(5 non tied)
 @lev1
 	.word 3650,16384,3450,1,3060,393219,3060-16,393218,3060-32,393218,3060-48,393218,3060-64,393218,3060-80,393218,3060-96,393218,3060-112,393220,2600,8192,2550,5,2500,5,2450,5,2400,5,2350,5
 	.word 2150,6,2000,7,1950,7,1900,7,1850,7,1600,1,1500,16384,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -193,7 +193,7 @@ alienDescript:
 	.word 7,383,2048,2048,0,0,0,0,0,0,0,0						@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @30
-	.word 63+32,360,0,0,3,46,6,0								@ inits
+	.word 63+32,360,0,0,3,46,6,25623								@ inits
 	.word 103+32,400,183+32,420,183+32,460,1024,1024,0,0,0,0	@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @31	-	Accellerator bullet tester

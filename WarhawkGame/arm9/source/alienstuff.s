@@ -61,8 +61,6 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				mov r11, #0			@ x pos
 				bl drawDigits		@ Display the initilised wave (Bug test)
 
-
-
 	cmp r7,#8192					@ Check for a "MINE FIELD" request
 	bne noMines
 				ldr r4,=mineCount
@@ -83,8 +81,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				str r6,[r4]									@ set delay to 0 (the hunter code handles the rest)
 				b initWaveAliensDone	
 	noHunter:
-	@ from here on in, we know that it is a normal attack
-	
+		@ from here on in, we know that it is a normal attack
 
 		@ now we need to make r2 the index to the start of attack wave r1
 		ldr r2,=alienWave
@@ -728,9 +725,8 @@ initHunterMine:
 						cmp r8,#384-32
 						subpl r8,#32
 						@ this should make it 0-383
-	
-					mov r1,r8				@ set x coord (RANDOM)
-					str r1,[r3,r0]
+
+					str r1,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#sptYOffs
 					mov r1,#384-32			@ set y coord
 					str r1,[r3,r0]
@@ -799,12 +795,9 @@ initHunterMine:
 						and r9,r8,r2
 						add r8,r9,r9,lsl #1
 						mov r8,r8,lsr #2
-						cmp r8,#384-32
-						subpl r8,#32
 						@ this should make it 0-383
-	
-					mov r1,r8				@ set x coord (RANDOM)
-					str r1,[r3,r0]
+			
+					str r8,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#sptYOffs
 					mov r1,#384-32			@ set y coord
 					str r1,[r3,r0]

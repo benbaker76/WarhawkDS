@@ -74,27 +74,28 @@ gameLoop:
 		
 		bl moveShip			@ check and move your ship
 		
-		bl scrollMain		@ Scroll Level Data
-		bl scrollSub		@ Main + Sub
-		bl levelDrift		@ update level with the horizontal drift
 		bl moveBullets		@ check and then moves bullets
 		bl alienFireMove	@ check and move alien bullets
 		bl fireCheck		@ check for your wish to shoot!
 
 
-		bl moveAliens		@ move the aliens and detect colisions with you
-
-		bl drawSprite		@ drawsprites and do update bloom effect
-
 		bl drawScore		@ update the score with any changes
 
 		
-		bl scrollStars		@ Scroll Stars (BG2,BG3)
-
 		bl checkWave		@ check if time for another alien attack
+		bl moveAliens		@ move the aliens and detect colisions with you
+
 		bl initHunterMine	@ check if we should chuck another mine or hunter into the mix
-		
+
+		bl drawSprite		@ drawsprites and do update bloom effect
+
+		bl scrollMain		@ Scroll Level Data
+		bl scrollSub		@ Main + Sub
+		bl levelDrift		@ update level with the horizontal drift
+		bl scrollStars		@ Scroll Stars (BG2,BG3)		
 		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
+
+
 
 @		bl drawDebugText	@ draw some numbers :)
 

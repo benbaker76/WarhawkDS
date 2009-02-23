@@ -40,6 +40,16 @@ drawSprite:
 										@ if not Kill sprite
 		@ Kill sprite on both screens!!!!!
 		@ note: read the setting - daft prat!!!
+		mov r0,#0
+		ldr r1, =BUF_ATTRIBUTE0
+		add r1,r8, lsl #3
+		strh r0,[r1]
+		ldr r1, =BUF_ATTRIBUTE1
+		add r1,r8, lsl #3
+		strh r0,[r1]
+		ldr r1, =BUF_ATTRIBUTE2
+		add r1,r8, lsl #3
+		strh r0,[r1]
 		
 		mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
 		ldr r0,=BUF_ATTRIBUTE0			@ if does not for some reason???
@@ -83,7 +93,7 @@ drawSprite:
 		sub r1,#32						@ take our height off
 		and r1,#0xff					@ Y is only 0-255
 		orr r2,r1						@ or with our attributes from earlier
-		strh r2,[r0]					@ store it in sprite attribute0
+		str r2,[r0]					@ store it in sprite attribute0
 		@ Draw X to MAIN screen
 		ldr r0,=spriteX					@ get X coord mem space
 		ldr r1,[r0,r8,lsl #2]			@ add ,Rx for offsets later!
@@ -108,7 +118,7 @@ drawSprite:
 		ldr r2,[r2,r8, lsl #2]			@ r2 = valuse
 		orr r1,r2, lsl #12				@ orr it with attribute2 *4096 (to set palette bits)
 		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
-		str r1, [r0]					@ store it all back
+		strh r1, [r0]					@ store it all back
 
 		ldr r0,=spriteY					@ Load Y coord
 		ldr r1,[r0,r8,lsl #2]			
@@ -150,7 +160,7 @@ drawSprite:
 		ldr r2,[r2,r8, lsl #2]
 		orr r1,r2, lsl #12
 		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
-		str r1, [r0]					@ store it all back
+		strh r1, [r0]					@ store it all back
 
 		@ Need to kill same sprite on MAIN screen - or do we???
 		@ Seeing that for this to occur, the sprite is offscreen on MAIN!
@@ -203,7 +213,7 @@ drawSprite:
 		ldr r2,[r2,r8, lsl #2]
 		orr r1,r2, lsl #12
 		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
-		str r1, [r0]					@ store it all back
+		strh r1, [r0]					@ store it all back
 		@ Need to kill same sprite on SUB screen - or do we???
 		@ Seeing that for this to occur, the sprite is offscreen on SUB!
 	sprites_Done:

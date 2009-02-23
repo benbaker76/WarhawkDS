@@ -143,12 +143,15 @@ alienFireMove:
 				
 					b testSkip
 					killAlienBullet:
-					mov r7,#0
-					str r7,[r2]					@ kill bullet
+@					mov r7,#0
+@					str r7,[r2]					@ kill bullet
 					
-@					mov r6,#sptXOffs		@ put bullet X off screen, only works if kill bullet
-@					mov r7,#512				@ above is disabled? MADNESS!!
-@					str r7,[r2,r6]
+					mov r6,#sptYOffs		@ put bullet X off screen, only works if kill bullet
+					mov r7,#788				@ above is disabled? MADNESS!!
+					str r7,[r2,r6]
+					mov r6,#sptXOffs		@ put bullet X off screen, only works if kill bullet
+					mov r7,#512				@ above is disabled? MADNESS!!
+					str r7,[r2,r6]
 
 					
 			testSkip:

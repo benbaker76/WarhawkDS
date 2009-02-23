@@ -48,6 +48,8 @@ alienFireInit:
 		bleq initRippleTripleShot
 	cmp r3,#23
 		bleq initMineShot
+	cmp r3,#24
+		bleq initTripleShot
 	@ etc!
 
 	alienFireInitDone:
@@ -143,8 +145,8 @@ alienFireMove:
 				
 					b testSkip
 					killAlienBullet:
-@					mov r7,#0
-@					str r7,[r2]					@ kill bullet
+					mov r7,#0
+					str r7,[r2]					@ kill bullet
 					
 					mov r6,#sptYOffs		@ put bullet X off screen, only works if kill bullet
 					mov r7,#788				@ above is disabled? MADNESS!!

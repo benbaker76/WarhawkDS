@@ -13,6 +13,7 @@
 	.global initRippleShot
 	.global initRippleTripleShot
 	.global initMineShot
+	.global initTripleShot
 
 	.arm
 	.align
@@ -247,3 +248,19 @@
 		iMineNo:	
 		
 	ldmfd sp!, {r0-r10, pc}
+
+@
+@ "INIT" - "Ripple triple shot 22" (this is a DUAL ripple shot and uses 3 bullets)
+	initTripleShot:
+	stmfd sp!, {r0-r10, lr}
+	
+		@ This is a downward shot that tracks to your X coord
+	push {r3}
+	mov r3,#3
+	bl initStandardShot
+	mov r3,#21
+	bl initRippleShot
+	pop {r3}
+
+	ldmfd sp!, {r0-r10, pc}
+	

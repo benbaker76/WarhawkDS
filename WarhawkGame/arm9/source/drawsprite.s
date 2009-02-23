@@ -33,6 +33,14 @@ drawSprite:
 	@ but, if on crossover, we need to plot 2 ships!!!
 	@ one on each screen in the correct location!!
 	@ Last section best commented!
+	ldr r0,=spriteY
+	ldr r1,[r0,r8, lsl #2]
+	cmp r1,#768
+	bpl killSprite
+
+
+
+
 	ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
 	ldr r1,[r0,r8, lsl #2]				@ add sprite number * 4
 	cmp r1,#0							@ Is sprite active? (anything other than 0)
@@ -40,16 +48,11 @@ drawSprite:
 										@ if not Kill sprite
 		@ Kill sprite on both screens!!!!!
 		@ note: read the setting - daft prat!!!
-		mov r0,#0
-		ldr r1, =BUF_ATTRIBUTE0
-		add r1,r8, lsl #3
-		strh r0,[r1]
-		ldr r1, =BUF_ATTRIBUTE1
-		add r1,r8, lsl #3
-		strh r0,[r1]
-		ldr r1, =BUF_ATTRIBUTE2
-		add r1,r8, lsl #3
-		strh r0,[r1]
+	killSprite:
+		ldr r0,=spriteActive
+		mov r1,#0
+		str r1,[r0,r8,lsl#2]
+		
 		
 		mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
 		ldr r0,=BUF_ATTRIBUTE0			@ if does not for some reason???
@@ -244,8 +247,11 @@ drawSprite:
 			cmp r1,#22							@ are we at the end frame?
 			bne noMoreStuff
 				noMoreBase:
-				ldr r0,=spriteActive
-				mov r1,#0						@ kill sprite (next update)
+@				ldr r0,=spriteActive
+@				mov r1,#0						@ kill sprite (next update)
+@				str r1,[r0,r8,lsl #2]
+				ldr r0,=spriteY
+				mov r1,#788
 				str r1,[r0,r8,lsl #2]
 			b noMoreStuff
 		alienExplodes:
@@ -273,9 +279,13 @@ drawSprite:
 			cmp r1,#13							@ are we at the end frame?
 			bne noMoreStuff
 				noMoreAlien:
-				ldr r0,=spriteActive
-				mov r1,#0						@ kill sprite (next update)
-				str r1,[r0,r8,lsl #2]	
+@				ldr r0,=spriteActive
+@				mov r1,#0						@ kill sprite (next update)
+@				str r1,[r0,r8,lsl #2]	
+				ldr r0,=spriteY
+				mov r1,#788
+				str r1,[r0,r8,lsl #2]
+
 			b noMoreStuff
 
 		shardAnimates:
@@ -303,9 +313,13 @@ drawSprite:
 			cmp r1,#26							@ are we at the end frame?
 			bne noMoreStuff
 				noMoreShard:
-				ldr r0,=spriteActive
-				mov r1,#0						@ kill sprite (next update)
-				str r1,[r0,r8,lsl #2]	
+@				ldr r0,=spriteActive
+@				mov r1,#0						@ kill sprite (next update)
+@				str r1,[r0,r8,lsl #2]	
+				ldr r0,=spriteY
+				mov r1,#788
+				str r1,[r0,r8,lsl #2]
+
 			b noMoreStuff
 
 

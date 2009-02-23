@@ -360,9 +360,12 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				bmi detectAlienKill	@	*IS DEAD*
 					@ MULTISHOT ALIEN *NOT DEAD*
 					@ kill BuLLET
-					mov r6,#0
-					ldr r8,=spriteActive+4
-					str r6, [r8,r0, lsl #2]
+@					mov r6,#0
+@					ldr r8,=spriteActive+4
+@					str r6, [r8,r0, lsl #2]
+					ldr r8,=spriteX+4
+					mov r6,#768
+					str r8, [r8,r0, lsl #2]
 					
 					@ ok, if the alien has an ident, we need to bloom all with the same ident!!
 					mov r8,#sptIdentOffs

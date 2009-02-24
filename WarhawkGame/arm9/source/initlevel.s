@@ -10,6 +10,7 @@
 	.arm
 	.align
 	.global initLevel
+	.global initLevelSprites
 	
 initLevel:
 
@@ -39,18 +40,7 @@ initLevel:
 	ldr r0,=yposSub
 	str r1,[r0]
 
-	mov r1, #1
-	ldr r0,=firePress
-	str r1,[r0]				@ Set fire press so fire to start does not fire a bullet
-	ldr r0,=spriteActive
-	str r1,[r0]				@ make sure our ship is visible
 
-	mov r1,#176
-	ldr r0,=spriteX
-	str r1,[r0]				@ our ships initial X coord
-	mov r1,#716
-	ldr r0,=spriteY
-	str r1,[r0]				@ our ships initial Y coord
 
 	mov r1,#32
 	ldr r0,=horizDrift
@@ -81,6 +71,7 @@ initLevel:
 		ldr r0,=StarBackPal
 		ldr r1,=StarBack
 		str r0,[r1]
+		
 		
 	level2:
 	cmp r8,#2
@@ -286,6 +277,59 @@ initLevel:
 
 mov r15,r14
 
+initLevelSprites:
+	stmfd sp!, {r0-r6, lr}
+	mov r1, #1
+	ldr r0,=firePress
+	str r1,[r0]				@ Set fire press so fire to start does not fire a bullet
+	ldr r0,=spriteActive
+	str r1,[r0]				@ make sure our ship is visible
 
+	mov r1,#176
+	ldr r0,=spriteX
+	str r1,[r0]				@ our ships initial X coord
+	mov r1,#716
+	ldr r0,=spriteY
+	str r1,[r0]				@ our ships initial Y coord
+	
+	bl initLevelSpecialSprites
+	
+	ldmfd sp!, {r0-r6, pc}
+
+initLevelSpecialSprites:
+	stmfd sp!, {r0-r6, lr}
+	ldr r8,=level
+	ldr r8,[r8]
+	cmp r8,#1
+	ldreq r0, =SpritesLev1Tiles
+	cmp r8,#2
+	ldreq r0, =SpritesLev2Tiles
+	cmp r8,#3
+	ldreq r0, =SpritesLev3Tiles
+	cmp r8,#4
+	ldreq r0, =SpritesLev4Tiles
+	cmp r8,#5
+	ldreq r0, =SpritesLev5Tiles
+	cmp r8,#6
+	ldreq r0, =SpritesLev6Tiles
+	cmp r8,#7
+	ldreq r0, =SpritesLev7Tiles
+	cmp r8,#8
+	ldreq r0, =SpritesLev8Tiles
+	cmp r8,#9
+	ldreq r0, =SpritesLev9Tiles
+	cmp r8,#10
+	ldreq r0, =SpritesLev10Tiles
+	
+	
+	ldr r1, =SPRITE_GFX
+	add r1,#21504
+	ldr r2, =11264
+	bl dmaCopy
+	ldr r1, =SPRITE_GFX_SUB
+	add r1,#21504
+	bl dmaCopy
+	
+	ldmfd sp!, {r0-r6, pc}
 .end
 

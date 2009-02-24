@@ -30,7 +30,8 @@ bl waitforVblank	@ We need to set up a wipe here and clear it later / but for no
 	bl initLevel
 	bl initVideo
 	bl initSprites
-	bl initLevel
+	bl initLevelSprites
+@	bl initLevel
 	
 	@ firstly, lets draw all the screen data ready for play
 	@ and display the ship sprite

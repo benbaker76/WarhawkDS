@@ -30,7 +30,7 @@ initSprites:
 	ldr r2, =SpritesTilesLen
 	bl dmaCopy
 	ldr r1, =SPRITE_GFX_SUB
-	bl dmaCopy
+	bl dmaCopy	
 	
 	@ Clear the OAM (disable all 128 sprites for both screens)
 

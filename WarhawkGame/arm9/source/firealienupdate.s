@@ -12,6 +12,7 @@
 	.global	moveAccelShot
 	.global	moveRippleShot
 	.global moveMineShot
+	.global moveRippleShotPhase1
 	
 	.arm
 	.align
@@ -76,9 +77,9 @@
 			add r1,r5
 			str r1,[r2,r4]
 			cmp r1,#768
-			bmi standard3
-				mov r1,#0
-				str r1,[r2]
+		@	bmi standard3
+		@		mov r1,#0
+		@		str r1,[r2]
 		standard3:
 		cmp r3,#4				@ Standard LEFT
 		bne standard4
@@ -96,8 +97,8 @@
 			ldr r1,[r2,r4]
 			add r1,#1
 			str r1,[r2,r4]
-			cmp r1,#768
-			bpl scrollDrift1
+		@	cmp r1,#768
+		@	bpl scrollDrift1
 			mov r4,#sptXOffs
 			ldr r1,[r2,r4]
 			add r1,r5
@@ -114,8 +115,8 @@
 			ldr r1,[r2,r4]
 			add r1,#1
 			str r1,[r2,r4]
-			cmp r1,#768
-			bpl scrollDrift2
+		@	cmp r1,#768
+		@	bpl scrollDrift2
 			mov r4,#sptXOffs
 			ldr r1,[r2,r4]
 			subs r1,r5
@@ -177,12 +178,12 @@
 		mov r4,#sptYOffs
 		ldr r5,[r2,r4]
 		add r5,#2						@ add 2 to bullet Y
-		cmp r5,#768
+	@	cmp r5,#768
 		str r5,[r2,r4]					@ put it back
-		bmi tShotActive
-			mov r1,#0
-			str r1,[r2]					@ kill bullet if off screen
-		tShotActive:
+	@	bmi tShotActive
+	@		mov r1,#0
+	@		str r1,[r2]					@ kill bullet if off screen
+	@	tShotActive:
 
 	ldmfd sp!, {r0-r10, pc}
 	
@@ -247,7 +248,7 @@
 		
 		mov r6,#sptYOffs				@ get y coord
 		ldr r5,[r2,r6]
-		add r5,#2						@ add 2
+		add r5,#3						@ add 2
 		str r5,[r2,r6]					@ put it back!
 		cmp r5,#768
 		bmi ripShotActive
@@ -316,6 +317,38 @@
 		mineShotActive:
 		
 	
-	ldmfd sp!, {r0-r10, pc}		
-	
-	
+	ldmfd sp!, {r0-r10, pc}	
+
+@
+@ "MOVE" - "Ripple single 25"		@ a shot that "wibbles" on fire (single bullet)
+	moveRippleShotPhase1:
+	stmfd sp!, {r0-r10, lr}
+		mov r4,#sptSpdDelayXOffs
+		ldr r5,[r2,r4]					@ load our BACKUP X coord into R5 (modify this and store in ACTUAL)
+			
+		mov r6,#sptSpdXOffs				@ speed X is the possiion in the sine data
+		ldr r8,[r2,r6]					@ r8 = sine number, now load it from ripple sine
+		ldr r9,=fireRippleSine
+		ldrsb r4,[r9,r8]				@ r4 = value in sine at r9 + r8
+		adds r5,r4						@ add current sine to X pos BACKUP (starts at 0)
+		mov r4,#sptXOffs
+		str r5,[r2,r4]					@ store it back in our ACTUAL X coord
+			
+		add r8,#1						@ add to sine offset
+		cmp r8,#48						@ we have 48 units in sine (0-47)
+		moveq r8,#0						@ so, if we excede - loop!
+		str r8,[r2,r6]					@ and put the little bugger back
+		
+		mov r6,#sptYOffs				@ get y coord
+		ldr r5,[r2,r6]
+		mov r7,#sptSpdYOffs
+		ldr r8,[r2,r7]
+		add r5,r8						@ add y speed
+		str r5,[r2,r6]					@ put it back!
+		cmp r5,#768
+		bmi ripShotph1Active
+			mov r1,#0
+			str r1,[r2]
+		ripShotph1Active:
+		
+	ldmfd sp!, {r0-r10, pc}	

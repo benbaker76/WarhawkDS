@@ -50,6 +50,14 @@ alienFireInit:
 		bleq initMineShot
 	cmp r3,#24
 		bleq initTripleShot
+	cmp r3,#25
+		bleq initRippleShotPhase1
+	cmp r3,#26
+		bleq initRippleShotPhase2
+	cmp r3,#27
+		bleq initRippleShotPhase1F
+	cmp r3,#28
+		bleq initRippleShotPhase2F
 	@ etc!
 
 	alienFireInitDone:
@@ -93,6 +101,11 @@ alienFireMove:
 					bleq moveRippleShot
 				cmp r3,#23
 					bleq moveMineShot
+					
+					
+					
+				cmp r3,#25
+					bleq moveRippleShotPhase1
 				@ ETC
 	
 				@ and from here we need to check if the bullet is on our ship

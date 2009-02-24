@@ -694,15 +694,18 @@ initHunterMine:
 		mov r1,#5																	@ reset the timer	(Change based on LEVEL)
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
-			mov r0,#63					@ R0 points to the sprite that will be used for the mine
+			mov r0,#0					@ R0 points to the sprite that will be used for the mine
 				findMineLoop:
 				ldr r2,[r3,r0, lsl #2]
 				cmp r2,#0
 				beq foundMine
-					subs r0,#1
-				bpl findMineLoop
+					add r0,#1
+					cmp r0,#64
+				bne findMineLoop
 				b initHunterMineFail
 					foundMine:
+	
+
 					add r3,r0, lsl #2		@ r3 is now offset to mine sprite
 					mov r1,#2
 					str r1,[r3]				@ activate as activeSprite 2
@@ -720,13 +723,13 @@ initHunterMine:
 						@ do convert code here!!
 						ldr r2,=0x1ff
 						and r9,r8,r2
-						add r8,r9,r9,lsl #1
-						mov r8,r8,lsr #2
-						cmp r8,#384-32
-						subpl r8,#32
+						add r8,r9,r9,lsl #1	@ divide 3
+						mov r8,r8,lsr #2		@ times 4
+					@	cmp r8,#384-32			@ but we really need 0-(319-32)
+					@	subpl r8,#32
 						@ this should make it 0-383
 
-					str r1,[r3,r0]			@ set x coord (RANDOM)
+					str r8,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#sptYOffs
 					mov r1,#384-32			@ set y coord
 					str r1,[r3,r0]
@@ -766,13 +769,14 @@ initHunterMine:
 		mov r1,#50																	@ reset the timer	(Change based on LEVEL)
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
-			mov r0,#63					@ R0 points to the sprite that will be used for the mine
+			mov r0,#0					@ R0 points to the sprite that will be used for the mine
 				findHunterLoop:
 				ldr r2,[r3,r0, lsl #2]
 				cmp r2,#0
 				beq foundHunter
-					subs r0,#1
-				bpl findHunterLoop
+					adds r0,#1
+					cmp r0,#64
+				bne findHunterLoop
 				b initHunterMineFail
 					foundHunter:
 					add r3,r0, lsl #2		@ r3 is now offset to mine sprite
@@ -837,11 +841,11 @@ moveMine:
 	
 	add r6,r5
 	str r6,[r1,r2]
-	cmp r6,#768
-	bmi mineOnScreen
-		mov r2,#0
-		str r2,[r1]
-	mineOnScreen:
+@	cmp r6,#768
+@	bmi mineOnScreen
+@		mov r2,#0
+@		str r2,[r1]
+@	mineOnScreen:
 	
 	mov r15,r14
 	

@@ -122,9 +122,14 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		bl initBaseExplode			@ Draw the EXPLOSION
 									@ pass r5 with the offset for the bullet (ie 6)
 		
-		ldr r1, =spriteActive+4		@ Kill the bullet
-		mov r2,#0
-		str r2, [r1, r0, lsl #2]
+@		ldr r1, =spriteActive+4		@ Kill the bullet
+@		mov r2,#0
+@		str r2, [r1, r0, lsl #2]
+		ldr r1,=spriteY+4
+		mov r2,#768
+		str r2, [r1,r0, lsl #2]
+
+
 		ldr r0,=adder+7				@ add 65 to the score
 		mov r1,#5
 		strb r1,[r0]
@@ -241,9 +246,15 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		bl initBaseExplode			@ Draw the EXPLOSION
 									@ pass r5 with the offset for the bullet (ie 6)
 		
-		ldr r1, =spriteActive+4		@ Kill the bullet
-		mov r2,#0
-		str r2, [r1, r0, lsl #2]
+@		ldr r1, =spriteActive+4		@ Kill the bullet
+@		mov r2,#0
+@		str r2, [r1, r0, lsl #2]
+
+		ldr r1,=spriteY+4
+		mov r2,#788
+		str r2, [r1,r0, lsl #2]
+
+
 		ldr r0,=adder+7				@ add 65 to the score
 		mov r1,#5
 		strb r1,[r0]
@@ -289,7 +300,7 @@ initBaseExplode:
 		lsl r2, #5					@ times by 32	: this aligns to a block of 32x32
 		add r2,r3					@ add them together
 
-		sub r2,#32					@ re align	
+		sub r2,#30					@ re align (for some reason 32 is not quite correct)
 									@ r4 is sprite active register already
 	mov r5,#5						@ and r6 is the sprite number to use for explosion
 	str r5,[r4,r6, lsl #2]			@ set sprite to "base explosion"
@@ -364,7 +375,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 @					ldr r8,=spriteActive+4
 @					str r6, [r8,r0, lsl #2]
 					ldr r8,=spriteX+4
-					mov r6,#768
+					mov r6,#788
 					str r8, [r8,r0, lsl #2]
 					
 					@ ok, if the alien has an ident, we need to bloom all with the same ident!!

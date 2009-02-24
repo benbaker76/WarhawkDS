@@ -87,7 +87,6 @@ gameLoop:
 
 		bl initHunterMine	@ check if we should chuck another mine or hunter into the mix
 
-		bl drawSprite		@ drawsprites and do update bloom effect
 
 		bl scrollMain		@ Scroll Level Data
 		bl scrollSub		@ Main + Sub
@@ -95,9 +94,9 @@ gameLoop:
 		bl scrollStars		@ Scroll Stars (BG2,BG3)		
 		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
 
+		bl drawSprite		@ drawsprites and do update bloom effect
 
-
-		bl drawDebugText	@ draw some numbers :)
+@		bl drawDebugText	@ draw some numbers :)
 
 
 	ldr r0, =energyText				@ Load out text pointer

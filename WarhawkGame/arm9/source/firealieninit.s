@@ -35,15 +35,13 @@
 @
 @ "INIT" - "Standard shots 1-18"
 	initStandardShot:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ this is a simple "DEMO" code for use one other types	
 		
 		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
 		cmp r2,#255					@ 255=not found
 		beq iStandardNo				@ so, we cannot init a bullet :(
-		
-			bl playLaserShotSound
 		
 			@ r1= offset for alien
 			@ r2= offset for bullet
@@ -63,12 +61,12 @@
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 		iStandardNo:	
 		
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	
 @
 @ "INIT" - "Tracker shot 19"
 	initTrackerShot:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord	
 		
@@ -99,12 +97,12 @@
 			str r6,[r2,r0]
 		iTrackNo:	
 		
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	
 @
 @ "INIT" - "Accelleration shot 20"
 	initAccelShot:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord	
 		
@@ -136,12 +134,12 @@
 			str r6,[r2,r0]
 		iAccellNo:	
 		
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	
 @
 @ "INIT" - "Ripple shot 21" (this is a DUAL shot and uses 2 bullets)
 	initRippleShot:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
 
@@ -198,12 +196,12 @@
 			mov r6,#24				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
 		iRippleNo:	
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	
 @
 @ "INIT" - "Ripple triple shot 22" (this is a DUAL ripple shot and uses 3 bullets)
 	initRippleTripleShot:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
 	push {r3}
@@ -213,12 +211,12 @@
 	bl initRippleShot
 	pop {r3}
 
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	
 @
 @ "INIT" - "Mine shot 23"
 	initMineShot:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that sits, waits and explodes!	
 		
@@ -253,12 +251,12 @@
 			str r6,[r2,r0]
 		iMineNo:	
 		
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 
 @
 @ "INIT" - "Triple shot 24" (This fires a spread of 3 shots)
 	initTripleShot:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
 	push {r3}
@@ -268,12 +266,12 @@
 	bl initRippleShot
 	pop {r3}
 
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	
 @
 @ "INIT" - "Ripple shot 25" (this is a DUAL shot and uses 2 bullets)
 	initRippleShotPhase1:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
 
@@ -307,12 +305,12 @@
 			mov r6,#3				@set y speed!	
 			str r6,[r2,r0]
 		iRippleph1No:	
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 
 @
 @ "INIT" - "Ripple shot 26" (this is a DUAL shot and uses 2 bullets)
 	initRippleShotPhase2:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
 
@@ -347,12 +345,12 @@
 			mov r6,#3				@set y speed!	
 			str r6,[r2,r0]
 		iRippleph2No:	
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	
 @
 @ "INIT" - "Ripple shot 27" (this is a DUAL shot and uses 2 bullets)
 	initRippleShotPhase1F:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
 
@@ -386,12 +384,12 @@
 			mov r6,#4				@set y speed!	
 			str r6,[r2,r0]
 		iRippleph1FNo:	
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 
 @
 @ "INIT" - "Ripple shot 28" (this is a DUAL shot and uses 2 bullets)
 	initRippleShotPhase2F:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
 
@@ -426,5 +424,5 @@
 			mov r6,#4				@set y speed!	
 			str r6,[r2,r0]
 		iRippleph2FNo:	
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r3, pc}
 	

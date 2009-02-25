@@ -35,30 +35,67 @@ alienFireInit:
 	ldr r5,=spriteY
 	ldr r5,[r5]
 	@---------- All our inits follow from here - SEQUENTIALLY ---------@
-	
+
 	cmp r3,#19					@ check and init standard linear shots types 1-12
 		blmi initStandardShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#19
 		bleq initTrackerShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#20
 		bleq initAccelShot
+		cmp r2,#255
+		blne playCrashBuzSound
+		mov r2,#255
 	cmp r3,#21
 		bleq initRippleShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#22
 		bleq initRippleTripleShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#23
 		bleq initMineShot
+		cmp r2,#255
+		blne playLowSound
+		mov r2,#255
 	cmp r3,#24
 		bleq initTripleShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#25
 		bleq initRippleShotPhase1
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#26
 		bleq initRippleShotPhase2
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#27
 		bleq initRippleShotPhase1F
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	cmp r3,#28
 		bleq initRippleShotPhase2F
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	@ etc!
+
+
+
+
 
 	alienFireInitDone:
 	ldmfd sp!, {r0-r10, pc}

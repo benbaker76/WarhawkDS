@@ -18,6 +18,12 @@
 	.global playLaserShotSound
 	.global playShipArmourHit1Sound
 	.global playShipArmourHit2Sound
+	.global playClassicSound
+	.global playCrashBuzSound
+	.global playDinkDinkSound
+	.global playHitWallSound
+	.global playLowSound
+	.global playSteelSound
 
 playInGameMusic:
 	stmfd sp!, {r0-r1, lr}
@@ -136,3 +142,80 @@ playShipArmourHit2Sound:
 	
 	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
 	
+playClassicSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =ClassicLen				@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =classic_raw			@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+
+playCrashBuzSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =CrashBuzLen				@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =crashbuz_raw			@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+
+playDinkDinkSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =DinkDinkLen			@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =dinkdink_raw			@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+
+playHitWallSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =HitWallLen				@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =hitwall_raw			@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+	
+playLowSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =LowLen					@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =low_raw				@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return
+	
+playSteelSound:
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)		@ Get the IPC sound length address
+	ldr r1, =SteelLen				@ Get the sample size
+	str r1, [r0]					@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)		@ Get the IPC sound data address
+	ldr r1, =steel_raw				@ Get the sample address
+	str r1, [r0]					@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 		@ restore registers and return

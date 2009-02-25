@@ -66,6 +66,12 @@
 #define LaserShotLen				4401
 #define ShipArmourHit1Len			2452
 #define ShipArmourHit2Len			1074
+#define ClassicLen					999
+#define CrashBuzLen					9115
+#define DinkDinkLen					14752
+#define HitWallLen					4133
+#define LowLen						3840
+#define SteelLen					1893
 
 #define sptActiveOffs				0
 #define sptXOffs					512

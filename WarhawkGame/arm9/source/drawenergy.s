@@ -45,30 +45,31 @@ drawAllEnergyBarsLoop:
 	
 @ ---------- Start energy bar drawing code -----------------
 	
-	mov r1, #21						@ y pos
-	ldr r3, =energyLevel			@ energyLevel address
-	mov r4, #3						@ y loop count
 	
-drawAllEnergyBarsLoopY:
-	
-	mov r5, #3						@ x loop count
 	mov r0, #26						@ x pos
+	ldr r3, =energyLevel			@ energyLevel address
+	mov r4, #3						@ x loop count
 	
 drawAllEnergyBarsLoopX:
+	
+	mov r5, #3						@ y loop count
+	mov r1, #21						@ y pos
+	
+drawAllEnergyBarsLoopY:
 
 	ldr r2, [r3], #4				@ Read energyLevel value, add 4
 	
 	bl drawEnergyBar				@ Draw energy bar
 	
-	add r0, #2						@ Add 2 to x pos	
-	subs r5, #1						@ sub 1 from x count
-	
-	bne drawAllEnergyBarsLoopX
-	
-	add r1, #1						@ Add 1 to y pos
-	subs r4, #1						@ sub 1 from y count
+	add r1, #1						@ Add 1 to y pos	
+	subs r5, #1						@ sub 1 from y count
 	
 	bne drawAllEnergyBarsLoopY
+	
+	add r0, #2						@ Add 1 to x pos
+	subs r4, #1						@ sub 1 from x count
+	
+	bne drawAllEnergyBarsLoopX
 	
 	ldmfd sp!, {r0-r6, pc}
 	

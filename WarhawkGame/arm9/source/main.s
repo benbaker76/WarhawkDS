@@ -1,5 +1,5 @@
 @
-@ Release V0.22
+@ Release V0.50
 @
 @ ps. you can kill trackers by swinging them off the bottom of the screen!
 
@@ -61,7 +61,6 @@ bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
 	str r1,[r0]
 	
 	bl clearBG0
-	bl drawAllEnergyBars
 
 @----------------------------@	
 @ This is the MAIN game loop @
@@ -81,6 +80,7 @@ gameLoop:
 
 
 		bl drawScore		@ update the score with any changes
+		bl drawAllEnergyBars
 
 		
 		bl checkWave		@ check if time for another alien attack

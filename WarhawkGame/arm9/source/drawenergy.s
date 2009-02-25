@@ -13,71 +13,77 @@
 	.global drawAllEnergyBars
 	.global drawEnergyBar
 	
+@ ---------- Calculate energy bar levels -----------------
+	
 drawAllEnergyBars:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r0, #26
-	mov r1, #21
-	ldr r3, =energyLevel
-	mov r4, #3
+	ldr r0, =energy					@ Read energy address
+	ldr r0, [r0]					@ Read energy value
+	mov r2, #0						@ Our energy offset
+	mov r4, #64						@ Our energy level check for each energy bar
 	
-drawAllEnergyBarsLoop1:
+drawAllEnergyBarsLoop:
+	
+	ldr r1, =energyLevel			@ Read the address of the energyLevel
+	add r1, r2, lsl #2				@ Get the current address of the energy bar
+	
+	mov r3, #0						@ Energy value will be zero
+	cmp r0, r4						@ Compare with our level check
+	subgt r3, r0, r4				@ Energy level greater than our level check?
+	cmp r3, #7						@ Is our Energy value greater than 7?
+	movgt r3, #7					@ Then make it 7
 
-	ldrb r2, [r3]
+	str r3, [r1]					@ Write our energy level for this bar
 	
-	bl drawEnergyBar
+	sub r4, #8						@ Subtract 8 from our energy level check
+	add r2, #1						@ Add one to our energy level offset
+	cmp r2, #9						@ Have we drawn all bars?
 	
-	add r3, #4
-	add r0, #2
+	bne drawAllEnergyBarsLoop		@ No, so loop until done
 	
-	subs r4, r4, #1
+@ ---------- Start energy bar drawing code -----------------
 	
-	bne drawAllEnergyBarsLoop1
+	mov r1, #21						@ y pos
+	ldr r3, =energyLevel			@ energyLevel address
+	mov r4, #3						@ y loop count
 	
-	mov r0, #26
-	add r1, #1
-	mov r4, #3
+drawAllEnergyBarsLoopY:
 	
-drawAllEnergyBarsLoop2:
+	mov r5, #3						@ x loop count
+	mov r0, #26						@ x pos
+	
+drawAllEnergyBarsLoopX:
 
-	ldrb r2, [r3]
+	ldr r2, [r3], #4				@ Read energyLevel value, add 4
 	
-	bl drawEnergyBar
+	bl drawEnergyBar				@ Draw energy bar
 	
-	add r3, #4
-	add r0, #2
+	add r0, #2						@ Add 2 to x pos	
+	subs r5, #1						@ sub 1 from x count
 	
-	subs r4, r4, #1
+	bne drawAllEnergyBarsLoopX
 	
-	bne drawAllEnergyBarsLoop2
+	add r1, #1						@ Add 1 to y pos
+	subs r4, #1						@ sub 1 from y count
 	
-	mov r0, #26
-	add r1, #1
-	mov r4, #3
-	
-drawAllEnergyBarsLoop3:
-
-	ldrb r2, [r3]
-	
-	bl drawEnergyBar
-	
-	add r3, #4
-	add r0, #2
-	
-	subs r4, r4, #1
-	
-	bne drawAllEnergyBarsLoop3
+	bne drawAllEnergyBarsLoopY
 	
 	ldmfd sp!, {r0-r6, pc}
+	
+@ ---------- Draw a single energy bar ----------------
 	
 drawEnergyBar:
 
 	@ r0 = x pos
 	@ r1 = y pos
-	@ r2 = Energy Level (0 Full - 7 Empty)
+	@ r2 = Energy Level (0 Empty - 7 Full)
 
-	stmfd sp!, {r3-r6, lr} 
+	stmfd sp!, {r3-r6, lr}
+	
+	mov r3, #7						@ Reverse the value
+	sub r2, r3, r2
 	
 	ldr r3, =BG_MAP_RAM(BG0_MAP_BASE) @ make r5 a pointer to sub
 

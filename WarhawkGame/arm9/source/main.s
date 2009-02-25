@@ -50,6 +50,7 @@ bl waitforVblank	@ We need to set up a wipe here and clear it later / but for no
 	bl drawScore
 	bl drawSprite
 	bl drawGetReadyText
+	bl drawAllEnergyBars
 	@bl playInGameMusic
 	
 bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
@@ -100,21 +101,21 @@ gameLoop:
 @		bl drawDebugText	@ draw some numbers :)
 
 
-	ldr r0, =energyText				@ Load out text pointer
-	ldr r1, =0						@ x pos
-	ldr r2, =0						@ y pos
-	ldr r3, =1						@ Draw on Sub screen
-	bl drawText
+@	ldr r0, =energyText				@ Load out text pointer
+@	ldr r1, =0						@ x pos
+@	ldr r2, =0						@ y pos
+@	ldr r3, =1						@ Draw on Sub screen
+@	bl drawText
 		
 	ldr r10,=energy					@ Pointer to data
 	ldr r10,[r10]					@ Read value
-	mov r8,#0						@ y pos
-	mov r9,#2						@ Number of digits
-	mov r11,#7						@ x pos
-	bl drawDigits					@ Draw
+@	mov r8,#0						@ y pos
+@	mov r9,#2						@ Number of digits
+@	mov r11,#7						@ x pos
+@	bl drawDigits					@ Draw
 
 	cmp r10,#0
-@	beq youDied
+	beq youDied
 	bl waitforNoblank
 	
 	@---------------------------------------------
@@ -130,7 +131,9 @@ gameLoop:
 	
 	
 	youDied:
-	
+
+	bl drawAllEnergyBars	
+
 	ldr r0, =youDiedText			@ Load out text pointer
 	ldr r1, =6						@ x pos
 	ldr r2, =10						@ y pos

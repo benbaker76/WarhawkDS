@@ -182,9 +182,6 @@ alienFireMove:
 					subs r7,#1
 					movmi r7,#0
 					str r7,[r6]
-					
-					cmp r7, #24
-					bllt playCrashBuzSound
 						
 					mov r6,#sptObjOffs
 					ldr r6,[r2,r6]

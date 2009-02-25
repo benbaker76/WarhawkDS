@@ -538,9 +538,6 @@ alienCollideCheck:
 				movmi r7,#0						@ if less than 0 make 0
 				str r7,[r6]
 				
-				cmp r7, #24
-				bllt playCrashBuzSound
-				
 				ldr r6,=sptHitsOffs				@ get alien hit points
 				ldr r7,[r1,r6]
 				subs r7,#1						@ take one off

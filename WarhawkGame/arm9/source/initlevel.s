@@ -14,7 +14,7 @@
 	
 initLevel:
 
-	mov r1,#0	
+	mov r1,#0
 	ldr r0,=levelEnd
 	str r1,[r0]				@ Flag is SET for end of level	
 	ldr r0,=powerUp
@@ -329,6 +329,8 @@ initLevelSpecialSprites:
 	ldr r1, =SPRITE_GFX_SUB
 	add r1,#21504
 	bl dmaCopy
+	
+	bl playDinkDinkSound
 	
 	ldmfd sp!, {r0-r6, pc}
 .end

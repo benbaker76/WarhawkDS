@@ -42,6 +42,9 @@
 		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
 		cmp r2,#255					@ 255=not found
 		beq iStandardNo				@ so, we cannot init a bullet :(
+		
+			bl playLaserShotSound
+		
 			@ r1= offset for alien
 			@ r2= offset for bullet
 			mov r0,#sptXOffs		@ use our x offset

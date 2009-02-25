@@ -138,13 +138,16 @@ alienFireMove:
 					mov r7,#16
 					str r7,[r6]						@ make ship flash
 				
-					@bl ShipHitSound				@ activate sound for ship being hit!
+					bl playSteelSound				@ activate sound for ship being hit!
 				
 					ldr r6,=energy					@ Take 1 off your energy
 					ldr r7,[r6]
 					subs r7,#1
 					movmi r7,#0
 					str r7,[r6]
+					
+					cmp r7, #24
+					bllt playCrashBuzSound
 						
 					mov r6,#sptObjOffs
 					ldr r6,[r2,r6]

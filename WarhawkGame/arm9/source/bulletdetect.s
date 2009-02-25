@@ -530,13 +530,16 @@ alienCollideCheck:
 				mov r7,#16
 				str r7,[r6]						@ make shp flash
 			
-				@bl playPlayerHitSound			@ activate sound for YOUR ship being hit!
+				bl playSteelSound			@ activate sound for YOUR ship being hit!
 			
 				ldr r6,=energy					@ Take 1 off your energy
 				ldr r7,[r6]
 				subs r7,#1						@ -1
 				movmi r7,#0						@ if less than 0 make 0
 				str r7,[r6]
+				
+				cmp r7, #24
+				bllt playCrashBuzSound
 				
 				ldr r6,=sptHitsOffs				@ get alien hit points
 				ldr r7,[r1,r6]

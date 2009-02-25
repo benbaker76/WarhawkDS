@@ -725,7 +725,7 @@ initHunterMine:
 						and r9,r8,r2
 						add r8,r9,r9,lsl #1	@ divide 3
 						mov r8,r8,lsr #2		@ times 4
-					@	cmp r8,#384-32			@ but we really need 0-(319-32)
+					@	cmp r8,#384-32			@ but we really need 0-(319-32=288)
 					@	subpl r8,#32
 						@ this should make it 0-383
 
@@ -744,6 +744,8 @@ initHunterMine:
 					str r1,[r3,r0]
 					mov r0,#sptFireTypeOffs
 					mov r1,#0				@ set it to never fire
+					str r1,[r3,r0]
+					mov r0,#sptIdentOffs
 					str r1,[r3,r0]
 
 					ldr r0,=mineCount		@ decrement the mine counter
@@ -816,6 +818,8 @@ initHunterMine:
 					str r1,[r3,r0]
 					mov r0,#sptFireTypeOffs
 					mov r1,#0				@ set it to never fire (for now)
+					str r1,[r3,r0]
+					mov r0,#sptIdentOffs
 					str r1,[r3,r0]
 
 					ldr r0,=hunterCount		@ decrement the mine counter

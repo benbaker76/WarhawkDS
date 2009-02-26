@@ -36,58 +36,48 @@ alienFireInit:
 	ldr r5,[r5]
 	@---------- All our inits follow from here - SEQUENTIALLY ---------@
 
-	cmp r3,#19					@ check and init standard linear shots types 1-12
+	cmp r3,#9					@ check and init standard linear shots types 1-12
 		blmi initStandardShot
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
-	cmp r3,#19
+	cmp r3,#9
 		bleq initTrackerShot
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
-	cmp r3,#20
+	cmp r3,#10
 		bleq initAccelShot
 		cmp r2,#255
 		blne playCrashBuzSound
 		mov r2,#255
-	cmp r3,#21
+	cmp r3,#11
 		bleq initRippleShot
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
-	cmp r3,#22
+	cmp r3,#12
 		bleq initRippleTripleShot
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
-	cmp r3,#23
+	cmp r3,#13
 		bleq initMineShot
 		cmp r2,#255
 		blne playLowSound
 		mov r2,#255
-	cmp r3,#24
+	cmp r3,#14
 		bleq initTripleShot
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
-	cmp r3,#25
+	cmp r3,#15
 		bleq initRippleShotPhase1
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
-	cmp r3,#26
+	cmp r3,#16
 		bleq initRippleShotPhase2
-		cmp r2,#255
-		blne playLaserShotSound
-		mov r2,#255
-	cmp r3,#27
-		bleq initRippleShotPhase1F
-		cmp r2,#255
-		blne playLaserShotSound
-		mov r2,#255
-	cmp r3,#28
-		bleq initRippleShotPhase2F
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
@@ -128,21 +118,22 @@ alienFireMove:
 				mov r3,#sptFireTypeOffs
 				ldr r3,[r2,r3]				@ r3= fire type to update
 	
-				cmp r3,#19					@ check for standard shot 1-12
+				cmp r3,#9					@ check for standard shot 1-12
 					blmi moveStandardShot
-				cmp r3,#19
+				cmp r3,#9
 					bleq moveTrackerShot
-				cmp r3,#20
+				cmp r3,#10
 					bleq moveAccelShot
-				cmp r3,#21
+				cmp r3,#11					@ 12 is triple ripple
 					bleq moveRippleShot
-				cmp r3,#23
+				cmp r3,#13
 					bleq moveMineShot
+				@cmp r3,#14	
+					@bleq moveTripleShot
 					
-					
-					
-				cmp r3,#25
-					bleq moveRippleShotPhase1
+				cmp r3,#15 					@ 16 is phase 2
+					bleq moveRippleShotSingle
+
 				@ ETC
 	
 				@ and from here we need to check if the bullet is on our ship

@@ -12,7 +12,7 @@
 	.global	moveAccelShot
 	.global	moveRippleShot
 	.global moveMineShot
-	.global moveRippleShotPhase1
+	.global moveRippleShotSingle
 	
 	.arm
 	.align
@@ -26,28 +26,20 @@
 @	r3		= Shot type (this will be needed if several types of shots are combined)
 @	r0/r1 	= Players x/y coord
 @
-@
+@	A check for >768 (base of screen) does not need to be done on a falling bullet
+@	as drawSprite.s takes care of that check - thankfully
 
 @
-@ "MOVE" - "Standard shots 1-18"
+@ "MOVE" - "Standard shots 1-8"
 @		1-4 	are standard directional
-@		5-6 	are right/left with the addition of a move in time with scroll vertically
-@		7-10	are standard directional with a speed of 4 (use r5 for speed)
-@		11-12 	are right/left (speed 4) with the addition of a move in time with scroll vertically	
-@		13-16	are standard directional with a speed of 6 (use r5 for speed)
-@		17-18	are right/left (speed 6) with the addition of a move in time with scroll vertically
+@		5-6 	are left/right with the addition of a move in time with scroll vertically
+@		7-8		are left/right with the addition of a move with scroll vertically x2
+@				This shot type is directly affected by "shotSpeed"!
 	moveStandardShot:
 	stmfd sp!, {r0-r10, lr}	
 		
-		mov r5,#2
-		cmp r3,#7				@ if type is >=7
-		movpl r5,#4				@ make speed 4
-		subpl r3,#6				@ make type 1-6
-		cmp r3,#7				@ if type is >=7
-		movpl r5,#6				@ make speed 4
-		subpl r3,#6				@ make type 1-6
-		
-			
+		mov r4,#sptFireSpdOffs
+		ldr r5,[r2,r4]			@ r5=shotSpeed
 		cmp r3,#1				@ Standard UP
 		bne standard1
 			mov r4,#sptYOffs
@@ -76,10 +68,6 @@
 			ldr r1,[r2,r4]
 			add r1,r5
 			str r1,[r2,r4]
-			cmp r1,#768
-		@	bmi standard3
-		@		mov r1,#0
-		@		str r1,[r2]
 		standard3:
 		cmp r3,#4				@ Standard LEFT
 		bne standard4
@@ -91,47 +79,73 @@
 				mov r1,#0
 				str r1,[r2]
 		standard4:
-		cmp r3,#5				@ Standard RIGHT with Scroll Drift
+		cmp r3,#5				@ Standard LEFT with Scroll Drift
 		bne standard5
 			mov r4,#sptYOffs
 			ldr r1,[r2,r4]
 			add r1,#1
 			str r1,[r2,r4]
-		@	cmp r1,#768
-		@	bpl scrollDrift1
-			mov r4,#sptXOffs
-			ldr r1,[r2,r4]
-			add r1,r5
-			str r1,[r2,r4]
-			cmp r1,#384
-			bmi standard5
-				scrollDrift1:
-				mov r1,#0
-				str r1,[r2]
-		standard5:			
-		cmp r3,#6				@ Standard LEFT with Scroll Drift
-		bne standard6
-			mov r4,#sptYOffs
-			ldr r1,[r2,r4]
-			add r1,#1
-			str r1,[r2,r4]
-		@	cmp r1,#768
-		@	bpl scrollDrift2
 			mov r4,#sptXOffs
 			ldr r1,[r2,r4]
 			subs r1,r5
 			str r1,[r2,r4]
 			cmp r1,#0
-			bpl standard6
-				scrollDrift2:
+			bpl standard5
+				mov r1,#0
+				str r1,[r2]	
+		standard5:			
+		cmp r3,#6				@ Standard RIGHT with Scroll Drift
+		bne standard6
+			mov r4,#sptYOffs
+			ldr r1,[r2,r4]
+			add r1,#1
+			str r1,[r2,r4]
+			mov r4,#sptXOffs
+			ldr r1,[r2,r4]
+			add r1,r5
+			str r1,[r2,r4]
+			cmp r1,#384
+			bmi standard6
 				mov r1,#0
 				str r1,[r2]
 		standard6:
+		cmp r3,#7				@ Standard LEFT with Scroll Driftx2
+		bne standard7
+			mov r4,#sptYOffs
+			ldr r1,[r2,r4]
+			add r1,#2
+			str r1,[r2,r4]
+			mov r4,#sptXOffs
+			ldr r1,[r2,r4]
+			subs r1,r5
+			str r1,[r2,r4]
+			cmp r1,#0
+			bpl standard7
+				mov r1,#0
+				str r1,[r2]	
+		standard7:			
+		cmp r3,#8				@ Standard RIGHT with Scroll Driftx2
+		bne standard8
+			mov r4,#sptYOffs
+			ldr r1,[r2,r4]
+			add r1,#2
+			str r1,[r2,r4]
+			mov r4,#sptXOffs
+			ldr r1,[r2,r4]
+			add r1,r5
+			str r1,[r2,r4]
+			cmp r1,#384
+			bmi standard8
+				mov r1,#0
+				str r1,[r2]
+		standard8:		
+
 
 	ldmfd sp!, {r0-r10, pc}
 	
 @
-@ "MOVE" - "Tracker shot 19"			@ slightly more complex but still.....
+@ "MOVE" - "Tracker shot 9"			@ slightly more complex but still.....
+@									@ "FireSpeed" is the rate of FALL
 	moveTrackerShot:
 	stmfd sp!, {r0-r10, lr}
 	@ first, sheck the bullets coord in relation to your x (r0)
@@ -175,21 +189,20 @@
 		adds r5,r7						@ add/sub our speed
 		str r5,[r2,r4]					@ store it back
 
+		mov r4,#sptFireSpdOffs
+		ldr r7,[r2,r4]					@ r7=our fire speed
+
 		mov r4,#sptYOffs
 		ldr r5,[r2,r4]
-		add r5,#2						@ add 2 to bullet Y
-	@	cmp r5,#768
+		add r5,r7						@ add speed to bullet Y
 		str r5,[r2,r4]					@ put it back
-	@	bmi tShotActive
-	@		mov r1,#0
-	@		str r1,[r2]					@ kill bullet if off screen
-	@	tShotActive:
 
 	ldmfd sp!, {r0-r10, pc}
 	
 	
 @
-@ "MOVE" - "Acceleration shot 20"		@ a shot that accelerates on fire (Nasty!)
+@ "MOVE" - "Acceleration shot 10"		@ a shot that accelerates on fire (Nasty!)
+@ 										@ "FireSpeed" has no affect on this shot type
 	moveAccelShot:
 	stmfd sp!, {r0-r10, lr}
 	@ first, sheck the bullets coord in relation to your x (r0)
@@ -227,7 +240,7 @@
 	ldmfd sp!, {r0-r10, pc}
 	
 @
-@ "MOVE" - "Ripple shot 21"		@ a shot that "wibbles" on fire
+@ "MOVE" - "Ripple shot 11"		@ a shot that "wibbles" on fire
 	moveRippleShot:
 	stmfd sp!, {r0-r10, lr}
 		mov r4,#sptSpdDelayXOffs
@@ -246,20 +259,18 @@
 		moveq r8,#0						@ so, if we excede - loop!
 		str r8,[r2,r6]					@ and put the little bugger back
 		
+		mov r7,#sptFireSpdOffs
+		ldr r7,[r2,r7]					@ get speed of bullet
+		
 		mov r6,#sptYOffs				@ get y coord
 		ldr r5,[r2,r6]
-		add r5,#3						@ add 2
+		add r5,r7
 		str r5,[r2,r6]					@ put it back!
-		cmp r5,#768
-		bmi ripShotActive
-			mov r1,#0
-			str r1,[r2]
-		ripShotActive:
 		
 	ldmfd sp!, {r0-r10, pc}
 
 @
-@ "MOVE" - "Mine shot 23"		@ a shot that launches, sits, and explodes!
+@ "MOVE" - "Mine shot 13"		@ a shot that launches, sits, and explodes!
 	moveMineShot:
 
 	stmfd sp!, {r0-r10, lr}
@@ -320,8 +331,8 @@
 	ldmfd sp!, {r0-r10, pc}	
 
 @
-@ "MOVE" - "Ripple single 25"		@ a shot that "wibbles" on fire (single bullet)
-	moveRippleShotPhase1:
+@ "MOVE" - "Ripple single 15 & 16"		@ a shot that "wibbles" on fire (single bullet)
+	moveRippleShotSingle:
 	stmfd sp!, {r0-r10, lr}
 		mov r4,#sptSpdDelayXOffs
 		ldr r5,[r2,r4]					@ load our BACKUP X coord into R5 (modify this and store in ACTUAL)
@@ -341,14 +352,9 @@
 		
 		mov r6,#sptYOffs				@ get y coord
 		ldr r5,[r2,r6]
-		mov r7,#sptSpdYOffs
+		mov r7,#sptFireSpdOffs
 		ldr r8,[r2,r7]
 		add r5,r8						@ add y speed
 		str r5,[r2,r6]					@ put it back!
-		cmp r5,#768
-		bmi ripShotph1Active
-			mov r1,#0
-			str r1,[r2]
-		ripShotph1Active:
 		
 	ldmfd sp!, {r0-r10, pc}	

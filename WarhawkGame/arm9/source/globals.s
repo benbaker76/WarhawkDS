@@ -91,6 +91,7 @@
 	.global mineCount
 	.global hunterCount
 	.global spriteIdent
+	.global spriteFireSpeed
 	
 	
 mineDelay:
@@ -249,21 +250,23 @@ spriteAngle:
 	.space 512
 spriteExplodeDelay:
 	.space 512
-
 spriteFireType:
 	.space 512
 spriteFireDelay:
 	.space 512
 spriteFireMax:
 	.space 512
-
 spriteBloom:
 	.space 512
 spriteIdent:
 	.space 512
+spriteFireSpeed:
+	.space 512
 	
 spriteInstruct:
 	.space 32768
+
+
 	
 irqTable:
 	.space 1024					@ 32 entries

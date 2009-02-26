@@ -33,7 +33,7 @@
 @
 
 @
-@ "INIT" - "Standard shots 1-18"
+@ "INIT" - "Standard shots 1-8"
 	initStandardShot:
 	stmfd sp!, {r3, lr}
 	
@@ -42,7 +42,6 @@
 		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
 		cmp r2,#255					@ 255=not found
 		beq iStandardNo				@ so, we cannot init a bullet :(
-		
 			@ r1= offset for alien
 			@ r2= offset for bullet
 			mov r0,#sptXOffs		@ use our x offset
@@ -51,6 +50,9 @@
 			mov r0,#sptYOffs
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			str r6,[r2,r0]			@ paste it in our bullet y
+			mov r0,#sptFireSpdOffs
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
 			mov r0,#sptFireTypeOffs
 			str r3,[r2,r0]			@ store r3 as our bullets type
 			
@@ -64,7 +66,7 @@
 	ldmfd sp!, {r3, pc}
 	
 @
-@ "INIT" - "Tracker shot 19"
+@ "INIT" - "Tracker shot 9"
 	initTrackerShot:
 	stmfd sp!, {r3, lr}
 	
@@ -85,7 +87,7 @@
 			str r3,[r2,r0]			@ store r3 as our bullets type
 			
 			mov r0,#sptObjOffs		
-			mov r6,#26				@ pick object 27
+			mov r6,#26				@ pick object 26
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#1				@ a 1 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
@@ -95,12 +97,16 @@
 			mov r0,#sptSpdDelayXOffs
 			mov r6,#6				@ set our speed delay to an initial value
 			str r6,[r2,r0]
+			mov r0,#sptFireSpdOffs
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
+			
 		iTrackNo:	
 		
 	ldmfd sp!, {r3, pc}
 	
 @
-@ "INIT" - "Accelleration shot 20"
+@ "INIT" - "Accelleration shot 10"
 	initAccelShot:
 	stmfd sp!, {r3, lr}
 	
@@ -137,7 +143,7 @@
 	ldmfd sp!, {r3, pc}
 	
 @
-@ "INIT" - "Ripple shot 21" (this is a DUAL shot and uses 2 bullets)
+@ "INIT" - "Ripple shot 11" (this is a DUAL shot and uses 2 bullets)
 	initRippleShot:
 	stmfd sp!, {r3, lr}
 	
@@ -159,9 +165,12 @@
 			str r6,[r2,r0]			@ paste it in our bullet y
 			mov r0,#sptFireTypeOffs
 			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#sptFireSpdOffs
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
 	
 			mov r0,#sptObjOffs		
-			mov r6,#27				@ pick object 26
+			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#1				@ a 1 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
@@ -185,9 +194,12 @@
 			str r6,[r2,r0]			@ paste it in our bullet y
 			mov r0,#sptFireTypeOffs
 			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#sptFireSpdOffs
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
 	
 			mov r0,#sptObjOffs		
-			mov r6,#27				@ pick object 26
+			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#1				@ a 1 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
@@ -196,25 +208,24 @@
 			mov r6,#24				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
 		iRippleNo:	
+		
 	ldmfd sp!, {r3, pc}
 	
 @
-@ "INIT" - "Ripple triple shot 22" (this is a DUAL ripple shot and uses 3 bullets)
+@ "INIT" - "Ripple triple shot 12" (this is a DUAL ripple shot and uses 3 bullets)
 	initRippleTripleShot:
 	stmfd sp!, {r3, lr}
 	
 		@ This is a downward shot that tracks to your X coord
-	push {r3}
+
+	mov r3,#11
+	bl initRippleShot
 	mov r3,#3
 	bl initStandardShot
-	mov r3,#21
-	bl initRippleShot
-	pop {r3}
-
 	ldmfd sp!, {r3, pc}
 	
 @
-@ "INIT" - "Mine shot 23"
+@ "INIT" - "Mine shot 13"
 	initMineShot:
 	stmfd sp!, {r3, lr}
 	
@@ -254,7 +265,7 @@
 	ldmfd sp!, {r3, pc}
 
 @
-@ "INIT" - "Triple shot 24" (This fires a spread of 3 shots)
+@ "INIT" - "Triple shot 14" (This fires a spread of 3 shots)
 	initTripleShot:
 	stmfd sp!, {r3, lr}
 	
@@ -269,7 +280,7 @@
 	ldmfd sp!, {r3, pc}
 	
 @
-@ "INIT" - "Ripple shot 25" (this is a DUAL shot and uses 2 bullets)
+@ "INIT" - "Ripple shot 15" (this is a Single shot, Phase 1)
 	initRippleShotPhase1:
 	stmfd sp!, {r3, lr}
 	
@@ -291,9 +302,12 @@
 			str r6,[r2,r0]			@ paste it in our bullet y
 			mov r0,#sptFireTypeOffs
 			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#sptFireSpdOffs
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
 	
 			mov r0,#sptObjOffs		
-			mov r6,#27				@ pick object 26
+			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#1				@ a 1 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
@@ -301,14 +315,11 @@
 			mov r0,#sptSpdXOffs	
 			mov r6,#0				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
-			mov r0,#sptSpdYOffs	
-			mov r6,#3				@set y speed!	
-			str r6,[r2,r0]
 		iRippleph1No:	
 	ldmfd sp!, {r3, pc}
 
 @
-@ "INIT" - "Ripple shot 26" (this is a DUAL shot and uses 2 bullets)
+@ "INIT" - "Ripple shot 16" (this is a Single shot, Phase 2)
 	initRippleShotPhase2:
 	stmfd sp!, {r3, lr}
 	
@@ -329,11 +340,14 @@
 			add r6,#14
 			str r6,[r2,r0]			@ paste it in our bullet y
 			mov r0,#sptFireTypeOffs
-			mov r4,#25
-			str r4,[r2,r0]			@ store r3 as our bullets type
+			mov r4,#15
+			str r4,[r2,r0]			@ store r4 as our bullets type (r3 +1)
+			mov r0,#sptFireSpdOffs
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
 	
 			mov r0,#sptObjOffs		
-			mov r6,#27				@ pick object 26
+			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#1				@ a 1 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
@@ -341,88 +355,5 @@
 			mov r0,#sptSpdXOffs	
 			mov r6,#24				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
-			mov r0,#sptSpdYOffs	
-			mov r6,#3				@set y speed!	
-			str r6,[r2,r0]
 		iRippleph2No:	
 	ldmfd sp!, {r3, pc}
-	
-@
-@ "INIT" - "Ripple shot 27" (this is a DUAL shot and uses 2 bullets)
-	initRippleShotPhase1F:
-	stmfd sp!, {r3, lr}
-	
-		@ This is a downward shot that tracks to your X coord
-
-		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
-		cmp r2,#255					@ 255=not found
-		beq iRippleph1FNo				@ so, we cannot init a bullet :(
-			@ r1= offset for alien
-			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
-			ldr r6,[r1,r0]			@ copy the aliens X
-			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptSpdDelayXOffs@ We will use this to store our ACUTAL X coord (modified by sine)
-			str r6,[r2,r0]			@ store our backup
-			mov r0,#sptYOffs
-			ldr r6,[r1,r0]			@ copy the aliens Y
-			add r6,#14
-			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
-			str r3,[r2,r0]			@ store r3 as our bullets type
-	
-			mov r0,#sptObjOffs		
-			mov r6,#27				@ pick object 26
-			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
-			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
-
-			mov r0,#sptSpdXOffs	
-			mov r6,#0				@ we will use this for a marker of where we are in the sine
-			str r6,[r2,r0]	
-			mov r0,#sptSpdYOffs	
-			mov r6,#4				@set y speed!	
-			str r6,[r2,r0]
-		iRippleph1FNo:	
-	ldmfd sp!, {r3, pc}
-
-@
-@ "INIT" - "Ripple shot 28" (this is a DUAL shot and uses 2 bullets)
-	initRippleShotPhase2F:
-	stmfd sp!, {r3, lr}
-	
-		@ This is a downward shot that tracks to your X coord
-
-		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
-		cmp r2,#255					@ 255=not found
-		beq iRippleph2FNo				@ so, we cannot init a bullet :(
-			@ r1= offset for alien
-			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
-			ldr r6,[r1,r0]			@ copy the aliens X
-			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptSpdDelayXOffs@ We will use this to store our ACUTAL X coord (modified by sine)
-			str r6,[r2,r0]			@ store our backup
-			mov r0,#sptYOffs
-			ldr r6,[r1,r0]			@ copy the aliens Y
-			add r6,#14
-			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
-			mov r4,#25
-			str r4,[r2,r0]			@ store r3 as our bullets type
-	
-			mov r0,#sptObjOffs		
-			mov r6,#27				@ pick object 26
-			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
-			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
-
-			mov r0,#sptSpdXOffs	
-			mov r6,#24				@ we will use this for a marker of where we are in the sine
-			str r6,[r2,r0]	
-			mov r0,#sptSpdYOffs	
-			mov r6,#4				@set y speed!	
-			str r6,[r2,r0]
-		iRippleph2FNo:	
-	ldmfd sp!, {r3, pc}
-	

@@ -73,6 +73,9 @@
 #define LowLen						3840
 #define SteelLen					1893
 
+#define typeMine					8192
+#define typeHunter					16384
+
 #define sptActiveOffs				0
 #define sptXOffs					512
 #define sptYOffs					1024
@@ -88,11 +91,9 @@
 #define sptHitsOffs					6144
 #define sptAngleOffs				6656
 #define sptExpDelayOffs				7168
-
 #define sptFireTypeOffs				7680
 #define sptFireDlyOffs				8192
 #define sptFireMaxOffs				8704
-
 #define sptBloomOffs				9216
-
 #define sptIdentOffs				9728
+#define sptFireSpdOffs				10240

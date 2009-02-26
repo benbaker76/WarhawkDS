@@ -135,7 +135,7 @@ alienDescript:
 	.word 5,60,4,50,3,50,4,50,5,50,6,50				@ Track points
 	.word 7,10,8,10,1,5,2,5,3,80,5,500
 @13 @	
-	.word 180,300,2,1024,0,48,2048,12806			@ fire is 50 delay and fire left (fire type 6)
+	.word 180,300,2,1024,0,48,0x3FFFF,0x2806			@ fire is 50 delay and fire left (fire type 6)
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @14	
@@ -147,7 +147,7 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @16	@
-	.word 276,300,2,1024,0,51,2048,12805				@ fire is 50 delay and fire right (fire type 5) 00110010 00000101
+	.word 276,300,2,1024,0,51,0x3FFFF,0x2805				@ fire is 50 delay and fire right (fire type 5) 00110010 00000101
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @17	
@@ -155,11 +155,11 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @18	
-	.word 212,300,2,1024,0,53,200,10249 			@ fie is 40 delay and fire down (fire type 7) 00101000 00000111
+	.word 212,300,2,1024,0,53,0x4FFFF,0x2803 		@ fie is 40 delay and fire down (fire type 7) 00101000 00000111
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @19	
-	.word 244,300,2,1024,0,54,200,10249				@ inits
+	.word 244,300,2,1024,0,54,0x4FFFF,0x2803		@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @20	
@@ -183,39 +183,39 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @25
-	.word 320,360,0,0,3,46,6,20483					@ inits
-	.word 280,400,200,420,200,460,1024,1024,0,0,0,0					@ Track points
+	.word 320,360,0,0,3,46,0x30004,0x2803			@ inits
+	.word 280,400,200,420,200,460,1024,1024,0,0,0,0	@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @26	
 	.word 32,576,1,1024,0,42,0,0					@ inits
-	.word 3,383,2048,2048,0,0,0,0,0,0,0,0					@ Track points
+	.word 3,383,2048,2048,0,0,0,0,0,0,0,0			@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @27	
 	.word 32,576+22,2,1024,0,42,0,0					@ inits
-	.word 3,383,2048,2048,0,0,0,0,0,0,0,0					@ Track points
+	.word 3,383,2048,2048,0,0,0,0,0,0,0,0			@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @28	
-	.word 383,576+44,2,1024,0,42,0,0							@ inits
-	.word 7,383,2048,2048,0,0,0,0,0,0,0,0						@ Track points
+	.word 383,576+44,2,1024,0,42,0,0				@ inits
+	.word 7,383,2048,2048,0,0,0,0,0,0,0,0			@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @29	
 	.word 383,576+66,1,1024,0,42,0,0							@ inits
 	.word 7,383,2048,2048,0,0,0,0,0,0,0,0						@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @30
-	.word 63+32,360,0,0,3,46,6,25623								@ inits
+	.word 63+32,360,0,0,3,46,0x30004,25623								@ inits
 	.word 103+32,400,183+32,420,183+32,460,1024,1024,0,0,0,0	@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @31	-	Accellerator bullet tester
-	.word 150,450,1,1024,0,43,20,19220							@ inits
+	.word 150,450,1,1024,0,43,20,0x280A							@ inits
 	.word 7,50,3,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @32	-	Ripple shot bullet tester
-	.word 250,451,0,1024,0,44,20,6422							@ inits	- bullet 10100 00010101
+	.word 250,451,0,1024,0,44,0x10014,0x320C							@ inits	- bullet 10100 00010101
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @33	-	Mine shot bullet tester
-	.word 200,400,1,1024,0,42,20,25623							@ inits	- bullet 10100 00010101
+	.word 200,400,1,1024,0,42,20,0x320D							@ inits	- bullet 10100 00010101
 	.word 3,60,7,120,3,60,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @34	-	 4 sprite alien with double ripple shot
@@ -227,11 +227,11 @@ alienDescript:
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @36	-	
-	.word 100,232,2,1024,0,44,200,10266							@ inits	- bullet 10100 00010101
+	.word 100,232,2,1024,0,44,0x4FFFF,0x320F							@ inits	- bullet 10100 00010101
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @37	-	
-	.word 132,232,2,1024,0,45,200,10265							@ inits	- bullet 10100 00010101
+	.word 132,232,2,1024,0,45,0x4FFFF,0x3210							@ inits	- bullet 10100 00010101
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @38	-	 4 sprite alien with double ripple shot
@@ -243,27 +243,27 @@ alienDescript:
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @40	-	
-	.word 200,232,2,1024,0,44,200,10266							@ inits	- bullet 10100 00010101
+	.word 200,232,2,1024,0,44,0x4FFFF,0x320F							@ inits	- bullet 10100 00010101
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @41	-	
-	.word 232,232,2,1024,0,45,200,10265							@ inits	- bullet 10100 00010101
+	.word 232,232,2,1024,0,45,0x4FFFF,0x3210							@ inits	- bullet 10100 00010101
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @38	-	 4 sprite alien with double ripple shot
-	.word 300,200,2,1024,0,42,200,0							@ inits	- bullet 10100 00010101
+	.word 300,200,2,1024,0,42,200,0								@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @39	-	
-	.word 332,200,2,1024,0,43,200,0							@ inits	- bullet 10100 00010101
+	.word 332,200,2,1024,0,43,200,0								@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @40	-	
-	.word 300,232,2,1024,0,44,200,10266							@ inits	- bullet 10100 00010101
+	.word 300,232,2,1024,0,44,0x4FFFF,0x320F					@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @41	-	
-	.word 332,232,2,1024,0,45,200,10265							@ inits	- bullet 10100 00010101
+	.word 332,232,2,1024,0,45,0x4FFFF,0x3210					@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 
@@ -278,11 +278,12 @@ alienDescript:
 	.word 180		@ init X				@ initial X coord
 	.word 450		@ init y				@ initial Y coord
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
-	.word 1024			@ init speed y			@ (set to 1024 to signal linear mode)
+	.word 1024			@ init speed y		@ (set to 1024 to signal linear mode)
 	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
 	.word 35		@ init spriteObj		@ Sprite to use for image
-	.word 20		@ init hits to kill		@ make massive for indestructable (0=one shot)
-	.word 19220			@ init 'fire type' 		@ Lower 8 bits = type, 0=none
+	.word 20		@ init hits to kill		@ lower 16 = Hits (0=one shot)
+											@ upper 16 = shot speed
+	.word 19220		@ init 'fire type' 		@ Lower 8 bits = type, 0=none
 											@ the rest is delay (shifted 8 left)
 	.word 0,0		@ track x,y 1			@ tracking coordinate (as in coords.png)
 	.word 0,0		@ track x,y 2

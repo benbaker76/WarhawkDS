@@ -61,7 +61,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 @				mov r11, #0			@ x pos
 @				bl drawDigits		@ Display the initilised wave (Bug test)
 
-	cmp r7,#8192					@ Check for a "MINE FIELD" request
+	cmp r7,#typeMine					@ Check for a "MINE FIELD" request
 	bne noMines
 				ldr r4,=mineCount
 				mov r6,#75									@ set number of mines to init (Base this on LEVEL)
@@ -71,7 +71,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				str r6,[r4]									@ set delay to 0 (the mine code handles the rest)
 				b initWaveAliensDone
 	noMines:
-	cmp r7,#16384					@ Check for a "HUNTER" request
+	cmp r7,#typeHunter					@ Check for a "HUNTER" request
 	bne noHunter
 				ldr r4,=hunterCount
 				mov r6,#25									@ set number of hunters to init (Base this on LEVEL)
@@ -185,9 +185,15 @@ initReversed:
 	str r2,[r3,r0]				@ store sprites Object (Image)
 	
 	add r1,#4
+	ldr r6,=0xffff			
+	ldr r2,[r4,r1]				@ this value if split as 2 16bit words
+	and r7,r2,r6
 	mov r0,#sptHitsOffs
-	ldr r2,[r4,r1]
-	str r2,[r3,r0]				@ store sprites hits to kill
+	str r7,[r3,r0]				@ store sprites hits to kill (lower 16)
+	sub r2,r7
+	lsr r2,#16
+	mov r0,#sptFireSpdOffs
+	str r2,[r3,r0]				@ store sprites shot speed (upper 16)
 
 	add r1,#4					@ Move our pointer to the shot setting
 	ldr r2,[r4,r1]

@@ -50,16 +50,16 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		lsr r4,#16					@ r4= ident
 		mov r6,r4					@ move to r6 for later
 		
-				mov r10,r7			@ Set to display attack wave number
-				mov r8,#23			@ y pos
-				mov r9,#5			@ Number of digits
-				mov r11, #0			@ x pos
-				bl drawDigits		@ Display the initilised wave (Bug test)
-				mov r10,r6			@ Set to display attack wave number
-				mov r8,#22			@ y pos
-				mov r9,#5			@ Number of digits
-				mov r11, #0			@ x pos
-				bl drawDigits		@ Display the initilised wave (Bug test)
+@				mov r10,r7			@ Set to display attack wave number
+@				mov r8,#23			@ y pos
+@				mov r9,#5			@ Number of digits
+@				mov r11, #0			@ x pos
+@				bl drawDigits		@ Display the initilised wave (Bug test)
+@				mov r10,r6			@ Set to display attack wave number
+@				mov r8,#22			@ y pos
+@				mov r9,#5			@ Number of digits
+@				mov r11, #0			@ x pos
+@				bl drawDigits		@ Display the initilised wave (Bug test)
 
 	cmp r7,#8192					@ Check for a "MINE FIELD" request
 	bne noMines

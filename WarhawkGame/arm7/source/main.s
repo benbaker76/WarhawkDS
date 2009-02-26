@@ -84,7 +84,9 @@ playSound:
 	stmfd sp!, {r0-r3, lr}
 	
 	bl getFreeChannel
-	
+	cmp r0,#255
+	beq playSoundDone
+
 	mov r3, r0, lsl #4
 	
 	ldr r0, =SCHANNEL_TIMER(0)
@@ -133,17 +135,17 @@ getFreeChannel:
 
 	mov r0, #15						@ Reset the counter
 	ldr r1, =SCHANNEL_CR(0)			@ This is the base address of the sound channel
-
+	
 freeChannelLoop:
-
+	
 	ldr r2, [r1, r0, lsl #4]		@ Add the offset (0x04000400 + ((n)<<4))
 	tst r2, #SCHANNEL_ENABLE		@ Is the sound channel enabled?
-	bne freeChannelFound			@ (if not equal = channel clear?)
+	beq freeChannelFound			@ (if not equal = channel clear)
 	subs r0, #1						@ sub one from our counter
 	bpl freeChannelLoop				@ keep looking
-	
-freeChannelFound:
-									
+	mov r0,#255
+
+freeChannelFound:								
 	ldmfd sp!, {r1-r3, pc}			@ restore rgisters and return
 
 .pool

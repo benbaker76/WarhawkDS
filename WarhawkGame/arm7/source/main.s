@@ -15,12 +15,9 @@ main:
 	ldr r1, =(SOUND_ENABLE | SOUND_VOL(127))	@ Turn on sound
 	strh r1, [r0]
 	
-	ldr r1, =IPC_SOUND_LEN(2)		@ Get the location of the sound length
-	ldr r2, =5170
-	str r2, [r1]
-	
-loop:
+mainLoop:
 	ldr r0, =REG_VCOUNT
+	
 waitVBlank:									
 	ldrh r2, [r0]					@ read REG_VCOUNT into r2
 	cmp r2, #193					@ 193 is, of course, the first scanline of vblank
@@ -36,7 +33,7 @@ waitVBlank:
 	cmp r1, #0						@ Is there data there?
 	blne playSound					@ If so lets play the sound
 	
-	b loop
+	b mainLoop
 	
 playADPCM:
 	stmfd sp!, {r0-r3, lr}
@@ -61,7 +58,7 @@ playADPCM:
 	and r3, #(~7)					@ Multiple of 4 bytes
 	add r3, #4						@ Add 4 bytes
 	and r3, #0x7FFFFFFF				@ And with 0x7FFFFFFF
-	lsr r3, r3, #2					@ Right shift (LEN >> 2)
+	lsr r3, #2						@ Right shift (LEN >> 2)
 	str r3, [r0]					@ Write the value
 	str r3, [r1]					@ Write the value
 	
@@ -88,8 +85,7 @@ playSound:
 	
 	bl getFreeChannel
 	
-	mov r3, r0
-	lsl r3, #4
+	mov r3, r0, lsl #4
 	
 	ldr r0, =SCHANNEL_TIMER(0)
 	add r0, r3
@@ -108,7 +104,7 @@ playSound:
 	ldr r2, [r1]					@ Read the value
 	and r2, #(~7)					@ Multiple of 4 bytes
 	and r2, #0x7FFFFFFF				@ And with 0x7FFFFFFF
-	lsr r2, r2, #2					@ Right shift (LEN >> 2)
+	lsr r2, #2						@ Right shift (LEN >> 2)
 	str r2, [r0]					@ Write the value
 	
 	ldr r0, =SCHANNEL_REPEAT_POINT(0)
@@ -125,28 +121,30 @@ playSound:
 	mov r1, #0
 	str r1, [r0]					@ Clear the value so it wont play again
 
+playSoundDone:
+
 	ldmfd sp!, {r0-r3, pc} 		@ restore rgisters and return
 	
 getFreeChannel:
 
-	stmfd sp!, {r1-r3, lr}
-	
-	mov r0, #15
-	
-freeChannelLoop:
-	ldr r1, =SCHANNEL_CR(0)
-	mov r2, r0
-	lsl r2, #4
-	add r1, r2
-	ldr r2, [r1]
-	tst r2, #SCHANNEL_ENABLE
-	beq freeChannelDone
-	subs r0, #1
-	bne freeChannelLoop
+	@ RetVal r0 = channel number (0 - 15)
 
-freeChannelDone:
+	stmfd sp!, {r1-r3, lr}
+
+	mov r0, #15						@ Reset the counter
+	ldr r1, =SCHANNEL_CR(0)			@ This is the base address of the sound channel
+
+freeChannelLoop:
+
+	ldr r2, [r1, r0, lsl #4]		@ Add the offset (0x04000400 + ((n)<<4))
+	tst r2, #SCHANNEL_ENABLE		@ Is the sound channel enabled?
+	bne freeChannelFound			@ (if not equal = channel clear?)
+	subs r0, #1						@ sub one from our counter
+	bpl freeChannelLoop				@ keep looking
 	
-	ldmfd sp!, {r1-r3, pc} 		@ restore rgisters and return
+freeChannelFound:
+									
+	ldmfd sp!, {r1-r3, pc}			@ restore rgisters and return
 
 .pool
 .end

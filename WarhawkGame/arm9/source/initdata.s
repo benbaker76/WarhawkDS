@@ -19,8 +19,6 @@ initData:
 	mov r0,#3
 	str r0,[r1]
 
-
-
 	ldmfd sp!, {r0-r1, pc}
 
 	.end

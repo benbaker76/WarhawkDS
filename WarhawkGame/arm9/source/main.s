@@ -59,7 +59,7 @@ bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
 	bl waitforFire		@ wait for a short while to start game
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)
 	ldr r0,=powerUp
-	str r1,[r0]
+@	str r1,[r0]
 	
 	bl clearBG0
 
@@ -95,7 +95,7 @@ gameLoop:
 		bl levelDrift		@ update level with the horizontal drift
 		bl scrollStars		@ Scroll Stars (BG2,BG3)		
 		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
-
+		bl checkBossInit	@ Check if we should set the offscreen boss up??
 		bl drawSprite		@ drawsprites and do update bloom effect
 
 @		bl drawDebugText	@ draw some numbers :)
@@ -109,11 +109,6 @@ gameLoop:
 		
 	ldr r10,=energy					@ Pointer to data
 	ldr r10,[r10]					@ Read value
-@	mov r8,#0						@ y pos
-@	mov r9,#2						@ Number of digits
-@	mov r11,#7						@ x pos
-@	bl drawDigits					@ Draw
-
 	cmp r10,#0
 	beq youDied
 	bl waitforNoblank

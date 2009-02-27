@@ -122,14 +122,17 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		bl initBaseExplode			@ Draw the EXPLOSION
 									@ pass r5 with the offset for the bullet (ie 6)
 		
-@		ldr r1, =spriteActive+4		@ Kill the bullet
-@		mov r2,#0
-@		str r2, [r1, r0, lsl #2]
-		ldr r1,=spriteY+4
-		mov r2,#768
-		str r2, [r1,r0, lsl #2]
+		ldr r1, =spriteObj+4
+		ldr r2, [r1,r0, lsl #2]
+		cmp r2,#4
+		beq LFPower					@ If powershot, keep the bullet going :)
+		
+			ldr r1,=spriteY+4			@ Kill the bullet
+			mov r2,#788
+			str r2, [r1,r0, lsl #2]
 
-
+		LFPower:
+		
 		ldr r0,=adder+7				@ add 65 to the score
 		mov r1,#5
 		strb r1,[r0]
@@ -245,16 +248,17 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		mov r10,#24
 		bl initBaseExplode			@ Draw the EXPLOSION
 									@ pass r5 with the offset for the bullet (ie 6)
+			
+		ldr r1, =spriteObj+4
+		ldr r2, [r1,r0, lsl #2]
+		cmp r2,#4
+		beq RFPower					@ If powershot, keep the bullet going :)
 		
-@		ldr r1, =spriteActive+4		@ Kill the bullet
-@		mov r2,#0
-@		str r2, [r1, r0, lsl #2]
+			ldr r1,=spriteY+4			@ Kill the bullet
+			mov r2,#788
+			str r2, [r1,r0, lsl #2]
 
-		ldr r1,=spriteY+4
-		mov r2,#788
-		str r2, [r1,r0, lsl #2]
-
-
+		RFPower:
 		ldr r0,=adder+7				@ add 65 to the score
 		mov r1,#5
 		strb r1,[r0]
@@ -327,6 +331,13 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	ldr r2, =spriteY+4			
 	ldr r2, [r2, r0, lsl #2]	@ r2= BULLET Y
 	add r2,#4
+	ldr r7, =spriteObj+4		@ The Bullet object tells us what type of shot!
+	ldr r7, [r7,r0, lsl #2]	@ r7 = 3 normal shot / 4 Power shot!
+								@ use this is a match is found!
+	cmp r7,#4					@ If powershot,
+	moveq r7,#8					@ power is UPPED
+	movne r7,#1					@ else, just the normal 1
+	
 	
 	mov r3,#63					@ Alien index (sprites 17 - 80 = 64)
 
@@ -343,41 +354,41 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			@ Do checks
 			mov r8,#sptXOffs
 			ldr r6,[r4,r8]					@ r6=current Alien X
-			add r6,#24						
+			add r6,#18						
 			cmp r6,r1						@ r1=Bullet x
 			bmi detectNoAlien
-			sub r6,#24
-			add r1,#24
+			sub r6,#18
+			add r1,#18
 			cmp r6,r1
-			sub r1,#24
+			sub r1,#18
 			bpl detectNoAlien
 
 			mov r8,#sptYOffs
 			ldr r6,[r4,r8]					@ r6=current Alien y
-			add r6,#24
+			add r6,#16
 			cmp r6,r2						@ r2=bullet y
 			bmi detectNoAlien
-			sub r6,#24
-			add r2,#24
+			sub r6,#16
+			add r2,#16
 			cmp r6,r2
-			sub r2,#24
+			sub r2,#16
 			bpl detectNoAlien
+				@ ALIEN DETECTED!!
+				
+				ldr r8,=spriteY+4			@ Kill the bullet
+				mov r6,#788
+				str r8, [r8,r0, lsl #2]				
+				
+				
+				
 				@ ok, now we need to see how many hits to kill
 				mov r8,#sptHitsOffs
 				ldr r6,[r4,r8]
-				subs r6,#1
+				subs r6,r7
 				str r6,[r4,r8]
 				cmp r6,#0
-				bmi detectAlienKill	@	*IS DEAD*
-					@ MULTISHOT ALIEN *NOT DEAD*
-					@ kill BuLLET
-@					mov r6,#0
-@					ldr r8,=spriteActive+4
-@					str r6, [r8,r0, lsl #2]
-					ldr r8,=spriteY+4
-					mov r6,#788
-					str r8, [r8,r0, lsl #2]
-					
+				bmi detectAlienKill			@ Alien	*IS DEAD*
+					@ MULTISHOT ALIEN *NOT DEAD*		
 					@ ok, if the alien has an ident, we need to bloom all with the same ident!!
 					mov r8,#sptIdentOffs
 					ldr r6,[r4,r8]
@@ -439,10 +450,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				mov r6,#4
 				mov r8,#sptExpDelayOffs
 				str r6,[r4,r8]
-				@ kill BuLLET
-				mov r6,#0
-				ldr r8,=spriteActive+4
-				str r6, [r8,r0, lsl #2]
+
 				@ add score
 				ldr r8,=adder+7				@ add 78 to the score
 				mov r6,#8

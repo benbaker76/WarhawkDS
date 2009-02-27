@@ -10,7 +10,7 @@
 	.arm
 	.align
 	.global playInGameMusic
-	.global playBlasterSound
+	.global playBlasterSound				@ Use = Normal Fire
 	.global playExplosionSound
 	.global playAlienExplodeSound
 	.global playAlienExplodeScreamSound
@@ -19,7 +19,7 @@
 	.global playShipArmourHit1Sound
 	.global playShipArmourHit2Sound
 	.global playClassicSound
-	.global playCrashBuzSound
+	.global playCrashBuzSound				@ Use = Low Energy
 	.global playDinkDinkSound
 	.global playHitWallSound
 	.global playLowSound

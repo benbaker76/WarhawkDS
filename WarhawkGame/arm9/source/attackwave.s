@@ -251,19 +251,19 @@ alienDescript:
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @38	-	 4 sprite alien with double ripple shot
-	.word 300,200,2,1024,0,42,200,0								@ inits
+	.word 300,200,2,1024,0,50,200,0								@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @39	-	
-	.word 332,200,2,1024,0,43,200,0								@ inits
+	.word 332,200,2,1024,0,51,200,0								@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @40	-	
-	.word 300,232,2,1024,0,44,0x4FFFF,0x320F					@ inits
+	.word 300,232,2,1024,0,52,0x4FFFF,0x320F					@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @41	-	
-	.word 332,232,2,1024,0,45,0x4FFFF,0x3210					@ inits
+	.word 332,232,2,1024,0,53,0x4FFFF,0x3210					@ inits
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 

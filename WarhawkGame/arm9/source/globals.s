@@ -11,6 +11,7 @@
 	.align
 	.data
 	
+	.global bossMan
 	.global pixelOffsetMain
 	.global pixelOffsetSub
 	.global pixelOffsetSFMain
@@ -101,6 +102,8 @@ mineCount:
 hunterDelay:
 	.word 0
 hunterCount:
+	.word 0
+bossMan:
 	.word 0
 	
 level:

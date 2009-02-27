@@ -23,6 +23,8 @@ initLevel:
 	str r1,[r0]				@ clear the fire delay
 	ldr r0,=waveNumber
 	str r1,[r0]				@ make sure we always start at wave 0
+	ldr r0,=bossMan
+	str r1,[r0]				@ turn the Boss attack Off!!
 	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub

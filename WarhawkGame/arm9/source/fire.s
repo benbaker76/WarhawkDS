@@ -22,7 +22,7 @@ waitforFire:
 	
 	mov r4,#180
 	
-	buttpause:
+	buttpause1:
 	
 		bl waitforVblank
 		bl scrollStars
@@ -31,9 +31,22 @@ waitforFire:
 		ldr r1,=REG_KEYINPUT
 		ldr r2,[r1]
 		tst r2,#BUTTON_A
-		beq butta
+		beq buttpause2
 		subs r4,#1
-		bne buttpause
+		bne buttpause1
+	
+	buttpause2:
+	
+		bl waitforVblank
+		bl scrollStars
+		bl waitforNoblank
+	
+		ldr r1,=REG_KEYINPUT
+		ldr r2,[r1]
+		tst r2,#BUTTON_A
+		bne butta
+		subs r4,#1
+		bne buttpause2
 		
 	butta:	
 	
@@ -46,21 +59,35 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 	ldr r2,[r1]
 	tst r2,#BUTTON_A
 	beq fireDown
+	@ FIRE RELEASED
+		@ ** we need to read "firePress" and see if it >0
+		@ ** if so, fire bullet, else if >50 fire power shot
+		mov r8,#0
 		ldr r0,=firePress
-		mov r1,#0
-		str r1,[r0]					@ set the flag to say fire has been released
+		ldr r8,[r0]			@ r1= fire pressed duration
+		mov r2,#0
+		str r2,[r0]			@ RESET "firepress" to 0
+		cmp r8,#1
+		bpl initFire		@ Fire
+		
 		ldmfd sp!, {r0-r6, pc}
 	fireDown:
-		ldr r0,=powerUp				@ check if autofire is on
-		ldrb r0, [r0]
-		cmp r0,#1
-		beq initpowerUp				@ if so, lets use it
-	
-		ldr r0,=firePress			@ load our pressed button check
+	@ FIRE PRESSED
+		ldr r0,=powerUp				@ check if autofire is on and fire pressed
 		ldr r0, [r0]
-		cmp r0,#0					@ check if fire is released
-		beq initFire				@ if it was, then lets see if we have a bullet spare?
+		cmp r0,#1
+		moveq r8,#0
+		beq initpowerUp				@ if so, lets use it
+			ldr r0,=firePress		@ if not, we need to incrememnt "firepress"
+			ldr r1,[r0]
+			add r1,#1
+			cmp r1,#255
+			moveq r1,#255			@ but not to go too high
+			str r1,[r0]
+					
+		@ and exit!
 		ldmfd sp!, {r0-r6, pc}
+
 	initpowerUp:
 		@ this is a little bit of code for auto fire
 		@ add a little delay check in here to see if we are ready for another bullet
@@ -73,10 +100,8 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		str r3,[r4]					@ put the result back
 		beq initFire				@ ok, lets "fire one off"
 		ldmfd sp!, {r0-r6, pc}		@ but, if not - we are done!
+
 	initFire:
-		ldr r0,=firePress
-		mov r1,#1
-		str r1,[r0]
 		@ Ok, now we need to see about initialising a bullet!!
 		@ These are stored in our sprite table from position 1-4 (4 bullets)
 		@ First thing is to see if we can fire a bullet.
@@ -84,7 +109,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		ldr r0, [r0]
 		cmp r0,#1
 		moveq r0,#15				@ if powered up, we can allow 16 bullets
-		movne r0,#3					@ if not, just the 4
+		movne r0,#5					@ if not, just the 6
 		ldr r1, =spriteActive
 		add r1, #4					@ add 4 bytes as stored in words
 		isbulletPossible:
@@ -99,21 +124,13 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		@ ok, all we need to do now is set spriteActive for the bullet r0
 		@ and set the image and coords for the bullet to start
 		@ the bullet code will take care of the rest
-
-@		ldr r1,=spriteBloom
-@		mov r2,#8
-@		str r2,[r1]					@ set a "Bloom" for a shot
-
+		@ r8 tells us if normal or POWER (1)
+	
 		ldr r1,=spriteActive
 		add r1,#4
 		mov r2,#1
 		str r2,[r1,r0, lsl #2]		@ sprite is now active
 		
-		ldr r1, =spriteSpeedY
-		add r1,#4
-		mov r2,#4					@ set the bullets speed!
-		str r2,[r1,r0, lsl #2]
-
 		ldr r3,=spriteX
 		ldr r2,[r3]					@ our ships x coord
 		ldr r4,=horizDrift			@ we need to add our horizontal-
@@ -121,21 +138,45 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		add r2,r4
 		ldr r1,=spriteX				@ store it in bullets x
 		add r1, #4
-		str r2,[r1,r0, lsl #2]		@ done!
-		
-		ldr r3,=spriteY
-		ldr r2,[r3]					@ our ships y coord
-		add r2,#4					@ Move it down a little
-		ldr r1,=spriteY				@ store the result in bullets y
-		add r1,#4
-		str r2,[r1,r0, lsl #2]		@ done
+		str r2,[r1,r0, lsl #2]		@ done!		
+	
+		cmp r8,#36					@ This is the "HOLD" period needed for the shot!
+		bmi fireNormal				@ "POWERSHOT"
+			ldr r3,=spriteY
+			ldr r2,[r3]					@ our ships y coord
+			add r2,#6					@ Move it down a little
+			ldr r1,=spriteY+4			@ store the result in bullets y
+			str r2,[r1,r0, lsl #2]		@ done
 
-		mov r2,#3					@ set r2 to our bullet image
-		ldr r1, =spriteObj
-		add r1, #4
-		str r2,[r1,r0, lsl #2]		@ done
 
-		bl playBlasterSound
+			ldr r1, =spriteSpeedY
+			add r1,#4
+			mov r2,#5					@ set the bullets speed!
+			str r2,[r1,r0, lsl #2]	
+			mov r2,#4					@ set r2 to our bullet image
+			ldr r1, =spriteObj
+			add r1, #4
+			str r2,[r1,r0, lsl #2]		@ done
+
+			bl playAlienExplodeScreamSound			@ CHANGE THIS BIG TIME!!!
+	ldmfd sp!, {r0-r6, pc}
+
+		fireNormal:					@ "NORMALSHOT"
+			ldr r3,=spriteY
+			ldr r2,[r3]					@ our ships y coord
+			add r2,#4					@ Move it down a little
+			ldr r1,=spriteY+4			@ store the result in bullets y
+			str r2,[r1,r0, lsl #2]
+			ldr r1, =spriteSpeedY
+			add r1,#4
+			mov r2,#4					@ set the bullets speed!
+			str r2,[r1,r0, lsl #2]
+			mov r2,#3					@ set r2 to our bullet image
+			ldr r1, =spriteObj
+			add r1, #4
+			str r2,[r1,r0, lsl #2]		@ done
+
+			bl playBlasterSound
 		
 		@ bullet should now be ready to go!!!
 		@ We can add the bullet movement code here, OR do it seperate
@@ -174,8 +215,8 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 
 			cmp r4,#384
 			bmi bulletDead
-			bl detectBGL				@ check if we have hit a base!!!
-			bl detectBGR 
+			bl detectBGL				@ check if we have hit a base!!! 	(Left Gun)
+			bl detectBGR 				@									(Right Gun)
 	
 			@ now detect against aliens
 			bl detectALN

@@ -49,7 +49,9 @@ waitforFire:
 		bne buttpause2
 		
 	butta:	
-	
+		ldr r0,=firePress
+		mov r1,#0
+		str r1,[r0]
 	ldmfd sp!, {r0-r6, pc}
 
 fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
@@ -62,7 +64,6 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 	@ FIRE RELEASED
 		@ ** we need to read "firePress" and see if it >0
 		@ ** if so, fire bullet, else if >50 fire power shot
-		mov r8,#0
 		ldr r0,=firePress
 		ldr r8,[r0]			@ r1= fire pressed duration
 		mov r2,#0
@@ -144,14 +145,14 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		bmi fireNormal				@ "POWERSHOT"
 			ldr r3,=spriteY
 			ldr r2,[r3]					@ our ships y coord
-			add r2,#6					@ Move it down a little
+			add r2,#8					@ Move it down a little
 			ldr r1,=spriteY+4			@ store the result in bullets y
 			str r2,[r1,r0, lsl #2]		@ done
 
 
 			ldr r1, =spriteSpeedY
 			add r1,#4
-			mov r2,#5					@ set the bullets speed!
+			mov r2,#6					@ set the bullets speed!
 			str r2,[r1,r0, lsl #2]	
 			mov r2,#4					@ set r2 to our bullet image
 			ldr r1, =spriteObj

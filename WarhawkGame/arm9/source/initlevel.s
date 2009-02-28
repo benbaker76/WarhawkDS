@@ -25,6 +25,9 @@ initLevel:
 	str r1,[r0]				@ make sure we always start at wave 0
 	ldr r0,=bossMan
 	str r1,[r0]				@ turn the Boss attack Off!!
+
+	ldr r0,=firePress
+	str r1,[r0]
 	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub

@@ -101,16 +101,10 @@ gameLoop:
 @		bl drawDebugText	@ draw some numbers :)
 
 
-@	ldr r0, =energyText				@ Load out text pointer
-@	ldr r1, =0						@ x pos
-@	ldr r2, =0						@ y pos
-@	ldr r3, =1						@ Draw on Sub screen
-@	bl drawText
-		
 	ldr r10,=energy					@ Pointer to data
 	ldr r10,[r10]					@ Read value
 	cmp r10,#0
-	beq youDied
+@	beq youDied
 	bl waitforNoblank
 	
 	@---------------------------------------------

@@ -70,7 +70,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 		
-		ldr r0,=StarBackPal
+		ldr r0,=Level1Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 		
@@ -91,7 +91,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 		
-		ldr r0,=StarBackPal2
+		ldr r0,=Level2Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 
@@ -111,7 +111,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 		
-		ldr r0,=StarBackPal3
+		ldr r0,=Level3Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 	
@@ -131,7 +131,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 
-		ldr r0,=StarBackPal4
+		ldr r0,=Level4Pal
 		ldr r1,=StarBack
 		str r0,[r1]	
 		
@@ -151,7 +151,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 
-		ldr r0,=StarBackPal5
+		ldr r0,=Level5Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 		
@@ -171,7 +171,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 
-		ldr r0,=StarBackPal6
+		ldr r0,=Level6Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 
@@ -191,7 +191,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 		
-		ldr r0,=StarBackPal7
+		ldr r0,=Level7Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 	
@@ -211,7 +211,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 
-		ldr r0,=StarBackPal8
+		ldr r0,=Level8Pal
 		ldr r1,=StarBack
 		str r0,[r1]	
 	
@@ -231,7 +231,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 	
-		ldr r0,=StarBackPal9
+		ldr r0,=Level9Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 		
@@ -251,7 +251,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]
 	
-		ldr r0,=StarBackPal10
+		ldr r0,=Level10Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 		
@@ -259,11 +259,11 @@ initLevel:
 	cmp r8,#11
 	bne levelDone
 							@ Set level 11
-		ldr r0,=Level3Map
+		ldr r0,=Level11Map
 		ldr r1,=LevelMap
 		str r0,[r1]
 
-		ldr r0,=Level3Tiles
+		ldr r0,=Level11Tiles
 		ldr r1,=LevelTiles
 		str r0,[r1]
 		
@@ -271,7 +271,7 @@ initLevel:
 		ldr r1,=collideMap
 		str r0,[r1]	
 
-		ldr r0,=StarBackPal11
+		ldr r0,=Level11Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 
@@ -322,7 +322,8 @@ initLevelSpecialSprites:
 	ldreq r0, =SpritesLev9Tiles
 	cmp r8,#10
 	ldreq r0, =SpritesLev10Tiles
-	
+	cmp r8,#11
+	ldreq r0, =SpritesLev11Tiles	
 	
 	ldr r1, =SPRITE_GFX
 	add r1,#21504

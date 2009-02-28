@@ -71,8 +71,8 @@ initVideo:
 	
 	@ Load the palette into the palette subscreen area and main
 
-	ldr r0, =Level1Pal
-@	ldr r0,[r0]
+	ldr r0, =StarBack
+	ldr r0,[r0]
 	ldr r1, =BG_PALETTE
 	ldr r2, =StarBackPalLen
 	bl dmaCopy

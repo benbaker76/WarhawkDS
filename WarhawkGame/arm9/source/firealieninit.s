@@ -40,8 +40,6 @@
 	.global initTripleShot
 	.global initRippleShotPhase1
 	.global initRippleShotPhase2
-	.global initRippleShotPhase1F
-	.global initRippleShotPhase2F
 
 @
 @	Every init in this code should also have a "move" function in firealienupdate.s
@@ -81,7 +79,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 		iStandardNo:	
 		
@@ -111,7 +109,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#26				@ pick object 26
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 			mov r0,#sptSpdXOffs	
 			mov r6,#0				@ make sure the bullets initial X speed is 0
@@ -151,7 +149,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#28				@ pick object 28
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
 			mov r0,#sptSpdYOffs	
@@ -194,7 +192,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
 			mov r0,#sptSpdXOffs	
@@ -223,7 +221,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
 			mov r0,#sptSpdXOffs	
@@ -255,7 +253,7 @@
 		
 		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
 		cmp r2,#255					@ 255=not found
-		beq iMineNo				@ so, we cannot init a bullet :(
+		beq iMineNo					@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
 			mov r0,#sptXOffs		@ use our x offset
@@ -270,7 +268,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#26				@ pick object 26 (mine)
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 	
 			mov r0,#sptSpdYOffs	
@@ -310,7 +308,7 @@
 
 		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
 		cmp r2,#255					@ 255=not found
-		beq iRippleph1No				@ so, we cannot init a bullet :(
+		beq iRippleph1No			@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
 			mov r0,#sptXOffs		@ use our x offset
@@ -331,7 +329,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
 			mov r0,#sptSpdXOffs	
@@ -371,7 +369,7 @@
 			mov r0,#sptObjOffs		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
-			mov r6,#1				@ a 1 sets the sprite active (visible)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
 			mov r0,#sptSpdXOffs	

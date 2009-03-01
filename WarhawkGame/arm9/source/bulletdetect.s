@@ -40,6 +40,7 @@
 	.global detectBGR
 	.global detectALN
 	.global alienCollideCheck
+	.global drawShard
 	
 @-------------- DETECT Left BULLET
 detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A BASE
@@ -361,7 +362,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	movne r7,#1					@ else, just the normal 1
 	
 	
-	mov r3,#63					@ Alien index (sprites 17 - 80 = 64)
+	mov r3,#111					@ Alien index (sprites 17 - 80 = 64)
 
 	detectAlienLoop:
 		ldr r4,=spriteActive+68		@ add 68 (17*4) for start of aliens
@@ -369,9 +370,11 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		ldr r5,[r4]
 		cmp r5,#0
 		beq detectNoAlien
+		cmp r5,#128
+		beq bossDetect
 		cmp r5,#4
 		bpl detectNoAlien
-		
+		bossDetect:
 		@ Found an ALIEN!!
 			@ Do checks
 			mov r8,#sptXOffs
@@ -401,8 +404,11 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				mov r6,#788
 				str r8, [r8,r0, lsl #2]				
 				
-				
-				
+				cmp r5,#128
+				bne standardAlienHit
+					bl bossIsShot			@ it is the Boss!!!
+				b detectNoAlien
+				standardAlienHit:
 				@ ok, now we need to see how many hits to kill
 				mov r8,#sptHitsOffs
 				ldr r6,[r4,r8]
@@ -568,12 +574,18 @@ alienCollideCheck:
 				movmi r7,#0						@ if less than 0 make 0
 				str r7,[r6]
 				
-				ldr r6,=sptHitsOffs				@ get alien hit points
-				ldr r7,[r1,r6]
-				subs r7,#1						@ take one off
-				str r7,[r1,r6]
-				cmp r7,#0						@ if alien dead?
-				bmi acDestroy					@ yes!, DESTROY it
+				mov r6,#sptIdentOffs
+				ldr r7,[r1, r6]
+				cmp r7,#128
+				beq missForBoss
+				
+					ldr r6,=sptHitsOffs				@ get alien hit points
+					ldr r7,[r1,r6]
+					subs r7,#1						@ take one off
+					str r7,[r1,r6]
+					cmp r7,#0						@ if alien dead?
+					bmi acDestroy					@ yes!, DESTROY it
+				missForBoss:
 				
 					bl playShipArmourHit1Sound		@ activate sound for YOUR ship hitting alien!
 					mov r6,#sptIdentOffs
@@ -586,7 +598,7 @@ alienCollideCheck:
 					beq alienSingleBloom
 						@ ok, for this ident, we need to flash all matching
 					
-						mov r8,#63
+						mov r8,#111
 						ldr r6,=spriteIdent+68
 						alienBloomLoop:
 							ldr r3,[r6,r8,lsl #2]

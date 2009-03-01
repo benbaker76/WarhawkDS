@@ -19,10 +19,6 @@
 @ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@
-@ Release V0.50
-@
-@ ps. you can kill trackers by swinging them off the bottom of the screen!
 
 #include "warhawk.h"
 #include "system.h"

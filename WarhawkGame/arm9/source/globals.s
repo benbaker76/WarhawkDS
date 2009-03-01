@@ -33,6 +33,9 @@
 	.data
 	
 	.global bossMan
+	.global bossX
+	.global bossY
+	.global bossHits
 	.global pixelOffsetMain
 	.global pixelOffsetSub
 	.global pixelOffsetSFMain
@@ -115,6 +118,13 @@
 	.global spriteIdent
 	.global spriteFireSpeed
 	
+bossX:
+	.word 0
+bossY:
+	.word 0
+bossHits:
+	.word 0
+
 	
 mineDelay:
 	.word 0

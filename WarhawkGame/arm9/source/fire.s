@@ -167,14 +167,14 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		bmi fireNormal				@ "POWERSHOT"
 			ldr r3,=spriteY
 			ldr r2,[r3]					@ our ships y coord
-			add r2,#8					@ Move it down a little
+			add r2,#2					@ Move it down a little
 			ldr r1,=spriteY+4			@ store the result in bullets y
 			str r2,[r1,r0, lsl #2]		@ done
 
 
 			ldr r1, =spriteSpeedY
 			add r1,#4
-			mov r2,#6					@ set the bullets speed!
+			mov r2,#5					@ set the bullets speed!
 			str r2,[r1,r0, lsl #2]	
 			mov r2,#4					@ set r2 to our bullet image
 			ldr r1, =spriteObj

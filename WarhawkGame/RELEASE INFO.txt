@@ -4,6 +4,7 @@
 v0.50 - HK
 - Added energy -> energy bar display
 - Changed bg1 to be 256 colors & bg3 to be 16
+- Added interrupt code
 
 v0.49 - FLASH (tied revision to SVN)
 - Added code to compliment Shards with a quick bloom effect!

@@ -1,3 +1,24 @@
+@ Copyright (c) 2009 Proteus Developments / Headsoft
+@ 
+@ Permission is hereby granted, free of charge, to any person obtaining
+@ a copy of this software and associated documentation files (the
+@ "Software"), to deal in the Software without restriction, including
+@ without limitation the rights to use, copy, modify, merge, publish,
+@ distribute, sublicense, and/or sell copies of the Software, and to
+@ permit persons to whom the Software is furnished to do so, subject to
+@ the following conditions:
+@ 
+@ The above copyright notice and this permission notice shall be included
+@ in all copies or substantial portions of the Software.
+@ 
+@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+@ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 @
 @ Release V0.50
 @
@@ -14,6 +35,7 @@
 
 	.arm
 	.align
+	.text
 	.global initSystem
 	.global main
 	.global debugDigits
@@ -23,9 +45,16 @@ initSystem:
 	bx lr
 
 main:
-	@ setup actual game data
-	bl initData
+	bl irqInit								@ Initialize Interrupts
+		
+	ldr r0, =IRQ_VBLANK						@ VBLANK interrupt
+	ldr r1, =gameLoop						@ Function Address
+	bl irqSet								@ Set the interrupt
+	
+	bl initData								@ setup actual game data
+	
 	@ Setup the screens and the sprites	
+	
 bl waitforVblank	@ We need to set up a wipe here and clear it later / but for now, this will just make it CLEAN
 	bl initLevel
 	bl initVideo
@@ -62,6 +91,21 @@ bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
 @	str r1,[r0]
 	
 	bl clearBG0
+	
+	@ ---------------------------------------------
+	@ INTERRUPTS
+	@ ---------------------------------------------
+	
+	@ldr r0, =(IRQ_VBLANK | IRQ_HBLANK)		@ Interrupts
+	@bl irqEnable							@ Enable
+	
+@mainLoop:
+
+	@b mainLoop
+	
+	@ ---------------------------------------------
+	@ INTERRUPTS
+	@ ---------------------------------------------
 
 @----------------------------@	
 @ This is the MAIN game loop @
@@ -134,5 +178,7 @@ gameLoop:
 
 @------------------------------------------------------------------------------
 
+	.pool
+	.end
 
 

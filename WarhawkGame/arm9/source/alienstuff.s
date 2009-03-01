@@ -1,3 +1,24 @@
+@ Copyright (c) 2009 Proteus Developments / Headsoft
+@ 
+@ Permission is hereby granted, free of charge, to any person obtaining
+@ a copy of this software and associated documentation files (the
+@ "Software"), to deal in the Software without restriction, including
+@ without limitation the rights to use, copy, modify, merge, publish,
+@ distribute, sublicense, and/or sell copies of the Software, and to
+@ permit persons to whom the Software is furnished to do so, subject to
+@ the following conditions:
+@ 
+@ The above copyright notice and this permission notice shall be included
+@ in all copies or substantial portions of the Software.
+@ 
+@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+@ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 #include "warhawk.h"
 #include "system.h"
 #include "video.h"
@@ -717,7 +738,7 @@ initHunterMine:
 					str r1,[r3]				@ activate as activeSprite 2
 					mov r0,#sptXOffs
 						@ GENERATE A RANDOM NUMBER
-						ldr     ip, seedpointer
+						ldr     ip, =seedpointer
 						ldmia   ip, {r8, r9}
 						tst     r9, r9, lsr #1				@ to bit into carry
 						movs    r2, r8, rrx					@ 33-bit rotate right
@@ -792,7 +813,7 @@ initHunterMine:
 					str r1,[r3]				@ activate as activeSprite 3
 					mov r0,#sptXOffs
 						@ GENERATE A RANDOM NUMBER
-						ldr     ip, seedpointer
+						ldr     ip, =seedpointer
 						ldmia   ip, {r8, r9}
 						tst     r9, r9, lsr #1				@ to bit into carry
 						movs    r2, r8, rrx					@ 33-bit rotate right
@@ -967,6 +988,8 @@ moveHunter:
 		str r2,[r1]									@ kill that nasty hunter!! :)
 	mov r15,r14
 	
+	.data
+	.align
 	
 seedpointer: 
         .long    seed  
@@ -974,5 +997,5 @@ seed:
         .long    0x55555555 
         .long    0x55555555
 	
-	
-.end
+	.pool
+	.end

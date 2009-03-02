@@ -118,9 +118,17 @@
 	.global hunterCount
 	.global spriteIdent
 	.global spriteFireSpeed
+	.global animFrame
+	.global animDelay
 	
 fxMode:
 	.word 0
+
+animFrame:
+	.word 0
+animDelay:
+	.word 0
+
 	
 bossX:
 	.word 0

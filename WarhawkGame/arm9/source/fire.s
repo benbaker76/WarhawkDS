@@ -48,7 +48,7 @@ waitforFire:
 	
 		bl waitforVblank
 		bl scrollStars
-		bl waitforNoblank
+		bl waitforNoVblank
 	
 		ldr r1,=REG_KEYINPUT
 		ldr r2,[r1]
@@ -61,7 +61,7 @@ waitforFire:
 	
 		bl waitforVblank
 		bl scrollStars
-		bl waitforNoblank
+		bl waitforNoVblank
 	
 		ldr r1,=REG_KEYINPUT
 		ldr r2,[r1]

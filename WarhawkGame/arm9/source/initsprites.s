@@ -34,7 +34,8 @@
 	.global initSprites
 	
 initSprites:
-	stmfd sp!, {r0-r6, lr} 
+
+	stmfd sp!, {r0-r6, lr}
 
 	@ Load the palette into the palette subscreen area and main
 

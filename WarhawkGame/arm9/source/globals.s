@@ -31,7 +31,8 @@
 	.arm
 	.align
 	.data
-	
+
+	.global fxMode
 	.global bossMan
 	.global bossX
 	.global bossY
@@ -110,13 +111,16 @@
 	.global collideMap
 	.global energy
 	.global energyText
-	.global youDiedText
+	.global gameOverText
 	.global mineDelay
 	.global hunterDelay
 	.global mineCount
 	.global hunterCount
 	.global spriteIdent
 	.global spriteFireSpeed
+	
+fxMode:
+	.word 0
 	
 bossX:
 	.word 0
@@ -250,8 +254,8 @@ pixelOffsetText:
 	.string "pixeloff:\0"
 energyText:
 	.string "energy:\0"
-youDiedText:
-	.string "you have died,  tit!\0"
+gameOverText:
+	.string "GAME OVER!\0"
 	.section .bss
 
 spriteActive:

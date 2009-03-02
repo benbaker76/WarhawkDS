@@ -19,7 +19,6 @@
 @ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 #include "warhawk.h"
 #include "system.h"
 #include "video.h"
@@ -41,12 +40,7 @@ initSystem:
 	bx lr
 
 main:
-	bl irqInit								@ Initialize Interrupts
-		
-	ldr r0, =IRQ_VBLANK						@ VBLANK interrupt
-	ldr r1, =gameLoop						@ Function Address
-	bl irqSet								@ Set the interrupt
-	
+	bl gameStop
 	bl initData								@ setup actual game data
 	
 	@ Setup the screens and the sprites	
@@ -54,6 +48,7 @@ main:
 bl waitforVblank	@ We need to set up a wipe here and clear it later / but for now, this will just make it CLEAN
 	bl initLevel
 	bl initVideo
+	bl initInterruptHandler					@ initialize the interrupt handler
 	bl initSprites
 	bl initLevelSprites
 @	bl initLevel
@@ -78,8 +73,14 @@ bl waitforVblank	@ We need to set up a wipe here and clear it later / but for no
 	bl drawAllEnergyBars
 	@bl playInGameMusic
 	
-bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
-
+	@ Fade in
+	
+	@bl fxSpotlightIn
+	bl fxFadeIn
+	bl fxMosaicIn
+	@bl fxScanline
+	@bl fxWipeInLeft
+	@bl fxCrossWipe
 
 	bl waitforFire		@ wait for a short while to start game
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)
@@ -88,93 +89,15 @@ bl waitforNoblank	@ end of bit to make it clean / use wipe to game!
 	
 	bl clearBG0
 	
-	@ ---------------------------------------------
-	@ INTERRUPTS
-	@ ---------------------------------------------
+	bl gameStart
 	
-	@ldr r0, =(IRQ_VBLANK | IRQ_HBLANK)		@ Interrupts
-	@bl irqEnable							@ Enable
-	
-@mainLoop:
-
-	@b mainLoop
-	
-	@ ---------------------------------------------
-	@ INTERRUPTS
-	@ ---------------------------------------------
-
-@----------------------------@	
-@ This is the MAIN game loop @
-@----------------------------@
 gameLoop:
 
 	bl waitforVblank
-	@--------------------------------------------
-	@ this code is executed offscreen
-	@--------------------------------------------
-		
-		bl moveShip			@ check and move your ship
-		
-		bl moveBullets		@ check and then moves bullets
-		bl alienFireMove	@ check and move alien bullets
-		bl fireCheck		@ check for your wish to shoot!
-
-
-		bl drawScore		@ update the score with any changes
-		bl drawAllEnergyBars
-
-		
-		bl checkWave		@ check if time for another alien attack
-		bl moveAliens		@ move the aliens and detect colisions with you
-
-		bl initHunterMine	@ check if we should chuck another mine or hunter into the mix
-
-
-		bl scrollMain		@ Scroll Level Data
-		bl scrollSub		@ Main + Sub
-		bl levelDrift		@ update level with the horizontal drift
-		bl scrollStars		@ Scroll Stars (BG2,BG3)		
-		bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
-		bl checkBossInit	@ Check if we should set the offscreen boss up??
-		bl drawSprite		@ drawsprites and do update bloom effect
-
-@		bl drawDebugText	@ draw some numbers :)
-
-
-	ldr r10,=energy					@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	cmp r10,#0
-@	beq youDied
-	bl waitforNoblank
-	
-	@---------------------------------------------
-	@ this code is executed during refresh
-	@ this should give us a bit more time in vblank
-	@---------------------------------------------
-			
 
 	b gameLoop			@ our main loop
 	
-	@ we will end up with more code here for game over and death
-	@ also for return to title!
-	
-	
-	youDied:
-
-	bl drawAllEnergyBars	
-
-	ldr r0, =youDiedText			@ Load out text pointer
-	ldr r1, =6						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =1						@ Draw on main screen
-	bl drawText
-	
-	stopit:
-	b stopit
-
 @------------------------------------------------------------------------------
 
 	.pool
 	.end
-
-

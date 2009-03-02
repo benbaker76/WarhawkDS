@@ -147,10 +147,10 @@ dmaCopy:
 	ldr r4, =DMA_COPY_HALFWORDS			@ load mask
 	orr r4, r2, lsr #1					@ DMA_COPY_HALFWORDS | (size >> 1)
 	str r4, [r3]						@ store
-	@push {r0}
-	@ov r0, #3							@ r0 = #3
-	@bl dmaWait							@ wait on channel 3
-	@pop {r0}
+	push {r0}
+	mov r0, #3							@ r0 = #3
+	bl dmaWait							@ wait on channel 3
+	pop {r0}
 	
 	ldmfd sp!, {r3-r5, pc}				@ restore and return
 	
@@ -280,9 +280,6 @@ dmaFillWords:
 dmaFillHalfWords:
 	stmfd sp!, {r3-r5, lr}				@ save
 	
-	ldr r3, =DMA_CR(3)					@ load dma register
-	mov r4, #0							@ zero
-	str r4, [r3]						@ reset
 	ldr r3, =DMA_FILL(3)				@ fill register
 	str r0, [r3]						@ store value
 	ldr r3, =DMA_SRC(3)					@ source
@@ -340,3 +337,4 @@ dmaBusy:
 
 	.pool
 	.end
+

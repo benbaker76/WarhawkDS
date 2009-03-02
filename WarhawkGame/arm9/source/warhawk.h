@@ -40,6 +40,28 @@
 
 #define SPRITE_PRIORITY				1
 
+@ Game modes
+
+#define GAMEMODE_STOPPED			0
+#define GAMEMODE_RUNNING			1
+
+@ FX defines. These are bits so we can have multiple fx at once
+
+#define FX_STOP						0
+#define FX_SINE_WOBBLE				BIT(0)
+#define FX_FADE_IN					BIT(1)
+#define FX_FADE_OUT					BIT(2)
+#define FX_MOSAIC_IN				BIT(3)
+#define FX_MOSAIC_OUT				BIT(4)
+#define FX_SPOTLIGHT_IN				BIT(5)
+#define FX_SPOTLIGHT_OUT			BIT(6)
+#define FX_SCANLINE					BIT(7)
+#define FX_WIPE_IN_LEFT				BIT(8)
+#define FX_WIPE_IN_RIGHT			BIT(9)
+#define FX_WIPE_OUT_UP				BIT(10)
+#define FX_WIPE_OUT_DOWN			BIT(11)
+#define FX_CROSSWIPE				BIT(12)
+
 @ We should be #includeing the generated headers for these values
 @ But it will error out because there is some "C" code
 @ We should ask the author of grit to add an option to output pure asm headers

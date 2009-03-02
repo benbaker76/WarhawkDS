@@ -112,11 +112,11 @@ drawGetReadyText:
 	ldr r3, =0						@ Draw on main screen
 	bl drawText
 	
-@	ldr r0, =getReadyText			@ Load out text pointer
-@	ldr r1, =11						@ x pos
-@	ldr r2, =10						@ y pos
-@	ldr r3, =1						@ Draw on sub screen
-@	bl drawText
+	ldr r0, =getReadyText			@ Load out text pointer
+	ldr r1, =11						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =1						@ Draw on sub screen
+	bl drawText
 	
 	ldmfd sp!, {r0-r3, pc}
 

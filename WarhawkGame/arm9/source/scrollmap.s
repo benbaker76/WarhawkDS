@@ -374,6 +374,8 @@ checkEndOfLevel:
 			ldr r0, =levelEnd
 			mov r1, #1
 			strb r1, [r0]
+			
+			bl fxSineWobbleOn				@ Start our wobble effect
 	levelPlay:
 	
 	ldmfd sp!, {r0-r6, pc}

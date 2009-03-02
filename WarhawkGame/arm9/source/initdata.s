@@ -37,9 +37,9 @@ initData:
 	@ use this to init data for the start of the game
 	stmfd sp!, {r0-r1, lr}
 
-	ldr r1,=level
-	mov r0,#11
-	str r0,[r1]
+	ldr r0,=level
+	mov r1,#1
+	str r1,[r0]
 
 	ldmfd sp!, {r0-r1, pc}
 	

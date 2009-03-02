@@ -69,12 +69,12 @@ initLevel:
 
 
 
-	mov r1,#32
 	ldr r0,=horizDrift
+	mov r1,#32
 	strb r1,[r0]			@ Drift on levels horizontal - centre to start level
 	
-	mov r1,#71
 	ldr r0,=energy
+	mov r1,#71
 	str r1,[r0]				@ set energy to full
 	
 	

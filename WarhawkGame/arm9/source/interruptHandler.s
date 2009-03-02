@@ -118,6 +118,7 @@ interruptHandlerVBlank:
 	bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
 	bl checkBossInit	@ Check if we should set the offscreen boss up??
 	bl drawSprite		@ drawsprites and do update bloom effect
+	bl animateAliens
 	
 @	bl drawDebugText	@ draw some numbers :)
 	

@@ -245,7 +245,7 @@ alienDescript:
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @33	-	Mine shot bullet tester
-	.word 200,400,1,1024,0,42,20,0x320D							@ inits	- bullet 10100 00010101
+	.word 200,400,1,1024,0,37,20,0x320D							@ inits	- bullet 10100 00010101
 	.word 3,60,7,120,3,60,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @34	-	 4 sprite alien with double ripple shot

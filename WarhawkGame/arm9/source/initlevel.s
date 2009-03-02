@@ -47,6 +47,8 @@ initLevel:
 	str r1,[r0]				@ make sure we always start at wave 0
 	ldr r0,=bossMan
 	str r1,[r0]				@ turn the Boss attack Off!!
+	ldr r0,=animFrame		
+	str r1,[r0]				@ reset anim frames
 
 	ldr r0,=firePress
 	str r1,[r0]
@@ -76,6 +78,10 @@ initLevel:
 	ldr r0,=energy
 	mov r1,#71
 	str r1,[r0]				@ set energy to full
+	
+	ldr r0,=animDelay
+	mov r1,#3
+	str r1,[r0]				@ set the anim to start on first call
 	
 	
 	ldr r8,=level

@@ -34,6 +34,7 @@
 	.global checkWave
 	.global moveAliens
 	.global initHunterMine
+	.global animateAliens
 
 checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	stmfd sp!, {r0-r4, lr}
@@ -988,6 +989,38 @@ moveHunter:
 		str r2,[r1]									@ kill that nasty hunter!! :)
 	mov r15,r14
 	
+animateAliens:
+stmfd sp!, {r0, lr}
+	ldr r0,=animDelay
+	ldr r1,[r0]
+	add r1,#1
+	cmp r1,#4
+	moveq r1,#0
+	str r1,[r0]
+	bne animateAliensDelay
+		ldr r0,=animFrame
+		ldr r1,[r0]
+		add r1,#1
+		cmp r1,#8
+		moveq r1,#0
+		str r1,[r0]
+
+		ldr r0, =SpritesAnimTiles
+		mov r2,#5*512
+		mul r2,r1				
+		add r0,r2				
+		ldr r1,=SPRITE_GFX
+		add r1,#512*37
+		mov r2,#512*5
+		ldr r1,=SPRITE_GFX_SUB
+		add r1,#512*37
+		bl dmaCopy
+		
+	animateAliensDelay:
+ldmfd sp!, {r0, pc}
+	
+	
+
 	.data
 	.align
 	

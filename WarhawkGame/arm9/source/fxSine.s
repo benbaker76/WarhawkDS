@@ -91,7 +91,7 @@ fxSineWobbleHBlank:
 	
 	mov r6,r9
 	add r6, #1						@ Add one to the count
-	cmp r6, #256					@ Have we reached the end of the sin table?
+	cmp r6, #192					@ Have we reached the end of the sin table?
 	moveq r6, #0					@ Yes so reset
 	strb r6, [r5]					@ Write it back to our sineOffset
 	

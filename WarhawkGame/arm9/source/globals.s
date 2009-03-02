@@ -120,7 +120,16 @@
 	.global spriteFireSpeed
 	.global animFrame
 	.global animDelay
+	.global bossXSpeed
+	.global bossXDelay
+	.global bossXDir
 	
+bossXSpeed:
+	.word 0
+bossXDelay:
+	.word 0
+bossXDir:
+	.word 0	
 fxMode:
 	.word 0
 

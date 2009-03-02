@@ -130,7 +130,6 @@ checkBossInit:
 			ldr r0,=bossMan
 			mov r1,#2
 			str r1,[r0]
-		@	b checkBossInitFail	
 		bossStillScroll:
 		ldr r0,=bossY
 		ldr r1,[r0]
@@ -235,22 +234,62 @@ bossIsDead:
 bossAttack:
 	stmfd sp!, {r0-r8, lr}
 
-
 	@ Boss attack code goes in here - somehow!!
 	@ BUGGER ME!! Here we need to move the boss and take care of its firing needs
 	@ What joy, what fun, what?
 	@ whatever data we need to use must be set in bossInit
 
+	ldr r4,=bossXDir
+	ldr r0,[r4]					@ r0/r4 0=left / 1=right
+	ldr r6,=bossX
+	ldr r3,[r6]					@ r3/r6 boss X
+	ldr r1,=bossXSpeed
+	ldr r2,[r1]	
 
+	
+	ldr r1,=bossXDelay
+	ldr r7,[r1]
+	add r7,#1
+	cmp r7,#8
 
-
-
-
-
-
-
-
-
+	moveq r7,#0
+	str r7,[r1]
+	beq bossMoveLR
+	b noBossUpdate
+	
+	
+	bossMoveLR:
+	cmp r0,#0
+	bne bossRight
+		@ move left
+		ldr r1,=bossXSpeed
+		ldr r2,[r1]				@ r2 = current X speed
+		subs r2,#1
+		cmp r2,#-4
+		movmi r2,#-4
+		str r2,[r1]
+		cmp r3,#180-48			@ the compare should be (180-32)-maxBossXspeed*2 (ish)
+		movmi r0,#1
+		b noBossUpdate
+	
+	bossRight:
+		@ move right
+		ldr r1,=bossXSpeed
+		ldr r2,[r1]				@ r2 = current X speed
+		adds r2,#1
+		cmp r2,#4
+		movpl r2,#4
+		str r2,[r1]
+		cmp r3,#180+48		
+		movpl r0,#0
+	
+	noBossUpdate:
+	
+	str r0,[r4]
+	adds r3,r2
+	str r3,[r6]
+	
+	@------------- FROM HERE WE NEED TO DO SHOTS AND ADD SOME Y CODE
 
 
 	

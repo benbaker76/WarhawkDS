@@ -110,7 +110,6 @@ interruptHandlerVBlank:
 
 	bl initHunterMine	@ check if we should chuck another mine or hunter into the mix
 
-
 	bl scrollMain		@ Scroll Level Data
 	bl scrollSub		@ Main + Sub
 	bl levelDrift		@ update level with the horizontal drift
@@ -184,7 +183,7 @@ checkGameOver:
 	ldr r1, [r0]
 	cmp r1, #0
 	bne checkGameOverDone
-	
+	beq checkGameOverDone
 	bl fxFadeOut
 	bl fxMosaicOut
 	

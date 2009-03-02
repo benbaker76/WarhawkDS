@@ -93,6 +93,9 @@ bl waitforVblank	@ We need to set up a wipe here and clear it later / but for no
 	
 gameLoop:
 
+
+
+
 	bl waitforVblank
 
 	b gameLoop			@ our main loop

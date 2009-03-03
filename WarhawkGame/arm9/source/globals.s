@@ -123,7 +123,29 @@
 	.global bossXSpeed
 	.global bossXDelay
 	.global bossXDir
+	.global bossFirePhase
+	.global bossFireDelay
+	.global bossMaxX
+	.global bossMaxY
+	.global bossTurn
+	.global bossFireMode
+	.global bossSpecial
+
+bossSpecial:
+	.word 0
+bossFireMode:
+	.word 0
+bossTurn:
+	.word 0
+bossMaxX:
+	.word 0
+bossMaxY:
+	.word 0
 	
+bossFireDelay:
+	.word 0
+bossFirePhase:
+	.word 0
 bossXSpeed:
 	.word 0
 bossXDelay:

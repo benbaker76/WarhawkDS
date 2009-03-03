@@ -75,7 +75,6 @@ drawSprite:
 		mov r1,#0
 		str r1,[r0,r8,lsl#2]
 		
-		
 		mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
 		ldr r0,=BUF_ATTRIBUTE0			@ if does not for some reason???
 		add r0,r8, lsl #3
@@ -193,13 +192,7 @@ drawSprite:
 		b sprites_Done
 	
 	spriteY_Main_Done:
-	
-	
-@ HK HK HK -	This should only disable sprites on the sub screen - it doesnt????
-@		mov r1, #ATTR0_DISABLED
-@		ldr r0,=BUF_ATTRIBUTE0_SUB
-@		str r1,[r0, r8, lsl#3]	
-@ HK HK HK -
+
 		@ Draw sprite to MAIN
 		ldr r0,=BUF_ATTRIBUTE0
 		add r0,r8, lsl #3
@@ -269,9 +262,6 @@ drawSprite:
 			cmp r1,#22							@ are we at the end frame?
 			bne noMoreStuff
 				noMoreBase:
-@				ldr r0,=spriteActive
-@				mov r1,#0						@ kill sprite (next update)
-@				str r1,[r0,r8,lsl #2]
 				ldr r0,=spriteY
 				mov r1,#788
 				str r1,[r0,r8,lsl #2]
@@ -282,7 +272,6 @@ drawSprite:
 			
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
-@			add r1,#1							@ add 1 and store back
 			str r1,[r0,r8,lsl #2]
 			cmp r1,#768
 			bpl noMoreAlien
@@ -301,9 +290,6 @@ drawSprite:
 			cmp r1,#13							@ are we at the end frame?
 			bne noMoreStuff
 				noMoreAlien:
-@				ldr r0,=spriteActive
-@				mov r1,#0						@ kill sprite (next update)
-@				str r1,[r0,r8,lsl #2]	
 				ldr r0,=spriteY
 				mov r1,#788
 				str r1,[r0,r8,lsl #2]
@@ -335,9 +321,6 @@ drawSprite:
 			cmp r1,#26							@ are we at the end frame?
 			bne noMoreStuff
 				noMoreShard:
-@				ldr r0,=spriteActive
-@				mov r1,#0						@ kill sprite (next update)
-@				str r1,[r0,r8,lsl #2]	
 				ldr r0,=spriteY
 				mov r1,#788
 				str r1,[r0,r8,lsl #2]

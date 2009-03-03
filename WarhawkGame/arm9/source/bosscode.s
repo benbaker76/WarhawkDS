@@ -43,19 +43,33 @@ checkBossInit:
 	@ Perhaps levelend will tell us when to move him???
 	@ not sure?
 	@ we will use bossMan as a flag to say that he is HERE!!!
-	@ 0= no, 1=yes, but not ready to move, 2=attack time
+	@ 0= no (but check scroll)
+	@ 1=yes, but not ready to move (so move with scroller)
+	@ 2=attack time (scroller stopped so off we go)
+	@ 3=boss is DEAD = EXPLODE
+	@ 4=EXPLODE done, end level!!
+	
 	ldr r0,=bossMan
 	ldr r0,[r0]
+	cmp r0,#0
+	beq bossInit
 	cmp r0,#1
 	beq bossActiveScroll		@ Use this to scroll the Boss with the bg1
 	cmp r0,#2
-	bne bossInit
+	bne bossDeadCheck
 		bl bossAttack			@ if he is active, let "bossAttack" do the work
 		b checkBossInitFail
+	bossDeadCheck:
+	cmp r0,#3
+	bne checkBossInitFail
+		bl bossIsDead
+		b checkBossInitFail	
+		
 	bossInit:
 	ldr r0,=yposSub
 	ldr r0,[r0]
-	cmp r0,#352					@ scroll pos to init BOSS
+@	cmp r0,#352					@ scroll pos to init BOSS
+cmp r0,#3744
 	bne checkBossInitFail		@ not time yet :(
 		@ here we need to lay all the sprites and data out for the boss
 		
@@ -105,18 +119,51 @@ checkBossInit:
 		bne bossSpriteLoop
 		ldr r1,=bossX					@ set X coord
 		mov r0,#144+32
-		ldr r2,=horizDrift
-		ldr r2,[r2]
-	@	add r0,r2
 		str r0,[r1]
 		ldr r1,=bossY					@ set y coord
 		mov r0,#288-42
+add r0,#150				@------------------ TESTING
 		str r0,[r1]
-		ldr r1,=bossHits				@ set hits to kill
-		mov r0,#256
-		str r0,[r1]
+		@ now we need to read the bossInitLev data based on the level
+		@ and set the variables accordingly		
+		ldr r0,=level
+		ldr r0,[r0]
+		sub r0,#1						@ make level 0-15
+		ldr r1,=bossInitLev
+		add r1, r0, lsl #5				@ add level * 32 (bytes)
+		ldr r0,[r1]						@ load "max X speed"
+		ldr r2,=bossMaxX
+		str r0,[r2]	
+		add r1,#4
+		ldr r0,[r1]						@ load "max y speed"
+		ldr r2,=bossMaxY
+		str r0,[r2]
+		add r1,#4
+		ldr r0,[r1]						@ load "boss turn speed"
+		ldr r2,=bossTurn
+		str r0,[r2]
+		add r1,#4
+		ldr r0,[r1]
+		ldr r2,=bossHits				@ set hits to kill
+		str r0,[r2]
+		add r1,#4
+		ldr r0,[r1]
+		ldr r2,=bossFireMode			@ store mode, 0=normal/1=twin fire
+		str r0,[r2]
+		add r1,#4
+		ldr r0,[r1]
+		ldr r2,=bossSpecial				@ store "SPECIAL" no idea yet!!
+		str r0,[r2]
+
+		mov r0,#0
+		ldr r1,=bossFirePhase
+		str r0,[r1]						@ reset shot phase
+		ldr r1,=bossFireDelay
+		str r0,[r1]						@ reset fire delay
+		
 		
 		bl bossDraw
+
 	
 	ldmfd sp!, {r1-r2, pc}
 	bossActiveScroll:
@@ -130,6 +177,7 @@ checkBossInit:
 			ldr r0,=bossMan
 			mov r1,#2
 			str r1,[r0]
+			bl fxFadeIn					@ need a FLASH to WHITE and back to NORMAL
 		bossStillScroll:
 		ldr r0,=bossY
 		ldr r1,[r0]
@@ -192,7 +240,12 @@ bossIsShot:
 		subs r6,r7
 		str r6,[r8]
 		cmp r6,#0
-		bmi bossIsDead
+		bpl bossIsOK
+			ldr r8,=bossMan
+			mov r6,#3
+			str r6,[r8]
+			ldmfd sp!, {r0-r8, pc}
+		bossIsOK:
 			@ make the boss "FLASH"
 			mov r7,#113
 			bossBloomLoop:
@@ -227,6 +280,13 @@ bossIsShot:
 @------------------ KILL THE BOSS
 bossIsDead:
 	stmfd sp!, {r0-r8, lr}
+	@ when boss is FULLY exploded, set bossMan=4 (signal level over)
+	
+	ldr r1,=bossMan
+	mov r0,#4				@ signal level END!!!!
+	str r0,[r1]
+	
+	bl fxFadeOut				@ Just for the HELL OF IT!!
 	
 	ldmfd sp!, {r0-r8, pc}
 
@@ -239,6 +299,16 @@ bossAttack:
 	@ What joy, what fun, what?
 	@ whatever data we need to use must be set in bossInit
 
+	@ we need to calulate limits based on max X speed?
+	@ amd use r8 = left limit. r9 = right limit
+	
+	@ must look into a way to calculate this???
+	
+	mov r8,#191-48
+	mov r9,#191+16
+
+	
+
 	ldr r4,=bossXDir
 	ldr r0,[r4]					@ r0/r4 0=left / 1=right
 	ldr r6,=bossX
@@ -247,42 +317,50 @@ bossAttack:
 	ldr r2,[r1]	
 
 	
+
+	ldr r1,=bossTurn
+	ldr r5,[r1]
+
+	
 	ldr r1,=bossXDelay
 	ldr r7,[r1]
 	add r7,#1
-	cmp r7,#8
-
+	cmp r7,r5
 	moveq r7,#0
 	str r7,[r1]
 	beq bossMoveLR
 	b noBossUpdate
-	
-	
+	@------ BOSS LEFT/RIGHT UPDATE
 	bossMoveLR:
 	cmp r0,#0
 	bne bossRight
 		@ move left
+		ldr r5,=bossMaxX
+		ldr r5,[r5]
+		rsb r5,r5,#0
 		ldr r1,=bossXSpeed
 		ldr r2,[r1]				@ r2 = current X speed
 		subs r2,#1
-		cmp r2,#-4
-		movmi r2,#-4
+		cmp r2,r5
+		movmi r2,r5
 		str r2,[r1]
-		cmp r3,#180-48			@ the compare should be (180-32)-maxBossXspeed*2 (ish)
+		cmp r3,r8			@ the compare should be (180-32)-maxBossXspeed*2 (ish)
 		movmi r0,#1
 		b noBossUpdate
 	
 	bossRight:
 		@ move right
+		ldr r5,=bossMaxX
+		ldr r5,[r5]
 		ldr r1,=bossXSpeed
 		ldr r2,[r1]				@ r2 = current X speed
 		adds r2,#1
-		cmp r2,#4
-		movpl r2,#4
+		cmp r2,r5
+		movpl r2,r5
 		str r2,[r1]
-		cmp r3,#180+48		
+		cmp r3,r9		
 		movpl r0,#0
-	
+	@-------- END OF BOSS MOVE
 	noBossUpdate:
 	
 	str r0,[r4]
@@ -292,12 +370,159 @@ bossAttack:
 	@------------- FROM HERE WE NEED TO DO SHOTS AND ADD SOME Y CODE
 
 
+	bl bossFire					@ do our fire checks, and shoot if needed
 	
-	bl bossDraw
+	bl bossDraw					@ redraw our boss
+	
 	ldmfd sp!, {r0-r8, pc}
+	
+@------------ OUR BOSSES FIRE CODE COMES IN HERE
+bossFire:
+	stmfd sp!, {r0-r8, lr}
+	@ First, check if the fire delay is 0
+	@ then grab fire type and set fire delay
+	@ add to fire phase also
+	ldr r1,=bossFireDelay
+	ldr r0,[r1]					@ grab fire delay
+	subs r0,#1					@ take 1 off
+	bmi boss2Fire				@ if <0, time to fire
+		str r0,[r1]
+		ldmfd sp!, {r0-r8, pc}
+	boss2Fire:					@ init a new bullet and reset delay
+	@ we will use 2 pieces of code here for speed!!
+	@ one for single shot and one for twin
 
+		ldr r1,=level
+		ldr r1,[r1]					@ r1 = level number
+		sub r1,#1					@ level is 1-16, we need 0-15
+		ldr r2,=bossFireLev			@ r2 = location base of fire pattern data
+		add r2,r1, lsl #8			@ add level*256 bytes
+		ldr r1,=bossFirePhase
+		ldr r1,[r1]					@ r1 = shot phase (0-31)
+		lsl r1,#3					@ phase * 8 (data in 2 word pairs = 8 bytes)
+		add r2,r1					@ r2 now points to speed/type
+		ldr r4,[r2]					@ r4 = speed and type	
+		ldr r7,=0xFFFF				@ isolate lower 16 bits (type)
+		and r3,r4,r7				@ r3 = type
+		cmp r3,#0
+		beq bossNotFired
+	
+	ldr r5,=bossFireMode
+	ldr r5,[r5]
+	cmp r5,#0
+	bne tryBossFire1
+		@------------ SINGLE SHOT -------------
+		ldr r1,=spriteActive		@ grab a bullet gen base
+		add r1,#127*4				@ use the last sprite (127)
+	
+		ldr r4,[r2]					@ grab speed/type
+		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
+		and r4,r7					@ r4= speed
+		lsr r4,#16					@ shunt them down :)
+		ldr r5,=sptFireSpdOffs		@ load Speed offset
+		str r4,[r1,r5]				@ and store it in the bullet define
 
+		mov r5,#0
+		str r5,[r8]  				@ clear "sprite active" value
+		ldr r5,=bossX
+		ldr r5,[r5]
+		add r5,#32
+		mov r4,#sptXOffs
+		str r5,[r1,r4]				@ store bullets X
+		ldr r5,=bossY
+		ldr r5,[r5]
+		add r5,#66
+		mov r4,#sptYOffs			@ store bullets y
+		str r5,[r1,r4]	
+		bl alienFireInit			@ init bullet (there is something else we need?)
+		mov r5,#788
+		mov r4,#sptXOffs
+		str r5,[r1,r4]
+		mov r4,#sptYOffs
+		str r5,[r1,r4]
+		b bossFireDone
+	tryBossFire1:
+		@ ---------------- TWIN FIRE ---------------------
+		ldr r1,=spriteActive		@ grab a bullet gen base
+		add r1,#127*4				@ use the last sprite (127)
 
+		ldr r4,[r2]					@ grab speed/type
+		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
+		and r4,r7					@ r4= speed
+		lsr r4,#16					@ shunt them down :)
+		ldr r5,=sptFireSpdOffs		@ load Speed offset
+		str r4,[r1,r5]				@ and store it in the bullet define
+
+		mov r5,#0
+		str r5,[r8]  				@ clear "sprite active" value
+		ldr r5,=bossX
+		ldr r5,[r5]
+		add r5,#12					@ left bullet
+		mov r4,#sptXOffs
+		str r5,[r1,r4]				@ store bullets X
+		ldr r5,=bossY
+		ldr r5,[r5]
+		add r5,#66
+		mov r4,#sptYOffs			@ store bullets y
+		str r5,[r1,r4]	
+		bl alienFireInit			@ init bullet (there is something else we need?)
+
+		@ for second bullet, if the type is "phased", then make the right alternate
+		cmp r3,#15
+		moveq r3,#16
+
+		ldr r5,=bossX
+		ldr r5,[r5]
+		add r5,#12+32				@ left bullet
+		mov r4,#sptXOffs
+		str r5,[r1,r4]				@ store bullets X
+		ldr r5,=bossY
+		ldr r5,[r5]
+		add r5,#66
+		mov r4,#sptYOffs			@ store bullets y
+		str r5,[r1,r4]	
+		bl alienFireInit			@ init bullet (there is something else we need?)
+		
+		mov r5,#788
+		mov r4,#sptXOffs
+		str r5,[r1,r4]
+		mov r4,#sptYOffs
+		str r5,[r1,r4]
+
+	bossFireDone:
+	@ now we need to grab and store the bullets delay value
+	add r2,#4					@ move to next word pointed to by r2
+	ldr r3,[r2]					@ r1 = delay value
+	ldr r0,=bossFireDelay
+	str r3,[r0]
+	bossNotFired:
+	@ add to the phase (if past 31, reset to 0)
+	ldr r3,=bossFirePhase
+	ldr r0,[r3]
+	add r0,#1
+	cmp r0,#32
+	moveq r0,#0
+	str r0,[r3]
+
+	ldr r1,=level
+	ldr r1,[r1]					@ r1 = level number
+	sub r1,#1					@ level is 1-16, we need 0-15
+	ldr r2,=bossFireLev			@ r2 = location base of fire pattern data
+	add r2,r1, lsl #8			@ add level*256 bytes
+	ldr r1,=bossFirePhase
+	ldr r1,[r1]					@ r1 = shot phase (0-31)
+	lsl r1,#3					@ phase * 8 (data in 2 word pairs = 8 bytes)
+	add r2,r1					@ r2 now points to speed/type
+	
+	ldr r4,[r2]					@ r4 = speed and type
+								@ we need to split these up and store!	
+	cmp r4,#0
+	bne bossNoNeedReset
+		ldr r1,=bossFirePhase
+		mov r0,#0
+		str r0,[r1]
+	bossNoNeedReset:
+	
+	ldmfd sp!, {r0-r8, pc}
 	.pool
 	.end
-

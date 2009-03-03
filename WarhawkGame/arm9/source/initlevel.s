@@ -84,6 +84,14 @@ initLevel:
 	str r1,[r0]				@ set the anim to start on first call
 	
 	
+	ldr r0,=levelEnd
+	mov r1,#1
+	str r1,[r0]
+	ldr r0,=bossMan
+@	str r1,[r0]
+	
+	
+	
 	ldr r8,=level
 	ldr r8,[r8]
 	cmp r8,#1

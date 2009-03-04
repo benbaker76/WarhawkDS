@@ -296,7 +296,7 @@ initLevel:
 		
 	level11:
 	cmp r8,#11
-	bne levelDone
+	bne level12
 							@ Set level 11
 		ldr r0,=Level11Map
 		ldr r1,=LevelMap
@@ -311,6 +311,26 @@ initLevel:
 		str r0,[r1]	
 
 		ldr r0,=Level11Pal
+		ldr r1,=StarBack
+		str r0,[r1]
+
+	level12:
+	cmp r8,#12
+	bne levelDone
+							@ Set level 11
+		ldr r0,=Level12Map
+		ldr r1,=LevelMap
+		str r0,[r1]
+
+		ldr r0,=Level12Tiles
+		ldr r1,=LevelTiles
+		str r0,[r1]
+		
+		ldr r0,=colMap12
+		ldr r1,=collideMap
+		str r0,[r1]	
+
+		ldr r0,=Level12Pal
 		ldr r1,=StarBack
 		str r0,[r1]
 

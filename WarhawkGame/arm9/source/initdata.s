@@ -38,7 +38,7 @@ initData:
 	stmfd sp!, {r0-r1, lr}
 
 	ldr r0,=level
-	mov r1,#1
+	mov r1,#12
 	str r1,[r0]
 
 	ldmfd sp!, {r0-r1, pc}

@@ -1,5 +1,10 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
+
+v0.51 - HK
+- Added fade to white
+- Fixed sine wobble issue
+
 v0.51 - FLASH
 - Added end on level boss code
 - Added descripts to handle pulse fire and mixed fire modes

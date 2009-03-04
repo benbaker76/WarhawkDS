@@ -177,7 +177,7 @@ checkBossInit:
 			ldr r0,=bossMan
 			mov r1,#2
 			str r1,[r0]
-			bl fxFadeIn					@ need a FLASH to WHITE and back to NORMAL
+			bl fxFadeWhiteIn				@ need a FLASH to WHITE and back to NORMAL
 		bossStillScroll:
 		ldr r0,=bossY
 		ldr r1,[r0]
@@ -286,7 +286,7 @@ bossIsDead:
 	mov r0,#4				@ signal level END!!!!
 	str r0,[r1]
 	
-	bl fxFadeOut				@ Just for the HELL OF IT!!
+	bl fxFadeWhiteOut			@ Just for the HELL OF IT!!
 	
 	ldmfd sp!, {r0-r8, pc}
 

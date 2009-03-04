@@ -75,11 +75,12 @@ bl waitforVblank	@ We need to set up a wipe here and clear it later / but for no
 	@ Fade in
 	
 	@bl fxSpotlightIn
-	bl fxFadeIn
+	bl fxFadeBlackIn
 	bl fxMosaicIn
 	@bl fxScanline
 	@bl fxWipeInLeft
 	@bl fxCrossWipe
+	@bl fxSineWobbleOn
 
 	bl waitforFire		@ wait for a short while to start game
 	mov r1,#1			@ just for checking (though this would NEVER be active at level start)
@@ -93,9 +94,7 @@ bl waitforVblank	@ We need to set up a wipe here and clear it later / but for no
 gameLoop:
 
 
-
-
-	bl waitforVblank
+	bl swiWaitForVBlank
 
 	b gameLoop			@ our main loop
 	

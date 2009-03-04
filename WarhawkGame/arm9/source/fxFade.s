@@ -29,12 +29,16 @@
 	.arm
 	.align
 	.text
-	.global fxFadeIn
-	.global fxFadeOut
-	.global fxFadeInVBlank
-	.global fxFadeOutVBlank
+	.global fxFadeBlackIn
+	.global fxFadeBlackOut
+	.global fxFadeWhiteIn
+	.global fxFadeWhiteOut
+	.global fxFadeBlackInVBlank
+	.global fxFadeBlackOutVBlank
+	.global fxFadeWhiteInVBlank
+	.global fxFadeWhiteOutVBlank
 	
-fxFadeInit:
+fxFadeBlackInit:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -60,39 +64,93 @@ fxFadeInit:
 	
 	ldmfd sp!, {r0-r6, pc}
 	
-	@ ---------------------------------------
+fxFadeWhiteInit:
+
+	stmfd sp!, {r0-r6, lr}
 	
-fxFadeIn:
+	ldr r0, =BLEND_CR
+	ldr r1, =(BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_SRC_BG2 | BLEND_SRC_BG3 | BLEND_SRC_SPRITE | BLEND_FADE_WHITE);
+	str r1, [r0]
+	
+	ldr r0, =SUB_BLEND_CR
+	ldr r1, =(BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_SRC_BG2 | BLEND_SRC_BG3 | BLEND_SRC_SPRITE | BLEND_FADE_WHITE);
+	str r1, [r0]
+	
+	ldr r0, =BLEND_Y					@ Blend register
+	ldr r1, =16							@ Set to black
+	strh r1, [r0]						@ Write to BLEND_Y
+	
+	ldr r0, =SUB_BLEND_Y				@ Blend register
+	ldr r1, =16							@ Set to black
+	strh r1, [r0]						@ Write to BLEND_Y
+	
+	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+fxFadeBlackIn:
 
 	stmfd sp!, {r0-r6, lr}
 
-	bl fxFadeInit
+	bl fxFadeBlackInit
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_IN
+	orr r1, #FX_FADE_BLACK_IN
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
 	
-fxFadeOut:
+fxFadeBlackOut:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeInit
+	bl fxFadeBlackInit
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_OUT
+	orr r1, #FX_FADE_BLACK_OUT
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeWhiteIn:
+
+	stmfd sp!, {r0-r6, lr}
+
+	bl fxFadeWhiteInit
+	
+	ldr r0, =fxMode					@ lets set the fade effect
+	ldr r1, [r0]
+	orr r1, #FX_FADE_WHITE_IN
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeWhiteOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeWhiteInit
+	
+	ldr r0, =fxMode					@ lets set the fade effect
+	ldr r1, [r0]
+	orr r1, #FX_FADE_WHITE_OUT
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
 
-fxFadeInVBlank:
+fxFadeBlackInVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 
@@ -113,7 +171,7 @@ fxFadeInVBlank:
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #65							@ Is our fadeValue at 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_FADE_IN)			@ Yes turn off effect
+	andeq r3, #~(FX_FADE_BLACK_IN)		@ Yes turn off effect
 	str r1, [r0]						@ Write fadeValue back
 	str r3, [r2]						@ Write fxMode back
 	
@@ -121,7 +179,7 @@ fxFadeInVBlank:
 	
 	@ ---------------------------------------
 	
-fxFadeOutVBlank:
+fxFadeBlackOutVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 
@@ -141,7 +199,64 @@ fxFadeOutVBlank:
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #65							@ Is our fadeValue at 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_FADE_OUT)			@ Yes turn off effect
+	andeq r3, #~(FX_FADE_BLACK_OUT)		@ Yes turn off effect
+	str r1, [r0]						@ Write fadeValue back
+	str r3, [r2]						@ Write fxMode back
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+
+fxFadeWhiteInVBlank:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, [r0]
+	
+	ldr r3, =16							@ Subtract from 15 to reverse value
+	sub r4, r3, r1, lsr #2				@ Divide by 4 to make value 0-15
+	
+	ldr r2, =BLEND_Y					@ Blend register
+	strh r4, [r2]						@ Write to BLEND_Y
+	
+	ldr r2, =SUB_BLEND_Y				@ Blend register
+	strh r4, [r2]						@ Write to SUB_BLEND_Y
+	
+	ldr r2, =fxMode						@ Get fxMode address
+	ldr r3, [r2]						@ Get fxMode value
+	add r1, #1							@ Add 1 to pos
+	cmp r1, #65							@ Is our fadeValue at 64?
+	moveq r1, #0						@ Yes so reset pos
+	andeq r3, #~(FX_FADE_WHITE_IN)		@ Yes turn off effect
+	str r1, [r0]						@ Write fadeValue back
+	str r3, [r2]						@ Write fxMode back
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeWhiteOutVBlank:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, [r0]
+
+	mov r4, r1, lsr #2					@ Divide by 4 to make value 0-15
+	
+	ldr r2, =BLEND_Y					@ Blend register
+	strh r4, [r2]						@ Write to BLEND_Y
+	
+	ldr r2, =SUB_BLEND_Y				@ Blend register
+	strh r4, [r2]						@ Write to SUB_BLEND_Y
+	
+	ldr r2, =fxMode						@ Get fxMode address
+	ldr r3, [r2]						@ Get fxMode value
+	add r1, #1							@ Add 1 to pos
+	cmp r1, #65							@ Is our fadeValue at 64?
+	moveq r1, #0						@ Yes so reset pos
+	andeq r3, #~(FX_FADE_WHITE_OUT)		@ Yes turn off effect
 	str r1, [r0]						@ Write fadeValue back
 	str r3, [r2]						@ Write fxMode back
 	

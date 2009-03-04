@@ -65,10 +65,14 @@ interruptHandlerVBlank:
 	
 	cmp r0, #0
 	bleq interruptHandlerHBlank
-	tst r0, #FX_FADE_IN
-	blne fxFadeInVBlank
-	tst r0, #FX_FADE_OUT
-	blne fxFadeOutVBlank
+	tst r0, #FX_FADE_BLACK_IN
+	blne fxFadeBlackInVBlank
+	tst r0, #FX_FADE_BLACK_OUT
+	blne fxFadeBlackOutVBlank
+	tst r0, #FX_FADE_WHITE_IN
+	blne fxFadeWhiteInVBlank
+	tst r0, #FX_FADE_WHITE_OUT
+	blne fxFadeWhiteOutVBlank
 	tst r0, #FX_MOSAIC_IN
 	blne fxMosaicInVBlank
 	tst r0, #FX_MOSAIC_OUT
@@ -184,7 +188,7 @@ checkGameOver:
 	cmp r1, #0
 	bne checkGameOverDone
 	beq checkGameOverDone
-	bl fxFadeOut
+	bl fxFadeBlackOut
 	bl fxMosaicOut
 	
 	bl drawAllEnergyBars	

@@ -69,7 +69,7 @@ fxSineWobbleHBlank:
 	ldr r2, =REG_BG3HOFS_SUB		@ Horizontal scroll register offset
 	ldr r3, =REG_BG2HOFS			@ Horizontal scroll register offset
 	ldr r4, =REG_BG3HOFS			@ Horizontal scroll register offset
-	ldr r5, =sineOffset				@ Sine offset address
+	ldr r5, =REG_VCOUNT				@ Sine offset address
 	ldrb r6, [r5]					@ Sine offset
 	mov r9,r6
 	
@@ -93,7 +93,7 @@ fxSineWobbleHBlank:
 	add r6, #1						@ Add one to the count
 	cmp r6, #192					@ Have we reached the end of the sin table?
 	moveq r6, #0					@ Yes so reset
-	strb r6, [r5]					@ Write it back to our sineOffset
+	@strb r6, [r5]					@ Write it back to our sineOffset
 	
 	ldmfd sp!, {r0-r9, pc}
 	

@@ -1,5 +1,9 @@
 -= Warhawk Main Game Code =-
 -= Flash & HeadKaze  2009 =-
+v0.51 - FLASH
+- Added end on level boss code
+- Added descripts to handle pulse fire and mixed fire modes
+- Modified "shard" and bullet detect to hand boss detection
 
 v0.50 - HK
 - Added energy -> energy bar display

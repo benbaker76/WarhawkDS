@@ -85,10 +85,10 @@ initLevel:
 	
 	
 	ldr r0,=levelEnd
-	mov r1,#1
+	mov r1,#0				@ make 1 for TEST
 	str r1,[r0]
 	ldr r0,=bossMan
-@	str r1,[r0]
+	str r1,[r0]				@ comment out for boss test!!!!
 	
 	
 	

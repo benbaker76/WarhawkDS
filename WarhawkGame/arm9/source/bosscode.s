@@ -68,8 +68,8 @@ checkBossInit:
 	bossInit:
 	ldr r0,=yposSub
 	ldr r0,[r0]
-@	cmp r0,#352					@ scroll pos to init BOSS
-cmp r0,#3744
+	cmp r0,#352					@ scroll pos to init BOSS
+@cmp r0,#3744					@ COMMENT OUT LINE ABOVE AND ADD THIS FOR TEST!
 	bne checkBossInitFail		@ not time yet :(
 		@ here we need to lay all the sprites and data out for the boss
 		
@@ -122,7 +122,7 @@ cmp r0,#3744
 		str r0,[r1]
 		ldr r1,=bossY					@ set y coord
 		mov r0,#288-42
-add r0,#150				@------------------ TESTING
+@ add r0,#150				@------------------ TESTING
 		str r0,[r1]
 		@ now we need to read the bossInitLev data based on the level
 		@ and set the variables accordingly		

@@ -345,8 +345,9 @@
 		str r5,[r2,r6]					@ put it back
 		cmp r5,#768						@ check if off screen
 		bmi mineShotActive
-			mov r1,#0
-			str r1,[r2]
+			mov r1,#788
+			mov r6,#sptYOffs
+			str r6,[r2,r1]
 		mineShotActive:
 		
 	
@@ -391,12 +392,10 @@
 		@ we use sptTrackXOffs and sptTrackYOffs to restore delays
 		mov r6,#sptSpdDelayXOffs
 		ldr r5,[r2,r6]
-		cmp r5,#0
-		beq doDirectX
 		subs r5,#1
 		str r5,[r2,r6]
-		bge noDirectX
-			doDirectX:
+		cmp r5,#0
+		bgt noDirectX
 			mov r7,#sptTrackXOffs
 			ldr r5,[r2,r7]
 			str r5,[r2,r6]			@ reset delay
@@ -405,16 +404,13 @@
 			mov r8,#sptSpdXOffs
 			ldrsb r8,[r2,r8]		@ r8=X speed
 			adds r5,r8				@ add to X coord
-			str r5,[r2,r6]			@ store it back
+			str r5,[r2,r6]			@ store it back	
 		noDirectX:
 		mov r6,#sptSpdDelayYOffs
 		ldr r5,[r2,r6]
-		cmp r5,#0
-		beq doDirectY
 		subs r5,#1
 		str r5,[r2,r6]
-		bge noDirectY
-			doDirectY:
+		bgt noDirectY
 			mov r7,#sptTrackYOffs
 			ldr r5,[r2,r7]
 			str r5,[r2,r6]			@ reset delay

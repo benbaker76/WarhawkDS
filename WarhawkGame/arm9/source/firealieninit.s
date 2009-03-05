@@ -426,34 +426,37 @@
 				cmp r4,r6
 				ble directDL				@ if px<ax shooting Left
 					@ We are directing bullet to down/right
-					mov r8,#0
-					mov r9,#0
 					
-					sub r8,r4,r6			@ r8 = x diff
-					sub r9,r5,r7			@ r9 = y diff
-					cmp r9,r8
-								@ is r8>r9
-					subgt r8,r9,r8			@ make X delay	
-					movgt r9,#0				@ no y delay
-					bgt directDone			
-								@ is r8<r9
-					submi r9,r8,r9			@ make Y delay
-					movmi r8,#0				@ no y delay
-					bmi directDone
-								@ are they equal?
+					sub r8,r4,r6
+					sub r9,r5,r7
+					@ have problem with angles near the diagonal!!! :(
+					cmp r8,r9
+					bmi testnext
+						push {r0-r2}
+						mov r1,r8
+						mov r2,r9
+						bl divideNumber
+						mov r9,r0
+						mov r8,#0	
+							push {r0-r10}	
+							mov r10,r2					@ Read value
+							mov r8,#8						@ y pos
+							mov r9,#8						@ Number of digits
+							mov r11, #9						@ x pos
+							bl drawDigits					@ Draw	
+							pop {r0-r10}			
+						pop {r0-r2}
+					b directDone
+					testnext:
 					mov r8,#0
 					mov r9,#0
-
-					mov r10,#1
-					mov r11,#1
-					b directDone
 				directDL:
 				
-			directUP:
-					
+			directUP:		
 					
 		mov r8,#0
 		str r8,[r2]
+		mov r9,#0
 		b iDirectNo
 		directDone:
 		@
@@ -476,6 +479,21 @@
 		str r10,[r2,r0]
 		mov r0,#sptSpdYOffs
 		str r11,[r2,r0]
+	push {r8,r9}	
+	mov r10,r2					@ Read value
+	mov r8,#0						@ y pos
+	mov r9,#8						@ Number of digits
+	mov r11, #9						@ x pos
+	bl drawDigits					@ Draw	
+	pop {r8,r9}
+	mov r10,r9					@ Read value
+	mov r8,#2						@ y pos
+	mov r9,#8						@ Number of digits
+	mov r11, #9						@ x pos
+	bl drawDigits					@ Draw			
+		
+		
+		
 		iDirectNo:	
 		
 	ldmfd sp!, {r3, pc}

@@ -480,7 +480,7 @@
 		mov r0,#sptSpdYOffs
 		str r11,[r2,r0]
 	push {r8,r9}	
-	mov r10,r2					@ Read value
+	mov r10,r8					@ Read value
 	mov r8,#0						@ y pos
 	mov r9,#8						@ Number of digits
 	mov r11, #9						@ x pos

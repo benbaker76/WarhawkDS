@@ -37,6 +37,7 @@
 	.global	moveRippleShot
 	.global moveMineShot
 	.global moveRippleShotSingle
+	.global moveDirectShot
 
 @
 @	Every move in this code should also have a "init" function in firealieninit.s
@@ -377,6 +378,53 @@
 		ldr r8,[r2,r7]
 		add r5,r8						@ add y speed
 		str r5,[r2,r6]					@ put it back!
+		
+	ldmfd sp!, {r0-r10, pc}	
+
+@
+@ "MOVE" - "Direct Shot 17"				@ a shot that Shoots to a set coord (single bullet)
+	moveDirectShot:
+	stmfd sp!, {r0-r10, lr}
+		
+		@ first to the X move
+		@ check the delay (sub from the delay and if -N, reset and move)
+		@ we use sptTrackXOffs and sptTrackYOffs to restore delays
+		mov r6,#sptSpdDelayXOffs
+		ldr r5,[r2,r6]
+		cmp r5,#0
+		beq doDirectX
+		subs r5,#1
+		str r5,[r2,r6]
+		bge noDirectX
+			doDirectX:
+			mov r7,#sptTrackXOffs
+			ldr r5,[r2,r7]
+			str r5,[r2,r6]			@ reset delay
+			mov r6,#sptXOffs
+			ldr r5,[r2,r6]			@ r5=Xcoord
+			mov r8,#sptSpdXOffs
+			ldrsb r8,[r2,r8]		@ r8=X speed
+			adds r5,r8				@ add to X coord
+			str r5,[r2,r6]			@ store it back
+		noDirectX:
+		mov r6,#sptSpdDelayYOffs
+		ldr r5,[r2,r6]
+		cmp r5,#0
+		beq doDirectY
+		subs r5,#1
+		str r5,[r2,r6]
+		bge noDirectY
+			doDirectY:
+			mov r7,#sptTrackYOffs
+			ldr r5,[r2,r7]
+			str r5,[r2,r6]			@ reset delay
+			mov r6,#sptYOffs
+			ldr r5,[r2,r6]			@ r5=Xcoord
+			mov r8,#sptSpdYOffs
+			ldrsb r8,[r2,r8]		@ r8=X speed
+			adds r5,r8				@ add to X coord
+			str r5,[r2,r6]			@ store it back
+		noDirectY:
 		
 	ldmfd sp!, {r0-r10, pc}	
 

@@ -241,7 +241,7 @@ alienDescript:
 	.word 7,50,3,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @32	-	Ripple shot bullet tester
-	.word 250,451,0,1024,0,44,0x10014,0x320C							@ inits	- bullet 10100 00010101
+	.word 250,451,0,1024,0,44,0x10014,0x4811					@ inits	- bullet 10100 00010101
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @33	-	Mine shot bullet tester

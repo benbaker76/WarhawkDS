@@ -40,6 +40,7 @@
 	.global initTripleShot
 	.global initRippleShotPhase1
 	.global initRippleShotPhase2
+	.global initDirectShot
 
 @
 @	Every init in this code should also have a "move" function in firealienupdate.s
@@ -377,6 +378,108 @@
 			str r6,[r2,r0]	
 		iRippleph2No:	
 	ldmfd sp!, {r3, pc}
+
+@
+@ "INIT" - "Direct Shot 17"
+	initDirectShot:
+	stmfd sp!, {r3, lr}
+
+		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+		cmp r2,#255					@ 255=not found
+		beq iDirectNo				@ so, we cannot init a bullet :(
+		
+		
+			ldr r0,=spriteX
+			ldr r4,[r0]
+			ldr r0,=spriteY
+			ldr r5,[r0]
+			ldr r0,=horizDrift
+			ldr r6,[r0]
+			add r4,r6
+		
+			@ r1= offset for alien
+			@ r2= offset for bullet
+			mov r0,#sptXOffs		@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#sptYOffs
+			ldr r7,[r1,r0]			@ copy the aliens Y
+			str r7,[r2,r0]			@ paste it in our bullet y
+			mov r0,#sptFireTypeOffs
+			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#sptFireSpdOffs
+			ldr r12,[r1,r0]		@ copy the bullet speed
+			str r12,[r2,r0]		@ paste it in our bullet speed
+			mov r0,#sptObjOffs		
+			mov r8,#27				@ pick object 27
+			str r8,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r8,#8				@ an 8 sets the sprite active (visible)
+			str r8,[r2]				@ set ACTIVE (this will always be r2 with no offset)
+			
+			@ ok, now to work out where to shoot???
+			@ r4/r5 = player X/Y
+			@ r6/r7 = Alien X/Y
+			@ r12 = shot speed
+			
+			cmp r5,r7
+			ble directUP					@ if py<ay shoot upwards
+				cmp r4,r6
+				ble directDL				@ if px<ax shooting Left
+					@ We are directing bullet to down/right
+					mov r8,#0
+					mov r9,#0
+					
+					sub r8,r4,r6			@ r8 = x diff
+					sub r9,r5,r7			@ r9 = y diff
+					cmp r9,r8
+								@ is r8>r9
+					subgt r8,r9,r8			@ make X delay	
+					movgt r9,#0				@ no y delay
+					bgt directDone			
+								@ is r8<r9
+					submi r9,r8,r9			@ make Y delay
+					movmi r8,#0				@ no y delay
+					bmi directDone
+								@ are they equal?
+					mov r8,#0
+					mov r9,#0
+
+					mov r10,#1
+					mov r11,#1
+					b directDone
+				directDL:
+				
+			directUP:
+					
+					
+		mov r8,#0
+		str r8,[r2]
+		b iDirectNo
+		directDone:
+		@
+		@	store the calculated values!
+		@
+		@ first backup the delay values to trackx/tracky
+		mov r0,#sptTrackXOffs
+		str r8,[r2,r0]				@ store X delay
+		mov r0,#sptSpdDelayXOffs
+		str r8,[r2,r0]
+		mov r0,#sptTrackYOffs
+		str r9,[r2,r0]				@ store y delay
+		mov r0,#sptSpdDelayYOffs
+		str r9,[r2,r0]
+		
+	mov r10,#1
+	mov r11,#1
+		
+		mov r0,#sptSpdXOffs
+		str r10,[r2,r0]
+		mov r0,#sptSpdYOffs
+		str r11,[r2,r0]
+		iDirectNo:	
+		
+	ldmfd sp!, {r3, pc}
+
 
 	.pool
 	.end

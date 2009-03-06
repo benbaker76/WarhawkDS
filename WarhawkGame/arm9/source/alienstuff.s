@@ -753,13 +753,13 @@ initHunterMine:
 						and r9,r8,r2
 						add r8,r9,r9,lsl #1	@ divide 3
 						mov r8,r8,lsr #2		@ times 4
-					@	cmp r8,#384-32			@ but we really need 0-(319-32=288)
+					@	cmp r8,#SCREEN_SUB_TOP-32			@ but we really need 0-(319-32=288)
 					@	subpl r8,#32
 						@ this should make it 0-383
 
 					str r8,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#SPRITE_Y_OFFS
-					mov r1,#384-32			@ set y coord
+					mov r1,#SCREEN_SUB_TOP-32			@ set y coord
 					str r1,[r3,r0]
 					mov r0,#SPRITE_SPEED_Y_OFFS
 					mov r1,#3				@ set y speed (change based on LEVEL) (3 is good for early levels)
@@ -833,7 +833,7 @@ initHunterMine:
 			
 					str r8,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#SPRITE_Y_OFFS
-					mov r1,#384-32			@ set y coord
+					mov r1,#SCREEN_SUB_TOP-32			@ set y coord
 					str r1,[r3,r0]
 					mov r0,#SPRITE_SPEED_Y_OFFS
 					mov r1,#2				@ set y speed (change based on LEVEL) (2 is good for early levels)
@@ -873,7 +873,7 @@ moveMine:
 	
 	add r6,r5
 	str r6,[r1,r2]
-@	cmp r6,#768
+@	cmp r6,#SCREEN_MAIN_WHITESPACE
 @	bmi mineOnScreen
 @		mov r2,#0
 @		str r2,[r1]
@@ -904,7 +904,7 @@ moveHunter:
 			ldr r6,[r1,r2]							@ r6 = the mines Y coord
 			add r6,r5
 			str r6,[r1,r2]
-			cmp r6,#768
+			cmp r6,#SCREEN_MAIN_WHITESPACE
 			bpl hunterKill
 			cmp r6,r3								@ is the Hunter level with your Y?
 			bmi	hunterDone							@ if not, we are done
@@ -954,7 +954,7 @@ moveHunter:
 			ldr r6,[r1,r2]							@ r6 = the hunters X coord
 			add r6,r5
 			str r6,[r1,r2]
-			cmp r6,#384
+			cmp r6,#SCREEN_SUB_TOP
 			bpl hunterKill	
 			cmp r8,#4								@ if we are on level 1-3, no need to do more
 			bmi hunterDone
@@ -979,7 +979,7 @@ moveHunter:
 			ldr r6,[r1,r2]							@ r6 = the hunters X coord
 			sub r6,r5
 			str r6,[r1,r2]	
-			cmp r6,#384-32
+			cmp r6,#SCREEN_SUB_TOP-32
 			bmi hunterKill
 			
 		hunterDone:

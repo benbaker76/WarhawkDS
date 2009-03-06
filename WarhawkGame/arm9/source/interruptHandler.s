@@ -99,31 +99,31 @@ interruptHandlerVBlank:
 	cmp r1, #GAMEMODE_STOPPED
 	bleq interruptHandlerVBlankDone
 	
-	bl moveShip			@ check and move your ship
+	bl moveShip									@ check and move your ship
 	
-	bl moveBullets		@ check and then moves bullets
-	bl alienFireMove	@ check and move alien bullets
-	bl fireCheck		@ check for your wish to shoot!
+	bl moveBullets								@ check and then moves bullets
+	bl alienFireMove							@ check and move alien bullets
+	bl fireCheck								@ check for your wish to shoot!
 
-	bl drawScore		@ update the score with any changes
+	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars
 
 	
-	bl checkWave		@ check if time for another alien attack
-	bl moveAliens		@ move the aliens and detect colisions with you
+	bl checkWave								@ check if time for another alien attack
+	bl moveAliens								@ move the aliens and detect colisions with you
 
-	bl initHunterMine	@ check if we should chuck another mine or hunter into the mix
+	bl initHunterMine							@ check if we should chuck another mine or hunter into the mix
 
-	bl scrollMain		@ Scroll Level Data
-	bl scrollSub		@ Main + Sub
-	bl levelDrift		@ update level with the horizontal drift
-	bl scrollStars		@ Scroll Stars (BG2,BG3)		
-	bl checkEndOfLevel	@ Set Flag for end-of-level (use later to init BOSS)
-	bl checkBossInit	@ Check if we should set the offscreen boss up??
-	bl drawSprite		@ drawsprites and do update bloom effect
+	bl scrollMain								@ Scroll Level Data
+	bl scrollSub								@ Main + Sub
+	bl levelDrift								@ update level with the horizontal drift
+	bl scrollStars								@ Scroll Stars (BG2,BG3)		
+	bl checkEndOfLevel							@ Set Flag for end-of-level (use later to init BOSS)
+	bl checkBossInit							@ Check if we should set the offscreen boss up??
+	bl drawSprite								@ drawsprites and do update bloom effect
 	bl animateAliens
 	
-@	bl drawDebugText	@ draw some numbers :)
+	@bl drawDebugText							@ draw some numbers :)
 	
 	bl checkGameOver
 	

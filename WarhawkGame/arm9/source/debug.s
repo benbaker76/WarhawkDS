@@ -19,14 +19,11 @@
 @ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "warhawk.h"
 #include "system.h"
 #include "video.h"
 #include "background.h"
 #include "dma.h"
 #include "interrupts.h"
-#include "sprite.h"
-#include "ipc.h"
 
 	.arm
 	.align
@@ -34,6 +31,7 @@
 	.global flushCaches
 	.global breakPoint
 	.global drawDebugString
+	.global debugString
 	
 flushCaches:
 
@@ -61,7 +59,7 @@ drawDebugString:
 
 textLoop:
 
-	stmfd sp!, {r1-r2, lr}
+	stmfd sp!, {r1-r8, lr}
 	
 	ldrb r2, [r0], #1				@ Read the data and add one
 	strb r2, [r1], #1				@ Write to buffer and add one
@@ -71,7 +69,8 @@ textLoop:
 
 textDone:
 	bl drawDebugNo$
-	ldmfd sp!, {r1-r2, pc}
+	
+	ldmfd sp!, {r1-r8, pc}
 
 drawDebugNo$:
 	mov r12, r12					@ First ID 
@@ -85,7 +84,12 @@ Data:
 	.space 120						@ Data
 
 drawDebugNo$Done:
+
 	bx lr							@ Return
 	
 	.pool
-	.end
+	.data
+
+debugString:
+
+	.string "r8 = %r8% ; r9 = %r9% ; r10 = %r10%\0"

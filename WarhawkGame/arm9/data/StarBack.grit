@@ -27,3 +27,8 @@
 # Tile index offset (non-zero indices only). Useful if you intend to load the tiles at an offset.
 #-------------------------------------------------------
 -ma18
+
+#-------------------------------------------------------
+# Create header file in asm format 
+#-------------------------------------------------------
+-fha

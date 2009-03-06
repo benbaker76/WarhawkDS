@@ -1,3 +1,11 @@
+#include "..\build\Font.h"
+#include "..\build\Score.h"
+#include "..\build\Energy.h"
+#include "..\build\StarFront.h"
+#include "..\build\StarBack.h"
+#include "..\build\Sprites.h"
+#include "..\build\Level1.h"
+
 @ View the VRAM layout at http://dev-scene.com/NDS/Tutorials_Day_4#Background_Memory_Layout_and_VRAM_Management
 
 @ BG0 - Text / Score / Energy
@@ -63,39 +71,6 @@
 #define FX_WIPE_OUT_UP				BIT(12)
 #define FX_WIPE_OUT_DOWN			BIT(13)
 #define FX_CROSSWIPE				BIT(14)
-
-@ We should be #includeing the generated headers for these values
-@ But it will error out because there is some "C" code
-@ We should ask the author of grit to add an option to output pure asm headers
-@ So we can eg. #include "..\build\StarBack.h" instead of copying out these values
-
-#define StarBackPalLen				512
-#define Level1TilesLen				49152
-#define CraterTilesLen				544
-#define StarFrontTilesLen 			576
-#define StarBackTilesLen			15008
-#define ScoreTilesLen				1344
-#define FontTilesLen				3392
-#define EnergyTilesLen				512
-
-#define SpritesTilesLen				37888
-#define SpritesPalLen				512
-
-#define InGameMusicLen				851393
-#define BlasterLen					5170
-#define ExplosionLen				6488
-#define AlienExplodeLen				6709
-#define AlienExplodeScreamLen		8080
-#define ElecShotLen					7916
-#define LaserShotLen				4401
-#define ShipArmourHit1Len			2452
-#define ShipArmourHit2Len			1074
-#define ClassicLen					999
-#define CrashBuzLen					9115
-#define DinkDinkLen					14752
-#define HitWallLen					4133
-#define LowLen						3840
-#define SteelLen					1893
 
 #define typeMine					8192
 #define typeHunter					16384

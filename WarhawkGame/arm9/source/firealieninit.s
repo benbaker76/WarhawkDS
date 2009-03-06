@@ -236,9 +236,6 @@
 @ "INIT" - "Ripple triple shot 12" (this is a DUAL ripple shot and uses 3 bullets)
 	initRippleTripleShot:
 	stmfd sp!, {r3, lr}
-	
-		@ This is a downward shot that tracks to your X coord
-
 	mov r3,#11
 	bl initRippleShot
 	mov r3,#3
@@ -289,8 +286,10 @@
 @ "INIT" - "Triple shot 14" (This fires a spread of 3 shots)
 	initTripleShot:
 	stmfd sp!, {r3, lr}
+	@ we will use SPRITE_TRACK_X_OFFS and SPRITE_SPEED_DELAY_X_OFFS for X delay and backup
+	@ and also SPRITE_TRACK_Y_OFFS and SPRITE_SPEED_DELAY_Y_OFFS for Y delay and backup
 	
-		@ This is a downward shot that tracks to your X coord
+
 	push {r3}
 	mov r3,#3
 	bl initStandardShot
@@ -317,12 +316,13 @@
 			str r6,[r2,r0]			@ paste it in our bullet X
 			mov r0,#SPRITE_SPEED_DELAY_X_OFFS	@ We will use this to store our ACUTAL X coord (modified by sine)
 			str r6,[r2,r0]			@ store our backup
-			mov r0,#SPRITE_SPEED_Y_OFFS
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			add r6,#14
 			str r6,[r2,r0]			@ paste it in our bullet y
 			mov r0,#SPRITE_FIRE_TYPE_OFFS
-			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r4,#15
+			str r4,[r2,r0]			@ store r4 as our bullets type (r3 +1)
 			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r6,[r1,r0]			@ copy the bullet speed
 			str r6,[r2,r0]			@ paste it in our bullet speed
@@ -331,7 +331,7 @@
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
-			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
+			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)			@ set ACTIVE (this will always be r2 with no offset)
 
 			mov r0,#SPRITE_SPEED_X_OFFS	
 			mov r6,#0				@ we will use this for a marker of where we are in the sine

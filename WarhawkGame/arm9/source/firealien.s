@@ -156,8 +156,7 @@ alienFireMove:
 				cmp r3,#13
 					bleq moveMineShot
 				@cmp r3,#14	
-					@bleq moveTripleShot
-					
+					bleq moveAngleShot	
 				cmp r3,#15 					@ 16 is phase 2
 					bleq moveRippleShotSingle
 				cmp r3,#17

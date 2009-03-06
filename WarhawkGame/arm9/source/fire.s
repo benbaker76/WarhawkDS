@@ -227,7 +227,7 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			ldr r6,[r5,r0, lsl #2]		@ this can be used for a power shot
 				
 			subs r4,r6					@ using r6 as a speed
-			mov r5,#384-64
+			mov r5,#SCREEN_SUB_TOP-64
 			cmp r4,r5					@ this is our exit, so it can slide off the top
 			bgt activeBstill
 				mov r5,#0				@ clear the flag, and -

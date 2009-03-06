@@ -57,7 +57,7 @@ drawSprite:
 	@ Last section best commented!
 	ldr r0,=spriteY
 	ldr r1,[r0,r8, lsl #2]
-	cmp r1,#768
+	cmp r1,#SCREEN_MAIN_WHITESPACE
 	bpl killSprite
 
 
@@ -95,13 +95,13 @@ drawSprite:
 	
 	ldr r0,=spriteY						@ Load Y coord
 	ldr r1,[r0,r8,lsl #2]				@ add ,rX for offsets
-	ldr r3,=383-32						@ if it offscreen?
+	ldr r3,=SCREEN_SUB_WHITESPACE-32	@ if it offscreen?
 	cmp r1,r3							@ if it is less than - then it is in whitespace
 	bmi sprites_Done					@ so, no need to draw it!
-	ldr r3,=576+32						@ now is it on the main screen
+	ldr r3,=SCREEN_MAIN_TOP+32			@ now is it on the main screen
 	cmp r1,r3							@ check
 	bpl spriteY_Main_Done				@ if so, we need only draw to main
-	ldr r3,=576-32						@ is it totally on the sub
+	ldr r3,=SCREEN_MAIN_TOP-32			@ is it totally on the sub
 	cmp r1,r3						@ Totally ON SUB
 	bmi spriteY_Sub_Done
 
@@ -110,7 +110,7 @@ drawSprite:
 		ldr r0,=BUF_ATTRIBUTE0			@ get the sprite attribute0 base
 		add r0,r8, lsl #3				@ add spritenumber *8
 		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
-		ldr r3,=576-32					@ make r3 the value of top screen -sprite height
+		ldr r3,=SCREEN_MAIN_TOP-32		@ make r3 the value of top screen -sprite height
 		sub r1,r3						@ subtract our sprites y coord
 		cmp r1,#32						@ check if it is less than sprites height (off top)
 		addmi r1,#256					@ if so, add #255 (make it offscreen)
@@ -153,7 +153,7 @@ drawSprite:
 		ldr r0,=BUF_ATTRIBUTE0_SUB		@ this all works in the same way as other sections
 		add r0,r8, lsl #3
 		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
-		ldr r3,=384
+		ldr r3,=SCREEN_SUB_TOP
 		cmp r1,r3
 		addmi r1,#256
 		sub r1,r3
@@ -163,9 +163,9 @@ drawSprite:
 		@ Draw X
 		ldr r0,=spriteX					@ get X coord mem space
 		ldr r1,[r0,r8,lsl #2]			@ add ,rX for offsets
-		cmp r1,#64						@ if less than 64, this is off left of screen
+		cmp r1,#SCREEN_LEFT				@ if less than 64, this is off left of screen
 		addmi r1,#512					@ convert coord for offscreen (32 each side)
-		sub r1,#64						@ Take 64 off our X
+		sub r1,#SCREEN_LEFT				@ Take 64 off our X
 		sub r1,r4						@ account for maps horizontal position
 		ldr r3,=0x1ff					@ Make sure 0-512 only as higher would affect attributes
 		ldr r0,=BUF_ATTRIBUTE1_SUB		@
@@ -197,7 +197,7 @@ drawSprite:
 		ldr r0,=BUF_ATTRIBUTE0
 		add r0,r8, lsl #3
 		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ These will not change in our game!
-		ldr r3,=576-32				@ Calculate offsets
+		ldr r3,=SCREEN_MAIN_TOP-32	@ Calculate offsets
 		sub r1,r3					@ R1 is STILL out Y coorrd
 		cmp r1,#32					@ Acound for partial display
 		addmi r1,#256				@ Modify if so (create a wrap)
@@ -208,9 +208,9 @@ drawSprite:
 		@ Draw X
 		ldr r0,=spriteX				@ get X coord mem space
 		ldr r1,[r0,r8,lsl #2]		@ add ,rX for offsets
-		cmp r1,#64					@ if less than 64, this is off left of screen
+		cmp r1,#SCREEN_LEFT			@ if less than 64, this is off left of screen
 		addmi r1,#512				@ convert coord for offscreen (32 each side)
-		sub r1,#64					@ Take 64 off our X
+		sub r1,#SCREEN_LEFT			@ Take 64 off our X
 		
 		sub r1,r4					@ account for maps horizontal position
 		
@@ -245,7 +245,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]
 			add r1,#1							@ add 1 and store back
 			str r1,[r0,r8,lsl #2]
-			cmp r1,#768
+			cmp r1,#SCREEN_MAIN_WHITESPACE
 			bpl noMoreBase
 			
 			ldr r0,=spriteExplodeDelay
@@ -304,7 +304,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]
 			add r1,#3							@ add 3 (to Y) and store back
 			str r1,[r0,r8,lsl #2]
-			cmp r1,#768
+			cmp r1,#SCREEN_MAIN_WHITESPACE
 			bpl noMoreShard
 			
 			ldr r0,=spriteExplodeDelay			@ check our animation delay

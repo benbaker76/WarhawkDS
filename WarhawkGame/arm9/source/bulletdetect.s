@@ -50,7 +50,7 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
 	ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
 	sub r1, #64					@ our sprite starts at 64 (very left of map) + 6 for left bullet
-	add r1, #6					@ our left bullet is right a bit in the sprite
+	add r1, #10					@ our left bullet is right a bit in the sprite
 	lsr r1, #5					@ divide x by 32
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
@@ -103,7 +103,7 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			lsl r1,#2	
 			ldr r2, =spriteX+4			@ DO X COORD CONVERSION
 			ldr r2, [r2, r0, lsl #2]
-			sub r2,#58					@ 64 - 6 (bullet offset)
+			sub r2,#54					@ 64 - 6 (bullet offset)
 			lsr r2, #5
 			lsl r2, #2
 			mov r0,r2
@@ -119,7 +119,7 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			lsl r1,#2	
 			ldr r2, =spriteX+4				@ DO Y COORD CONVERSION
 			ldr r2, [r2, r0, lsl #2]
-			sub r2,#58						@ 64 - 6 (bullet offset)
+			sub r2,#54						@ 64 - 6 (bullet offset)
 			lsr r2, #5
 			lsl r2, #2
 			mov r0,r2
@@ -141,7 +141,7 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		pop {r0-r4}	
 @--------------- end of CRATER draw code
 	
-		mov r10,#6
+		mov r10,#10
 		bl initBaseExplode			@ Draw the EXPLOSION
 									@ pass r5 with the offset for the bullet (ie 6)
 		
@@ -177,7 +177,7 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
 	ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
 	sub r1, #64					@ our sprite starts at 64 (very left of map) + 6 for left bullet
-	add r1, #24					@ our left bullet is right a bit in the sprite
+	add r1, #22					@ our left bullet is right a bit in the sprite
 	lsr r1, #5					@ divide x by 32
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
@@ -230,7 +230,7 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			lsl r1,#2	
 			ldr r2, =spriteX+4			@ DO X COORD CONVERSION
 			ldr r2, [r2, r0, lsl #2]
-			sub r2,#30					@ 64 - 6 (bullet offset)
+			sub r2,#32+10					@ 64 - 6 (bullet offset)
 			lsr r2, #5
 			lsl r2, #2
 			mov r0,r2
@@ -246,7 +246,7 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			lsl r1,#2	
 			ldr r2, =spriteX+4				@ DO Y COORD CONVERSION
 			ldr r2, [r2, r0, lsl #2]
-			sub r2,#30						@ 64 - 6 (bullet offset)
+			sub r2,#32+10						@ 64 - 6 (bullet offset)
 			lsr r2, #5
 			lsl r2, #2
 			mov r0,r2
@@ -268,7 +268,7 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		pop {r0-r4}	
 @--------------- end of CRATER draw code
 	
-		mov r10,#24
+		mov r10,#22
 		bl initBaseExplode			@ Draw the EXPLOSION
 									@ pass r5 with the offset for the bullet (ie 6)
 			

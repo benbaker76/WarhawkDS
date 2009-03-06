@@ -167,7 +167,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		bmi fireNormal				@ "POWERSHOT"
 			ldr r3,=spriteY
 			ldr r2,[r3]					@ our ships y coord
-			add r2,#2					@ Move it down a little
+			add r2,#4					@ Move it down a little
 			ldr r1,=spriteY+4			@ store the result in bullets y
 			str r2,[r1,r0, lsl #2]		@ done
 

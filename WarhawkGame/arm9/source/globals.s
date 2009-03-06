@@ -32,6 +32,7 @@
 	.align
 	.data
 
+	.global gameMode
 	.global fxMode
 	.global bossMan
 	.global bossX
@@ -132,6 +133,11 @@
 	.global bossFireMode
 	.global bossSpecial
 
+gameMode:
+	.word 0
+fxMode:
+	.word 0
+
 bossSpecial:
 	.word 0
 bossFireMode:
@@ -152,8 +158,6 @@ bossXSpeed:
 bossXDelay:
 	.word 0
 bossXDir:
-	.word 0	
-fxMode:
 	.word 0
 
 animFrame:

@@ -32,9 +32,7 @@
 	.section	.itcm,"ax",%progbits
 	.align
 	.global initInterruptHandler
-	.global gameStart
-	.global gameStop
-	
+
 initInterruptHandler:
 
 	stmfd sp!, {r0-r6, lr}
@@ -93,40 +91,7 @@ interruptHandlerVBlank:
 	blne fxWipeOutDownVBlank
 	tst r0, #FX_CROSSWIPE
 	blne fxCrossWipeVBlank
-	
-	ldr r0, =gameMode
-	ldr r1, [r0]
-	cmp r1, #GAMEMODE_STOPPED
-	bleq interruptHandlerVBlankDone
-	
-	bl moveShip									@ check and move your ship
-	
-	bl moveBullets								@ check and then moves bullets
-	bl alienFireMove							@ check and move alien bullets
-	bl fireCheck								@ check for your wish to shoot!
-
-	bl drawScore								@ update the score with any changes
-	bl drawAllEnergyBars
-
-	
-	bl checkWave								@ check if time for another alien attack
-	bl moveAliens								@ move the aliens and detect colisions with you
-
-	bl initHunterMine							@ check if we should chuck another mine or hunter into the mix
-
-	bl scrollMain								@ Scroll Level Data
-	bl scrollSub								@ Main + Sub
-	bl levelDrift								@ update level with the horizontal drift
-	bl scrollStars								@ Scroll Stars (BG2,BG3)		
-	bl checkEndOfLevel							@ Set Flag for end-of-level (use later to init BOSS)
-	bl checkBossInit							@ Check if we should set the offscreen boss up??
-	bl drawSprite								@ drawsprites and do update bloom effect
-	bl animateAliens
-	
-	@bl drawDebugText							@ draw some numbers :)
-	
-	bl checkGameOver
-	
+		
 interruptHandlerVBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -154,71 +119,6 @@ interruptHandlerHBlankDone:
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ------------------------------------
-	
-gameStart:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_RUNNING
-	str r1, [r0]
-		
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ------------------------------------
-	
-gameStop:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_STOPPED
-	str r1, [r0]
-		
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ------------------------------------
-	
-checkGameOver:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =energy
-	ldr r1, [r0]
-	cmp r1, #0
-	bne checkGameOverDone
-	beq checkGameOverDone
-	bl fxFadeBlackOut
-	bl fxMosaicOut
-	
-	bl drawAllEnergyBars	
-
-	ldr r0, =gameOverText			@ Load out text pointer
-	ldr r1, =11						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =0						@ Draw on main screen
-	bl drawText
-	
-	ldr r0, =gameOverText			@ Load out text pointer
-	ldr r1, =11						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =1						@ Draw on sub screen
-	bl drawText
-	
-	bl gameStop
-	
-checkGameOverDone:
-		
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ------------------------------------
-	
-	.align
-	.data
-	
-gameMode:
-
-	.word 0
 
 	.pool
 	.end

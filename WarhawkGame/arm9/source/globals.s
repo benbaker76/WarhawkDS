@@ -44,13 +44,11 @@
 	.global pixelOffsetSBMain
 	.global pixelOffsetSBSub
 	.global pixelOffsetText
-	.global levelMap
 	.global pressMe
 	.global firePress
 	.global horizDrift
 	.global powerUp
 	.global powerUpDelay
-	.global levelEnd
 	.global delaySF
 	.global delaySB
 	.global score
@@ -103,6 +101,7 @@
 	.global digits
 	.global moveBaseExplosion
 	.global levelNum
+	.global levelEnd
 	.global levelMap
 	.global levelPal
 	.global levelTiles
@@ -184,6 +183,8 @@ bossMan:
 	
 levelNum:
 	.word 0
+levelEnd:
+	.word 0
 levelMap:
 	.word 0
 levelPal:
@@ -221,8 +222,6 @@ horizDrift:
 powerUp:
 	.word 0
 powerUpDelay:
-	.word 0
-levelEnd:
 	.word 0
 delaySF:
 	.word 2

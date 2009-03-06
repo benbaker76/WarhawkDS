@@ -16,6 +16,18 @@
 #include "..\build\Level10.h"
 #include "..\build\Level11.h"
 #include "..\build\Level12.h"
+#include "..\build\SpritesLev1.h"
+#include "..\build\SpritesLev2.h"
+#include "..\build\SpritesLev3.h"
+#include "..\build\SpritesLev4.h"
+#include "..\build\SpritesLev5.h"
+#include "..\build\SpritesLev6.h"
+#include "..\build\SpritesLev7.h"
+#include "..\build\SpritesLev8.h"
+#include "..\build\SpritesLev9.h"
+#include "..\build\SpritesLev10.h"
+#include "..\build\SpritesLev11.h"
+#include "..\build\SpritesLev12.h"
 
 @ View the VRAM layout at http://dev-scene.com/NDS/Tutorials_Day_4#Background_Memory_Layout_and_VRAM_Management
 

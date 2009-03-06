@@ -498,33 +498,46 @@ initLevelSpecialSprites:
 	ldr r8,[r8]
 	cmp r8,#1
 	ldreq r0, =SpritesLev1Tiles
+	ldreq r2, =SpritesLev1TilesLen
 	cmp r8,#2
 	ldreq r0, =SpritesLev2Tiles
+	ldreq r2, =SpritesLev2TilesLen
 	cmp r8,#3
 	ldreq r0, =SpritesLev3Tiles
+	ldreq r2, =SpritesLev3TilesLen
 	cmp r8,#4
 	ldreq r0, =SpritesLev4Tiles
+	ldreq r2, =SpritesLev4TilesLen
 	cmp r8,#5
 	ldreq r0, =SpritesLev5Tiles
+	ldreq r2, =SpritesLev5TilesLen
 	cmp r8,#6
 	ldreq r0, =SpritesLev6Tiles
+	ldreq r2, =SpritesLev6TilesLen
 	cmp r8,#7
 	ldreq r0, =SpritesLev7Tiles
+	ldreq r2, =SpritesLev7TilesLen
 	cmp r8,#8
 	ldreq r0, =SpritesLev8Tiles
+	ldreq r2, =SpritesLev8TilesLen
 	cmp r8,#9
 	ldreq r0, =SpritesLev9Tiles
+	ldreq r2, =SpritesLev9TilesLen
 	cmp r8,#10
 	ldreq r0, =SpritesLev10Tiles
+	ldreq r2, =SpritesLev10TilesLen
 	cmp r8,#11
-	ldreq r0, =SpritesLev11Tiles	
+	ldreq r0, =SpritesLev11Tiles
+	ldreq r2, =SpritesLev11TilesLen
+	cmp r8,#12
+	ldreq r0, =SpritesLev12Tiles
+	ldreq r2, =SpritesLev12TilesLen
 	
 	ldr r1, =SPRITE_GFX
-	add r1,#21504
-	ldr r2, =11264
+	add r1, #21504
 	bl dmaCopy
 	ldr r1, =SPRITE_GFX_SUB
-	add r1,#21504
+	add r1, #21504
 	bl dmaCopy
 	
 	bl playDinkDinkSound

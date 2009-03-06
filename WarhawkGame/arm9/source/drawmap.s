@@ -52,7 +52,7 @@ checkCraterBlockMain:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =collideMap				@ collision map
+	ldr r0, =colMap					@ collision map
 	ldr r0,[r0]
 	ldr r1, =yposMain
 	ldr r2, =vofsMain
@@ -74,7 +74,7 @@ checkCraterBlockMainLoop:
 	cmp r6, #16
 	beq checkCraterBlockMainExit
 	
-	ldr r0, =collideMap
+	ldr r0, =colMap
 	ldr r0,[r0]
 	add r0, r4
 	ldrb r3, [r0, r6]				@ read the value
@@ -102,7 +102,7 @@ drawCraterBlockMain:
 
 	stmfd sp!, {r2-r6, lr}
 	
-	ldr r2, =LevelMap
+	ldr r2, =levelMap
 	ldr r2,[r2]						@ source
 	ldr r3, =BG_MAP_RAM(BG1_MAP_BASE)	@ destination
 	ldr r4, =0						@ xpos (in the LevelMap)
@@ -149,7 +149,7 @@ drawCraterBlockSub:
 
 	stmfd sp!, {r2-r6, lr}
 	
-	ldr r2, =LevelMap
+	ldr r2, =levelMap
 	ldr r2,[r2]						@ source
 
 	ldr r3, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
@@ -192,7 +192,7 @@ drawCraterBlockSubLoop:
 drawMapMain:
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =LevelMap
+	ldr r0, =levelMap
 	ldr r0,[r0]						@ source
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)	@ destination
 	ldr r2, =yposMain				@
@@ -245,7 +245,7 @@ drawMapSub:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =LevelMap
+	ldr r0, =levelMap
 	ldr r0,[r0]						@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =yposSub				@
@@ -312,7 +312,7 @@ drawMapScreenMain:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =LevelMap
+	ldr r0, =levelMap
 	ldr r0,[r0]						@ source
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)	@ destination
 	ldr r2, =yposMain				@
@@ -356,7 +356,7 @@ drawMapScreenSub:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =LevelMap
+	ldr r0, =levelMap
 	ldr r0,[r0]						@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =yposSub				@

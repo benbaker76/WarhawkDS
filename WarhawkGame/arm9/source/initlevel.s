@@ -36,6 +36,8 @@
 	
 initLevel:
 
+	stmfd sp!, {r0-r6, lr}
+
 	mov r1,#0
 	ldr r0,=levelEnd
 	str r1,[r0]				@ Flag is SET for end of level	
@@ -92,25 +94,29 @@ initLevel:
 	
 	
 	
-	ldr r8,=level
+	ldr r8,=levelNum
 	ldr r8,[r8]
 	cmp r8,#1
 	bne level2
 							@ Set level 1
 		ldr r0,=Level1Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 		
 		ldr r0,=Level1Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap1
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 		
 		ldr r0,=Level1Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal1
+		ldr r1,=starBackPal
 		str r0,[r1]
 		
 		
@@ -119,19 +125,23 @@ initLevel:
 	bne level3
 							@ Set level 2
 		ldr r0,=Level2Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level2Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap2
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 		
 		ldr r0,=Level2Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal2
+		ldr r1,=starBackPal
 		str r0,[r1]
 
 	level3:
@@ -139,19 +149,23 @@ initLevel:
 	bne level4
 							@ Set level 3
 		ldr r0,=Level3Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level3Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap3
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 		
 		ldr r0,=Level3Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
 		str r0,[r1]
 	
 	level4:
@@ -159,39 +173,47 @@ initLevel:
 	bne level5
 							@ Set level 4
 		ldr r0,=Level4Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level4Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap4
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 
 		ldr r0,=Level4Pal
-		ldr r1,=StarBack
-		str r0,[r1]	
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal1
+		ldr r1,=starBackPal
+		str r0,[r1]
 		
 	level5:
 	cmp r8,#5
 	bne level6
 							@ Set level 5
 		ldr r0,=Level5Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level5Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap5
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 
 		ldr r0,=Level5Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal2
+		ldr r1,=starBackPal
 		str r0,[r1]
 		
 	level6:
@@ -199,19 +221,23 @@ initLevel:
 	bne level7
 							@ Set level 6
 		ldr r0,=Level6Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level6Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap6
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 
 		ldr r0,=Level6Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
 		str r0,[r1]
 
 	level7:
@@ -219,19 +245,23 @@ initLevel:
 	bne level8
 							@ Set level 7
 		ldr r0,=Level7Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level7Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap7
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 		
 		ldr r0,=Level7Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal1
+		ldr r1,=starBackPal
 		str r0,[r1]
 	
 	level8:
@@ -239,39 +269,47 @@ initLevel:
 	bne level9
 							@ Set level 8
 		ldr r0,=Level8Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level8Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap8
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 
 		ldr r0,=Level8Pal
-		ldr r1,=StarBack
-		str r0,[r1]	
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal2
+		ldr r1,=starBackPal
+		str r0,[r1]
 	
 	level9:
 	cmp r8,#9
 	bne level10
 							@ Set level 9
 		ldr r0,=Level9Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level9Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap9
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 	
 		ldr r0,=Level9Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
 		str r0,[r1]
 		
 	level10:
@@ -279,19 +317,23 @@ initLevel:
 	bne level11
 							@ Set level 10
 		ldr r0,=Level10Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level10Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap10
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]
 	
 		ldr r0,=Level10Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal1
+		ldr r1,=starBackPal
 		str r0,[r1]
 		
 	level11:
@@ -299,19 +341,23 @@ initLevel:
 	bne level12
 							@ Set level 11
 		ldr r0,=Level11Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level11Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap11
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]	
 
 		ldr r0,=Level11Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal2
+		ldr r1,=starBackPal
 		str r0,[r1]
 
 	level12:
@@ -319,24 +365,64 @@ initLevel:
 	bne levelDone
 							@ Set level 11
 		ldr r0,=Level12Map
-		ldr r1,=LevelMap
+		ldr r1,=levelMap
 		str r0,[r1]
 
 		ldr r0,=Level12Tiles
-		ldr r1,=LevelTiles
+		ldr r1,=levelTiles
 		str r0,[r1]
 		
 		ldr r0,=colMap12
-		ldr r1,=collideMap
+		ldr r1,=colMap
 		str r0,[r1]	
 
 		ldr r0,=Level12Pal
-		ldr r1,=StarBack
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
 		str r0,[r1]
 
 	levelDone:
+	
+	@ Load the palette into the palette subscreen area and main
 
-mov r15,r14
+		ldr r0, =levelPal
+		ldr r0,[r0]
+		ldr r1, =BG_PALETTE
+		ldr r2, =512
+		bl dmaCopy
+		mov r3, #0
+		strh r3, [r1]
+		ldr r1, =BG_PALETTE_SUB
+		bl dmaCopy
+		strh r3, [r1]
+		
+		@ Load the star back palette
+
+		ldr r0, =starBackPal
+		ldr r0,[r0]
+		ldr r1, =BG_PALETTE
+		ldr r2, =32
+		bl dmaCopy
+		mov r3, #0
+		strh r3, [r1]
+		ldr r1, =BG_PALETTE_SUB
+		bl dmaCopy
+		strh r3, [r1]
+
+		@ Write the tile data to VRAM Level BG1
+
+		ldr r0,=levelTiles
+		ldr r0,[r0]
+		ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+		ldr r2, =Level1TilesLen
+		bl dmaCopy
+		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+		bl dmaCopy
+
+	ldmfd sp!, {r0-r6, pc}
 
 initLevelSprites:
 	stmfd sp!, {r0-r6, lr}
@@ -359,7 +445,7 @@ initLevelSprites:
 
 initLevelSpecialSprites:
 	stmfd sp!, {r0-r6, lr}
-	ldr r8,=level
+	ldr r8,=levelNum
 	ldr r8,[r8]
 	cmp r8,#1
 	ldreq r0, =SpritesLev1Tiles

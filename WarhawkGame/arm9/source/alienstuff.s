@@ -45,7 +45,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	ldr r3,[r1]						@ r3=current wave number to look for
 	ldr r2,=alienLevel
 
-	ldr r4,=level					@ we need to modify alienLevel based on game level
+	ldr r4,=levelNum				@ we need to modify alienLevel based on game level
 	ldr r4,[r4]						@ r4=current level
 	sub r4,#1
 	add r2,r4, lsl #9				@ add to alienLevel, LEVEL*512 (128 words)
@@ -885,7 +885,7 @@ moveHunter:
 	@ do not use r0,r1 or r7 here to write to!
 	@ in a hunter, we use sptObjOffs to tell use which way it is moving
 	@ 30=down 31=up 32=left 33=rght
-	ldr r2,=level
+	ldr r2,=levelNum
 	ldr r8,[r2]										@ r8 = current level
 	mov r2,#sptObjOffs
 	ldr r4,[r1,r2]									@ r4 = current direction

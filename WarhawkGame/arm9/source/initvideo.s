@@ -91,29 +91,6 @@ initVideo:
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
 	strh r1, [r0]
 	
-	@ Load the palette into the palette subscreen area and main
-
-	ldr r0, =StarBack
-	ldr r0,[r0]
-	ldr r1, =BG_PALETTE
-	ldr r2, =StarBackPalLen
-	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-	strh r3, [r1]
-
-	
-	@ Write the tile data to VRAM Level BG1
-
-	ldr r0,=LevelTiles
-	ldr r0,[r0]
-	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =Level1TilesLen
-	bl dmaCopy
-	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
-	bl dmaCopy
 	
 	@ Write the tile data to VRAM FrontStar BG2
 

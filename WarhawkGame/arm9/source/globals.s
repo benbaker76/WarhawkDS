@@ -44,7 +44,7 @@
 	.global pixelOffsetSBMain
 	.global pixelOffsetSBSub
 	.global pixelOffsetText
-	.global LevelMap
+	.global levelMap
 	.global pressMe
 	.global firePress
 	.global horizDrift
@@ -102,13 +102,14 @@
 	.global irqTable
 	.global digits
 	.global moveBaseExplosion
-	.global level
-	.global LevelMap
-	.global LevelTiles
-	.global StarBack
+	.global levelNum
+	.global levelMap
+	.global levelPal
+	.global levelTiles
+	.global colMap
+	.global starBackPal
 	.global craterFrame
 	.global waveNumber
-	.global collideMap
 	.global energy
 	.global energyText
 	.global gameOverText
@@ -180,15 +181,17 @@ hunterCount:
 bossMan:
 	.word 0
 	
-level:
+levelNum:
 	.word 0
-LevelMap:
+levelMap:
 	.word 0
-collideMap:
+levelPal:
 	.word 0
-LevelTiles:
+levelTiles:
 	.word 0
-StarBack:
+colMap:
+	.word 0
+starBackPal:
 	.word 0
 energy:
 	.word 0

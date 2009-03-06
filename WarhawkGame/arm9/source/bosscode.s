@@ -81,7 +81,7 @@ checkBossInit:
 		@ set r0 to the source based on the level
 		@ set r1 to the destination in our sprite tiles
 		ldr r0, =BossShipsTiles
-		ldr r1,=level
+		ldr r1,=levelNum
 		ldr r1,[r1]
 		sub r1,#1
 		mov r2,#9
@@ -126,7 +126,7 @@ checkBossInit:
 		str r0,[r1]
 		@ now we need to read the bossInitLev data based on the level
 		@ and set the variables accordingly		
-		ldr r0,=level
+		ldr r0,=levelNum
 		ldr r0,[r0]
 		sub r0,#1						@ make level 0-15
 		ldr r1,=bossInitLev
@@ -392,7 +392,7 @@ bossFire:
 	@ we will use 2 pieces of code here for speed!!
 	@ one for single shot and one for twin
 
-		ldr r1,=level
+		ldr r1,=levelNum
 		ldr r1,[r1]					@ r1 = level number
 		sub r1,#1					@ level is 1-16, we need 0-15
 		ldr r2,=bossFireLev			@ r2 = location base of fire pattern data
@@ -504,7 +504,7 @@ bossFire:
 	moveq r0,#0
 	str r0,[r3]
 
-	ldr r1,=level
+	ldr r1,=levelNum
 	ldr r1,[r1]					@ r1 = level number
 	sub r1,#1					@ level is 1-16, we need 0-15
 	ldr r2,=bossFireLev			@ r2 = location base of fire pattern data

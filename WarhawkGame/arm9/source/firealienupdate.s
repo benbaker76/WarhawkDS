@@ -358,7 +358,7 @@
 @ "MOVE" - "Angled Shot 14"				@ a shot that Shoots to an angle (of Sorts)
 	moveAngleShot:
 	stmfd sp!, {r0-r10, lr}
-		
+
 		@ first to the X move
 		@ check the delay (sub from the delay and if -N, reset and move)
 		@ we use SPRITE_TRACK_X_OFFS and SPRITE_TRACK_Y_OFFS to restore delays
@@ -378,19 +378,21 @@
 			adds r5,r8				@ add to X coord
 			str r5,[r2,r6]			@ store it back	
 		noAngleX:
+
 		mov r6,#SPRITE_SPEED_DELAY_Y_OFFS
 		ldr r5,[r2,r6]
 		subs r5,#1
 		str r5,[r2,r6]
 		bgt noAngleY
+
 			mov r7,#SPRITE_TRACK_Y_OFFS
 			ldr r5,[r2,r7]
 			str r5,[r2,r6]			@ reset delay
 			mov r6,#SPRITE_Y_OFFS
-			ldr r5,[r2,r6]			@ r5=Xcoord
+			ldr r5,[r2,r6]			@ r5=Ycoord
 			mov r8,#SPRITE_SPEED_Y_OFFS
-			ldrsb r8,[r2,r8]		@ r8=X speed
-			adds r5,r8				@ add to X coord
+			ldrsb r8,[r2,r8]		@ r8=Y speed
+			adds r5,r8				@ add to Y coord
 			str r5,[r2,r6]			@ store it back
 		noAngleY:
 		

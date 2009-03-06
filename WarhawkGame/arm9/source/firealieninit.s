@@ -288,15 +288,64 @@
 	stmfd sp!, {r3, lr}
 	@ we will use SPRITE_TRACK_X_OFFS and SPRITE_SPEED_DELAY_X_OFFS for X delay and backup
 	@ and also SPRITE_TRACK_Y_OFFS and SPRITE_SPEED_DELAY_Y_OFFS for Y delay and backup
+	@ SPRITE_SPEED_X_OFFS and SPRITE_SPEED_Y_OFFS are used for the speed of the bullet
+	@ and SPRITE_FIRE_SPEED_OFFS holds the shot speed
 	
+	@ WHY THE FUCK DOES THIS NOT WORK :)
+	
+	
+								@ we use r3=14 for an angled shot!			
+@	mov r3,#3					@ 3=downward
+@	bl initStandardShot			@ do a central shot!
+@	mov r3,#17					@ set an "angled" shot
+	@ ok, now lets set a shot to the left!
+	bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+	cmp r2,#255					@ 255=not found
+	beq iTripleNo				@ so, we cannot init a bullet :(
 
-	push {r3}
-	mov r3,#3
-	bl initStandardShot
-	mov r3,#21
-	bl initRippleShot
-	pop {r3}
+			@ ok, lets fire one slighlty to the left - little delay on the X update and a negative x speed
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r7,[r1,r0]			@ copy the aliens Y
+			str r7,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			mov r3,#14				@ set shot 14 (angled)
+			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r8,#27				@ pick object 27
+			str r8,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r8,#8				@ an 8 sets the sprite active (visible)
+			str r8,[r2]				@ set ACTIVE (this will always be r2 with no offset)
+		
 
+
+			mov r6,#2				@ set the X update delay
+			mov r0,#SPRITE_TRACK_X_OFFS
+			str r6,[r2,r0]
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r6,[r2,r0]
+	
+			mov r6,#2				@ and clear the y update delay
+			mov r0,#SPRITE_TRACK_Y_OFFS
+			str r6,[r2,r0]
+			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
+			str r6,[r2,r0]
+	
+			mov r0,#SPRITE_FIRE_SPEED_OFFS	@ this is a downward shot - so this is needed in Y speed
+			ldr r6,[r1,r0]			@ r6 = speed
+		mov r6,#4
+			mov r0,#SPRITE_SPEED_Y_OFFS
+			str r6,[r2,r0]
+			mov r0,#SPRITE_SPEED_X_OFFS
+			str r6,[r2,r0]
+
+
+
+
+	iTripleNo:
+@	pop {r3}
 	ldmfd sp!, {r3, pc}
 	
 @

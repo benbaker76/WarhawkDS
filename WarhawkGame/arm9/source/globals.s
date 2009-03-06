@@ -106,6 +106,7 @@
 	.global levelMap
 	.global levelPal
 	.global levelTiles
+	.global levelTilesLen
 	.global colMap
 	.global starBackPal
 	.global craterFrame
@@ -188,6 +189,8 @@ levelMap:
 levelPal:
 	.word 0
 levelTiles:
+	.word 0
+levelTilesLen:
 	.word 0
 colMap:
 	.word 0

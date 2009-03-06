@@ -107,6 +107,10 @@ initLevel:
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
+		ldr r0,=Level1TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
 		ldr r0,=colMap1
 		ldr r1,=colMap
 		str r0,[r1]
@@ -130,6 +134,10 @@ initLevel:
 
 		ldr r0,=Level2Tiles
 		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level2TilesLen
+		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
 		ldr r0,=colMap2
@@ -156,6 +164,10 @@ initLevel:
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
+		ldr r0,=Level3TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
 		ldr r0,=colMap3
 		ldr r1,=colMap
 		str r0,[r1]
@@ -178,6 +190,10 @@ initLevel:
 
 		ldr r0,=Level4Tiles
 		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level4TilesLen
+		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
 		ldr r0,=colMap4
@@ -204,6 +220,10 @@ initLevel:
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
+		ldr r0,=Level5TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
 		ldr r0,=colMap5
 		ldr r1,=colMap
 		str r0,[r1]
@@ -226,6 +246,10 @@ initLevel:
 
 		ldr r0,=Level6Tiles
 		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level6TilesLen
+		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
 		ldr r0,=colMap6
@@ -252,6 +276,10 @@ initLevel:
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
+		ldr r0,=Level7TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
 		ldr r0,=colMap7
 		ldr r1,=colMap
 		str r0,[r1]
@@ -274,6 +302,10 @@ initLevel:
 
 		ldr r0,=Level8Tiles
 		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level8TilesLen
+		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
 		ldr r0,=colMap8
@@ -300,6 +332,10 @@ initLevel:
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
+		ldr r0,=Level9TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
 		ldr r0,=colMap9
 		ldr r1,=colMap
 		str r0,[r1]
@@ -322,6 +358,10 @@ initLevel:
 
 		ldr r0,=Level10Tiles
 		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level10TilesLen
+		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
 		ldr r0,=colMap10
@@ -348,6 +388,10 @@ initLevel:
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
+		ldr r0,=Level11TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
 		ldr r0,=colMap11
 		ldr r1,=colMap
 		str r0,[r1]	
@@ -370,6 +414,10 @@ initLevel:
 
 		ldr r0,=Level12Tiles
 		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level12TilesLen
+		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
 		ldr r0,=colMap12
@@ -417,7 +465,8 @@ initLevel:
 		ldr r0,=levelTiles
 		ldr r0,[r0]
 		ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-		ldr r2, =Level1TilesLen
+		ldr r2, =levelTilesLen
+		ldr r2, [r2]
 		bl dmaCopy
 		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
 		bl dmaCopy

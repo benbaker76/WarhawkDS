@@ -5,6 +5,17 @@
 #include "..\build\StarBack.h"
 #include "..\build\Sprites.h"
 #include "..\build\Level1.h"
+#include "..\build\Level2.h"
+#include "..\build\Level3.h"
+#include "..\build\Level4.h"
+#include "..\build\Level5.h"
+#include "..\build\Level6.h"
+#include "..\build\Level7.h"
+#include "..\build\Level8.h"
+#include "..\build\Level9.h"
+#include "..\build\Level10.h"
+#include "..\build\Level11.h"
+#include "..\build\Level12.h"
 
 @ View the VRAM layout at http://dev-scene.com/NDS/Tutorials_Day_4#Background_Memory_Layout_and_VRAM_Management
 

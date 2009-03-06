@@ -16,6 +16,8 @@
 #include "..\build\Level10.h"
 #include "..\build\Level11.h"
 #include "..\build\Level12.h"
+#include "..\build\Level13.h"
+#include "..\build\Level14.h"
 #include "..\build\SpritesLev1.h"
 #include "..\build\SpritesLev2.h"
 #include "..\build\SpritesLev3.h"

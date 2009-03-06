@@ -406,7 +406,7 @@ initLevel:
 
 	level12:
 	cmp r8,#12
-	bne levelDone
+	bne level13
 							@ Set level 11
 		ldr r0,=Level12Map
 		ldr r1,=levelMap
@@ -431,6 +431,60 @@ initLevel:
 		ldr r0,=StarBackPal3
 		ldr r1,=starBackPal
 		str r0,[r1]
+	level13:
+	cmp r8,#13
+	bne level14
+							@ Set level 11
+		ldr r0,=Level13Map
+		ldr r1,=levelMap
+		str r0,[r1]
+
+		ldr r0,=Level13Tiles
+		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level13TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
+		ldr r0,=colMap12
+		ldr r1,=colMap
+		str r0,[r1]	
+
+		ldr r0,=Level13Pal
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
+		str r0,[r1]	
+	level14:
+	cmp r8,#14
+	bne levelDone
+							@ Set level 11
+		ldr r0,=Level14Map
+		ldr r1,=levelMap
+		str r0,[r1]
+
+		ldr r0,=Level14Tiles
+		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level14TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
+		ldr r0,=colMap12
+		ldr r1,=colMap
+		str r0,[r1]	
+
+		ldr r0,=Level14Pal
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
+		str r0,[r1]	
 
 	levelDone:
 	
@@ -532,7 +586,12 @@ initLevelSpecialSprites:
 	cmp r8,#12
 	ldreq r0, =SpritesLev12Tiles
 	ldreq r2, =SpritesLev12TilesLen
-	
+	cmp r8,#13
+	ldreq r0, =SpritesLev12Tiles
+	ldreq r2, =SpritesLev12TilesLen
+	cmp r8,#14
+	ldreq r0, =SpritesLev12Tiles
+	ldreq r2, =SpritesLev12TilesLen	
 	ldr r1, =SPRITE_GFX
 	add r1, #21504
 	bl dmaCopy

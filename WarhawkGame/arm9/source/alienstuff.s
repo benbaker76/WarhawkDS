@@ -934,8 +934,8 @@ moveHunter:
 			bmi hunterKill
 			cmp r8,#4								@ if we are on level 1-3, no need to do more
 			bmi hunterDone
-			cmp r6,r9								@ is the Hunter (r6) near you (r9)								
-			bpl hunterDone							@ if not, dont do anything
+			cmp r6,r9 								@ is the Hunter (r6) near you (r9)								
+			bpl hunterDone	
 					mov r2,#SPRITE_Y_OFFS
 					ldr r5,[r1,r2]					@ r5 = Hunter Y
 					cmp r5,r3						@ if you are below it, dont bother going up!
@@ -958,7 +958,7 @@ moveHunter:
 			bpl hunterKill	
 			cmp r8,#4								@ if we are on level 1-3, no need to do more
 			bmi hunterDone
-			add r6,#32
+			@add r6,#48
 			cmp r6,r9								@ is the Hunter (r6) near you (r9)								
 			bmi hunterDone							@ if not, dont do anything
 					mov r2,#SPRITE_Y_OFFS

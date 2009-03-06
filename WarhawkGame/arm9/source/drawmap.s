@@ -94,6 +94,7 @@ checkCraterBlockMainExit:
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
+	@ -----------------------------------
 	
 drawCraterBlockMain:
 
@@ -141,6 +142,7 @@ drawCraterBlockMainLoop:
 	
 	ldmfd sp!, {r2-r6, pc} 		@ restore registers and return
 	
+	@ -----------------------------------
 	
 drawCraterBlockSub:
 
@@ -188,6 +190,7 @@ drawCraterBlockSubLoop:
 	
 	ldmfd sp!, {r2-r6, pc} 		@ restore registers and return
 	
+	@ -----------------------------------
 
 drawMapMain:
 	stmfd sp!, {r0-r6, lr}
@@ -240,6 +243,8 @@ drawMapMainDone:
 	cmp r1,r1
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 
 drawMapSub:
 
@@ -291,22 +296,7 @@ drawMapSubDone:
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@ -----------------------------------
-	
 	
 drawMapScreenMain:
 
@@ -351,6 +341,8 @@ drawMapScreenMainLoop:
 drawMapScreenMainDone:
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 
 drawMapScreenSub:
 
@@ -399,12 +391,6 @@ drawMapScreenSubDone:
 	
 	@--------------------------------------------------
 
-
-
-
-
-	
-	
 drawSFMapScreenMain:
 
 	stmfd sp!, {r0-r6, lr}
@@ -448,6 +434,8 @@ drawSFMapScreenSub:
 	bl drawSFMapSub
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 
 drawSBMapScreenMain:
 
@@ -493,12 +481,7 @@ drawSBMapScreenSub:
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
-	
-	
-	
-	
-	
-	
+	@ -----------------------------------
 
 drawSFMapMain:
 
@@ -524,6 +507,8 @@ drawSFMapMain:
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 	
 drawSFMapSub:
 
@@ -551,6 +536,8 @@ drawSFMapSub:
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 
 drawSBMapMain:
 
@@ -576,6 +563,8 @@ drawSBMapMain:
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 
 drawSBMapSub:
 
@@ -603,6 +592,8 @@ drawSBMapSub:
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 	
 	.pool
 	.end

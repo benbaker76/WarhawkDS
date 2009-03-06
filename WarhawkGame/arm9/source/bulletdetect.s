@@ -377,7 +377,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		bossDetect:
 		@ Found an ALIEN!!
 			@ Do checks
-			mov r8,#sptXOffs
+			mov r8,#SPRITE_X_OFFS
 			ldr r6,[r4,r8]					@ r6=current Alien X
 			add r6,#18						
 			cmp r6,r1						@ r1=Bullet x
@@ -388,7 +388,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			sub r1,#18
 			bpl detectNoAlien
 
-			mov r8,#sptYOffs
+			mov r8,#SPRITE_Y_OFFS
 			ldr r6,[r4,r8]					@ r6=current Alien y
 			add r6,#16
 			cmp r6,r2						@ r2=bullet y
@@ -410,7 +410,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				b detectNoAlien
 				standardAlienHit:
 				@ ok, now we need to see how many hits to kill
-				mov r8,#sptHitsOffs
+				mov r8,#SPRITE_HIT_OFFS
 				ldr r6,[r4,r8]
 				subs r6,r7
 				str r6,[r4,r8]
@@ -418,7 +418,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				bmi detectAlienKill			@ Alien	*IS DEAD*
 					@ MULTISHOT ALIEN *NOT DEAD*		
 					@ ok, if the alien has an ident, we need to bloom all with the same ident!!
-					mov r8,#sptIdentOffs
+					mov r8,#SPRITE_IDENT_OFFS
 					ldr r6,[r4,r8]
 					cmp r6,#2
 					bmi alienNoIdent
@@ -445,7 +445,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					
 					
 					alienNoIdent:
-					mov r8,#sptBloomOffs
+					mov r8,#SPRITE_BLOOM_OFFS
 					mov r6,#16				@ do bloom
 					str r6,[r4,r8]			@ store it back
 		
@@ -453,10 +453,10 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		
 					@ ok, alien not dead yet!!, so, play "Hit" sound
 					@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?
-					mov r8,#sptXOffs
+					mov r8,#SPRITE_X_OFFS
 					ldr r6,[r4,r8]
 					mov r6,r1			@ just test with bullet x (comment out to use alien x)
-					mov r8,#sptYOffs
+					mov r8,#SPRITE_Y_OFFS
 					ldr r7,[r4,r8]
 					bl drawShard
 					
@@ -473,10 +473,10 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				mov r6,#4
 				str r6,[r4]
 				mov r6,#6
-				mov r8,#sptObjOffs
+				mov r8,#SPRITE_OBJ_OFFS
 				str r6,[r4,r8]
 				mov r6,#4
-				mov r8,#sptExpDelayOffs
+				mov r8,#SPRITE_EXP_DELAY_OFFS
 				str r6,[r4,r8]
 
 				@ add score
@@ -541,7 +541,7 @@ alienCollideCheck:
 			ldr r5,[r5]
 			add r3,r5						@ we MUST account for level horizontal movement (player is not tied to level)
 
-			mov r8,#sptXOffs
+			mov r8,#SPRITE_X_OFFS
 			ldr r6,[r1,r8]					@ r6=current Alien X
 
 			@ simple detect code!!!
@@ -553,7 +553,7 @@ alienCollideCheck:
 			cmp r6,r3
 			bpl noPlayer
 
-			mov r8,#sptYOffs
+			mov r8,#SPRITE_Y_OFFS
 			ldr r6,[r1,r8]					@ r6=current Alien y
 			add r6,#16
 			cmp r6,r4						@ r4=player y
@@ -574,12 +574,12 @@ alienCollideCheck:
 				movmi r7,#0						@ if less than 0 make 0
 				str r7,[r6]
 				
-				mov r6,#sptIdentOffs
+				mov r6,#SPRITE_IDENT_OFFS
 				ldr r7,[r1, r6]
 				cmp r7,#128
 				beq missForBoss
 				
-					ldr r6,=sptHitsOffs				@ get alien hit points
+					ldr r6,=SPRITE_HIT_OFFS			@ get alien hit points
 					ldr r7,[r1,r6]
 					subs r7,#1						@ take one off
 					str r7,[r1,r6]
@@ -588,7 +588,7 @@ alienCollideCheck:
 				missForBoss:
 				
 					bl playShipArmourHit1Sound		@ activate sound for YOUR ship hitting alien!
-					mov r6,#sptIdentOffs
+					mov r6,#SPRITE_IDENT_OFFS
 					ldr r7,[r1,r6]
 					cmp r7,#2
 					bmi alienSingleBloom
@@ -617,7 +617,7 @@ alienCollideCheck:
 				
 				
 					alienSingleBloom:
-					mov r8,#sptBloomOffs		@ ok, alien not dead, so lets make him flash
+					mov r8,#SPRITE_BLOOM_OFFS	@ ok, alien not dead, so lets make him flash
 					mov r6,#16					@ do bloom
 					str r6,[r1,r8]				@ store it back
 					bl playShipArmourHit1Sound	@ make that "TING" sound
@@ -631,10 +631,10 @@ alienCollideCheck:
 					str r6,[r1]
 				
 					mov r6,#6					@ set the initial explosion frame
-					mov r8,#sptObjOffs			
+					mov r8,#SPRITE_OBJ_OFFS			
 					str r6,[r1,r8]
 					mov r6,#4					@ reset the explode delay
-					mov r8,#sptExpDelayOffs
+					mov r8,#SPRITE_EXP_DELAY_OFFS
 					str r6,[r1,r8]
 			
 					@ add score

@@ -258,10 +258,10 @@ bossIsShot:
 		
 			@ ok, alien not dead yet!!, so, play "Hit" sound
 			@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?
-			mov r8,#sptXOffs
+			mov r8,#SPRITE_X_OFFS
 			ldr r6,[r4,r8]
 			mov r6,r1			@ just test with bullet x (comment out to use alien x)
-			mov r8,#sptYOffs
+			mov r8,#SPRITE_Y_OFFS
 			ldr r7,[r4,r8]
 			bl drawShard
 					
@@ -419,7 +419,7 @@ bossFire:
 		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
 		and r4,r7					@ r4= speed
 		lsr r4,#16					@ shunt them down :)
-		ldr r5,=sptFireSpdOffs		@ load Speed offset
+		ldr r5,=SPRITE_FIRE_SPEED_OFFS		@ load Speed offset
 		str r4,[r1,r5]				@ and store it in the bullet define
 
 		mov r5,#0
@@ -427,18 +427,18 @@ bossFire:
 		ldr r5,=bossX
 		ldr r5,[r5]
 		add r5,#32
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		str r5,[r1,r4]				@ store bullets X
 		ldr r5,=bossY
 		ldr r5,[r5]
 		add r5,#66
-		mov r4,#sptYOffs			@ store bullets y
+		mov r4,#SPRITE_Y_OFFS		@ store bullets y
 		str r5,[r1,r4]	
 		bl alienFireInit			@ init bullet (there is something else we need?)
 		mov r5,#788
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		str r5,[r1,r4]
-		mov r4,#sptYOffs
+		mov r4,#SPRITE_Y_OFFS
 		str r5,[r1,r4]
 		b bossFireDone
 	tryBossFire1:
@@ -450,7 +450,7 @@ bossFire:
 		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
 		and r4,r7					@ r4= speed
 		lsr r4,#16					@ shunt them down :)
-		ldr r5,=sptFireSpdOffs		@ load Speed offset
+		ldr r5,=SPRITE_FIRE_SPEED_OFFS		@ load Speed offset
 		str r4,[r1,r5]				@ and store it in the bullet define
 
 		mov r5,#0
@@ -458,12 +458,12 @@ bossFire:
 		ldr r5,=bossX
 		ldr r5,[r5]
 		add r5,#12					@ left bullet
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		str r5,[r1,r4]				@ store bullets X
 		ldr r5,=bossY
 		ldr r5,[r5]
 		add r5,#66
-		mov r4,#sptYOffs			@ store bullets y
+		mov r4,#SPRITE_Y_OFFS		@ store bullets y
 		str r5,[r1,r4]	
 		bl alienFireInit			@ init bullet (there is something else we need?)
 
@@ -474,19 +474,19 @@ bossFire:
 		ldr r5,=bossX
 		ldr r5,[r5]
 		add r5,#12+32				@ left bullet
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		str r5,[r1,r4]				@ store bullets X
 		ldr r5,=bossY
 		ldr r5,[r5]
 		add r5,#66
-		mov r4,#sptYOffs			@ store bullets y
+		mov r4,#SPRITE_Y_OFFS		@ store bullets y
 		str r5,[r1,r4]	
 		bl alienFireInit			@ init bullet (there is something else we need?)
 		
 		mov r5,#788
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		str r5,[r1,r4]
-		mov r4,#sptYOffs
+		mov r4,#SPRITE_Y_OFFS
 		str r5,[r1,r4]
 
 	bossFireDone:

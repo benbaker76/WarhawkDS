@@ -142,7 +142,7 @@ alienFireMove:
 			beq testSkip
 				mov r2,r5					@ mov r5 into r2 as bullet base
 				add r2,r4, lsl #2			@ Set r2 to bullets offset
-				mov r3,#sptFireTypeOffs
+				mov r3,#SPRITE_FIRE_TYPE_OFFS
 				ldr r3,[r2,r3]				@ r3= fire type to update
 	
 				cmp r3,#9					@ check for standard shot 1-12
@@ -167,9 +167,9 @@ alienFireMove:
 	
 				@ and from here we need to check if the bullet is on our ship
 				@ and if so, deplete energy, mainloop will act on a 0 and kill us!
-				mov r6,#sptXOffs
+				mov r6,#SPRITE_X_OFFS
 				ldr r6,[r2,r6]
-				mov r7,#sptYOffs
+				mov r7,#SPRITE_Y_OFFS
 				ldr r7,[r2,r7]
 				@ r0,r1 = player x/y
 				@ r6,r7 = bullet x/y
@@ -203,11 +203,11 @@ alienFireMove:
 					movmi r7,#0
 					str r7,[r6]
 						
-					mov r6,#sptObjOffs
+					mov r6,#SPRITE_OBJ_OFFS
 					ldr r6,[r2,r6]
 					cmp r6,#26						@ 26 is the sprite we use for mine/tracker
 					bne killAlienBullet
-						mov r6,#sptBloomOffs		@ if it is obj 26
+						mov r6,#SPRITE_BLOOM_OFFS	@ if it is obj 26
 						mov r7,#16					@ flash it, and do not destroy
 						str r7,[r2,r6]
 				
@@ -218,7 +218,7 @@ alienFireMove:
 @					mov r7,#0
 @					str r7,[r2]					@ kill bullet
 					
-					mov r6,#sptYOffs		@ put bullet X off screen, only works if kill bullet
+					mov r6,#SPRITE_Y_OFFS	@ put bullet X off screen, only works if kill bullet
 					mov r7,#788				@ above is disabled? MADNESS!!
 					str r7,[r2,r6]
 					

@@ -65,19 +65,19 @@
 		beq iStandardNo				@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireSpdOffs
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r6,[r1,r0]			@ copy the bullet speed
 			str r6,[r2,r0]			@ paste it in our bullet speed
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
 			
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
@@ -98,27 +98,27 @@
 		beq iTrackNo				@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
 			
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#26				@ pick object 26
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
-			mov r0,#sptSpdXOffs	
+			mov r0,#SPRITE_SPEED_X_OFFS	
 			mov r6,#0				@ make sure the bullets initial X speed is 0
 			str r6,[r2,r0]
-			mov r0,#sptSpdDelayXOffs
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
 			mov r6,#6				@ set our speed delay to an initial value
 			str r6,[r2,r0]
-			mov r0,#sptFireSpdOffs
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r6,[r1,r0]			@ copy the bullet speed
 			str r6,[r2,r0]			@ paste it in our bullet speed
 			
@@ -138,25 +138,25 @@
 		beq iAccellNo				@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
 	
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#28				@ pick object 28
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
-			mov r0,#sptSpdYOffs	
+			mov r0,#SPRITE_SPEED_Y_OFFS	
 			mov r6,#1				@ make sure the bullets initial y speed is 1
 			str r6,[r2,r0]
-			mov r0,#sptSpdDelayYOffs
+			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
 			mov r6,#0				@ set our speed delay to an initial value
 			str r6,[r2,r0]
 		iAccellNo:	
@@ -175,28 +175,28 @@
 		beq iRippleNo				@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptSpdDelayXOffs@ We will use this to store our ACUTAL X coord (modified by sine)
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS	@ We will use this to store our ACUTAL X coord (modified by sine)
 			str r6,[r2,r0]			@ store our backup
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			add r6,#10
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
-			mov r0,#sptFireSpdOffs
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r6,[r1,r0]			@ copy the bullet speed
 			str r6,[r2,r0]			@ paste it in our bullet speed
 	
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
-			mov r0,#sptSpdXOffs	
+			mov r0,#SPRITE_SPEED_X_OFFS	
 			mov r6,#0				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
 		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
@@ -204,28 +204,28 @@
 		beq iRippleNo				@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptSpdDelayXOffs@ We will use this to store our ACUTAL X coord (modified by sine)
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS	@ We will use this to store our ACUTAL X coord (modified by sine)
 			str r6,[r2,r0]			@ store our backup
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			add r6,#10
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
-			mov r0,#sptFireSpdOffs
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r6,[r1,r0]			@ copy the bullet speed
 			str r6,[r2,r0]			@ paste it in our bullet speed
 	
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
-			mov r0,#sptSpdXOffs	
+			mov r0,#SPRITE_SPEED_X_OFFS	
 			mov r6,#24				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
 		iRippleNo:	
@@ -257,28 +257,28 @@
 		beq iMineNo					@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
 			
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#26				@ pick object 26 (mine)
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 	
-			mov r0,#sptSpdYOffs	
+			mov r0,#SPRITE_SPEED_Y_OFFS	
 			mov r6,#3				@ make sure the mines initial Y speed
 			str r6,[r2,r0]
-			mov r0,#sptSpdDelayYOffs
+			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
 			mov r6,#0				@ set our speed delay to an initial value (0)
 			str r6,[r2,r0]
-			mov r0,#sptSpdDelayXOffs
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
 			mov r6,#128				@ set our Explode delay to an initial value
 			str r6,[r2,r0]
 		iMineNo:	
@@ -312,28 +312,28 @@
 		beq iRippleph1No			@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptSpdDelayXOffs@ We will use this to store our ACUTAL X coord (modified by sine)
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS	@ We will use this to store our ACUTAL X coord (modified by sine)
 			str r6,[r2,r0]			@ store our backup
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_SPEED_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			add r6,#14
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
-			mov r0,#sptFireSpdOffs
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r6,[r1,r0]			@ copy the bullet speed
 			str r6,[r2,r0]			@ paste it in our bullet speed
 	
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
-			mov r0,#sptSpdXOffs	
+			mov r0,#SPRITE_SPEED_X_OFFS	
 			mov r6,#0				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
 		iRippleph1No:	
@@ -351,29 +351,29 @@
 		beq iRippleph2No				@ so, we cannot init a bullet :(
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptSpdDelayXOffs@ We will use this to store our ACUTAL X coord (modified by sine)
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS	@ We will use this to store our ACUTAL X coord (modified by sine)
 			str r6,[r2,r0]			@ store our backup
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r6,[r1,r0]			@ copy the aliens Y
 			add r6,#14
 			str r6,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			mov r4,#15
 			str r4,[r2,r0]			@ store r4 as our bullets type (r3 +1)
-			mov r0,#sptFireSpdOffs
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r6,[r1,r0]			@ copy the bullet speed
 			str r6,[r2,r0]			@ paste it in our bullet speed
 	
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#27				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r6,#8				@ an 8 sets the sprite active (visible)
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 
-			mov r0,#sptSpdXOffs	
+			mov r0,#SPRITE_SPEED_X_OFFS	
 			mov r6,#24				@ we will use this for a marker of where we are in the sine
 			str r6,[r2,r0]	
 		iRippleph2No:	
@@ -399,18 +399,18 @@
 		
 			@ r1= offset for alien
 			@ r2= offset for bullet
-			mov r0,#sptXOffs		@ use our x offset
+			mov r0,#SPRITE_X_OFFS		@ use our x offset
 			ldr r6,[r1,r0]			@ copy the aliens X
 			str r6,[r2,r0]			@ paste it in our bullet X
-			mov r0,#sptYOffs
+			mov r0,#SPRITE_Y_OFFS
 			ldr r7,[r1,r0]			@ copy the aliens Y
 			str r7,[r2,r0]			@ paste it in our bullet y
-			mov r0,#sptFireTypeOffs
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			str r3,[r2,r0]			@ store r3 as our bullets type
-			mov r0,#sptFireSpdOffs
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r12,[r1,r0]		@ copy the bullet speed
 			str r12,[r2,r0]		@ paste it in our bullet speed
-			mov r0,#sptObjOffs		
+			mov r0,#SPRITE_OBJ_OFFS		
 			mov r8,#27				@ pick object 27
 			str r8,[r2,r0]			@ set object to a bullet (Either 26,27,28)
 			mov r8,#8				@ an 8 sets the sprite active (visible)
@@ -463,21 +463,21 @@
 		@	store the calculated values!
 		@
 		@ first backup the delay values to trackx/tracky
-		mov r0,#sptTrackXOffs
+		mov r0,#SPRITE_TRACK_X_OFFS
 		str r8,[r2,r0]				@ store X delay
-		mov r0,#sptSpdDelayXOffs
+		mov r0,#SPRITE_SPEED_DELAY_X_OFFS
 		str r8,[r2,r0]
-		mov r0,#sptTrackYOffs
+		mov r0,#SPRITE_TRACK_Y_OFFS
 		str r9,[r2,r0]				@ store y delay
-		mov r0,#sptSpdDelayYOffs
+		mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
 		str r9,[r2,r0]
 		
 	mov r10,#1
 	mov r11,#1
 		
-		mov r0,#sptSpdXOffs
+		mov r0,#SPRITE_SPEED_X_OFFS
 		str r10,[r2,r0]
-		mov r0,#sptSpdYOffs
+		mov r0,#SPRITE_SPEED_Y_OFFS
 		str r11,[r2,r0]
 	push {r8,r9}	
 	mov r10,r8					@ Read value

@@ -60,11 +60,11 @@
 	moveStandardShot:
 	stmfd sp!, {r0-r10, lr}	
 		
-		mov r4,#sptFireSpdOffs
+		mov r4,#SPRITE_FIRE_SPEED_OFFS
 		ldr r5,[r2,r4]			@ r5=shotSpeed
 		cmp r3,#1				@ Standard UP
 		bne standard1
-			mov r4,#sptYOffs
+			mov r4,#SPRITE_Y_OFFS
 			ldr r1,[r2,r4]
 			sub r1,r5
 			str r1,[r2,r4]
@@ -75,7 +75,7 @@
 		standard1:
 		cmp r3,#2				@ Standard RIGHT
 		bne standard2
-			mov r4,#sptXOffs
+			mov r4,#SPRITE_X_OFFS
 			ldr r1,[r2,r4]
 			add r1,r5
 			str r1,[r2,r4]
@@ -86,14 +86,14 @@
 		standard2:
 		cmp r3,#3				@ Standard DOWN
 		bne standard3
-			mov r4,#sptYOffs
+			mov r4,#SPRITE_Y_OFFS
 			ldr r1,[r2,r4]
 			add r1,r5
 			str r1,[r2,r4]
 		standard3:
 		cmp r3,#4				@ Standard LEFT
 		bne standard4
-			mov r4,#sptXOffs
+			mov r4,#SPRITE_X_OFFS
 			ldr r1,[r2,r4]
 			subs r1,r5
 			str r1,[r2,r4]
@@ -103,11 +103,11 @@
 		standard4:
 		cmp r3,#5				@ Standard LEFT with Scroll Drift
 		bne standard5
-			mov r4,#sptYOffs
+			mov r4,#SPRITE_Y_OFFS
 			ldr r1,[r2,r4]
 			add r1,#1
 			str r1,[r2,r4]
-			mov r4,#sptXOffs
+			mov r4,#SPRITE_X_OFFS
 			ldr r1,[r2,r4]
 			subs r1,r5
 			str r1,[r2,r4]
@@ -118,11 +118,11 @@
 		standard5:			
 		cmp r3,#6				@ Standard RIGHT with Scroll Drift
 		bne standard6
-			mov r4,#sptYOffs
+			mov r4,#SPRITE_Y_OFFS
 			ldr r1,[r2,r4]
 			add r1,#1
 			str r1,[r2,r4]
-			mov r4,#sptXOffs
+			mov r4,#SPRITE_X_OFFS
 			ldr r1,[r2,r4]
 			add r1,r5
 			str r1,[r2,r4]
@@ -133,11 +133,11 @@
 		standard6:
 		cmp r3,#7				@ Standard LEFT with Scroll Driftx2
 		bne standard7
-			mov r4,#sptYOffs
+			mov r4,#SPRITE_Y_OFFS
 			ldr r1,[r2,r4]
 			add r1,#2
 			str r1,[r2,r4]
-			mov r4,#sptXOffs
+			mov r4,#SPRITE_X_OFFS
 			ldr r1,[r2,r4]
 			subs r1,r5
 			str r1,[r2,r4]
@@ -148,11 +148,11 @@
 		standard7:			
 		cmp r3,#8				@ Standard RIGHT with Scroll Driftx2
 		bne standard8
-			mov r4,#sptYOffs
+			mov r4,#SPRITE_Y_OFFS
 			ldr r1,[r2,r4]
 			add r1,#2
 			str r1,[r2,r4]
-			mov r4,#sptXOffs
+			mov r4,#SPRITE_X_OFFS
 			ldr r1,[r2,r4]
 			add r1,r5
 			str r1,[r2,r4]
@@ -172,10 +172,10 @@
 	stmfd sp!, {r0-r10, lr}
 	@ first, sheck the bullets coord in relation to your x (r0)
 
-		mov r6,#sptSpdXOffs				@ r6 is index to bullex x speed
+		mov r6,#SPRITE_SPEED_X_OFFS				@ r6 is index to bullex x speed
 		ldr r7,[r2,r6]					@ r7 is the bullets current speed
 	
-		mov r4,#sptSpdDelayXOffs		@ Update the speed delay
+		mov r4,#SPRITE_SPEED_DELAY_X_OFFS		@ Update the speed delay
 		ldr r5,[r2,r4]					@ r5 = speed delay x
 		subs r5,#1						@ take 1 off
 		str r5,[r2,r4]					@ put it back
@@ -184,7 +184,7 @@
 		mov r5,#12						@ else reset counter
 		str r5,[r2,r4]					@ store it and allow update of speed
 	
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		ldr r4,[r2,r4]					@ r4 = bullet X coord
 
 		cmp r4,r0						@ is bullet left or right of players x (r0)
@@ -206,15 +206,15 @@
 
 		tShotDone:
 
-		mov r4,#sptXOffs			
+		mov r4,#SPRITE_X_OFFS			
 		ldr r5,[r2,r4]					@ load our bullet x pos
 		adds r5,r7						@ add/sub our speed
 		str r5,[r2,r4]					@ store it back
 
-		mov r4,#sptFireSpdOffs
+		mov r4,#SPRITE_FIRE_SPEED_OFFS
 		ldr r7,[r2,r4]					@ r7=our fire speed
 
-		mov r4,#sptYOffs
+		mov r4,#SPRITE_Y_OFFS
 		ldr r5,[r2,r4]
 		add r5,r7						@ add speed to bullet Y
 		str r5,[r2,r4]					@ put it back
@@ -228,9 +228,9 @@
 	moveAccelShot:
 	stmfd sp!, {r0-r10, lr}
 	@ first, sheck the bullets coord in relation to your x (r0)
-		mov r6,#sptSpdYOffs
+		mov r6,#SPRITE_SPEED_Y_OFFS
 		ldr r8,[r2,r6]
-		mov r6,#sptSpdDelayYOffs		@ r6 is index to bullex y delay
+		mov r6,#SPRITE_SPEED_DELAY_Y_OFFS		@ r6 is index to bullex y delay
 		ldr r7,[r2,r6]					@ r7 is the bullets current delay
 		add r7,#1
 		str r7,[r2,r6]
@@ -240,16 +240,16 @@
 		bmi accShotUpdate
 			mov r7,#0					@ reset delay
 			str r7,[r2,r6]
-			mov r6,#sptSpdYOffs
+			mov r6,#SPRITE_SPEED_Y_OFFS
 			ldr r7,[r2,r6]
 			add r7,#1					@ add 1 to y speed
 			cmp r7,#16					@ if >, keep the same
 			moveq r7,#16
 			str r7,[r2,r6]				@ store speed back
 		accShotUpdate:
-			mov r6,#sptSpdYOffs
+			mov r6,#SPRITE_SPEED_Y_OFFS
 			ldr r7,[r2,r6]	
-			mov r4,#sptYOffs			
+			mov r4,#SPRITE_Y_OFFS			
 			ldr r5,[r2,r4]					@ load our bullet Y pos
 			add r5,r7						@ add/sub our speed
 			str r5,[r2,r4]					@ store it back
@@ -265,15 +265,15 @@
 @ "MOVE" - "Ripple shot 11"		@ a shot that "wibbles" on fire
 	moveRippleShot:
 	stmfd sp!, {r0-r10, lr}
-		mov r4,#sptSpdDelayXOffs
+		mov r4,#SPRITE_SPEED_DELAY_X_OFFS
 		ldr r5,[r2,r4]					@ load our BACKUP X coord into R5 (modify this and store in ACTUAL)
 			
-		mov r6,#sptSpdXOffs				@ speed X is the possiion in the sine data
+		mov r6,#SPRITE_SPEED_X_OFFS				@ speed X is the possiion in the sine data
 		ldr r8,[r2,r6]					@ r8 = sine number, now load it from ripple sine
 		ldr r9,=fireRippleSine
 		ldrsb r4,[r9,r8]				@ r4 = value in sine at r9 + r8
 		adds r5,r4						@ add current sine to X pos BACKUP (starts at 0)
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		str r5,[r2,r4]					@ store it back in our ACTUAL X coord
 			
 		add r8,#1						@ add to sine offset
@@ -281,10 +281,10 @@
 		moveq r8,#0						@ so, if we excede - loop!
 		str r8,[r2,r6]					@ and put the little bugger back
 		
-		mov r7,#sptFireSpdOffs
+		mov r7,#SPRITE_FIRE_SPEED_OFFS
 		ldr r7,[r2,r7]					@ get speed of bullet
 		
-		mov r6,#sptYOffs				@ get y coord
+		mov r6,#SPRITE_Y_OFFS				@ get y coord
 		ldr r5,[r2,r6]
 		add r5,r7
 		str r5,[r2,r6]					@ put it back!
@@ -297,11 +297,11 @@
 
 	stmfd sp!, {r0-r10, lr}
 
-		mov r6,#sptSpdYOffs
+		mov r6,#SPRITE_SPEED_Y_OFFS
 		ldr r7,[r2,r6]					@ r7 = y speed and r6 is offset
 
 		@ First we need to slow the mine down
-		mov r8,#sptSpdDelayYOffs
+		mov r8,#SPRITE_SPEED_DELAY_Y_OFFS
 		ldr r5,[r2,r8]					@ load our delay
 		add r5,#1						@ add 1
 		cmp r5,#12						@ check if it is time to slow
@@ -313,40 +313,40 @@
 			str r7,[r2,r6]				@ put it back!
 		iMineNot:
 		
-		mov r6,#sptSpdDelayXOffs
+		mov r6,#SPRITE_SPEED_DELAY_X_OFFS
 		ldr r5,[r2,r6]					@ load our EXPLODE delay
 		sub r5,#1
 		str r5,[r2,r6]
 		cmp r5,#15
 		bne mineBloomPass
-			mov r6,#sptBloomOffs
+			mov r6,#SPRITE_BLOOM_OFFS
 			mov r5,#16					@ set a little bloom for when nearly EXPLODED
 			str r5,[r2,r6]
 		mineBloomPass:
 		cmp r5,#0
 		bne mineNoExplode
 			bl playAlienExplodeScreamSound
-			mov r6,#sptBloomOffs
+			mov r6,#SPRITE_BLOOM_OFFS
 			mov r5,#16					@ set a little bloom to whiten initial explosion
 			str r5,[r2,r6]
 			mov r6,#5					@ set mine to an explosion
 			str r6,[r2]
 			mov r6,#14					@ set the initial explosion frame
-			mov r8,#sptObjOffs			
+			mov r8,#SPRITE_OBJ_OFFS			
 			str r6,[r2,r8]
 			mov r6,#4					@ reset the explode delay
-			mov r8,#sptExpDelayOffs
+			mov r8,#SPRITE_EXP_DELAY_OFFS
 			str r6,[r2,r8]
 			b mineShotActive
 		mineNoExplode:
-		mov r6,#sptYOffs				
+		mov r6,#SPRITE_Y_OFFS				
 		ldr r5,[r2,r6]					@ r5 = y coord
 		add r5,r7						@ add our speed
 		str r5,[r2,r6]					@ put it back
 		cmp r5,#768						@ check if off screen
 		bmi mineShotActive
 			mov r1,#788
-			mov r6,#sptYOffs
+			mov r6,#SPRITE_Y_OFFS
 			str r6,[r2,r1]
 		mineShotActive:
 		
@@ -357,15 +357,15 @@
 @ "MOVE" - "Ripple single 15 & 16"		@ a shot that "wibbles" on fire (single bullet)
 	moveRippleShotSingle:
 	stmfd sp!, {r0-r10, lr}
-		mov r4,#sptSpdDelayXOffs
+		mov r4,#SPRITE_SPEED_DELAY_X_OFFS
 		ldr r5,[r2,r4]					@ load our BACKUP X coord into R5 (modify this and store in ACTUAL)
 			
-		mov r6,#sptSpdXOffs				@ speed X is the possiion in the sine data
+		mov r6,#SPRITE_SPEED_X_OFFS				@ speed X is the possiion in the sine data
 		ldr r8,[r2,r6]					@ r8 = sine number, now load it from ripple sine
 		ldr r9,=fireRippleSine
 		ldrsb r4,[r9,r8]				@ r4 = value in sine at r9 + r8
 		adds r5,r4						@ add current sine to X pos BACKUP (starts at 0)
-		mov r4,#sptXOffs
+		mov r4,#SPRITE_X_OFFS
 		str r5,[r2,r4]					@ store it back in our ACTUAL X coord
 			
 		add r8,#1						@ add to sine offset
@@ -373,9 +373,9 @@
 		moveq r8,#0						@ so, if we excede - loop!
 		str r8,[r2,r6]					@ and put the little bugger back
 		
-		mov r6,#sptYOffs				@ get y coord
+		mov r6,#SPRITE_Y_OFFS				@ get y coord
 		ldr r5,[r2,r6]
-		mov r7,#sptFireSpdOffs
+		mov r7,#SPRITE_FIRE_SPEED_OFFS
 		ldr r8,[r2,r7]
 		add r5,r8						@ add y speed
 		str r5,[r2,r6]					@ put it back!
@@ -389,34 +389,34 @@
 		
 		@ first to the X move
 		@ check the delay (sub from the delay and if -N, reset and move)
-		@ we use sptTrackXOffs and sptTrackYOffs to restore delays
-		mov r6,#sptSpdDelayXOffs
+		@ we use SPRITE_TRACK_X_OFFS and SPRITE_TRACK_Y_OFFS to restore delays
+		mov r6,#SPRITE_SPEED_DELAY_X_OFFS
 		ldr r5,[r2,r6]
 		subs r5,#1
 		str r5,[r2,r6]
 		cmp r5,#0
 		bgt noDirectX
-			mov r7,#sptTrackXOffs
+			mov r7,#SPRITE_TRACK_X_OFFS
 			ldr r5,[r2,r7]
 			str r5,[r2,r6]			@ reset delay
-			mov r6,#sptXOffs
+			mov r6,#SPRITE_X_OFFS
 			ldr r5,[r2,r6]			@ r5=Xcoord
-			mov r8,#sptSpdXOffs
+			mov r8,#SPRITE_SPEED_X_OFFS
 			ldrsb r8,[r2,r8]		@ r8=X speed
 			adds r5,r8				@ add to X coord
 			str r5,[r2,r6]			@ store it back	
 		noDirectX:
-		mov r6,#sptSpdDelayYOffs
+		mov r6,#SPRITE_SPEED_DELAY_Y_OFFS
 		ldr r5,[r2,r6]
 		subs r5,#1
 		str r5,[r2,r6]
 		bgt noDirectY
-			mov r7,#sptTrackYOffs
+			mov r7,#SPRITE_TRACK_Y_OFFS
 			ldr r5,[r2,r7]
 			str r5,[r2,r6]			@ reset delay
-			mov r6,#sptYOffs
+			mov r6,#SPRITE_Y_OFFS
 			ldr r5,[r2,r6]			@ r5=Xcoord
-			mov r8,#sptSpdYOffs
+			mov r8,#SPRITE_SPEED_Y_OFFS
 			ldrsb r8,[r2,r8]		@ r8=X speed
 			adds r5,r8				@ add to X coord
 			str r5,[r2,r6]			@ store it back

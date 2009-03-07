@@ -407,7 +407,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				cmp r5,#128
 				bne standardAlienHit
 					bl bossIsShot			@ it is the Boss!!!
-				b detectNoAlien
+					b detectNoAlien
 				standardAlienHit:
 				@ ok, now we need to see how many hits to kill
 				mov r8,#SPRITE_HIT_OFFS

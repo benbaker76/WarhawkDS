@@ -850,7 +850,7 @@ initHunterMine:
 					mov r0,#SPRITE_IDENT_OFFS
 					str r1,[r3,r0]
 
-					ldr r0,=hunterCount		@ decrement the mine counter
+					ldr r0,=hunterCount		@ decrement the hunter counter
 					ldr r1,[r0]
 					subs r1,#1
 					movmi r1,#0

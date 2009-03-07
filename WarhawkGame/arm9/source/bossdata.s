@@ -40,7 +40,9 @@ bossInitLev:
 	.word 4,2,8,35,0,0,0,0
 	@2
 	.word 4,2,6,35,1,0,0,0
-	.space 32
+	@3
+	.word 4,2,6,35,0,0,0,0
+	@4
 	.space 32
 	.space 32
 	.space 32
@@ -60,6 +62,9 @@ bossFireLev:
 	@ form [speed/type], delay
 	@ speed and type are shared 16 bit values across a single word
 	@ if type is 0, the pattern repeats
+	@ we need to think of a way to add an alien into the mix?? Giving 
+	@ Lets start with a hunter released? We can use a value of 8192 again to set a hunter
+	@ and the "Speed" setting to control the X coord to launch from (they always have speed 2)
 	@1
 	.word 0x00020003,4,0x00020003,4,0x00020003,4,0x00020003,4,0x00020003,4,0x00020003,50,0x00020009,50,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -71,7 +76,11 @@ bossFireLev:
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@3
-	.space 256
+	.word 0x00040012,4,0x00040012,4,0x00040012,4,0x00040012,4,0x0002000E,4,0x0002000E,50,0x0002000E,10,0x0002000E,20
+	.word 0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,50
+	.word 0x00004000,1,0x01804000,1,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	@4
 	.space 256
 	.space 256
 	.space 256

@@ -233,7 +233,10 @@ bossIsShot:
 	@ r4 = sprite offset
 	@ r7 = bullets danage value
 	stmfd sp!, {r0-r8, lr}
-
+		ldr r8,=bossMan
+		ldr r8,[r8]
+		cmp r8,#3
+		bpl heBeDead
 				@ ok, now we need to see how many hits to kill
 		ldr r8,=bossHits
 		ldr r6,[r8]
@@ -274,7 +277,7 @@ bossIsShot:
 			strb r6,[r8]
 			bl addScore	
 			bl playShipArmourHit1Sound
-
+		heBeDead:
 	ldmfd sp!, {r0-r8, pc}
 
 @------------------ KILL THE BOSS
@@ -307,8 +310,6 @@ bossAttack:
 	mov r8,#191-48
 	mov r9,#191+16
 
-	
-
 	ldr r4,=bossXDir
 	ldr r0,[r4]					@ r0/r4 0=left / 1=right
 	ldr r6,=bossX
@@ -316,12 +317,9 @@ bossAttack:
 	ldr r1,=bossXSpeed
 	ldr r2,[r1]	
 
-	
-
 	ldr r1,=bossTurn
 	ldr r5,[r1]
 
-	
 	ldr r1,=bossXDelay
 	ldr r7,[r1]
 	add r7,#1
@@ -406,6 +404,8 @@ bossFire:
 		and r3,r4,r7				@ r3 = type
 		cmp r3,#0
 		beq bossNotFired
+		cmp r3,#SPRITE_TYPE_HUNTER
+		beq initBossHunter
 	
 	ldr r5,=bossFireMode
 	ldr r5,[r5]
@@ -419,6 +419,7 @@ bossFire:
 		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
 		and r4,r7					@ r4= speed
 		lsr r4,#16					@ shunt them down :)
+		
 		ldr r5,=SPRITE_FIRE_SPEED_OFFS		@ load Speed offset
 		str r4,[r1,r5]				@ and store it in the bullet define
 
@@ -524,5 +525,53 @@ bossFire:
 	bossNoNeedReset:
 	
 	ldmfd sp!, {r0-r8, pc}
+	
+@---------------- HERE WE NEED TO "FIRE" A HUNTER!
+initBossHunter:
+	ldr r4,[r2]					@ grab speed/type
+	ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
+	and r4,r7					@ r4= speed
+	lsr r4,#16					@ shunt them down :)
+	
+	ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
+	mov r0,#0					@ R0 points to the sprite that will be used for the mine
+		findBossHunterLoop:
+		ldr r2,[r3,r0, lsl #2]
+		cmp r2,#0
+		beq foundBossHunter
+			adds r0,#1
+			cmp r0,#64
+		bne findBossHunterLoop
+		b bossFireDone
+		foundBossHunter:
+			add r3,r0, lsl #2		@ r3 is now offset to mine sprite
+			mov r1,#3
+			str r1,[r3]				@ activate as activeSprite 3
+			mov r0,#SPRITE_X_OFFS
+			
+			str r4,[r3,r0]			@ set x coord
+			mov r0,#SPRITE_Y_OFFS
+			mov r1,#SCREEN_SUB_TOP-32			@ set y coord
+			str r1,[r3,r0]
+			mov r0,#SPRITE_SPEED_Y_OFFS
+			mov r1,#2				@ set y speed (change based on LEVEL) (2 is good for early levels)
+			str r1,[r3,r0]
+			mov r0,#SPRITE_OBJ_OFFS
+			mov r1,#30
+			str r1,[r3,r0]			@ set sprite to display
+			mov r0,#SPRITE_HIT_OFFS
+			mov r1,#0				@ set number of hits a single shot (for now)
+			str r1,[r3,r0]
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			mov r1,#0				@ set it to never fire (for now)
+			str r1,[r3,r0]
+			mov r0,#SPRITE_IDENT_OFFS
+			str r1,[r3,r0]
+
+
+
+
+	b bossFireDone
+
 	.pool
 	.end

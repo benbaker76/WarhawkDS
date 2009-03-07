@@ -41,6 +41,7 @@
 	.global initRippleShotPhase1
 	.global initRippleShotPhase2
 	.global initDirectShot
+	.global initSpreadShot
 
 @
 @	Every init in this code should also have a "move" function in firealienupdate.s
@@ -290,14 +291,11 @@
 	@ and also SPRITE_TRACK_Y_OFFS and SPRITE_SPEED_DELAY_Y_OFFS for Y delay and backup
 	@ SPRITE_SPEED_X_OFFS and SPRITE_SPEED_Y_OFFS are used for the speed of the bullet
 	@ and SPRITE_FIRE_SPEED_OFFS holds the shot speed
-	
-	@ WHY THE FUCK DOES THIS NOT WORK :)
-	
-	
+
 								@ we use r3=14 for an angled shot!			
-@	mov r3,#3					@ 3=downward
-@	bl initStandardShot			@ do a central shot!
-@	mov r3,#17					@ set an "angled" shot
+	mov r3,#3					@ 3=downward
+	bl initStandardShot			@ do a central shot!
+	mov r3,#14					@ set an "angled" shot
 	@ ok, now lets set a shot to the left!
 	bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
 	cmp r2,#255					@ 255=not found
@@ -311,7 +309,6 @@
 			ldr r7,[r1,r0]			@ copy the aliens Y
 			str r7,[r2,r0]			@ paste it in our bullet y
 			mov r0,#SPRITE_FIRE_TYPE_OFFS
-			mov r3,#14				@ set shot 14 (angled)
 			str r3,[r2,r0]			@ store r3 as our bullets type
 			mov r0,#SPRITE_OBJ_OFFS		
 			mov r8,#27				@ pick object 27
@@ -319,30 +316,76 @@
 			mov r8,#8				@ an 8 sets the sprite active (visible)
 			str r8,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 		
-
-
-			mov r6,#2				@ set the X update delay
+			mov r0,#SPRITE_FIRE_SPEED_OFFS	@ this is a downward shot - so this is needed in Y speed
+			ldr r7,[r1,r0]			@ r6 = speed			
+			mov r0,#SPRITE_SPEED_Y_OFFS
+			str r7,[r2,r0]
+			mov r6,#1
+			mov r0,#SPRITE_SPEED_X_OFFS
+			str r6,[r2,r0]
+			cmp r7,#1
+			moveq r8,#8
+			cmp r7,#2
+			moveq r8,#4
+			cmp r7,#3
+			moveq r8,#3
+			cmp r7,#4
+			moveq r8,#2
+			movgt r8,#1
 			mov r0,#SPRITE_TRACK_X_OFFS
-			str r6,[r2,r0]
+			str r8,[r2,r0]			@ store r8 for the y update delay
 			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
-			str r6,[r2,r0]
-	
-			mov r6,#2				@ and clear the y update delay
+			str r8,[r2,r0]			@ and backup
+			mov r6,#0				@ and clear the y update delay
 			mov r0,#SPRITE_TRACK_Y_OFFS
 			str r6,[r2,r0]
 			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
 			str r6,[r2,r0]
+	@ ok, now lets set a shot to the left!
+	bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+	cmp r2,#255					@ 255=not found
+	beq iTripleNo				@ so, we cannot init a bullet :(
+
+			@ ok, lets fire one slighlty to the left - little delay on the X update and a negative x speed
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r7,[r1,r0]			@ copy the aliens Y
+			str r7,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r8,#27				@ pick object 27
+			str r8,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r8,#8				@ an 8 sets the sprite active (visible)
+			str r8,[r2]				@ set ACTIVE (this will always be r2 with no offset)
 	
 			mov r0,#SPRITE_FIRE_SPEED_OFFS	@ this is a downward shot - so this is needed in Y speed
-			ldr r6,[r1,r0]			@ r6 = speed
-		mov r6,#4
+			ldr r7,[r1,r0]			@ r6 = speed			
 			mov r0,#SPRITE_SPEED_Y_OFFS
-			str r6,[r2,r0]
+			str r7,[r2,r0]
+			mov r6,#-1
 			mov r0,#SPRITE_SPEED_X_OFFS
 			str r6,[r2,r0]
-
-
-
+			cmp r7,#1
+			moveq r8,#8
+			cmp r7,#2
+			moveq r8,#4
+			cmp r7,#3
+			moveq r8,#3
+			cmp r7,#4
+			moveq r8,#2
+			movgt r8,#1
+			mov r0,#SPRITE_TRACK_X_OFFS
+			str r8,[r2,r0]			@ store r8 for the y update delay
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r8,[r2,r0]			@ and backup
+			mov r6,#0				@ and clear the y update delay
+			mov r0,#SPRITE_TRACK_Y_OFFS
+			str r6,[r2,r0]
+			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
+			str r6,[r2,r0]
 
 	iTripleNo:
 @	pop {r3}
@@ -541,10 +584,115 @@
 	mov r11, #9						@ x pos
 	bl drawDigits					@ Draw			
 		
-		
-		
 		iDirectNo:	
 		
+	ldmfd sp!, {r3, pc}
+
+@
+@ "INIT" - "Spread shot 18" (This fires a spread of 3 shots)
+	initSpreadShot:
+	stmfd sp!, {r3, lr}
+	@ we will use SPRITE_TRACK_X_OFFS and SPRITE_SPEED_DELAY_X_OFFS for X delay and backup
+	@ and also SPRITE_TRACK_Y_OFFS and SPRITE_SPEED_DELAY_Y_OFFS for Y delay and backup
+	@ SPRITE_SPEED_X_OFFS and SPRITE_SPEED_Y_OFFS are used for the speed of the bullet
+	@ and SPRITE_FIRE_SPEED_OFFS holds the shot speed
+
+								@ we use r3=14 for an angled shot!			
+	mov r3,#3					@ 3=downward
+	bl initStandardShot			@ do a central shot!
+	mov r3,#14
+	bl initTripleShot
+	mov r3,#14					@ set an "angled" shot
+	@ ok, now lets set a shot to the left!
+	bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+	cmp r2,#255					@ 255=not found
+	beq iSpreadNo				@ so, we cannot init a bullet :(
+
+			@ ok, lets fire one slighlty to the left - little delay on the X update and a negative x speed
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r7,[r1,r0]			@ copy the aliens Y
+			str r7,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r8,#27				@ pick object 27
+			str r8,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r8,#8				@ an 8 sets the sprite active (visible)
+			str r8,[r2]				@ set ACTIVE (this will always be r2 with no offset)
+		
+			mov r0,#SPRITE_FIRE_SPEED_OFFS	@ this is a downward shot - so this is needed in Y speed
+			ldr r7,[r1,r0]			@ r6 = speed				
+			mov r0,#SPRITE_SPEED_Y_OFFS
+			str r7,[r2,r0]
+			mov r6,#1
+			mov r0,#SPRITE_SPEED_X_OFFS
+			str r6,[r2,r0]
+			cmp r7,#1
+			moveq r8,#4
+			cmp r7,#2
+			moveq r8,#2
+			cmp r7,#3
+			moveq r8,#1
+			cmp r7,#4
+			movpl r8,#0
+			mov r0,#SPRITE_TRACK_X_OFFS
+			str r8,[r2,r0]			@ store r8 for the y update delay
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r8,[r2,r0]			@ and backup
+			mov r6,#0				@ and clear the y update delay
+			mov r0,#SPRITE_TRACK_Y_OFFS
+			str r6,[r2,r0]
+			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
+			str r6,[r2,r0]
+	@ ok, now lets set a shot to the left!
+	bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+	cmp r2,#255					@ 255=not found
+	beq iSpreadNo				@ so, we cannot init a bullet :(
+
+			@ ok, lets fire one slighlty to the left - little delay on the X update and a negative x speed
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r7,[r1,r0]			@ copy the aliens Y
+			str r7,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r8,#27				@ pick object 27
+			str r8,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r8,#8				@ an 8 sets the sprite active (visible)
+			str r8,[r2]				@ set ACTIVE (this will always be r2 with no offset)
+	
+			mov r0,#SPRITE_FIRE_SPEED_OFFS	@ this is a downward shot - so this is needed in Y speed
+			ldr r7,[r1,r0]			@ r6 = speed			
+			mov r0,#SPRITE_SPEED_Y_OFFS
+			str r7,[r2,r0]
+			mov r6,#-1
+			mov r0,#SPRITE_SPEED_X_OFFS
+			str r6,[r2,r0]
+			cmp r7,#1
+			moveq r8,#4
+			cmp r7,#2
+			moveq r8,#2
+			cmp r7,#3
+			moveq r8,#1
+			cmp r7,#4
+			movpl r8,#0
+			mov r0,#SPRITE_TRACK_X_OFFS
+			str r8,[r2,r0]			@ store r8 for the y update delay
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r8,[r2,r0]			@ and backup
+			mov r6,#0				@ and clear the y update delay
+			mov r0,#SPRITE_TRACK_Y_OFFS
+			str r6,[r2,r0]
+			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
+			str r6,[r2,r0]
+
+	iSpreadNo:
 	ldmfd sp!, {r3, pc}
 
 

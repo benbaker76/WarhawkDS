@@ -108,6 +108,11 @@ alienFireInit:
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
+	cmp r3,#18
+		bleq initSpreadShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	@ etc!
 
 
@@ -155,7 +160,7 @@ alienFireMove:
 					bleq moveRippleShot
 				cmp r3,#13
 					bleq moveMineShot
-				@cmp r3,#14	
+				cmp r3,#14	
 					bleq moveAngleShot	
 				cmp r3,#15 					@ 16 is phase 2
 					bleq moveRippleShotSingle

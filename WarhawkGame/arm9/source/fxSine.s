@@ -61,49 +61,53 @@ fxSineWobbleOff:
 
 fxSineWobbleHBlank:
 
-	stmfd sp!, {r0-r9, lr}
+	stmfd sp!, {r0-r6, lr}
 
-	ldr r0, =sinTable2				@ Address of sine table
-	ldr r8, =sinTable
-	ldr r1, =REG_BG2HOFS_SUB		@ Horizontal scroll register offset
+	ldr r0, =SIN_bin				@ Address of sine table
+	ldr r1, =REG_VCOUNT				@ REG_VCOUNT address
+	ldrh r1, [r1]					@ REG_VCOUNT value
+	
+	add r0, r1, lsl #1				@ Add the REG_VCOUNT * 2 (16 bit values in SIN table)
+	ldrsh r1, [r0]					@ Load the SIN value
+	asr r1, #6						@ Right shift the SIN value 4 bits plus 2 bits to make it smaller
+	rsb r1, r1, #0					@ Reverse subtract to make it negative (r1=#0 - r1)
+	
+	ldr r2, =REG_BG2HOFS_SUB		@ Horizontal scroll register offset
+	strh r1, [r2]
+	
+	add r0, #(192 * 2)				@ Add our Main screen offset (* 2 for 16 bit values)
+	
+	ldrsh r1, [r0]					@ Load the SIN value
+	asr r1, #6						@ Right shift the SIN value 4 bits plus 2 bits to make it smaller
+	rsb r1, r1, #0					@ Reverse subtract to make it negative (r1=#0 - r1)
+	
+	ldr r2, =REG_BG2HOFS			@ Horizontal scroll register offset
+	strh r1, [r2]
+	
+	@ -------------------------
+	
+	ldr r0, =SIN_bin				@ Address of sine table
+	ldr r1, =REG_VCOUNT				@ REG_VCOUNT address
+	ldrh r1, [r1]					@ REG_VCOUNT value
+
+	add r0, r1, lsl #1				@ Add the REG_VCOUNT * 2 (16 bit values in SIN table)	
+	ldrsh r1, [r0]					@ Load the SIN value
+	asr r1, #7						@ Right shift the SIN value 4 bits plus 3 bits to make it smaller
+	
 	ldr r2, =REG_BG3HOFS_SUB		@ Horizontal scroll register offset
-	ldr r3, =REG_BG2HOFS			@ Horizontal scroll register offset
-	ldr r4, =REG_BG3HOFS			@ Horizontal scroll register offset
-	ldr r5, =REG_VCOUNT				@ Sine offset address
-	ldrb r6, [r5]					@ Sine offset
-	mov r9,r6
+	strh r1, [r2]
 	
-	ldrb r7, [r0, r6]				@ Load the sine value offset
-	strh r7, [r1]					@ Write it to the scroll register
-	add r6,#192
-	cmp r6,#256
-	subpl r6,#256
-	ldrb r7, [r0, r6]				@ Load the sine value offset	
-	strh r7, [r3]
-	mov r6,r9
-	ldrb r7, [r8, r6]
-	strh r7, [r2]					@ Write it to the scroll register
-	add r6,#192
-	cmp r6,#256
-	subpl r6,#256
-	ldrb r7, [r8, r6]				@ Load the sine value offset	
-	strh r7, [r4]					@ Write it to the scroll register
+	add r0, #(192 * 2)				@ Add our Main screen offset (* 2 for 16 bit values)
+		
+	ldrsh r1, [r0]					@ Load the SIN value
+	asr r1, #7						@ Right shift the SIN value 4 bits plus 3 bits to make it smaller
 	
-	mov r6,r9
-	add r6, #1						@ Add one to the count
-	cmp r6, #192					@ Have we reached the end of the sin table?
-	moveq r6, #0					@ Yes so reset
-	@strb r6, [r5]					@ Write it back to our sineOffset
-	
-	ldmfd sp!, {r0-r9, pc}
+	ldr r2, =REG_BG3HOFS			@ Horizontal scroll register offset
+	strh r1, [r2]
+
+	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
-
-	.data
-	.align
-
-sineOffset:
-	.word 0
 
 	.pool
 	.end

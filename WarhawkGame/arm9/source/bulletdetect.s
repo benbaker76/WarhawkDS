@@ -49,7 +49,7 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	
 	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
 	ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
-	sub r1, #64					@ our sprite starts at 64 (very left of map) + 6 for left bullet
+	sub r1, #64					@ our sprite starts at 64 (very left of map) + 10 for left bullet
 	add r1, #10					@ our left bullet is right a bit in the sprite
 	lsr r1, #5					@ divide x by 32
 	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
@@ -72,6 +72,8 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	beq no_hit
 	cmp r6,#3					@ 1 and 2 = Hit!
 	bpl no_hit
+	mov r11,#0
+	detectBGL2:
 	bl playExplosionSound
 
 	lsl r6,#2 					@ times by 4
@@ -89,6 +91,7 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
 		ldr r4, =spriteY+4			@ DO Y COORD CONVERSION
 		ldr r4, [r4, r0, lsl #2]
+		add r4,r11
 		lsr r4,#5					@ convert to a 32 block
 		lsl r4,#5
 
@@ -164,9 +167,39 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		strb r1,[r0]
 		sub r0,#1
 		bl addScore
-
+		ldmfd sp!, {r0-r6, pc}
+	
 	no_hit:
+	@ check mid bullet (we never move more that 6 pixels, so y+6 should work fine!)
+	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
+	ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
+	sub r1, #64					@ our sprite starts at 64 (very left of map) + 10 for left bullet
+	add r1, #10					@ our left bullet is right a bit in the sprite
+	lsr r1, #5					@ divide x by 32
+	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
+	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
+	sub r2, #384				@ take 384 off our coord, as this is the top of the screen
+	add r2,#8
+	lsr r2,#5					@ convert to a 32 block
+	lsl r2,#5					
+	ldr r3,=yposSub
+	ldr r3,[r3]					@ load the yposSub
+	sub r3,#160					@ take that bloody 160 off
+	add r3,r2					@ add our scroll and bullet y together
+	lsr r3,#5					@ divide by 32 (our blocks)
+	lsl r3,#4					@ mul by 16	to convert to our colMap format	
+	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
+	ldr r4,=colMap
+	ldr r4,[r4]
+	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
+	cmp r6,#0					@ if we find a 0 = no hit!
+	beq no_hit2
+	cmp r6,#3					@ 1 and 2 = Hit!
+	bpl no_hit2
+	mov r11,#8
+	b detectBGL2
+	no_hit2:
 	ldmfd sp!, {r0-r6, pc}
 
 @-------------- DETECT Right BULLET	
@@ -199,6 +232,8 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	beq no_hitR
 	cmp r6,#3					@ 1 and 2 = Hit!
 	bpl no_hitR
+	mov r11,#0
+	detectBGR2:
 	bl playExplosionSound
 
 	lsl r6,#2 					@ times by 4
@@ -216,6 +251,7 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
 		ldr r4, =spriteY+4			@ DO Y COORD CONVERSION
 		ldr r4, [r4, r0, lsl #2]
+		add r4,r11
 		lsr r4,#5					@ convert to a 32 block
 		lsl r4,#5
 
@@ -291,7 +327,36 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		bl addScore
 
 	no_hitR:
+	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
+	ldr r1, [r1, r0, lsl #2]	@ r1=our x coord
+	sub r1, #64					@ our sprite starts at 64 (very left of map) + 6 for left bullet
+	add r1, #22					@ our left bullet is right a bit in the sprite
+	lsr r1, #5					@ divide x by 32
+	ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
+	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
+	sub r2, #384				@ take 384 off our coord, as this is the top of the screen
+	add r2,#8
+	lsr r2,#5					@ convert to a 32 block
+	lsl r2,#5					
+	ldr r3,=yposSub
+	ldr r3,[r3]					@ load the yposSub
+	sub r3,#160					@ take that bloody 160 off
+	add r3,r2					@ add our scroll and bullet y together
+	lsr r3,#5					@ divide by 32 (our blocks)
+	lsl r3,#4					@ mul by 16	to convert to our colMap format	
+	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
+	ldr r4,=colMap
+	ldr r4,[r4]
+	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
+	cmp r6,#0					@ if we find a 0 = no hit!
+	beq no_hitR2
+	cmp r6,#3					@ 1 and 2 = Hit!
+	bpl no_hitR2
+	mov r11,#8
+	b detectBGR2
+	bl playExplosionSound
+	no_hitR2:
 	ldmfd sp!, {r0-r6, pc}
 	
 @-------------- The init EXPLOSION Code
@@ -319,6 +384,7 @@ initBaseExplode:
 		lsl r1, #5					@ multiply by 32
 		ldr r2, =spriteY+4			@ DO Y COORD CONVERSION
 		ldr r2, [r2, r0, lsl #2]	@ r2=our y coord
+		add r2,r11
 		ldr r3,=pixelOffsetMain		@ load our pixeloffset (1-32)
 		ldr r3,[r3]
 		subs r3,#1					@ try to compensate for pixeloffs being 1-32 (need 0-31)
@@ -367,10 +433,14 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	detectAlienLoop:
 		ldr r4,=spriteActive+68		@ add 68 (17*4) for start of aliens
 		add r4,r3, lsl #2			@ r4=aliens base offset so we can use the "offs" for data grabbing
-		ldr r5,[r4]
+		ldr r5,[r4]					@ r5= the active alien value
 		cmp r5,#0
 		beq detectNoAlien
 		cmp r5,#128
+		beq bossDetect
+		cmp r5,#9
+		beq bossDetect
+		cmp r5,#10
 		beq bossDetect
 		cmp r5,#4
 		bpl detectNoAlien
@@ -409,6 +479,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					bl bossIsShot			@ it is the Boss!!!
 					b detectNoAlien
 				standardAlienHit:
+				
 				@ ok, now we need to see how many hits to kill
 				mov r8,#SPRITE_HIT_OFFS
 				ldr r6,[r4,r8]
@@ -488,6 +559,8 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				strb r6,[r8]
 				bl addScore		
 				bl playAlienExplodeSound
+				cmp r5,#9					@ was this a dropship?
+				bleq dropShipShot
 	
 		detectNoAlien:
 		subs r3,#1
@@ -562,6 +635,16 @@ alienCollideCheck:
 			add r4,#16
 			cmp r6,r4
 			bpl noPlayer
+			
+				ldr r8,[r1]					@ load the ACTIVE value
+				cmp r8,#10
+				bne notPowerup
+					bl powerupCollect
+					b acNoDestroy
+				
+				
+				notPowerup:
+				
 				ldr r6,=spriteBloom
 				mov r7,#16
 				str r7,[r6]						@ make shp flash

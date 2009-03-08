@@ -132,6 +132,13 @@
 	.global bossTurn
 	.global bossFireMode
 	.global bossSpecial
+	.global delayPowerUp
+	.global powerupLives
+	
+powerupLives:
+	.word 0
+delayPowerUp:
+	.word 0
 
 gameMode:
 	.word 0

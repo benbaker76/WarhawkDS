@@ -51,7 +51,6 @@ initLevel:
 	str r1,[r0]				@ turn the Boss attack Off!!
 	ldr r0,=animFrame		
 	str r1,[r0]				@ reset anim frames
-
 	ldr r0,=firePress
 	str r1,[r0]
 	
@@ -71,7 +70,9 @@ initLevel:
 	ldr r0,=yposSub
 	str r1,[r0]
 
-
+	mov r1,#250
+	ldr r0,=delayPowerUp
+	str r1,[r0]
 
 	ldr r0,=horizDrift
 	mov r1,#32

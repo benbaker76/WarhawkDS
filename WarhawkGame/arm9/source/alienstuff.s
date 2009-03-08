@@ -265,7 +265,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	@ to see if we can add more
 	stmfd sp!, {r0-r10, lr}
 
-	mov r7,#63
+	mov r7,#63						@ 64 aliens! (63-0)
 	moveAlienLoop:
 
 		@ calculate r1 to be the alien sprite pointer to use
@@ -300,6 +300,13 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		b haveWeCrashed
 	
 	hunterNot:
+	cmp r0,#10					@ is it a powerup!!?
+	bne powerupNot
+		b haveWeCrashed
+	
+	powerupNot:
+	
+	
 	cmp r0,#1
 	bne noAlienMove
 
@@ -1008,12 +1015,14 @@ stmfd sp!, {r0, lr}
 		ldr r0, =SpritesAnimTiles
 		mov r2,#5*512
 		mul r2,r1				
-		add r0,r2				
+		add r0,r2									@ r0 = source of data			
 		ldr r1,=SPRITE_GFX
-		add r1,#512*37
-		mov r2,#512*5
+		add r1,#512*37								@ r1 = destination
+		mov r2,#512*5								@ r2 = length
+		bl dmaCopy
 		ldr r1,=SPRITE_GFX_SUB
 		add r1,#512*37
+		mov r2,#512*5
 		bl dmaCopy
 		
 	animateAliensDelay:

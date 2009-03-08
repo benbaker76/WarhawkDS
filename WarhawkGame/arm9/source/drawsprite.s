@@ -298,7 +298,7 @@ drawSprite:
 
 		shardAnimates:
 		cmp r1,#6								@ -------------- Shard Animation
-		bne whatNext
+		bne moveDropShip
 			
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
@@ -326,7 +326,22 @@ drawSprite:
 				str r1,[r0,r8,lsl #2]
 
 			b noMoreStuff
-
+		moveDropShip:
+		cmp r1,#9
+		bne movePowerup							@ --------------- Drop ship
+			ldr r0,=spriteY
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#2							@ move it down screen
+			str r1,[r0,r8,lsl #2]
+			b noMoreStuff
+		movePowerup:
+		cmp r1,#10
+		bne whatNext
+			ldr r0,=spriteY
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#3							@ move it down screen
+			str r1,[r0,r8,lsl #2]
+			b noMoreStuff
 
 		whatNext:
 

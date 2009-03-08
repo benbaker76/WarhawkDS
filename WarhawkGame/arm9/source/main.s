@@ -111,7 +111,7 @@ gameLoop:
 
 	bl checkPowerUp								@ check for and use powerup
 	
-@	bl checkWave								@ check if time for another alien attack
+	bl checkWave								@ check if time for another alien attack
 	bl moveAliens								@ move the aliens and detect colisions with you
 
 	bl initHunterMine							@ check if we should chuck another mine or hunter into the mix

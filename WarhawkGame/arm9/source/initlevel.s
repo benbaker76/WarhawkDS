@@ -93,7 +93,6 @@ initLevel:
 	str r1,[r0]				@ comment out for boss test!!!!
 	
 	
-	
 	ldr r8,=levelNum
 	ldr r8,[r8]
 	cmp r8,#1
@@ -485,6 +484,8 @@ initLevel:
 		ldr r0,=StarBackPal3
 		ldr r1,=starBackPal
 		str r0,[r1]	
+		
+		
 
 	levelDone:
 	
@@ -544,10 +545,23 @@ initLevelSprites:
 	
 	bl initLevelSpecialSprites
 	
+	@ now we need to add special explosions!	
+	
 	ldmfd sp!, {r0-r6, pc}
 
 initLevelSpecialSprites:
 	stmfd sp!, {r0-r6, lr}
+	
+	@ Restore original Explosions
+	ldr r0, =ExplodeOriginalTiles
+	ldr r2, =ExplodeOriginalTilesLen	
+	ldr r1, =SPRITE_GFX
+	add r1, #6*512
+	bl dmaCopy
+	ldr r1, =SPRITE_GFX_SUB
+	add r1, #6*512
+	bl dmaCopy	
+
 	ldr r8,=levelNum
 	ldr r8,[r8]
 	cmp r8,#1
@@ -590,14 +604,30 @@ initLevelSpecialSprites:
 	ldreq r0, =SpritesLev12Tiles
 	ldreq r2, =SpritesLev12TilesLen
 	cmp r8,#14
-	ldreq r0, =SpritesLev12Tiles
-	ldreq r2, =SpritesLev12TilesLen	
+	ldreq r0, =SpritesLev1Tiles
+	ldreq r2, =SpritesLev1TilesLen	
 	ldr r1, =SPRITE_GFX
 	add r1, #21504
 	bl dmaCopy
 	ldr r1, =SPRITE_GFX_SUB
 	add r1, #21504
 	bl dmaCopy
+	
+	
+	cmp r8,#14
+	bne noSkulls
+		ldr r0, =ExplodeSkullTiles
+		ldr r2, =ExplodeSkullTilesLen	
+		ldr r1, =SPRITE_GFX
+		add r1, #6*512
+		bl dmaCopy
+		ldr r1, =SPRITE_GFX_SUB
+		add r1, #6*512
+		bl dmaCopy
+	
+	
+	noSkulls:
+	
 	
 	bl playDinkDinkSound
 	

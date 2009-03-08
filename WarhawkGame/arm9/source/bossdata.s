@@ -44,6 +44,10 @@ bossInitLev:
 	.word 4,2,6,35,0,0,0,0
 	@4
 	.space 32
+	@5
+	.space 32
+	.space 32
+	@7
 	.space 32
 	.space 32
 	.space 32
@@ -51,9 +55,8 @@ bossInitLev:
 	.space 32
 	.space 32
 	.space 32
-	.space 32
-	.space 32
-	.space 32
+	@14
+	.word 4,2,8,35,0,0,0,0
 	.space 32
 	.space 32
 
@@ -91,7 +94,11 @@ bossFireLev:
 	.space 256
 	.space 256
 	.space 256
-	.space 256
+	@14
+	.word 0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,4,0x0003000F,50,0x0001000A,50,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.space 256
 	.space 256
 	

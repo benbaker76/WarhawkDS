@@ -24,12 +24,11 @@
 	.arm
 	.align
 	.text
-	.global irqSet
-	.global irqInit
-	.global irqEnable
-	.global irqDisable
-	.global irqClear
-	.global irqTable
+	.global divf32
+	.global sqrtf32
+	.global div32
+	.global mod32
+	.global sqrt32
 
 @ fn divf32(int32 num, int32 den)
 @ brief Fixed point divide
@@ -56,7 +55,7 @@ divf32Loop1:
 	ldr r3, =REG_DIV_NUMER				@ Load REG_DIV_NUMER
 	mov r4, r0							@ Read the number
 	lsl r4, #12							@ Shift left
-	str r4, [r3], #4					@ Write the num and add 4
+	str r4, [r3], #4					@ Write the num and add 4 bytes
 	mov r4, r0							@ Read the number
 	lsr r4, #20							@ Right shift 20
 	str r4, [r3]						@ Write remaining 20 bits
@@ -89,29 +88,157 @@ sqrtf32:
 	
 	ldr r1, =REG_SQRTCNT				@ Load REG_SQRTCNT
 	mov r2, #SQRT_64					@ Load SQRT_64
-	strh r2, [r2]						@ Write it to REG_DIVCNT
+	strh r2, [r2]						@ Write it to REG_SQRTCNT
 	
 sqrtf32Loop1:
 	
 	ldr r2, [r1]						@ Read REG_DIVCNT
 	tst r2, #SQRT_BUSY					@ Busy?
-	bne divf32Loop1						@ Yes, so loop
+	bne sqrtf32Loop1					@ Yes, so loop
 	
 	ldr r2, =REG_SQRT_PARAM				@ Load REG_SQRT_PARAM
 	mov r3, r0							@ Read the number
 	lsl r3, #12							@ Shift left
-	str r3, [r2], #4					@ Write the num and add 4
+	str r3, [r2], #4					@ Write the num and add 4 bytes
 	mov r3, r0							@ Read the number
 	lsr r3, #20							@ Right shift 20
 	str r3, [r2]						@ Write remaining 20 bits
 	
 sqrtf32Loop2:
 	
+	ldr r3, [r2]						@ Read REG_SQRTCNT
+	tst r3, #SQRT_BUSY					@ Busy?
+	bne sqrtf32Loop2					@ Yes, so loop
+	
+	ldr r0, =REG_SQRT_RESULT			@ Get REG_SQRT_RESULT address
+	ldr r0, [r0]						@ Get result and place it in r0
+	
+	ldmfd sp!, {r1-r4, pc}				@ Return
+	
+	@ ---------------------------------------------
+	
+@ fn  int32 div32(int32 num, int32 den)
+@ brief integer divide
+@ r0 - param num  numerator
+@ r1 - param den  denominator
+@ r0 - return returns 32 bit integer result
+div32:
+
+	stmfd sp!, {r1-r4, lr}
+
+	@ r0 - num
+	
+	ldr r1, =REG_DIVCNT					@ Load REG_DIVCNT
+	mov r2, #DIV_32_32					@ Load DIV_32_32
+	strh r2, [r2]						@ Write it to REG_DIVCNT
+	
+div32Loop1:
+	
+	ldr r2, [r1]						@ Read REG_DIVCNT
+	tst r2, #DIV_BUSY					@ Busy?
+	bne div32Loop1						@ Yes, so loop
+	
+	ldr r2, =REG_DIV_NUMER_L			@ Load REG_DIV_NUMER_L
+	str r0, [r2]						@ Write the num
+	
+	ldr r2, =REG_DIV_DENOM_L			@ Load REG_DIV_NUMER_L
+	str r1, [r2]						@ Write the den
+	
+	mov r3, r0							@ Read the number
+	lsr r3, #20							@ Right shift 20
+	str r3, [r2]						@ Write remaining 20 bits
+	
+div32Loop2:
+	
+	ldr r3, [r2]						@ Read REG_DIVCNT
+	tst r3, #DIV_BUSY					@ Busy?
+	bne div32Loop2						@ Yes, so loop
+	
+	ldr r0, =REG_DIV_RESULT_L			@ Get REG_DIV_RESULT_L address
+	ldr r0, [r0]						@ Get result and place it in r0
+	
+	ldmfd sp!, {r1-r4, pc}				@ Return
+	
+	@ ---------------------------------------------
+	
+@ fn  int32 mod32(int32 num, int32 den)
+@ brief integer modulous
+@ r0 - param num  numerator
+@ r1 - param den  denominator
+@ r0 - return returns 32 bit integer remainder
+mod32:
+
+	stmfd sp!, {r1-r4, lr}
+
+	@ r0 - num
+	
+	ldr r1, =REG_DIVCNT					@ Load REG_DIVCNT
+	mov r2, #DIV_32_32					@ Load DIV_32_32
+	strh r2, [r2]						@ Write it to REG_DIVCNT
+	
+mod32Loop1:
+	
+	ldr r2, [r1]						@ Read REG_DIVCNT
+	tst r2, #DIV_BUSY					@ Busy?
+	bne mod32Loop1						@ Yes, so loop
+	
+	ldr r2, =REG_DIV_NUMER_L			@ Load REG_DIV_NUMER_L
+	str r0, [r2]						@ Write the num
+	
+	ldr r2, =REG_DIV_DENOM_L			@ Load REG_DIV_NUMER_L
+	str r1, [r2]						@ Write the den
+	
+	mov r3, r0							@ Read the number
+	lsr r3, #20							@ Right shift 20
+	str r3, [r2]						@ Write remaining 20 bits
+	
+mod32Loop2:
+	
+	ldr r3, [r2]						@ Read REG_DIVCNT
+	tst r3, #DIV_BUSY					@ Busy?
+	bne mod32Loop2						@ Yes, so loop
+	
+	ldr r0, =REG_DIVREM_RESULT_L		@ Get REG_DIVREM_RESULT_L address
+	ldr r0, [r0]						@ Get result and place it in r0
+	
+	ldmfd sp!, {r1-r4, pc}				@ Return
+	
+	@ ---------------------------------------------
+	
+@ fn int32 sqrt32(int a)
+@ brief integer sqrt
+@ r0 - param a 32 bit integer argument
+@ r0 - return returns 32 bit integer result
+sqrt32:
+
+	stmfd sp!, {r1-r4, lr}
+
+	@ r0 - a
+	
+	ldr r1, =REG_SQRTCNT				@ Load REG_SQRTCNT
+	mov r2, #SQRT_32					@ Load SQRT_32
+	strh r2, [r2]						@ Write it to REG_SQRTCNT
+	
+sqrt32Loop1:
+	
+	ldr r2, [r1]						@ Read REG_DIVCNT
+	tst r2, #SQRT_BUSY					@ Busy?
+	bne sqrt32Loop1						@ Yes, so loop
+	
+	ldr r2, =REG_SQRT_PARAM_L			@ Load REG_SQRT_PARAM_L
+	str r0, [r2]						@ Write the num
+	
+	mov r3, r0							@ Read the number
+	lsr r3, #20							@ Right shift 20
+	str r3, [r2]						@ Write remaining 20 bits
+	
+sqrt32Loop2:
+	
 	ldr r3, [r2]						@ Read REG_DIVCNT
 	tst r3, #SQRT_BUSY					@ Busy?
-	bne divf32Loop2						@ Yes, so loop
+	bne sqrt32Loop2						@ Yes, so loop
 	
-	ldr r0, =REG_SQRT_RESULT			@ Get REG_DIV_RESULT_L address
+	ldr r0, =REG_SQRT_RESULT			@ Get REG_SQRT_RESULT address
 	ldr r0, [r0]						@ Get result and place it in r0
 	
 	ldmfd sp!, {r1-r4, pc}				@ Return

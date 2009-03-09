@@ -38,7 +38,7 @@
 @ r0 = return returns 20.12 result
 divf32:
 
-	stmfd sp!, {r2-r3, lr}
+	stmfd sp!, {r2-r4, lr}
 
 	@ r0 - Number
 	@ r1 - Denominator
@@ -54,8 +54,12 @@ divf32Loop1:
 	bne divf32Loop1						@ Yes, so loop
 	
 	ldr r3, =REG_DIV_NUMER				@ Load REG_DIV_NUMER
-	lsl r0, #12							@ Shift left
-	str r0, [r3]						@ Write the num
+	mov r4, r0							@ Read the number
+	lsl r4, #12							@ Shift left
+	str r4, [r3], #4					@ Write the num and add 4
+	mov r4, r0							@ Read the number
+	lsr r4, #20							@ Right shift 20
+	str r4, [r3]						@ Write remaining 20 bits
 	
 	ldr r3, =REG_DIV_DENOM_L			@ Load REG_DIV_DENOM_L
 	str r1, [r3]						@ Write the den
@@ -69,7 +73,48 @@ divf32Loop2:
 	ldr r0, =REG_DIV_RESULT_L			@ Get REG_DIV_RESULT_L address
 	ldr r0, [r0]						@ Get result and place it in r0
 	
-	ldmfd sp!, {r2-r3, pc}				@ Return
+	ldmfd sp!, {r2-r4, pc}				@ Return
+	
+	@ ---------------------------------------------
+	
+@ fn int32 sqrtf32(int32 a)
+@ brief Fixed point sqrt
+@ r0 - param a Takes 20.12 
+@ r0 - return returns 20.12 result
+sqrtf32:
+
+	stmfd sp!, {r1-r4, lr}
+
+	@ r0 - a
+	
+	ldr r1, =REG_SQRTCNT				@ Load REG_SQRTCNT
+	mov r2, #SQRT_64					@ Load SQRT_64
+	strh r2, [r2]						@ Write it to REG_DIVCNT
+	
+sqrtf32Loop1:
+	
+	ldr r2, [r1]						@ Read REG_DIVCNT
+	tst r2, #SQRT_BUSY					@ Busy?
+	bne divf32Loop1						@ Yes, so loop
+	
+	ldr r2, =REG_SQRT_PARAM				@ Load REG_SQRT_PARAM
+	mov r3, r0							@ Read the number
+	lsl r3, #12							@ Shift left
+	str r3, [r2], #4					@ Write the num and add 4
+	mov r3, r0							@ Read the number
+	lsr r3, #20							@ Right shift 20
+	str r3, [r2]						@ Write remaining 20 bits
+	
+sqrtf32Loop2:
+	
+	ldr r3, [r2]						@ Read REG_DIVCNT
+	tst r3, #SQRT_BUSY					@ Busy?
+	bne divf32Loop2						@ Yes, so loop
+	
+	ldr r0, =REG_SQRT_RESULT			@ Get REG_DIV_RESULT_L address
+	ldr r0, [r0]						@ Get result and place it in r0
+	
+	ldmfd sp!, {r1-r4, pc}				@ Return
 	
 	@ ---------------------------------------------
 

@@ -316,13 +316,9 @@ alienDescript:
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @46	-	DIRECT bullet tester
-	.word 150,451,0,1024,0,1,0x10014,0x4811					@ inits	- bullet 10100 00010101
+	.word 150,451,0,1024,0,1,0x40014,0x0F11					@ inits	- bullet 10100 00010101
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
-
-
-
-
 
 @34
 	@ Alien define structure
@@ -330,7 +326,7 @@ alienDescript:
 	.word 180		@ init X				@ initial X coord
 	.word 450		@ init y				@ initial Y coord
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
-	.word 1024			@ init speed y		@ (set to 1024 to signal linear mode)
+	.word 1024		@ init speed y			@ (set to 1024 to signal linear mode)
 	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
 	.word 35		@ init spriteObj		@ Sprite to use for image
 	.word 20		@ init hits to kill		@ lower 16 = Hits (0=one shot)

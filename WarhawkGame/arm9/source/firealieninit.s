@@ -480,7 +480,6 @@
 		cmp r2,#255					@ 255=not found
 		beq iDirectNo				@ so, we cannot init a bullet :(
 		
-		
 			ldr r0,=spriteX
 			ldr r4,[r0]
 			ldr r0,=spriteY
@@ -512,77 +511,70 @@
 			@ r4/r5 = player X/Y
 			@ r6/r7 = Alien X/Y
 			@ r12 = shot speed
+			mov r10,r12						@ Store the X/Y speeds
+			mov r11,r12						@ we will need r12 later
 			
 			cmp r5,r7
-			ble directUP					@ if py<ay shoot upwards
+			rsble r11,r11,#0
+			suble r9,r7,r5
+			subgt r9,r5,r7			
 				cmp r4,r6
-				ble directDL				@ if px<ax shooting Left
-					@ We are directing bullet to down/right
+				rsble r10,r10,#0
+				suble r8,r6,r4
+				subgt r8,r4,r6
+				cmp r8,r9
+				bmi directOddQuad
+					push {r0-r2}
+					mov r0,r8					@ divide this number
+					add r9,r12					@ we also need to divide by the SPEED
+					mov r1,r9					@ by this number
+						bl divf32				@ r0=result 20.12	
+					mov r9,r0					@ move the whole to r9
+					mov r8,#0	
+					pop {r0-r2}
+				b directDone
+				directOddQuad:
+					push {r0-r2}
+					mov r0,r9					@ divide this number
+					add r8,r12					@ we also need to divide by the SPEED
+					mov r1,r8					@ by this number
+						bl divf32				@ r0=result 20.12	
+					mov r8,r0					@ move the whole to r9
+					mov r9,#0	
+					pop {r0-r2}
+				b directDone				
 					
-					sub r8,r4,r6
-					sub r9,r5,r7
-					@ have problem with angles near the diagonal!!! :(
-					cmp r8,r9
-					bmi testnext
-						push {r0-r2}
-						mov r1,r8
-						mov r2,r9
-						bl divideNumber
-						mov r9,r0
-						mov r8,#0	
-							push {r0-r10}	
-							mov r10,r2					@ Read value
-							mov r8,#8						@ y pos
-							mov r9,#8						@ Number of digits
-							mov r11, #9						@ x pos
-							bl drawDigits					@ Draw	
-							pop {r0-r10}			
-						pop {r0-r2}
-					b directDone
-					testnext:
-					mov r8,#0
-					mov r9,#0
-				directDL:
-				
-			directUP:		
-					
-		mov r8,#0
-		str r8,[r2]
-		mov r9,#0
-		b iDirectNo
 		directDone:
+		@ We may need to divide the r8 and r9 delays by the r12 speed value?
 		@
+@		push {r0-r2}
+@		mov r0,r8
+@		mov r1,r12
+@		bl divf32
+@		mov r8,r0
+@		mov r0,r9
+@		mov r1,r12
+@		bl divf32
+@		mov r9,r0
+@		pop {r0-r2}
+		
+		
+		
 		@	store the calculated values!
 		@
 		@ first backup the delay values to trackx/tracky
 		mov r0,#SPRITE_TRACK_X_OFFS
-		str r8,[r2,r0]				@ store X delay
+		str r8,[r2,r0]				@ store X delay			@ Whole number
 		mov r0,#SPRITE_SPEED_DELAY_X_OFFS
-		str r8,[r2,r0]
+		str r8,[r2,r0]										@ whole number
 		mov r0,#SPRITE_TRACK_Y_OFFS
 		str r9,[r2,r0]				@ store y delay
 		mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
-		str r9,[r2,r0]
-		
-	mov r10,#1
-	mov r11,#1
-		
+		str r9,[r2,r0]				@ store the X and Y speeds
 		mov r0,#SPRITE_SPEED_X_OFFS
 		str r10,[r2,r0]
 		mov r0,#SPRITE_SPEED_Y_OFFS
 		str r11,[r2,r0]
-	push {r8,r9}	
-	mov r10,r8					@ Read value
-	mov r8,#0						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw	
-	pop {r8,r9}
-	mov r10,r9					@ Read value
-	mov r8,#2						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw			
 		
 		iDirectNo:	
 		

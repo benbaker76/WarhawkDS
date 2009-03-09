@@ -348,7 +348,7 @@
 		bmi mineShotActive
 			mov r1,#788
 			mov r6,#SPRITE_Y_OFFS
-			str r6,[r2,r1]
+			str r1,[r2,r6]
 		mineShotActive:
 		
 	
@@ -432,41 +432,72 @@
 	moveDirectShot:
 	stmfd sp!, {r0-r10, lr}
 		
-		@ first to the X move
-		@ check the delay (sub from the delay and if -N, reset and move)
 		@ we use SPRITE_TRACK_X_OFFS and SPRITE_TRACK_Y_OFFS to restore delays
 		mov r6,#SPRITE_SPEED_DELAY_X_OFFS
-		ldr r5,[r2,r6]
-		subs r5,#1
-		str r5,[r2,r6]
-		cmp r5,#0
-		bgt noDirectX
+		ldr r5,[r2,r6]				@ format 20.12
+		ldr r9,=0xFFF				@ AND value to grab fractional
+		mov r7,r5					@ use a backup in r7
+		cmp r7,#0
+		beq directXUpdate		
+		lsr r7,#12					@ convert to the integer
+		subs r7,#1					@ take one off our delay
+		lsl r7,#12					@ return to fixed point
+		and r5,r9					@ seperate the fractional
+		mov r9,r5					@ store that for later in r9
+		add r5,r7					@ add the fixed point whole back
+		str r5,[r2,r6]				@ and return safely :)
+		bgt noDirectX				@ act on our SUBS earlier
 			mov r7,#SPRITE_TRACK_X_OFFS
-			ldr r5,[r2,r7]
-			str r5,[r2,r6]			@ reset delay
+			@ ------------------------ THER IS SOMETHING IN THESE 3 LINES THAT CAUSES SLIGHT DRIFT!!???
+			ldr r10,[r2,r7]		@ load our backup stepping in r10
+			add r10,r9				@ add the fractional from earlier
+			str r10,[r2,r6]		@ and store this for our next delay
+			directXUpdate:
 			mov r6,#SPRITE_X_OFFS
 			ldr r5,[r2,r6]			@ r5=Xcoord
 			mov r8,#SPRITE_SPEED_X_OFFS
 			ldrsb r8,[r2,r8]		@ r8=X speed
 			adds r5,r8				@ add to X coord
+			cmp r5,#384
+				bpl directDeath
+			cmp r5,#0
+				bmi directDeath
 			str r5,[r2,r6]			@ store it back	
 		noDirectX:
 		mov r6,#SPRITE_SPEED_DELAY_Y_OFFS
-		ldr r5,[r2,r6]
-		subs r5,#1
-		str r5,[r2,r6]
-		bgt noDirectY
+		ldr r5,[r2,r6]				@ format 20.12
+		ldr r9,=0xFFF				@ AND value to grab fractional
+		mov r7,r5					@ use a backup in r7
+		cmp r7,#0
+		beq DirectYUpdate
+		lsr r7,#12					@ convert to the integer		
+		subs r7,#1					@ take one off our delay
+		lsl r7,#12					@ return to fixed point
+		and r5,r9					@ seperate the fractional
+		mov r9,r5					@ store that for later in r9
+		add r5,r7					@ add the fixed point whole back
+		str r5,[r2,r6]				@ and return safely :)
+		bgt noDirectY				@ act on our SUBS earlier
 			mov r7,#SPRITE_TRACK_Y_OFFS
-			ldr r5,[r2,r7]
-			str r5,[r2,r6]			@ reset delay
-			mov r6,#SPRITE_Y_OFFS
-			ldr r5,[r2,r6]			@ r5=Xcoord
+			@ ------------------------ THER IS SOMETHING IN THESE 3 LINES THAT CAUSES SLIGHT DRIFT!!???
+			ldr r10,[r2,r7]		@ load our backup stepping in r10
+			add r10,r9				@ add the fractional from earlier
+			str r10,[r2,r6]		@ and store this for our next delay	
+		DirectYUpdate:
+			mov r6,#SPRITE_Y_OFFS	@
+			ldr r5,[r2,r6]			@ r5=ycoord
 			mov r8,#SPRITE_SPEED_Y_OFFS
-			ldrsb r8,[r2,r8]		@ r8=X speed
-			adds r5,r8				@ add to X coord
+			ldrsb r8,[r2,r8]		@ r8=y speed
+			adds r5,r8				@ add speed to y coord
+			cmp r5,#0
+				bmi directDeath
 			str r5,[r2,r6]			@ store it back
-		noDirectY:
-		
+		noDirectY:	
+			ldmfd sp!, {r0-r10, pc}	
+		directDeath:
+			mov r1,#788
+			mov r6,#SPRITE_Y_OFFS
+			str r1,[r2,r6]
 	ldmfd sp!, {r0-r10, pc}	
 
 	.pool

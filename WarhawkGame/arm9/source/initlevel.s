@@ -407,7 +407,7 @@ initLevel:
 	level12:
 	cmp r8,#12
 	bne level13
-							@ Set level 11
+							@ Set level 12
 		ldr r0,=Level12Map
 		ldr r1,=levelMap
 		str r0,[r1]
@@ -434,7 +434,7 @@ initLevel:
 	level13:
 	cmp r8,#13
 	bne level14
-							@ Set level 11
+							@ Set level 13
 		ldr r0,=Level13Map
 		ldr r1,=levelMap
 		str r0,[r1]
@@ -460,8 +460,8 @@ initLevel:
 		str r0,[r1]	
 	level14:
 	cmp r8,#14
-	bne levelDone
-							@ Set level 11
+	bne level15
+							@ Set level 14
 		ldr r0,=Level14Map
 		ldr r1,=levelMap
 		str r0,[r1]
@@ -479,6 +479,33 @@ initLevel:
 		str r0,[r1]	
 
 		ldr r0,=Level14Pal
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
+		str r0,[r1]
+	level15:
+	cmp r8,#15
+	bne levelDone
+							@ Set level 15
+		ldr r0,=Level15Map
+		ldr r1,=levelMap
+		str r0,[r1]
+
+		ldr r0,=Level15Tiles
+		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level15TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
+		ldr r0,=colMap12
+		ldr r1,=colMap
+		str r0,[r1]	
+
+		ldr r0,=Level15Pal
 		ldr r1,=levelPal
 		str r0,[r1]
 		

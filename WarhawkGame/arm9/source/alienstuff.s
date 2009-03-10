@@ -714,6 +714,7 @@ initHunterMine:
 @-------------- THIS CODE IS ONLY FOR INITIALISING HUNTERS AND MINES
 @ first, lets check if mines are active?
 @ we can use mineCount for this, if 0 = then sadly no mines
+	stmfd sp!, {lr}
 	ldr r0,=mineCount
 	ldr r1,[r0]
 	cmp r1,#0				@ is is active??
@@ -739,28 +740,19 @@ initHunterMine:
 				bne findMineLoop
 				b initHunterMineFail
 					foundMine:
-	
-
 					add r3,r0, lsl #2		@ r3 is now offset to mine sprite
 					mov r1,#2
 					str r1,[r3]				@ activate as activeSprite 2
 					mov r0,#SPRITE_X_OFFS
 						@ GENERATE A RANDOM NUMBER
-						ldr     ip, =seedpointer
-						ldmia   ip, {r8, r9}
-						tst     r9, r9, lsr #1				@ to bit into carry
-						movs    r2, r8, rrx					@ 33-bit rotate right
-						adc     r9, r9, r9					@ carry into LSB of r2
-						eor     r2, r2, r8, lsl #12		@ concenate the 38 bit value
-						eor     r8, r2, r2, lsr #20		@ de-concentate
-						stmia   ip, {r8, r9} 
-						@ r8 is now a random 32 bit number that we need to convert to 0-351 (HOW THE HELL)
+						bl getRandom
+						@ r8 is now a random 32 bit number that we need to convert to 0-223 (HOW THE HELL)
 						@ do convert code here!!
 						ldr r2,=0x1ff
-						and r9,r8,r2
+						and r9,r8,r2			@ r9 =0-511
 						add r8,r9,r9,lsl #1	@ divide 3
 						mov r8,r8,lsr #2		@ times 4
-					@	cmp r8,#SCREEN_SUB_TOP-32			@ but we really need 0-(319-32=288)
+					@	cmp r8,#SCREEN_SUB_TOP-32			@ but we really need 0-(256-32=224)
 					@	subpl r8,#32
 						@ this should make it 0-383
 
@@ -789,7 +781,7 @@ initHunterMine:
 					movmi r1,#0
 					str r1,[r0]				@ store it back
 
-	initHunter:								@ DO THE "HUNTER" INIT
+	initHunter:								@-------- DO THE "HUNTER" INIT
 
 	ldr r0,=hunterCount
 	ldr r1,[r0]
@@ -821,22 +813,12 @@ initHunterMine:
 					str r1,[r3]				@ activate as activeSprite 3
 					mov r0,#SPRITE_X_OFFS
 						@ GENERATE A RANDOM NUMBER
-						ldr     ip, =seedpointer
-						ldmia   ip, {r8, r9}
-						tst     r9, r9, lsr #1				@ to bit into carry
-						movs    r2, r8, rrx					@ 33-bit rotate right
-						adc     r9, r9, r9					@ carry into LSB of r2
-						eor     r2, r2, r8, lsl #12		@ concenate the 38 bit value
-						eor     r8, r2, r2, lsr #20		@ de-concentate
-						stmia   ip, {r8, r9} 
-						@ r8 is now a random 32 bit number that we need to convert to 0-351 (HOW THE HELL)
-						@ do convert code here!!					
-						
+						bl getRandom
 						ldr r2,=0x1ff
 						and r9,r8,r2
 						add r8,r9,r9,lsl #1
 						mov r8,r8,lsr #2
-						@ this should make it 0-383
+						@ this should make it 0-383 ( we need 0-224)
 			
 					str r8,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#SPRITE_Y_OFFS
@@ -864,7 +846,7 @@ initHunterMine:
 					str r1,[r0]				@ store it back
 	initNothing:
 	initHunterMineFail:
-	mov r15,r14
+	ldmfd sp!, {pc}
 	
 	
 	
@@ -879,13 +861,7 @@ moveMine:
 	ldr r6,[r1,r2]							@ r6 = the mines Y coord
 	
 	add r6,r5
-	str r6,[r1,r2]
-@	cmp r6,#SCREEN_MAIN_WHITESPACE
-@	bmi mineOnScreen
-@		mov r2,#0
-@		str r2,[r1]
-@	mineOnScreen:
-	
+	str r6,[r1,r2]	
 	mov r15,r14
 	
 moveHunter:

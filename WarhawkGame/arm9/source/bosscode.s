@@ -64,7 +64,9 @@ checkBossInit:
 	bne checkBossInitFail
 		bl bossIsDead
 		b checkBossInitFail	
-		
+	ldmfd sp!, {r1-r2, pc}
+	
+	
 	bossInit:
 	ldr r0,=yposSub
 	ldr r0,[r0]
@@ -163,9 +165,8 @@ checkBossInit:
 		
 		
 		bl bossDraw
-
-	
-	ldmfd sp!, {r1-r2, pc}
+		ldmfd sp!, {r1-r2, pc}
+		
 	bossActiveScroll:
 		@ here we need to update all 9 sprites by 1 Y pos.
 		@ and check when time to "LAUNCH", set bossman to 2
@@ -567,9 +568,6 @@ initBossHunter:
 			str r1,[r3,r0]
 			mov r0,#SPRITE_IDENT_OFFS
 			str r1,[r3,r0]
-
-
-
 
 	b bossFireDone
 

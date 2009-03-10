@@ -168,7 +168,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 
 			ldr r3,=spriteY
 			ldr r2,[r3]					@ our ships y coord
-			add r2,#10					@ Move it down a little
+			add r2,#6					@ Move it down a little
 			ldr r1,=spriteY+4			@ store the result in bullets y
 			str r2,[r1,r0, lsl #2]		@ done
 			ldr r1, =spriteSpeedY
@@ -180,42 +180,41 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			add r1, #4
 			str r2,[r1,r0, lsl #2]		@ done
 			
-			ldr r1, =spriteActive
-			add r1, #4					@ add 4 bytes as stored in words
-			isbulletPossible2:
-				ldr r2,[r1,r0, lsl #2]	@ Multiplied by 4 as in words
-				cmp r2,#0
-				beq bulletPossible2
-				subs r0,#1			
-			bpl isbulletPossible2	
-				ldmfd sp!, {r0-r6, pc}	
-			bulletPossible2:	
-
-			ldr r1,=spriteActive
-			add r1,#4
-			mov r2,#1
-			str r2,[r1,r0, lsl #2]		@ sprite is now active
-			ldr r3,=spriteX
-			ldr r2,[r3]					@ our ships x coord
-			ldr r4,=horizDrift			@ we need to add our horizontal-
-			ldr r4,[r4]					@ drift to the bullets X coord
-			add r2,r4
-			ldr r1,=spriteX				@ store it in bullets x
-			add r1, #4
-			str r2,[r1,r0, lsl #2]		@ done!		
-			ldr r3,=spriteY
-			ldr r2,[r3]					@ our ships y coord
-			add r2,#4					@ Move it down a little
-			ldr r1,=spriteY+4			@ store the result in bullets y
-			str r2,[r1,r0, lsl #2]		@ done
-			ldr r1, =spriteSpeedY
-			add r1,#4
-			mov r2,#6					@ set the bullets speed!
-			str r2,[r1,r0, lsl #2]	
-			mov r2,#4					@ set r2 to our bullet image
-			ldr r1, =spriteObj
-			add r1, #4
-			str r2,[r1,r0, lsl #2]		@ done		
+			@ldr r1, =spriteActive
+			@add r1, #4					@ add 4 bytes as stored in words
+			@isbulletPossible2:
+			@	ldr r2,[r1,r0, lsl #2]	@ Multiplied by 4 as in words
+			@	cmp r2,#0
+			@	beq bulletPossible2
+			@	subs r0,#1			
+			@bpl isbulletPossible2	
+			@	ldmfd sp!, {r0-r6, pc}	
+			@bulletPossible2:	
+			@ldr r1,=spriteActive
+			@add r1,#4
+			@mov r2,#1
+			@str r2,[r1,r0, lsl #2]		@ sprite is now active
+			@ldr r3,=spriteX
+			@ldr r2,[r3]					@ our ships x coord
+			@ldr r4,=horizDrift			@ we need to add our horizontal-
+			@ldr r4,[r4]					@ drift to the bullets X coord
+			@add r2,r4
+			@ldr r1,=spriteX				@ store it in bullets x
+			@add r1, #4
+			@str r2,[r1,r0, lsl #2]		@ done!		
+			@ldr r3,=spriteY
+			@ldr r2,[r3]					@ our ships y coord
+			@add r2,#4					@ Move it down a little
+			@ldr r1,=spriteY+4			@ store the result in bullets y
+			@str r2,[r1,r0, lsl #2]		@ done
+			@ldr r1, =spriteSpeedY
+			@add r1,#4
+			@mov r2,#6					@ set the bullets speed!
+			@str r2,[r1,r0, lsl #2]	
+			@mov r2,#4					@ set r2 to our bullet image
+			@ldr r1, =spriteObj
+			@add r1, #4
+			@str r2,[r1,r0, lsl #2]		@ done		
 
 			bl playAlienExplodeScreamSound			@ CHANGE THIS BIG TIME!!!
 	ldmfd sp!, {r0-r6, pc}
@@ -223,7 +222,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		fireNormal:					@ "NORMALSHOT"
 			ldr r3,=spriteY
 			ldr r2,[r3]					@ our ships y coord
-			add r2,#4					@ Move it down a little
+			add r2,#6					@ Move it down a little
 			ldr r1,=spriteY+4			@ store the result in bullets y
 			str r2,[r1,r0, lsl #2]
 			ldr r1, =spriteSpeedY

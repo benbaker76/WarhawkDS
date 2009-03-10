@@ -424,9 +424,8 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	ldr r7, [r7,r0, lsl #2]	@ r7 = 3 normal shot / 4 Power shot!
 								@ use this is a match is found!
 	cmp r7,#4					@ If powershot,
-	moveq r7,#8					@ power is UPPED
-	movne r7,#1					@ else, just the normal 1
-	
+	moveq r7,#12					@ power is UPPED
+	movne r7,#1					@ else, just the normal 1	
 	
 	mov r3,#111					@ Alien index (sprites 17 - 80 = 64)
 
@@ -490,30 +489,31 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					@ MULTISHOT ALIEN *NOT DEAD*		
 					@ ok, if the alien has an ident, we need to bloom all with the same ident!!
 					mov r8,#SPRITE_IDENT_OFFS
-					ldr r6,[r4,r8]
-					cmp r6,#2
+					ldr r8,[r4,r8]
+					cmp r8,#2
 					bmi alienNoIdent
-					cmp r6,#4
+					cmp r8,#4
 					beq alienNoIdent
-					cmp r6,#5
+					cmp r8,#5
 					beq alienNoIdent
 						@ ok, for this ident, we need to flash all matching
-					
+						@ r6=hits, copy to all idented aliens
 						mov r7,#63
 						ldr r5,=spriteIdent+68
 						fireBloomLoop:
 							ldr r3,[r5,r7,lsl #2]
-							cmp r3,r6
+							cmp r3,r8
 							bne fireBloomNot
 								@ ok, we have found a matching ident
 								ldr r2,=spriteBloom+68
 								mov r3,#16
-								str r3,[r2,r7,lsl #2]	@ make it FLASH		
+								str r3,[r2,r7,lsl #2]	@ make it FLASH	
+								ldr r2,=spriteHits+68
+								str r6,[r2,r7,lsl #2]	@ store new hits
 							fireBloomNot:
 							subs r7,#1
 						bpl fireBloomLoop
 					b alienBloomed
-					
 					
 					alienNoIdent:
 					mov r8,#SPRITE_BLOOM_OFFS
@@ -540,33 +540,84 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					b detectNoAlien
 			
 			detectAlienKill:
-				@ explode alien
-				mov r6,#4
-				str r6,[r4]
-				mov r6,#6
-				mov r8,#SPRITE_OBJ_OFFS
-				str r6,[r4,r8]
-				mov r6,#4
-				mov r8,#SPRITE_EXP_DELAY_OFFS
-				str r6,[r4,r8]
 
-				@ add score
-				ldr r8,=adder+7				@ add 78 to the score
-				mov r6,#8
-				strb r6,[r8]
-				sub r8,#1
-				mov r6,#7
-				strb r6,[r8]
-				bl addScore		
-				bl playAlienExplodeSound
-				cmp r5,#9					@ was this a dropship?
-				bleq dropShipShot
+			mov r8,#SPRITE_IDENT_OFFS
+			ldr r8,[r4,r8]
+			cmp r8,#2
+			bmi explodeSNoIdent
+			cmp r8,#4
+			beq explodeSNoIdent
+			cmp r8,#5
+			beq explodeSNoIdent
+			b explodeSIdent
+
+			dropCheck:
+			cmp r5,#9					@ was this a dropship?
+			bleq dropShipShot
 	
 		detectNoAlien:
 		subs r3,#1
 		bpl detectAlienLoop
 	
 	ldmfd sp!, {r0-r8, pc}
+	
+explodeSNoIdent:
+	mov r6,#4
+	str r6,[r4]
+	mov r6,#6
+	mov r8,#SPRITE_OBJ_OFFS
+	str r6,[r4,r8]
+	mov r6,#4
+	mov r8,#SPRITE_EXP_DELAY_OFFS
+	str r6,[r4,r8]
+	ldr r8,=adder+7				@ add 78 to the score
+	mov r6,#8
+	strb r6,[r8]
+	sub r8,#1
+	mov r6,#7
+	strb r6,[r8]
+	bl addScore		
+	bl playAlienExplodeSound
+	b dropCheck
+
+explodeSIdent:	
+	mov r7,#63
+	ldr r6,=spriteIdent+68
+	fireIdentExplodeLoop:
+	ldr r3,[r6,r7,lsl #2]
+	cmp r3,r8
+		bne fireIdentExplodeNot
+		@ ok, we have found a matching ident
+		@ so, set this to EXPLODE
+			ldr r2,=spriteActive+68
+			mov r3,#4					@ set to an explosion
+			str r3,[r2,r7,lsl #2]		@
+			mov r3,#6					@ set first explosion frame
+			ldr r2,=spriteObj+68
+			str r3,[r2,r7,lsl #2]
+			mov r3,#4					@ set the delay on explosion
+			ldr r2,=spriteExplodeDelay+68
+			str r3,[r2,r7,lsl #2]
+			@ from here we need a little shift to x/y to muddle the explosions slighlty
+		fireIdentExplodeNot:
+		subs r7,#1
+	bpl fireIdentExplodeLoop	
+	ldr r8,=adder+7				@ add 184 to the score (dont ask why?)
+	mov r6,#4
+	strb r6,[r8]
+	sub r8,#1
+	mov r6,#8
+	strb r6,[r8]
+	sub r8,#1
+	mov r6,#1
+	strb r6,[r8]
+
+	bl addScore		
+	bl playAlienExplodeSound	@ HK - we really need a meatier explode here?
+
+
+b dropCheck	
+	
 @--------------------------- Draw "shard" at alien coord r6,r7	
 drawShard:
 	stmfd sp!, {r1-r3, lr}
@@ -668,37 +719,38 @@ alienCollideCheck:
 					str r7,[r1,r6]
 					cmp r7,#0						@ if alien dead?
 					bmi acDestroy					@ yes!, DESTROY it
+	
 				missForBoss:
 				
 					bl playShipArmourHit1Sound		@ activate sound for YOUR ship hitting alien!
 					mov r6,#SPRITE_IDENT_OFFS
-					ldr r7,[r1,r6]
-					cmp r7,#2
+					ldr r6,[r1,r6]
+					cmp r6,#2
 					bmi alienSingleBloom
-					cmp r7,#4
+					cmp r6,#4
 					beq alienSingleBloom
-					cmp r7,#5
+					cmp r6,#5
 					beq alienSingleBloom
 						@ ok, for this ident, we need to flash all matching
-					
+						@ and decrement the hits and store the value in ALL idents
+						@ r7=hits left
 						mov r8,#111
-						ldr r6,=spriteIdent+68
+						ldr r5,=spriteIdent+68
 						alienBloomLoop:
-							ldr r3,[r6,r8,lsl #2]
-							cmp r3,r7
+							ldr r3,[r5,r8,lsl #2]
+							cmp r3,r6
 							bne alienBloomNot
 								@ ok, we have found a matching ident
 								ldr r2,=spriteBloom+68
 								mov r3,#16
-								str r3,[r2,r8,lsl #2]	@ make it FLASH		
+								str r3,[r2,r8,lsl #2]	@ make it FLASH	
+								ldr r2,=spriteHits+68
+								str r7,[r2,r8,lsl #2]
 							alienBloomNot:
 							subs r8,#1
 						bpl alienBloomLoop
-					b acNoDestroy				
-				
-				
-				
-				
+						b acNoDestroy				
+
 					alienSingleBloom:
 					mov r8,#SPRITE_BLOOM_OFFS	@ ok, alien not dead, so lets make him flash
 					mov r6,#16					@ do bloom
@@ -707,34 +759,78 @@ alienCollideCheck:
 					b acNoDestroy				@ jump out of what we are doing
 				acDestroy:
 						
-					bl playAlienExplodeSound	@ make a noise!!!
-					
 					@ explode alien
-					mov r6,#4					@ set alien to an explosion
-					str r6,[r1]
-				
-					mov r6,#6					@ set the initial explosion frame
-					mov r8,#SPRITE_OBJ_OFFS			
-					str r6,[r1,r8]
-					mov r6,#4					@ reset the explode delay
-					mov r8,#SPRITE_EXP_DELAY_OFFS
-					str r6,[r1,r8]
-			
-					@ add score
-					ldr r8,=adder+7				@ add 21 to the score (THAT IS ALL YOU GET FOR CRASHING)
-					mov r6,#1					@ first a 1
-					strb r6,[r8]
-					sub r8,#1
-					mov r6,#2					@ then a 2
-					strb r6,[r8]
-					bl addScore		
-					bl playAlienExplodeSound
+					@ we have 2 options here - ident and non ident
+					
+					mov r6,#SPRITE_IDENT_OFFS
+					ldr r6,[r1,r6]
+					cmp r6,#2
+					bmi explodeNonIdent
+					cmp r6,#4
+					beq explodeNonIdent
+					cmp r6,#5
+					beq explodeNonIdent	
+					b explodeIdent
 
 				acNoDestroy:
 			noPlayer:
-	
-	
 	ldmfd sp!, {r0-r8, pc}
+	
+explodeNonIdent:
+		mov r6,#4					@ set alien to an explosion
+		str r6,[r1]
+	
+		mov r6,#6					@ set the initial explosion frame
+		mov r8,#SPRITE_OBJ_OFFS			
+		str r6,[r1,r8]
+		mov r6,#4					@ reset the explode delay
+		mov r8,#SPRITE_EXP_DELAY_OFFS
+		str r6,[r1,r8]
+			
+		@ add score
+		ldr r8,=adder+7				@ add 21 to the score (THAT IS ALL YOU GET FOR CRASHING)
+		mov r6,#1					@ first a 1
+		strb r6,[r8]
+		sub r8,#1
+		mov r6,#2					@ then a 2
+		strb r6,[r8]
+		bl addScore		
+		bl playAlienExplodeSound
+		b noPlayer
+		
+explodeIdent:
+		@ r6=ident to explode
+		mov r8,#111
+		ldr r5,=spriteIdent+68
+		alienBigExplodeLoop:
+			ldr r3,[r5,r8,lsl #2]
+			cmp r3,r6
+			bne alienExplodeNot
+				@ ok, we have found a matching ident
+				@ so, set this to EXPLODE
+				ldr r2,=spriteActive+68
+				mov r3,#4					@ set to an explosion
+				str r3,[r2,r8,lsl #2]		@
+				mov r3,#6					@ set first explosion frame
+				ldr r2,=spriteObj+68
+				str r3,[r2,r8,lsl #2]
+				mov r3,#4					@ set the delay on explosion
+				ldr r2,=spriteExplodeDelay+68
+				str r3,[r2,r8,lsl #2]
+				@ from here we need a little shift to x/y to muddle the explosions slighlty
+			alienExplodeNot:
+			subs r8,#1
+		bpl alienBigExplodeLoop
+		ldr r8,=adder+7				@ add 42 to the score (dont ask why?)
+		mov r6,#2
+		strb r6,[r8]
+		sub r8,#1
+		mov r6,#4
+		strb r6,[r8]
 
+		bl addScore		
+		bl playAlienExplodeSound	@ HK - we really need a meatier explode here?
+
+		b noPlayer
 	.pool
 	.end

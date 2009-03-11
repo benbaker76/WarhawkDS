@@ -52,8 +52,7 @@ checkCraterBlockMain:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =colMap					@ collision map
-	ldr r0,[r0]
+	ldr r0, =colMapStore					@ collision map
 	ldr r1, =yposMain
 	ldr r2, =vofsMain
 
@@ -74,8 +73,7 @@ checkCraterBlockMainLoop:
 	cmp r6, #16
 	beq checkCraterBlockMainExit
 	
-	ldr r0, =colMap
-	ldr r0,[r0]
+	ldr r0, =colMapStore
 	add r0, r4
 	ldrb r3, [r0, r6]				@ read the value
 

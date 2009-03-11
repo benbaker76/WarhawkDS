@@ -93,6 +93,12 @@ initLevel:
 	ldr r0,=bossMan
 	str r1,[r0]				@ comment out for boss test!!!!
 	
+	@ we NEED to copy colmapX to a place in ram to modify it, otherwise
+	@ when we come back to play the level - the bases will still be destroyed
+	@ from that last time!
+	
+	@ so, copy from colmap (r9)
+	@ we will set the colmap in r9 here
 	
 	ldr r8,=levelNum
 	ldr r8,[r8]
@@ -111,9 +117,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap1
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap1
 		
 		ldr r0,=Level1Pal
 		ldr r1,=levelPal
@@ -140,9 +144,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap2
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap2
 		
 		ldr r0,=Level2Pal
 		ldr r1,=levelPal
@@ -168,9 +170,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap3
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap3
 		
 		ldr r0,=Level3Pal
 		ldr r1,=levelPal
@@ -196,9 +196,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap4
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap4
 
 		ldr r0,=Level4Pal
 		ldr r1,=levelPal
@@ -224,9 +222,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap5
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap5
 
 		ldr r0,=Level5Pal
 		ldr r1,=levelPal
@@ -252,9 +248,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap6
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap6
 
 		ldr r0,=Level6Pal
 		ldr r1,=levelPal
@@ -280,9 +274,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap7
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap7
 		
 		ldr r0,=Level7Pal
 		ldr r1,=levelPal
@@ -308,9 +300,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap8
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap8
 
 		ldr r0,=Level8Pal
 		ldr r1,=levelPal
@@ -336,9 +326,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap9
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap9
 	
 		ldr r0,=Level9Pal
 		ldr r1,=levelPal
@@ -364,9 +352,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap10
-		ldr r1,=colMap
-		str r0,[r1]
+		ldr r9,=colMap10
 	
 		ldr r0,=Level10Pal
 		ldr r1,=levelPal
@@ -392,9 +378,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap11
-		ldr r1,=colMap
-		str r0,[r1]	
+		ldr r9,=colMap11
 
 		ldr r0,=Level11Pal
 		ldr r1,=levelPal
@@ -420,9 +404,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap12
-		ldr r1,=colMap
-		str r0,[r1]	
+		ldr r9,=colMap12
 
 		ldr r0,=Level12Pal
 		ldr r1,=levelPal
@@ -447,9 +429,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap12
-		ldr r1,=colMap
-		str r0,[r1]	
+		ldr r9,=colMap13
 
 		ldr r0,=Level13Pal
 		ldr r1,=levelPal
@@ -474,9 +454,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap12
-		ldr r1,=colMap
-		str r0,[r1]	
+		ldr r9,=colMap14
 
 		ldr r0,=Level14Pal
 		ldr r1,=levelPal
@@ -487,6 +465,32 @@ initLevel:
 		str r0,[r1]
 	level15:
 	cmp r8,#15
+	bne level16
+							@ Set level 15
+		ldr r0,=Level15Map
+		ldr r1,=levelMap
+		str r0,[r1]
+
+		ldr r0,=Level15Tiles
+		ldr r1,=levelTiles
+		str r0,[r1]
+		
+		ldr r0,=Level15TilesLen
+		ldr r1,=levelTilesLen
+		str r0,[r1]
+		
+		ldr r9,=colMap15
+
+		ldr r0,=Level15Pal
+		ldr r1,=levelPal
+		str r0,[r1]
+		
+		ldr r0,=StarBackPal3
+		ldr r1,=starBackPal
+		str r0,[r1]		
+
+	level16:
+	cmp r8,#16
 	bne levelDone
 							@ Set level 15
 		ldr r0,=Level15Map
@@ -501,9 +505,7 @@ initLevel:
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r0,=colMap12
-		ldr r1,=colMap
-		str r0,[r1]	
+		ldr r9,=colMap16
 
 		ldr r0,=Level15Pal
 		ldr r1,=levelPal
@@ -512,10 +514,15 @@ initLevel:
 		ldr r0,=StarBackPal3
 		ldr r1,=starBackPal
 		str r0,[r1]	
-		
-		
-
 	levelDone:
+	
+	@ ok, using r9 as source, copy data to colMapStore
+	
+		mov r0,r9
+		ldr r1,=colMapStore
+		ldr r2,=1984*4
+		bl dmaCopy
+	
 	
 	@ Load the palette into the palette subscreen area and main
 
@@ -652,8 +659,6 @@ initLevelSpecialSprites:
 		ldr r1, =SPRITE_GFX_SUB
 		add r1, #6*512
 		bl dmaCopy
-	
-	
 	noSkulls:
 	
 	

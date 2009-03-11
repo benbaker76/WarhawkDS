@@ -744,18 +744,15 @@ initHunterMine:
 					mov r1,#2
 					str r1,[r3]				@ activate as activeSprite 2
 					mov r0,#SPRITE_X_OFFS
-						@ GENERATE A RANDOM NUMBER
+						@ GENERATE A RANDOM NUMBER (32bit word)
 						bl getRandom
-						@ r8 is now a random 32 bit number that we need to convert to 0-223 (HOW THE HELL)
-						@ do convert code here!!
 						ldr r2,=0x1ff
-						and r9,r8,r2			@ r9 =0-511
-						add r8,r9,r9,lsl #1	@ divide 3
-						mov r8,r8,lsr #2		@ times 4
-					@	cmp r8,#SCREEN_SUB_TOP-32			@ but we really need 0-(256-32=224)
-					@	subpl r8,#32
-						@ this should make it 0-383
-
+						and r8,r2
+						mov r2,#9
+						mul r8,r2
+						lsr r8,#4
+						add r8,#64
+						@ this should make it 64-351 ( from 0-288)
 					str r8,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#SPRITE_Y_OFFS
 					mov r1,#SCREEN_SUB_TOP-32			@ set y coord
@@ -812,14 +809,15 @@ initHunterMine:
 					mov r1,#3
 					str r1,[r3]				@ activate as activeSprite 3
 					mov r0,#SPRITE_X_OFFS
-						@ GENERATE A RANDOM NUMBER
+						@ GENERATE A RANDOM NUMBER (32bit word)
 						bl getRandom
 						ldr r2,=0x1ff
-						and r9,r8,r2
-						add r8,r9,r9,lsl #1
-						mov r8,r8,lsr #2
-						@ this should make it 0-383 ( we need 0-224)
-			
+						and r8,r2
+						mov r2,#9
+						mul r8,r2
+						lsr r8,#4
+						add r8,#64
+						@ this should make it 64-351 ( from 0-288)
 					str r8,[r3,r0]			@ set x coord (RANDOM)
 					mov r0,#SPRITE_Y_OFFS
 					mov r1,#SCREEN_SUB_TOP-32			@ set y coord

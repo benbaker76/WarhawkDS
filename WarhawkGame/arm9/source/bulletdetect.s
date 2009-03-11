@@ -62,11 +62,10 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	sub r3,#160					@ take that bloody 160 off
 	add r3,r2					@ add our scroll and bullet y together
 	lsr r3,#5					@ divide by 32 (our blocks)
-	lsl r3,#4					@ mul by 16	to convert to our colMap format	
+	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
-	ldr r4,=colMap
-	ldr r4,[r4]
+	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
 	cmp r6,#0					@ if we find a 0 = no hit!
 	beq no_hit
@@ -187,11 +186,10 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	sub r3,#160					@ take that bloody 160 off
 	add r3,r2					@ add our scroll and bullet y together
 	lsr r3,#5					@ divide by 32 (our blocks)
-	lsl r3,#4					@ mul by 16	to convert to our colMap format	
+	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
-	ldr r4,=colMap
-	ldr r4,[r4]
+	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
 	cmp r6,#0					@ if we find a 0 = no hit!
 	beq no_hit2
@@ -222,11 +220,10 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	sub r3,#160					@ take that bloody 160 off
 	add r3,r2					@ add our scroll and bullet y together
 	lsr r3,#5					@ divide by 32 (our blocks)
-	lsl r3,#4					@ mul by 16	to convert to our colMap format	
+	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
-	ldr r4,=colMap
-	ldr r4,[r4]
+	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
 	cmp r6,#0					@ if we find a 0 = no hit!
 	beq no_hitR
@@ -343,11 +340,10 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	sub r3,#160					@ take that bloody 160 off
 	add r3,r2					@ add our scroll and bullet y together
 	lsr r3,#5					@ divide by 32 (our blocks)
-	lsl r3,#4					@ mul by 16	to convert to our colMap format	
+	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
-	ldr r4,=colMap
-	ldr r4,[r4]
+	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
 	cmp r6,#0					@ if we find a 0 = no hit!
 	beq no_hitR2

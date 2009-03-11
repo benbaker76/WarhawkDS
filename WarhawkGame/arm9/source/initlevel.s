@@ -639,8 +639,8 @@ initLevelSpecialSprites:
 	ldreq r0, =SpritesLev12Tiles
 	ldreq r2, =SpritesLev12TilesLen
 	cmp r8,#14
-	ldreq r0, =SpritesLev1Tiles
-	ldreq r2, =SpritesLev1TilesLen	
+	ldreq r0, =SpritesLev14Tiles
+	ldreq r2, =SpritesLev14TilesLen	
 	ldr r1, =SPRITE_GFX
 	add r1, #21504
 	bl dmaCopy

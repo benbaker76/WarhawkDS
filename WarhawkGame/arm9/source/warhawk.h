@@ -31,6 +31,10 @@
 #include "..\build\SpritesLev10.h"
 #include "..\build\SpritesLev11.h"
 #include "..\build\SpritesLev12.h"
+#include "..\build\SpritesLev13.h"
+#include "..\build\SpritesLev14.h"
+#include "..\build\SpritesLev15.h"
+#include "..\build\SpritesLev16.h"
 
 #include "..\build\ExplodeOriginal.h"
 #include "..\build\ExplodeSkull.h"

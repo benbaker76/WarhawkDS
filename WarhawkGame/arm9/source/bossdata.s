@@ -58,8 +58,10 @@ bossInitLev:
 	.word 4,2,8,35,1,0,0,0
 	@14
 	.word 4,2,8,35,0,0,0,0
-	.space 32
-	.space 32
+	@15
+	.word 4,2,8,35,1,0,0,0
+	@16
+	.word 4,2,8,35,1,0,0,0
 
 bossFireLev:
 	@ this consists of 64 words that describe the bosses firing pattern

@@ -52,7 +52,7 @@ alienLevel:
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 @Lev3
-	.word 3650,393225,3600,458762,3550,524299,3500,589834,3450,655369,3400,458762,3365,8192,3350,524299,3300,589834,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 3650,393225,3600,458762,3550,524299,3500,589834,3450,655369,3400,458762,3350,524299,3300,589834,3299,8192,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -200,19 +200,19 @@ alienDescript:
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @17	
-	.word 180,300,2,1024,0,52,2048,0					@ inits
+	.word 180,300,2,1024,0,52,10,0					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @18	
-	.word 212,300,2,1024,0,53,0x4FFFF,0x2803 		@ fie is 40 delay and fire down (fire type 7) 00101000 00000111
+	.word 212,300,2,1024,0,53,0x4000A,0x2803 		@ fie is 40 delay and fire down (fire type 7) 00101000 00000111
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @19	
-	.word 244,300,2,1024,0,54,0x4FFFF,0x2803		@ inits
+	.word 244,300,2,1024,0,54,0x4000A,0x2803		@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @20	
-	.word 276,300,2,1024,0,55,200,0					@ inits
+	.word 276,300,2,1024,0,55,10,0					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @21	
@@ -316,7 +316,7 @@ alienDescript:
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @46	-	DIRECT bullet tester
-	.word 150,451,0,1024,0,1,0x40014,0x0F11					@ inits	- bullet 10100 00010101
+	.word 150,451,0,1024,0,40,0x30014,0x0411					@ inits	- bullet 10100 00010101
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 
@@ -330,7 +330,7 @@ alienDescript:
 	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
 	.word 35		@ init spriteObj		@ Sprite to use for image
 	.word 20		@ init hits to kill		@ lower 16 = Hits (0=one shot)
-											@ upper 16 = shot speed
+											@ upper 16 = shot speed (shot)
 	.word 19220		@ init 'fire type' 		@ Lower 8 bits = type, 0=none
 											@ the rest is delay (shifted 8 left)
 	.word 0,0		@ track x,y 1			@ tracking coordinate (as in coords.png)

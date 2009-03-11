@@ -71,17 +71,6 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		sub r4,r7
 		lsr r4,#16					@ r4= ident
 		mov r6,r4					@ move to r6 for later
-		
-@				mov r10,r7			@ Set to display attack wave number
-@				mov r8,#23			@ y pos
-@				mov r9,#5			@ Number of digits
-@				mov r11, #0			@ x pos
-@				bl drawDigits		@ Display the initilised wave (Bug test)
-@				mov r10,r6			@ Set to display attack wave number
-@				mov r8,#22			@ y pos
-@				mov r9,#5			@ Number of digits
-@				mov r11, #0			@ x pos
-@				bl drawDigits		@ Display the initilised wave (Bug test)
 
 	cmp r7,#SPRITE_TYPE_MINE		@ Check for a "MINE FIELD" request
 	bne noMines
@@ -727,7 +716,7 @@ initHunterMine:
 	str r1,[r0]
 	cmp r1,#0
 	bpl initHunter			@ not time yet
-		mov r1,#5																	@ reset the timer	(Change based on LEVEL)
+		mov r1,#8			@ reset the timer	(Change based on LEVEL)
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#0					@ R0 points to the sprite that will be used for the mine

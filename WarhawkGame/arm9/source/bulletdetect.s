@@ -594,7 +594,27 @@ explodeSIdent:
 			mov r3,#4					@ set the delay on explosion
 			ldr r2,=spriteExplodeDelay+68
 			str r3,[r2,r7,lsl #2]
-			@ from here we need a little shift to x/y to muddle the explosions slighlty
+			@ from here we add a little shift to x/y to muddle the explosions slighlty
+			push {r8}
+			ldr r2,=spriteX+68
+			ldr r3,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0x7
+			subs r8,#3
+			adds r3,r8
+			str r3,[r2,r7,lsl #2]
+			ldr r2,=spriteY+68
+			ldr r3,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0x7
+			subs r8,#3
+			adds r3,r8
+			str r3,[r2,r7,lsl #2]
+			ldr r2,=spriteBloom+68
+			bl getRandom
+			and r8,#0x1f
+			str r8,[r2,r7,lsl #2]				
+			pop {r8}
 		fireIdentExplodeNot:
 		subs r7,#1
 	bpl fireIdentExplodeLoop	
@@ -796,26 +816,46 @@ explodeNonIdent:
 		
 explodeIdent:
 		@ r6=ident to explode
-		mov r8,#111
+		mov r7,#111
 		ldr r5,=spriteIdent+68
 		alienBigExplodeLoop:
-			ldr r3,[r5,r8,lsl #2]
+			ldr r3,[r5,r7,lsl #2]
 			cmp r3,r6
 			bne alienExplodeNot
 				@ ok, we have found a matching ident
 				@ so, set this to EXPLODE
 				ldr r2,=spriteActive+68
 				mov r3,#4					@ set to an explosion
-				str r3,[r2,r8,lsl #2]		@
+				str r3,[r2,r7,lsl #2]		@
 				mov r3,#6					@ set first explosion frame
 				ldr r2,=spriteObj+68
-				str r3,[r2,r8,lsl #2]
+				str r3,[r2,r7,lsl #2]
 				mov r3,#4					@ set the delay on explosion
 				ldr r2,=spriteExplodeDelay+68
-				str r3,[r2,r8,lsl #2]
-				@ from here we need a little shift to x/y to muddle the explosions slighlty
-			alienExplodeNot:
-			subs r8,#1
+				str r3,[r2,r7,lsl #2]
+				@ from here we add a little shift to x/y to muddle the explosions slighlty
+				push {r8}
+				ldr r2,=spriteX+68
+				ldr r3,[r2,r7,lsl #2]
+				bl getRandom
+				and r8,#0x7
+				subs r8,#3
+				adds r3,r8
+				str r3,[r2,r7,lsl #2]
+				ldr r2,=spriteY+68
+				ldr r3,[r2,r7,lsl #2]
+				bl getRandom
+				and r8,#0x7
+				subs r8,#3
+				adds r3,r8
+				str r3,[r2,r7,lsl #2]
+				ldr r2,=spriteBloom+68
+				bl getRandom
+				and r8,#0x1f
+				str r8,[r2,r7,lsl #2]				
+				pop {r8}
+				alienExplodeNot:
+			subs r7,#1
 		bpl alienBigExplodeLoop
 		ldr r8,=adder+7				@ add 42 to the score (dont ask why?)
 		mov r6,#2

@@ -35,6 +35,7 @@
 	.global moveAliens
 	.global initHunterMine
 	.global animateAliens
+	.global initAlien
 
 checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	stmfd sp!, {r0-r4, lr}
@@ -93,10 +94,9 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				b initWaveAliensDone	
 	noHunter:
 		@ from here on in, we know that it is a normal attack
-
-		@ now we need to make r2 the index to the start of attack wave r1
+		@ now we need to make r2 the index to the start of attack wave r7
 		ldr r2,=alienWave
-		add r2, r7, lsl #7				@ add r2=r1*128 (each wave is 32 words)
+		add r2, r7, lsl #7				@ add r2=r7*128 (each wave is 32 words)
 		mov r3,#0						@ counter to get the data an init them
 		initWaveAliens:					@ we need to pass r1 to initAliens to start them
 			ldr r1,[r2,r3, lsl #2]		@ r1+alien number*4 (one word each)

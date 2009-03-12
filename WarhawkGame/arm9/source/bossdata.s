@@ -68,9 +68,12 @@ bossFireLev:
 	@ form [speed/type], delay
 	@ speed and type are shared 16 bit values across a single word
 	@ if type is 0, the pattern repeats
-	@ we need to think of a way to add an alien into the mix?? Giving 
-	@ Lets start with a hunter released? We can use a value of 8192 again to set a hunter
-	@ and the "Speed" setting to control the X coord to launch from (they always have speed 2)
+	@ we need to think of a way to add aliens into the mix??
+	@ - Lets start with a hunter released? We can use a value of 16384 again to set a hunter
+	@ - and the "Speed" setting to control the X coord to launch from (they always have speed 2)
+	@ - set speed to 16384 to set a random release on the X coord for the Hunter.
+	@ now for Attack Waves, we need to supply the wave number
+	@ set "type" to 32768 and speed to the number of the wave to use
 	@1
 	.word 0x00020003,4,0x00020003,4,0x00020003,4,0x00020003,4,0x00020003,4,0x00020003,50,0x00020009,50,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -84,7 +87,7 @@ bossFireLev:
 	@3
 	.word 0x00040012,4,0x00040012,4,0x00040012,4,0x00040012,4,0x0002000E,4,0x0002000E,50,0x0002000E,10,0x0002000E,20
 	.word 0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,4,0x00050003,50
-	.word 0x00004000,1,0x01804000,1,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0x40004000,1,0x40004000,1,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@4
 	.word 0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4
@@ -106,8 +109,8 @@ bossFireLev:
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@14
-	.word 0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,4,0x0003000F,50,0x0001000A,50,0,0
-	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,4,0x0003000F,50,0x0001000A,50,0x000D8000,16
+	.word 0x000D8000,16,0x000D8000,16,0x000D8000,50,0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,50
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.space 256

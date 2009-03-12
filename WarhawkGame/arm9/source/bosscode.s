@@ -407,6 +407,8 @@ bossFire:
 		beq bossNotFired
 		cmp r3,#SPRITE_TYPE_HUNTER
 		beq initBossHunter
+		cmp r3,#SPRITE_TYPE_ALIENWAVE
+		beq initBossWave
 	
 	ldr r5,=bossFireMode
 	ldr r5,[r5]
@@ -531,14 +533,28 @@ bossFire:
 initBossHunter:
 	ldr r4,[r2]					@ grab speed/type
 	ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
-	and r4,r7					@ r4= speed
+	and r4,r7					@ r4= speed (used for X coord here)
 	lsr r4,#16					@ shunt them down :)
 	
+	cmp r4,#SPRITE_TYPE_HUNTER	@ if speed is set also, we need to randomly grab a number
+	bne bossHunterFixed
+	
+		bl getRandom
+		ldr r4,=0x1ff
+		and r8,r4
+		mov r4,#9
+		mul r8,r4
+		lsr r8,#4
+		add r4,r8,#64
+		@ this should make it 64-351 ( from 0-288)
+	
+	bossHunterFixed:
+		
 	ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 	mov r0,#0					@ R0 points to the sprite that will be used for the mine
 		findBossHunterLoop:
-		ldr r2,[r3,r0, lsl #2]
-		cmp r2,#0
+		ldr r4,[r3,r0, lsl #2]
+		cmp r4,#0
 		beq foundBossHunter
 			adds r0,#1
 			cmp r0,#64
@@ -571,5 +587,27 @@ initBossHunter:
 
 	b bossFireDone
 
+@--------------- HERE WE NEED TO 'FIRE' AND ATTACK WAVE
+initBossWave:
+		ldr r4,[r2]					@ grab speed/type
+		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
+		and r4,r7					@ r4= speed (used for attack wave here)
+		lsr r4,#16					@ shunt them down :)
+		@ now we need to make r2 the index to the start of attack wave r4
+		ldr r5,=alienWave
+		add r5, r4, lsl #7				@ add r2=r7*128 (each wave is 32 words)
+		mov r3,#0						@ counter to get the data an init them
+		initBossAliens:					@ we need to pass r1 to initAliens to start them
+			ldr r1,[r5,r3, lsl #2]		@ r1+alien number*4 (one word each)
+			cmp r1,#0
+				beq initBossAliensDone	@ if the alien descript is 0, that is it!
+				mov r6,#0				@ make sure aliens have no ident
+				bl initAlien
+			add r3,#1
+			cmp r3,#32
+		bne initBossAliens
+	initBossAliensDone:
+	
+	b bossFireDone
 	.pool
 	.end

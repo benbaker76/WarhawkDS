@@ -48,8 +48,8 @@ moveShip:
 	ldr r7,=powerUp				@ check if we are "Powered up"
 	ldr r7,[r7]
 	cmp r7, #1					@ a 1 signals a power up
-	moveq r7,#3					@ if so, move 4 pixels per refresh
-	movne r7,#2					@ if not, move our standard 2
+	moveq r7,#5					@ if so, move 4 pixels per refresh
+	movne r7,#3					@ if not, move our standard 2
 
 								@ r7 now holds our ship speed
 	ldr r2,[r1]					@ R2 is the input (except X and Y handled by ARM7)
@@ -81,19 +81,21 @@ moveShip:
 		ldr r8, [r8]
 		cmp r8,#0
 		beq leftmove
-			sub r8,r7, lsr #1
+			subs r8,r7, lsr #1
+			cmp r8,#0
+			movmi r8,#0
 			ldr r4,=horizDrift
 			strb r8,[r4]
 			ldr r8,[r6]
 			subs r8,r7, lsr #1
 			cmp r8,#64
-			movmi r8,#64
+			movle r8,#64
 			b dircheck2pass
 		leftmove:
 		ldr r8,[r6]
 		subs r8,r7
 		cmp r8,#64
-		movmi r8,#64
+		movle r8,#64
 		dircheck2pass:
 		str r8,[r6]
 		b dircheck4
@@ -107,6 +109,8 @@ moveShip:
 		cmp r8,#64
 		beq rightmove
 			add r8,r7, lsr #1
+			cmp r8,#64
+			movpl r8,#64
 			ldr r4,=horizDrift
 			strb r8,[r4]
 			ldr r8,[r6]
@@ -114,7 +118,7 @@ moveShip:
 			add r4,#32
 			adds r8,r7,lsr #1
 			cmp r8,r4
-			movpl r8,r4
+			movge r8,r4
 			b dircheck3pass
 		rightmove:
 		ldr r8,[r6]
@@ -122,7 +126,7 @@ moveShip:
 		add r4,#32		
 		adds r8,r7
 		cmp r8,r4			@ 256-sprite width
-		movpl r8,r4
+		movge r8,r4
 		dircheck3pass:
 		str r8,[r6]
 	dircheck4:

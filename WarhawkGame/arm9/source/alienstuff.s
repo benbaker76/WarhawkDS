@@ -720,7 +720,17 @@ initHunterMine:
 	str r1,[r0]
 	cmp r1,#0
 	bpl initHunter			@ not time yet
-		mov r1,#8			@ reset the timer	(Change based on LEVEL)
+		ldr r7,=levelNum	@ set the timer between meteors based on level
+		ldr r7,[r7]
+		cmp r7,#3
+		movle r1,#16
+		cmp r7,#4
+		movge r1,#12
+		cmp r7,#8
+		movge r1,#8
+		cmp r7,#10
+		movge r1,#6
+
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#0					@ R0 points to the sprite that will be used for the mine
@@ -747,12 +757,26 @@ initHunterMine:
 						add r8,#64
 						@ this should make it 64-351 ( from 0-288)
 					str r8,[r3,r0]			@ set x coord (RANDOM)
+					ldr r7,=levelNum
+					ldr r7,[r7]
 					mov r0,#SPRITE_Y_OFFS
 					mov r1,#SCREEN_SUB_TOP-32			@ set y coord
 					str r1,[r3,r0]
+					
 					mov r0,#SPRITE_SPEED_Y_OFFS
-					mov r1,#3				@ set y speed (change based on LEVEL) (3 is good for early levels)
-					str r1,[r3,r0]
+					mov r1,#0x3				@ set Y speed based on level (r7)
+					cmp r7,#5
+					movge r1,#0x7
+					cmp r7,#10
+					movge r1,#0x7
+					bl getRandom
+					and r8,r1
+					cmp r8,#2
+					addle r8,#2
+					cmp r7,#10
+					addge r8,#1
+					str r8,[r3,r0]
+					
 					mov r0,#SPRITE_OBJ_OFFS
 					mov r1,#36
 					str r1,[r3,r0]			@ set sprite to display
@@ -783,7 +807,15 @@ initHunterMine:
 	str r1,[r0]
 	cmp r1,#0
 	bpl initNothing			@ not time yet
-		mov r1,#50																	@ reset the timer	(Change based on LEVEL)
+		ldr r7,=levelNum
+		ldr r7,[r7]
+		mov r1,#40			@ set the duration for the next hunter based on level
+		cmp r7,#3
+		movge r1,#30
+		cmp r7,#7
+		movge r1,#25
+		cmp r7,#10
+		movge r1,#20
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#0					@ R0 points to the sprite that will be used for the mine
@@ -814,18 +846,26 @@ initHunterMine:
 					mov r1,#SCREEN_SUB_TOP-32			@ set y coord
 					str r1,[r3,r0]
 					mov r0,#SPRITE_SPEED_Y_OFFS
-					mov r1,#2				@ set y speed (change based on LEVEL) (2 is good for early levels)
+					@ r7=level
+					mov r1,#2		@ set hunter speed based on level
+					cmp r7,#6
+					movge r1,#3
+					cmp r7,#10
+					movge r1,#4
 					str r1,[r3,r0]
+					
 					mov r0,#SPRITE_OBJ_OFFS
 					mov r1,#30
 					str r1,[r3,r0]			@ set sprite to display
 					mov r0,#SPRITE_HIT_OFFS
 					mov r1,#0				@ set number of hits a single shot (for now)
 					str r1,[r3,r0]
+					mov r0,#SPRITE_IDENT_OFFS
+					str r1,[r3,r0]					
+					
+
 					mov r0,#SPRITE_FIRE_TYPE_OFFS
 					mov r1,#0				@ set it to never fire (for now)
-					str r1,[r3,r0]
-					mov r0,#SPRITE_IDENT_OFFS
 					str r1,[r3,r0]
 
 	initNothing:
@@ -847,6 +887,7 @@ moveMine:
 	mov r15,r14
 	
 moveHunter:
+	stmfd sp!, {lr}
 	@ do not use r0,r1 or r7 here to write to!
 	@ in a hunter, we use sptObjOffs to tell use which way it is moving
 	@ 30=down 31=up 32=left 33=rght
@@ -948,11 +989,12 @@ moveHunter:
 			bmi hunterKill
 			
 		hunterDone:
-		mov r15,r14
+		
+	ldmfd sp!, {pc}
 	hunterKill:
 		mov r2,#0
 		str r2,[r1]									@ kill that nasty hunter!! :)
-	mov r15,r14
+	ldmfd sp!, {pc}
 	
 animateAliens:
 stmfd sp!, {r0, lr}

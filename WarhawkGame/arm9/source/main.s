@@ -37,7 +37,36 @@
 	.global gameStop
 
 initSystem:
-	bx lr
+	stmfd sp!, {r0-r2, lr}
+	
+	mov r0, #0						@ Clear video display registers
+	ldr r1, =0x04000000
+	mov r2, #0x56
+	bl dmaFillWords
+	ldr r1, =0x04001008
+	bl dmaFillWords
+	
+	ldr r0, =VRAM_CR
+	mov r1, #0
+	strb r1, [r0]
+	ldr r0, =VRAM_E_CR
+	strb r1, [r0]
+	ldr r0, =VRAM_F_CR
+	strb r1, [r0]
+	ldr r0, =VRAM_G_CR
+	strb r1, [r0]
+	ldr r0, =VRAM_H_CR
+	strb r1, [r0]
+	ldr r0, =VRAM_I_CR
+	strb r1, [r0]
+	
+	ldr r0, =REG_DISPCNT
+	mov r1, #0
+	str r1, [r0]
+	ldr r0, =REG_DISPCNT_SUB
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r2, pc}
 
 main:
 	bl gameStop

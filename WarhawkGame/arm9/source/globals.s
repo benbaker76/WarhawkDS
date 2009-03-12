@@ -134,6 +134,8 @@
 	.global bossSpecial
 	.global delayPowerUp
 	.global powerupLives
+	.global bossLeftMin
+	.global bossRightMax
 	
 powerupLives:
 	.word 0
@@ -143,6 +145,11 @@ delayPowerUp:
 gameMode:
 	.word 0
 fxMode:
+	.word 0
+
+bossLeftMin:
+	.word 0
+bossRightMax:
 	.word 0
 
 bossSpecial:

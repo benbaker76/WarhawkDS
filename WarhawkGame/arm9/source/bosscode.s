@@ -133,28 +133,47 @@ checkBossInit:
 		sub r0,#1						@ make level 0-15
 		ldr r1,=bossInitLev
 		add r1, r0, lsl #5				@ add level * 32 (bytes)
+
 		ldr r0,[r1]						@ load "max X speed"
 		ldr r2,=bossMaxX
 		str r0,[r2]	
+
+		ldr r2,=bossXSpeed
+		str r0,[r2]
+
 		add r1,#4
 		ldr r0,[r1]						@ load "max y speed"
 		ldr r2,=bossMaxY
 		str r0,[r2]
+
 		add r1,#4
 		ldr r0,[r1]						@ load "boss turn speed"
 		ldr r2,=bossTurn
 		str r0,[r2]
+
 		add r1,#4
 		ldr r0,[r1]
 		ldr r2,=bossHits				@ set hits to kill
 		str r0,[r2]
+
 		add r1,#4
 		ldr r0,[r1]
 		ldr r2,=bossFireMode			@ store mode, 0=normal/1=twin fire
 		str r0,[r2]
+
 		add r1,#4
 		ldr r0,[r1]
 		ldr r2,=bossSpecial				@ store "SPECIAL" no idea yet!!
+		str r0,[r2]
+
+		add r1,#4
+		ldr r0,[r1]
+		ldr r2,=bossLeftMin				@ store Min x Coord
+		str r0,[r2]
+
+		add r1,#4
+		ldr r0,[r1]
+		ldr r2,=bossRightMax				@ store Max X Coord
 		str r0,[r2]
 
 		mov r0,#0
@@ -308,8 +327,10 @@ bossAttack:
 	
 	@ must look into a way to calculate this???
 	
-	mov r8,#191-48
-	mov r9,#191+16
+	ldr r8,=bossLeftMin
+	ldr r8,[r8]
+	ldr r9,=bossRightMax
+	ldr r9,[r9]
 
 	ldr r4,=bossXDir
 	ldr r0,[r4]					@ r0/r4 0=left / 1=right
@@ -360,9 +381,10 @@ bossAttack:
 		cmp r3,r9		
 		movpl r0,#0
 	@-------- END OF BOSS MOVE
-	noBossUpdate:
-	
+
+	noBossUpdate:	
 	str r0,[r4]
+
 	adds r3,r2
 	str r3,[r6]
 	
@@ -499,6 +521,7 @@ bossFire:
 	ldr r3,[r2]					@ r1 = delay value
 	ldr r0,=bossFireDelay
 	str r3,[r0]
+	
 	bossNotFired:
 	@ add to the phase (if past 31, reset to 0)
 	ldr r3,=bossFirePhase

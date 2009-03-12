@@ -34,34 +34,40 @@ bossInitLev:
 	@ hits			= hits to kill the boss
 	@ fire mode		= 0=single, 1=double, ??			bossFireMode
 	@ special		= 0=normal, 1= homing boss, 2
-	@ unused
-	@ unused
+	@ X left		= Min X move coord
+	@ X right		= Max X move coord
 	@1
-	.word 4,2,8,35,0,0,0,0
+	.word 4,2,8,35,0,0,143,207
 	@2
-	.word 4,2,6,35,1,0,0,0
+	.word 4,2,6,35,1,0,143,207
 	@3
-	.word 4,2,6,35,0,0,0,0
+	.word 4,2,6,35,0,0,143,207
 	@4
 	.space 32
 	@5
 	.space 32
+	@6
 	.space 32
 	@7
 	.space 32
+	@8
 	.space 32
+	@9
 	.space 32
+	@10
 	.space 32
+	@11
 	.space 32
+	@12
 	.space 32
 	@13
-	.word 4,2,8,35,1,0,0,0
+	.word 4,2,8,35,1,0,143,207
 	@14
-	.word 4,2,8,35,0,0,0,0
+	.word 4,2,10,35,0,0,183,143
 	@15
-	.word 4,2,8,35,1,0,0,0
+	.word 4,2,8,35,1,0,143,207
 	@16
-	.word 4,2,8,35,1,0,0,0
+	.word 4,2,8,35,1,0,143,207
 
 bossFireLev:
 	@ this consists of 64 words that describe the bosses firing pattern

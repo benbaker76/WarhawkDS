@@ -116,8 +116,8 @@
 	.global gameOverText
 	.global mineDelay
 	.global hunterDelay
-	.global mineCount
-	.global hunterCount
+	.global mineTimerCounter
+	.global hunterTimerCounter
 	.global spriteIdent
 	.global spriteFireSpeed
 	.global animFrame
@@ -183,11 +183,11 @@ bossHits:
 	
 mineDelay:
 	.word 0
-mineCount:
+mineTimerCounter:
 	.word 0
 hunterDelay:
 	.word 0
-hunterCount:
+hunterTimerCounter:
 	.word 0
 bossMan:
 	.word 0

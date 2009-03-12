@@ -74,8 +74,8 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 
 	cmp r7,#SPRITE_TYPE_MINE		@ Check for a "MINE FIELD" request
 	bne noMines
-				ldr r4,=mineCount
-				mov r6,#75									@ set number of mines to init (Base this on LEVEL)
+				ldr r4,=mineTimerCounter
+				mov r6,#700									@ set duration of mines to init (Base this on LEVEL)
 				str r6,[r4]
 				ldr r4,=mineDelay
 				mov r6,#0
@@ -84,8 +84,8 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	noMines:
 	cmp r7,#SPRITE_TYPE_HUNTER								@ Check for a "HUNTER" request
 	bne noHunter
-				ldr r4,=hunterCount
-				mov r6,#25									@ set number of hunters to init (Base this on LEVEL)
+				ldr r4,=hunterTimerCounter
+				mov r6,#700									@ set duration of hunters to init (Base this on LEVEL)
 				str r6,[r4]
 				ldr r4,=hunterDelay
 				mov r6,#0
@@ -702,10 +702,14 @@ aliensTracker:
 initHunterMine:
 @-------------- THIS CODE IS ONLY FOR INITIALISING HUNTERS AND MINES
 @ first, lets check if mines are active?
-@ we can use mineCount for this, if 0 = then sadly no mines
+@ we can use mineTimerCounter for this, if 0 = then sadly no mines
 	stmfd sp!, {lr}
-	ldr r0,=mineCount
+	ldr r0,=mineTimerCounter
 	ldr r1,[r0]
+	subs r1,#1
+	cmp r1,#0
+	movmi r1,#0
+	str r1,[r0]
 	cmp r1,#0				@ is is active??
 	bne checkMineTimer		@ yes!!
 		b initHunter		@ no :( so let us check for a hunter
@@ -761,16 +765,14 @@ initHunterMine:
 					mov r0,#SPRITE_IDENT_OFFS
 					str r1,[r3,r0]
 
-					ldr r0,=mineCount		@ decrement the mine counter
-					ldr r1,[r0]
-					subs r1,#1
-					movmi r1,#0
-					str r1,[r0]				@ store it back
-
 	initHunter:								@-------- DO THE "HUNTER" INIT
 
-	ldr r0,=hunterCount
+	ldr r0,=hunterTimerCounter
 	ldr r1,[r0]
+	subs r1,#1
+	cmp r1,#0
+	movmi r1,#0
+	str r1,[r0]
 	cmp r1,#0				@ is is active??
 	bne checkHunterTimer		@ yes!!
 		b initNothing		@ no :( so let us check for a hunter
@@ -826,16 +828,9 @@ initHunterMine:
 					mov r0,#SPRITE_IDENT_OFFS
 					str r1,[r3,r0]
 
-					ldr r0,=hunterCount		@ decrement the hunter counter
-					ldr r1,[r0]
-					subs r1,#1
-					movmi r1,#0
-					str r1,[r0]				@ store it back
 	initNothing:
 	initHunterMineFail:
 	ldmfd sp!, {pc}
-	
-	
 	
 moveMine:
 	@ this is just a little bit of code to move our "MINES", that is all we have to do

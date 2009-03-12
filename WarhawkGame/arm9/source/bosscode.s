@@ -425,7 +425,7 @@ bossFire:
 		str r4,[r1,r5]				@ and store it in the bullet define
 
 		mov r5,#0
-		str r5,[r8]  				@ clear "sprite active" value
+		str r5,[r1]  				@ clear "sprite active" value
 		ldr r5,=bossX
 		ldr r5,[r5]
 		add r5,#32
@@ -456,7 +456,7 @@ bossFire:
 		str r4,[r1,r5]				@ and store it in the bullet define
 
 		mov r5,#0
-		str r5,[r8]  				@ clear "sprite active" value
+		str r5,[r1]  				@ clear "sprite active" value
 		ldr r5,=bossX
 		ldr r5,[r5]
 		add r5,#12					@ left bullet

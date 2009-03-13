@@ -124,6 +124,7 @@
 	.global animDelay
 	.global bossXSpeed
 	.global bossXDelay
+	.global bossYDelay
 	.global bossXDir
 	.global bossFirePhase
 	.global bossFireDelay
@@ -136,6 +137,13 @@
 	.global powerupLives
 	.global bossLeftMin
 	.global bossRightMax
+	.global explodeSpriteBoss
+	.global explodeSpriteBossCount
+	
+explodeSpriteBossCount:
+	.word 0
+explodeSpriteBoss:
+	.word 0
 	
 powerupLives:
 	.word 0
@@ -170,6 +178,8 @@ bossFirePhase:
 bossXSpeed:
 	.word 0
 bossXDelay:
+	.word 0
+bossYDelay:
 	.word 0
 bossXDir:
 	.word 0

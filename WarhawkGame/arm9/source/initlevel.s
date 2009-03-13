@@ -70,6 +70,47 @@ initLevel:
 	ldr r0,=yposSub
 	str r1,[r0]
 
+	mov r0,#0
+	ldr r1,=pixelOffsetSFSub
+	str r0,[r1]
+	ldr r1,=pixelOffsetSFMain
+	str r0,[r1]
+	ldr r1,=pixelOffsetSBSub
+	str r0,[r1]
+	ldr r1,=pixelOffsetSBMain
+	str r0,[r1]
+	mov r0,#256
+	ldr r1,=vofsSFMain
+	str r0,[r1]
+	ldr r1,=vofsSBMain
+	str r0,[r1]
+	ldr r1,=vofsSFSub
+	str r0,[r1]
+	ldr r1,=vofsSBSub
+	str r0,[r1]
+	mov r0,#736
+	ldr r1,=yposSFMain
+	str r0,[r1]
+	ldr r1,=yposSBMain
+	str r0,[r1]
+	ldr r1,=yposSFSub
+	str r0,[r1]
+	ldr r1,=yposSBSub
+	str r0,[r1]
+
+	@ reset the BOSS stuff
+	mov r0,#0
+	ldr r1,=bossXDelay
+	str r0,[r1]
+	ldr r1,=bossYDelay
+	str r0,[r1]
+	ldr r1,=bossXDir
+	str r0,[r1]
+	ldr r1,=bossMan
+	str r0,[r1]
+	ldr r1,=explodeSpriteBossCount
+	str r0,[r1]
+
 	mov r1,#250
 	ldr r0,=delayPowerUp
 	str r1,[r0]
@@ -668,4 +709,3 @@ initLevelSpecialSprites:
 	
 	.pool
 	.end
-

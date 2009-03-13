@@ -219,9 +219,6 @@ alienFireMove:
 				
 					b testSkip
 					killAlienBullet:
-@					mov r7,#0
-@					str r7,[r2]					@ kill bullet
-					
 					mov r6,#SPRITE_Y_OFFS	@ put bullet X off screen, only works if kill bullet
 					mov r7,#788				@ above is disabled? MADNESS!!
 					str r7,[r2,r6]

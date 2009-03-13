@@ -38,40 +38,19 @@ initData:
 	stmfd sp!, {r0-r1, lr}
 
 	ldr r0,=levelNum
-	mov r1,#14
+	mov r1,#1
 	str r1,[r0]
+
+	@ to add:-
+	@ reset score
+	@ and what else?????????????????
 
 	ldmfd sp!, {r0-r1, pc}
 	
 	.align
 	.data
 
-@ These below need to be inited at game start - not per level
 
-pixelOffsetSFSub:
-	.word 0
-pixelOffsetSFMain:
-	.word 0
-pixelOffsetSBSub:
-	.word 0
-pixelOffsetSBMain:
-	.word 0
-vofsSFMain:
-	.word 256
-vofsSBMain:
-	.word 256
-vofsSFSub:
-	.word 256
-vofsSBSub:
-	.word 256
-yposSFMain:
-	.word 736						@ 3200 - 192 - 64 / 4
-yposSBMain:
-	.word 736						@ 3200 - 192 - 64 / 4
-yposSFSub:
-	.word 736						@ 3200 - 192 - 64 / 4
-yposSBSub:
-	.word 736						@ 3200 - 192 - 64 / 4
 	
 	.pool
 	.end

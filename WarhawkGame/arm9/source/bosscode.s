@@ -35,6 +35,7 @@
 	.global checkBossInit
 	.global bossAttack
 	.global bossIsShot
+	.global bossExploder
 	
 @----------------- BOSS INIT CODE	
 checkBossInit:
@@ -63,6 +64,13 @@ checkBossInit:
 	cmp r0,#3
 	bne checkBossInitFail
 		bl bossIsDead
+@-------------------------------------------- use this is we wanna keep the boss moving as he dies!		
+@		ldr r0,=explodeSpriteBossCount
+@		ldr r0,[r0]
+@		cmp r0,#3
+@		bge checkBossInitFail		
+@		bl bossAttack		
+@-------------------------------------------- might be fun?? :)
 		b checkBossInitFail	
 	ldmfd sp!, {r1-r2, pc}
 	
@@ -303,13 +311,13 @@ bossIsShot:
 @------------------ KILL THE BOSS
 bossIsDead:
 	stmfd sp!, {r0-r8, lr}
-	@ when boss is FULLY exploded, set bossMan=4 (signal level over)
-	
-	ldr r1,=bossMan
-	mov r0,#4				@ signal level END!!!!
+
+	ldr r1,=levelEnd
+	mov r0,#2
 	str r0,[r1]
+
 	
-	bl fxFadeWhiteOut			@ Just for the HELL OF IT!!
+@	bl fxFadeWhiteOut			@ Just for the HELL OF IT!!
 	
 	ldmfd sp!, {r0-r8, pc}
 
@@ -389,9 +397,10 @@ bossAttack:
 	str r3,[r6]
 	
 	@------------- FROM HERE WE NEED TO DO SHOTS AND ADD SOME Y CODE
-
-
-	bl bossFire					@ do our fire checks, and shoot if needed
+	ldr r5,=bossMan
+	ldr r5,[r5]
+	cmp r5,#3
+	bllt bossFire					@ do our fire checks, and shoot if needed
 	
 	bl bossDraw					@ redraw our boss
 	
@@ -632,5 +641,100 @@ initBossWave:
 	initBossAliensDone:
 	
 	b bossFireDone
+	
+@----------------- THIS IS OUR RATHER FUN EXPLODE CODE
+bossExploder:
+	stmfd sp!, {lr}
+	@ sprites 17-127 can be used
+	@ if active is not 0 or 128, take the x,y from it and explode it anyway!!
+
+	ldr r0,=levelEnd
+	ldr r0,[r0]
+	cmp r0,#3
+	beq stillExplodingBoss
+
+	beloop:
+	ldr r0,=explodeSpriteBoss
+	ldr r1,[r0]						@ r1=number of sprite to explode!
+	ldr r2,=spriteActive
+	add r2, r1, lsl #2				@ r2=offs to sprite
+	ldr r3,[r2]						@ r3=spriteActive
+	cmp r3,#0
+	beq useForBossExplode
+	cmp r3,#128
+	beq useForBossExplode
+		@	ok, this is an active alien, or bullet!! (but if it is an explosion, ignore it)
+		cmp r3,#4					@ if >4, let it do its stuff! (drawsprite.s will handle it)
+		bge notFreeForBoss
+		@ ok, lets blow this bugger up :)
+	
+			mov r6,#4
+			str r6,[r2]
+			mov r6,#6
+			mov r8,#SPRITE_OBJ_OFFS
+			str r6,[r2,r8]
+			mov r6,#4
+			mov r8,#SPRITE_EXP_DELAY_OFFS
+			str r6,[r2,r8]
+	
+		b notFreeForBoss
+	useForBossExplode:
+		@ ok, we need to get a random number for X coord (0-95)
+
+		bl getRandom
+		and r8,#127
+		ldr r6,=bossX
+		ldr r6,[r6]
+		sub r6,#32
+		add r9,r8,r6			@ r9 = X coord
+
+		bl getRandom
+		and r8,#127
+		ldr r6,=bossY
+		ldr r6,[r6]	
+		sub r6,#32
+		add r10,r8,r6			@ r10 = Y coord
+
+		@ r2= offset to the sprite, so lets use that to explode it!!!
+			mov r6,#4
+			str r6,[r2]
+			mov r6,#6
+			mov r8,#SPRITE_OBJ_OFFS
+			str r6,[r2,r8]
+			mov r6,#8
+			mov r8,#SPRITE_EXP_DELAY_OFFS
+			str r6,[r2,r8]
+			mov r8,#SPRITE_X_OFFS
+			str r9,[r2,r8]
+			mov r8,#SPRITE_Y_OFFS
+			str r10,[r2,r8]
+			@ do a random bloom
+			bl getRandom
+			and r8,#0x2F		@ i know it is out of palette range, but give a shimmer!! :) (cheating)
+			mov r7,#SPRITE_BLOOM_OFFS
+			str r8,[r2,r7]
+	notFreeForBoss:
+
+	add r1,#1
+	cmp r1,#127					@ PUT CHECKS INTO THE DETECTION
+	bne noBossExplodeWrap
+		mov r1,#17
+		ldr r5,=explodeSpriteBossCount
+		ldr r6,[r5]
+		add r6,#1
+		str r6,[r5]
+	noBossExplodeWrap:
+	str r1,[r0]						@ put new sprite number back
+	
+	ldr r5,=explodeSpriteBossCount
+	ldr r6,[r5]
+	cmp r6,#4						@ this is "HOW LONG FOR IT????" (tie this to Explosion sound)
+	ble stillExplodingBoss
+		ldr r6,=levelEnd
+		mov r8,#3
+		str r8,[r6]
+	stillExplodingBoss:
+
+	ldmfd sp!, {pc}
 	.pool
 	.end

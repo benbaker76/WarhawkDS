@@ -75,6 +75,8 @@ main:
 	
 	@ Setup the screens and the sprites	
 	
+levelLoop:	
+	
 	bl initLevel
 	bl initInterruptHandler						@ initialize the interrupt handler
 	bl initSprites
@@ -94,6 +96,7 @@ main:
 	bl drawSFMapScreenSub
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
+	bl levelDrift
 	bl drawScore
 	bl drawSprite
 	bl drawGetReadyText
@@ -111,13 +114,15 @@ main:
 	@bl fxSineWobbleOn
 
 	bl waitforFire								@ wait for a short while to start game
-	mov r1,#1									@ just for checking (though this would NEVER be active at level start)
-	ldr r0,=powerUp
-@	str r1,[r0]
-	
+
 	bl clearBG0
 	
 	bl gameStart
+
+@ldr r0,=levelEnd
+@mov r1,#2
+@str r1,[r0]
+
 	
 	@ ------------------------------------
 	
@@ -131,35 +136,30 @@ gameLoop:
 	bleq gameLoopDone
 
 	bl moveShip									@ check and move your ship
-	
 	bl alienFireMove							@ check and move alien bullets
 	bl fireCheck								@ check for your wish to shoot!
-
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars
-
 	bl checkPowerUp								@ check for and use powerup
-	
 	bl checkWave								@ check if time for another alien attack
 	bl moveAliens								@ move the aliens and detect colisions with you
-
 	bl initHunterMine							@ check if we should chuck another mine or hunter into the mix
-
 	bl scrollMain								@ Scroll Level Data
 	bl scrollSub								@ Main + Sub
 	bl levelDrift								@ update level with the horizontal drift
-
 	bl moveBullets								@ check and then moves bullets
-
 	bl scrollStars								@ Scroll Stars (BG2,BG3)		
 	bl checkEndOfLevel							@ Set Flag for end-of-level (use later to init BOSS)
 	bl checkBossInit							@ Check if we should set the offscreen boss up??
 	bl drawSprite								@ drawsprites and do update bloom effect
 	bl animateAliens
-	
+	bl checkGameOver	
 	@bl drawDebugText							@ draw some numbers :)
-	
-	bl checkGameOver
+
+	ldr r0,=levelEnd
+	ldr r0,[r0]
+	cmp r0,#2
+	beq levelComplete
 	
 gameLoopDone:
 
@@ -223,7 +223,84 @@ checkGameOverDone:
 		
 	ldmfd sp!, {r0-r6, pc}
 	
-	@ ------------------------------------
+@------------------------------- THIS IS WHERE WE KEEP THINGS GOING WHILE WE EXPLODE THE BOSS
+@------------------------------- SOME NICE EFFECT??? WHO KNOWS
 
+levelComplete:
+	@ Anything to set up???
+	
+	@ Well we need a way to init a big boss explode, we can generate a random number
+	@ from 0-95 and use that for the x and y of explosions and also file them from
+	@ start to end, overwriting active number 128 (boss sprites)
+	@ this may look ok???
+	@ well, we need to set variables for bossExploder to use
+	@ explodeSpriteBoss = current number of the sprite to use
+	@ explodeSpriteBossCount = count the times through the loop
+	@ when this has been done enough, we will need to set a little delay
+	@ to wait for all explosions to have finished, then set levelEnd to 3
+	@ That should be easy, will keep the exploding stuff in bosscode.s
+	ldr r0,=explodeSpriteBoss
+	mov r1,#17
+	str r1,[r0]				@ set current sprite number
+	ldr r0,=explodeSpriteBossCount
+	mov r1,#0
+	str r1,[r0]
+	
+@ dummy values for now!
+@ldr r0,=bossX
+@mov r1,#250
+@str r1,[r0]
+@ldr r0,=bossY
+@mov r1,#400
+@str r1,[r0]
+
+	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
+
+	bossDeathLoop:
+		bl swiWaitForVBlank							@ Wait for vblank
+		bl moveShip									@ check and move your ship
+		bl alienFireMove							@ check and move alien bullets
+		bl fireCheck								@ check for your wish to shoot!
+		bl drawScore								@ update the score with any changes
+		bl moveAliens								@ move the aliens and detect colisions with you
+		bl levelDrift								@ update level with the horizontal drift
+		bl moveBullets								@ check and then moves bullets
+		bl scrollStars								@ Scroll Stars (BG2,BG3)		
+		bl drawSprite								@ drawsprites and do update bloom effect
+		bl animateAliens
+		bl checkBossInit							@ so we can still move him as he DIES	
+		bl bossExploder
+	
+		ldr r0,=levelEnd
+		ldr r0,[r0]
+		cmp r0,#3
+		bne notTimeToEndDeath
+			ldr r0,=explodeSpriteBossCount			@ use this as a little delay to let explosions settle
+			ldr r1,[r0]
+			cmp r1,#128
+			beq levelNext
+			add r1,#1
+			str r1,[r0]
+	notTimeToEndDeath:
+	
+	b bossDeathLoop
+
+@------------------------------ THIS IS WHERE WE ADD THE SCORES AND PREPARE FOR NEXT LEVEL
+levelNext:
+	bl fxSineWobbleOff			@ turn the "wibble" or "wobble" off
+
+	ldr r0,=levelNum
+	ldr r1,[r0]
+	add r1,#1
+	cmp r1,#17
+	moveq r1,#1
+	str r1,[r0]
+
+	ldr r0,=levelEnd
+	mov r1,#0
+	str r1,[r0]
+
+	b levelLoop
+	
 	.pool
 	.end

@@ -279,7 +279,7 @@ drawSprite:
 			ldr r0,=spriteExplodeDelay			@ check our animation delay
 			ldr r1,[r0,r8,lsl #2]
 			subs r1,#1							@ take 1 off the count					
-			movmi r1,#3							@ and reset if <0
+			movmi r1,#4							@ and reset if <0
 			str r1,[r0,r8,lsl #2]
 			bpl noMoreStuff
 			

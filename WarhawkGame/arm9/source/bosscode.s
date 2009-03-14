@@ -450,8 +450,6 @@ bossFire:
 		add r1,#127*4				@ use the last sprite (127)
 	
 		ldr r4,[r2]					@ grab speed/type
-		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
-		and r4,r7					@ r4= speed
 		lsr r4,#16					@ shunt them down :)
 		
 		ldr r5,=SPRITE_FIRE_SPEED_OFFS		@ load Speed offset
@@ -482,8 +480,6 @@ bossFire:
 		add r1,#127*4				@ use the last sprite (127)
 
 		ldr r4,[r2]					@ grab speed/type
-		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
-		and r4,r7					@ r4= speed
 		lsr r4,#16					@ shunt them down :)
 		ldr r5,=SPRITE_FIRE_SPEED_OFFS		@ load Speed offset
 		str r4,[r1,r5]				@ and store it in the bullet define
@@ -564,8 +560,6 @@ bossFire:
 @---------------- HERE WE NEED TO "FIRE" A HUNTER!
 initBossHunter:
 	ldr r4,[r2]					@ grab speed/type
-	ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
-	and r4,r7					@ r4= speed (used for X coord here)
 	lsr r4,#16					@ shunt them down :)
 	
 	cmp r4,#SPRITE_TYPE_HUNTER	@ if speed is set also, we need to randomly grab a number
@@ -622,8 +616,6 @@ initBossHunter:
 @--------------- HERE WE NEED TO 'FIRE' AND ATTACK WAVE
 initBossWave:
 		ldr r4,[r2]					@ grab speed/type
-		ldr r7,=0xFFFF0000			@ isolate upper 16 bits (speed)
-		and r4,r7					@ r4= speed (used for attack wave here)
 		lsr r4,#16					@ shunt them down :)
 		@ now we need to make r2 the index to the start of attack wave r4
 		ldr r5,=alienWave

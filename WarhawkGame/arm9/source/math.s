@@ -44,7 +44,7 @@ divf32:
 	
 	ldr r2, =REG_DIVCNT					@ Load REG_DIVCNT
 	mov r3, #DIV_64_32					@ Load DIV_64_32
-	strh r3, [r3]						@ Write it to REG_DIVCNT
+	strh r3, [r2]						@ Write it to REG_DIVCNT
 	
 divf32Loop1:
 	
@@ -88,7 +88,7 @@ sqrtf32:
 	
 	ldr r1, =REG_SQRTCNT				@ Load REG_SQRTCNT
 	mov r2, #SQRT_64					@ Load SQRT_64
-	strh r2, [r2]						@ Write it to REG_SQRTCNT
+	strh r2, [r1]						@ Write it to REG_SQRTCNT
 	
 sqrtf32Loop1:
 	
@@ -130,7 +130,7 @@ div32:
 	
 	ldr r1, =REG_DIVCNT					@ Load REG_DIVCNT
 	mov r2, #DIV_32_32					@ Load DIV_32_32
-	strh r2, [r2]						@ Write it to REG_DIVCNT
+	strh r2, [r1]						@ Write it to REG_DIVCNT
 	
 div32Loop1:
 	
@@ -174,7 +174,7 @@ mod32:
 	
 	ldr r1, =REG_DIVCNT					@ Load REG_DIVCNT
 	mov r2, #DIV_32_32					@ Load DIV_32_32
-	strh r2, [r2]						@ Write it to REG_DIVCNT
+	strh r2, [r1]						@ Write it to REG_DIVCNT
 	
 mod32Loop1:
 	
@@ -217,7 +217,7 @@ sqrt32:
 	
 	ldr r1, =REG_SQRTCNT				@ Load REG_SQRTCNT
 	mov r2, #SQRT_32					@ Load SQRT_32
-	strh r2, [r2]						@ Write it to REG_SQRTCNT
+	strh r2, [r1]						@ Write it to REG_SQRTCNT
 	
 sqrt32Loop1:
 	

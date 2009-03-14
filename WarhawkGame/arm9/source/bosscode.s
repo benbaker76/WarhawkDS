@@ -62,18 +62,19 @@ checkBossInit:
 		b checkBossInitFail
 	bossDeadCheck:
 	cmp r0,#3
-	bne checkBossInitFail
+	bne bossDeadCheck2
 		bl bossIsDead
-@-------------------------------------------- use this is we wanna keep the boss moving as he dies!		
-@		ldr r0,=explodeSpriteBossCount
-@		ldr r0,[r0]
-@		cmp r0,#3
-@		bge checkBossInitFail		
-@		bl bossAttack		
-@-------------------------------------------- might be fun?? :)
+		b checkBossInitFail
+	bossDeadCheck2:
+	cmp r0,#4
+	bne checkBossInitFail
+		ldr r0,=explodeSpriteBossCount	@ if bossMan=4 we want to use this bit of code
+		ldr r0,[r0]						@ so that we can keep him moving for a bit
+		cmp r0,#1						@ while he explodes and then stop him
+		bge checkBossInitFail			@ and let the explosion settle :)
+		bl bossAttack	
 		b checkBossInitFail	
 	ldmfd sp!, {r1-r2, pc}
-	
 	
 	bossInit:
 	ldr r0,=yposSub
@@ -190,7 +191,6 @@ checkBossInit:
 		ldr r1,=bossFireDelay
 		str r0,[r1]						@ reset fire delay
 		
-		
 		bl bossDraw
 		ldmfd sp!, {r1-r2, pc}
 		
@@ -212,14 +212,13 @@ checkBossInit:
 		add r1,#1
 		str r1,[r0]
 		bl bossDraw
-		
 
 checkBossInitFail:
 	ldmfd sp!, {r1-r2, pc}
 
 @------------------ ALL THIS DOES IS DRAW THE BOSS BASED ON TOP LEFT X/Y	
 bossDraw:
-	stmfd sp!, {r1-r2, lr}
+	stmfd sp!, {r1-r6, lr}
 	ldr r6,=bossX
 	ldr r6,[r6]					@ r1 =x
 	ldr r2,=bossY
@@ -229,6 +228,12 @@ bossDraw:
 	mov r5,#0					@ horizontal counter
 	bossDrawLoop:
 	
+		ldr r3,=spriteActive	@ we need to make sure if the boss in exploding
+		add r3, r4, lsl #2		@ that we leave it alone
+		ldr r3,[r3]
+		cmp r3,#4				@ value of boss explode
+		beq noBossCollide
+	
 		ldr r3,=spriteX
 		str r6,[r3, r4, lsl #2]	@ store X
 		ldr r3,=spriteY
@@ -237,9 +242,11 @@ bossDraw:
 		@ now we need to detect against your ship using alienCollideCheck
 		@ r1 must be the aliens offset
 		
-		ldr r1,=spriteActive
-		add r1, r4, lsl #2
-		bl alienCollideCheck
+			ldr r1,=spriteActive
+			add r1, r4, lsl #2
+			bl alienCollideCheck
+		
+		noBossCollide:
 		
 		add r5,#1
 		cmp r5,#3
@@ -253,7 +260,7 @@ bossDraw:
 		cmp r4,#122
 	bne bossDrawLoop	
 	
-	ldmfd sp!, {r1-r2, pc}
+	ldmfd sp!, {r1-r6, pc}
 		
 @------------------ BOSS HAS TAKEN A SHOT!!!
 bossIsShot:
@@ -261,10 +268,10 @@ bossIsShot:
 	@ r4 = sprite offset
 	@ r7 = bullets danage value
 	stmfd sp!, {r0-r8, lr}
-		ldr r8,=bossMan
+		ldr r8,=levelEnd
 		ldr r8,[r8]
-		cmp r8,#3
-		bpl heBeDead
+		cmp r8,#2
+		beq heBeDead
 				@ ok, now we need to see how many hits to kill
 		ldr r8,=bossHits
 		ldr r6,[r8]
@@ -314,6 +321,10 @@ bossIsDead:
 
 	ldr r1,=levelEnd
 	mov r0,#2
+	str r0,[r1]
+	
+	ldr r1,=bossMan
+	mov r0,#4
 	str r0,[r1]
 
 	
@@ -412,6 +423,13 @@ bossFire:
 	@ First, check if the fire delay is 0
 	@ then grab fire type and set fire delay
 	@ add to fire phase also
+	ldr r1,=levelEnd
+	ldr r1,[r1]
+	cmp r1,#2
+	beq bossNoNeedReset
+	
+	
+	
 	ldr r1,=bossFireDelay
 	ldr r0,[r1]					@ grab fire delay
 	subs r0,#1					@ take 1 off
@@ -656,36 +674,63 @@ bossExploder:
 	cmp r3,#128
 	beq useForBossExplode
 		@	ok, this is an active alien, or bullet!! (but if it is an explosion, ignore it)
-		cmp r3,#4					@ if >4, let it do its stuff! (drawsprite.s will handle it)
+		cmp r3,#4					@ if >=4, let it do its stuff! (drawsprite.s will handle it)
 		bge notFreeForBoss
 		@ ok, lets blow this bugger up :)
-	
 			mov r6,#4
 			str r6,[r2]
 			mov r6,#6
 			mov r8,#SPRITE_OBJ_OFFS
 			str r6,[r2,r8]
-			mov r6,#4
+			mov r6,#8
 			mov r8,#SPRITE_EXP_DELAY_OFFS
 			str r6,[r2,r8]
+			mov r8,#SPRITE_X_OFFS
+			str r9,[r2,r8]
+			mov r8,#SPRITE_Y_OFFS
+			str r10,[r2,r8]
+			mov r10,#0
+			mov r8,#SPRITE_SPEED_X_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_SPEED_Y_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_SPEED_DELAY_X_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_SPEED_DELAY_Y_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_FIRE_SPEED_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_FIRE_TYPE_OFFS
+			str r10,[r2,r8]
+			b notFreeForBoss
 	
-		b notFreeForBoss
 	useForBossExplode:
 		@ ok, we need to get a random number for X coord (0-95)
-
 		bl getRandom
 		and r8,#127
+		mov r3,#3
+		mul r8,r3
+		push {r0,r1}
+		mov r0,r8
+		mov r1,#6
+		bl divf32
+		mov r8,r0, lsr #12			
 		ldr r6,=bossX
 		ldr r6,[r6]
-		sub r6,#32
 		add r9,r8,r6			@ r9 = X coord
 
 		bl getRandom
 		and r8,#127
+		mov r3,#3
+		mul r8,r3
+		mov r0,r8
+		mov r1,#6
+		bl divf32
+ 		mov r8,r0, lsr #12
 		ldr r6,=bossY
 		ldr r6,[r6]	
-		sub r6,#32
 		add r10,r8,r6			@ r10 = Y coord
+		pop {r0,r1}
 
 		@ r2= offset to the sprite, so lets use that to explode it!!!
 			mov r6,#4
@@ -699,6 +744,19 @@ bossExploder:
 			mov r8,#SPRITE_X_OFFS
 			str r9,[r2,r8]
 			mov r8,#SPRITE_Y_OFFS
+			str r10,[r2,r8]
+			mov r10,#0
+			mov r8,#SPRITE_SPEED_X_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_SPEED_Y_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_SPEED_DELAY_X_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_SPEED_DELAY_Y_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_FIRE_SPEED_OFFS
+			str r10,[r2,r8]
+			mov r8,#SPRITE_FIRE_TYPE_OFFS
 			str r10,[r2,r8]
 			@ do a random bloom
 			bl getRandom
@@ -720,7 +778,7 @@ bossExploder:
 	
 	ldr r5,=explodeSpriteBossCount
 	ldr r6,[r5]
-	cmp r6,#4						@ this is "HOW LONG FOR IT????" (tie this to Explosion sound)
+	cmp r6,#2						@ this is "HOW LONG FOR IT????" (tie this to Explosion sound)
 	ble stillExplodingBoss
 		ldr r6,=levelEnd
 		mov r8,#3

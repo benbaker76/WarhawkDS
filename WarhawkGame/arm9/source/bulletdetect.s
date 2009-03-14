@@ -420,7 +420,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	ldr r7, [r7,r0, lsl #2]	@ r7 = 3 normal shot / 4 Power shot!
 								@ use this is a match is found!
 	cmp r7,#4					@ If powershot,
-	moveq r7,#12					@ power is UPPED
+	moveq r7,#12				@ power is UPPED
 	movne r7,#1					@ else, just the normal 1	
 	
 	mov r3,#111					@ Alien index (sprites 17 - 80 = 64)
@@ -476,12 +476,16 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				standardAlienHit:
 				
 				@ ok, now we need to see how many hits to kill
+				cmp r5,#2					@ this is a mine!
+				beq multishotBloom
+				
 				mov r8,#SPRITE_HIT_OFFS
 				ldr r6,[r4,r8]
 				subs r6,r7
 				str r6,[r4,r8]
 				cmp r6,#0
 				bmi detectAlienKill			@ Alien	*IS DEAD*
+				multishotBloom:
 					@ MULTISHOT ALIEN *NOT DEAD*		
 					@ ok, if the alien has an ident, we need to bloom all with the same ident!!
 					mov r8,#SPRITE_IDENT_OFFS
@@ -672,6 +676,13 @@ drawShard:
 alienCollideCheck:
 	stmfd sp!, {r0-r8, lr}
 											@ r1 is offset to alien
+
+ldr r5,=levelEnd
+ldr r5,[r5]
+cmp r5,#2
+beq noPlayer
+
+
 
 			ldr r5,=spriteX
 			ldr r3,[r5]						@ r3 is player x

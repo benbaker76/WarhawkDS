@@ -273,11 +273,11 @@ levelComplete:
 	
 		ldr r0,=levelEnd
 		ldr r0,[r0]
-		cmp r0,#3
+		cmp r0,#3									@ if levelEnd=3, just wait for explosions to finish
 		bne notTimeToEndDeath
 			ldr r0,=explodeSpriteBossCount			@ use this as a little delay to let explosions settle
 			ldr r1,[r0]
-			cmp r1,#128
+			cmp r1,#128								@ delay for explosions
 			beq levelNext
 			add r1,#1
 			str r1,[r0]

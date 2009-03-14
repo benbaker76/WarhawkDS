@@ -79,6 +79,12 @@ initLevel:
 	str r0,[r1]
 	ldr r1,=pixelOffsetSBMain
 	str r0,[r1]
+	
+	
+	
+	
+	
+
 	mov r0,#256
 	ldr r1,=vofsSFMain
 	str r0,[r1]
@@ -88,6 +94,7 @@ initLevel:
 	str r0,[r1]
 	ldr r1,=vofsSBSub
 	str r0,[r1]
+
 	mov r0,#736
 	ldr r1,=yposSFMain
 	str r0,[r1]
@@ -110,6 +117,13 @@ initLevel:
 	str r0,[r1]
 	ldr r1,=explodeSpriteBossCount
 	str r0,[r1]
+	
+	mov r0,#2
+	ldr r1,=delaySF
+	str r0,[r1]
+	mov r0,#4
+	ldr r1,=delaySB
+	str r0,[r1]
 
 	mov r1,#250
 	ldr r0,=delayPowerUp
@@ -127,12 +141,26 @@ initLevel:
 	mov r1,#3
 	str r1,[r0]				@ set the anim to start on first call
 	
-	
 	ldr r0,=levelEnd
 	mov r1,#0				@ make 1 for TEST
 	str r1,[r0]
 	ldr r0,=bossMan
 	str r1,[r0]				@ comment out for boss test!!!!
+	
+	ldr r0, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
+	ldr r1, =REG_BG1HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	ldr r2, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
+	ldr r3, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
+	ldr r4, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
+	ldr r5, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
+	mov r6, #32						@ Offset the horizontal scroll register by 32 pixels to centre the map
+	strh r6, [r0]					@ Write our offset value to REG_BG1HOFS
+	strh r6, [r1]					@ Write our offset value to REG_BG1HOFS_SUB
+	mov r6,#0
+	strh r6, [r2]					@ Write our offset value to REG_BG2HOFS
+	strh r6, [r3]					@ Write our offset value to REG_BG2HOFS_SUB
+	strh r6, [r4]					@ Write our offset value to REG_BG3HOFS
+	strh r6, [r5]					@ Write our offset value to REG_BG3HOFS_SUB	
 	
 	@ we NEED to copy colmapX to a place in ram to modify it, otherwise
 	@ when we come back to play the level - the bases will still be destroyed

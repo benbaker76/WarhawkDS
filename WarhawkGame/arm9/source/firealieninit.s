@@ -545,21 +545,6 @@
 				b directDone				
 					
 		directDone:
-		@ We may need to divide the r8 and r9 delays by the r12 speed value?
-		@
-@		push {r0-r2}
-@		mov r0,r8
-@		mov r1,r12
-@		bl divf32
-@		mov r8,r0
-@		mov r0,r9
-@		mov r1,r12
-@		bl divf32
-@		mov r9,r0
-@		pop {r0-r2}
-		
-		
-		
 		@	store the calculated values!
 		@
 		@ first backup the delay values to trackx/tracky

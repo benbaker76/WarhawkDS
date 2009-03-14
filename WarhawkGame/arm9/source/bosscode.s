@@ -682,26 +682,10 @@ bossExploder:
 			mov r6,#6
 			mov r8,#SPRITE_OBJ_OFFS
 			str r6,[r2,r8]
-			mov r6,#8
+			mov r6,#4
 			mov r8,#SPRITE_EXP_DELAY_OFFS
 			str r6,[r2,r8]
-			mov r8,#SPRITE_X_OFFS
-			str r9,[r2,r8]
-			mov r8,#SPRITE_Y_OFFS
-			str r10,[r2,r8]
 			mov r10,#0
-			mov r8,#SPRITE_SPEED_X_OFFS
-			str r10,[r2,r8]
-			mov r8,#SPRITE_SPEED_Y_OFFS
-			str r10,[r2,r8]
-			mov r8,#SPRITE_SPEED_DELAY_X_OFFS
-			str r10,[r2,r8]
-			mov r8,#SPRITE_SPEED_DELAY_Y_OFFS
-			str r10,[r2,r8]
-			mov r8,#SPRITE_FIRE_SPEED_OFFS
-			str r10,[r2,r8]
-			mov r8,#SPRITE_FIRE_TYPE_OFFS
-			str r10,[r2,r8]
 			b notFreeForBoss
 	
 	useForBossExplode:

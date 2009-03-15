@@ -92,7 +92,7 @@
 
 @ FX defines. These are bits so we can have multiple fx at once
 
-#define FX_STOP						0
+#define FX_NONE						0
 #define FX_SINE_WOBBLE				BIT(0)
 #define FX_FADE_BLACK_IN			BIT(1)
 #define FX_FADE_BLACK_OUT			BIT(2)

@@ -302,7 +302,9 @@ checkLevelSkip:
 @------------------------------ THIS IS WHERE WE ADD THE SCORES AND PREPARE FOR PREVIOUS LEVEL
 
 levelBack:
-	bl fxSineWobbleOff			@ turn the "wibble" or "wobble" off
+	ldr r0, =fxMode				@ turn off all fx
+	ldr r1, =FX_NONE
+	str r1, [r0]
 
 	ldr r0,=levelNum
 	ldr r1,[r0]
@@ -319,7 +321,9 @@ levelBack:
 
 @------------------------------ THIS IS WHERE WE ADD THE SCORES AND PREPARE FOR NEXT LEVEL
 levelNext:
-	bl fxSineWobbleOff			@ turn the "wibble" or "wobble" off
+	ldr r0, =fxMode				@ turn off all fx
+	ldr r1, =FX_NONE
+	str r1, [r0]
 
 	ldr r0,=levelNum
 	ldr r1,[r0]

@@ -41,6 +41,7 @@
 	.global drawSprite
 
 drawSprite:
+	stmfd sp!, {lr}
 	mov r8,#127 			@ our counter for 128 sprites, do not think we need them all though
 	ldr r4,=horizDrift	 	@ here we will set r4 as an adder for sprite offset
 	ldr r4,[r4]				@ against our horizontal scroll
@@ -57,11 +58,8 @@ drawSprite:
 	@ Last section best commented!
 	ldr r0,=spriteY
 	ldr r1,[r0,r8, lsl #2]
-	cmp r1,#SCREEN_MAIN_WHITESPACE
+	cmp r1,#SCREEN_MAIN_WHITESPACE+32
 	bpl killSprite
-
-
-
 
 	ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
 	ldr r1,[r0,r8, lsl #2]				@ add sprite number * 4
@@ -72,6 +70,10 @@ drawSprite:
 		@ note: read the setting - daft prat!!!
 	killSprite:
 		ldr r0,=spriteActive
+		ldr r1,[r0,r8, lsl #2]
+		cmp r1,#128				@ if it is a boss - dont kill it!!!
+		beq sprites_Drawn
+
 		mov r1,#0
 		str r1,[r0,r8,lsl#2]
 		
@@ -95,6 +97,9 @@ drawSprite:
 	
 	ldr r0,=spriteY						@ Load Y coord
 	ldr r1,[r0,r8,lsl #2]				@ add ,rX for offsets
+	cmp r1,#SCREEN_MAIN_WHITESPACE		@ if is is > than screen base, do NOT draw it
+	bpl sprites_Done
+
 	ldr r3,=SCREEN_SUB_WHITESPACE-32	@ if it offscreen?
 	cmp r1,r3							@ if it is less than - then it is in whitespace
 	bmi sprites_Done					@ so, no need to draw it!
@@ -102,8 +107,8 @@ drawSprite:
 	cmp r1,r3							@ check
 	bpl spriteY_Main_Done				@ if so, we need only draw to main
 	ldr r3,=SCREEN_MAIN_TOP-32			@ is it totally on the sub
-	cmp r1,r3						@ Totally ON SUB
-	bmi spriteY_Sub_Done
+	cmp r1,r3							@ Totally ON SUB
+	bmi spriteY_Sub_Only
 
 		@ The sprite is now between 2 screens and needs to be drawn to BOTH!
 		@ Draw Y to MAIN screen (lower)
@@ -190,7 +195,56 @@ drawSprite:
 		@ Seeing that for this to occur, the sprite is offscreen on MAIN!
 	
 		b sprites_Done
+		
+	@ DRAW the Sprite on top screen and KILL the sprite on SUB!!!
+	spriteY_Sub_Only:
+		@ Draw sprite to SUB screen ONLY (r1 holds Y)
+		
+		mov r3, #ATTR0_DISABLED			@ Kill the SAME number sprite on Main Screen
+		ldr r0,=BUF_ATTRIBUTE0
+		add r0,r8, lsl #3
+		strh r3,[r0]
+
+		ldr r0,=BUF_ATTRIBUTE0_SUB		@ this all works in the same way as other sections
+		add r0,r8, lsl #3
+		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
+		ldr r3,=SCREEN_SUB_TOP
+		cmp r1,r3
+		addmi r1,#256
+		sub r1,r3
+		and r1,#0xff					@ Y is only 0-255
+		orr r2,r1
+		strh r2,[r0]
+		@ Draw X
+		ldr r0,=spriteX					@ get X coord mem space
+		ldr r1,[r0,r8,lsl #2]			@ add ,rX for offsets
+		cmp r1,#SCREEN_LEFT				@ if less than 64, this is off left of screen
+		addmi r1,#512					@ convert coord for offscreen (32 each side)
+		sub r1,#SCREEN_LEFT				@ Take 64 off our X
+		sub r1,r4						@ account for maps horizontal position
+		ldr r3,=0x1ff					@ Make sure 0-512 only as higher would affect attributes
+		ldr r0,=BUF_ATTRIBUTE1_SUB		@
+		add r0,r8, lsl #3
+		ldr r2, =(ATTR1_SIZE_32)
+		and r1,r3
+		orr r2,r1
+		strh r2,[r0]
+			@ Draw Attributes
+		ldr r0,=BUF_ATTRIBUTE2_SUB
+		add r0,r8, lsl #3
+		ldr r2,=spriteObj
+		ldr r3,[r2,r8, lsl #2]
+		ldr r1,=(0 | ATTR2_PRIORITY(SPRITE_PRIORITY)) @ add palette here *****
+		ldr r2,=spriteBloom
+		ldr r2,[r2,r8, lsl #2]
+		orr r1,r2, lsl #12
+		orr r1,r3, lsl #4				@ or r1 with sprite pointer *16 (for sprite data block)
+		strh r1, [r0]					@ store it all back
+
+		@ Need to kill same sprite on MAIN screen - or do we???
+		@ Seeing that for this to occur, the sprite is offscreen on MAIN!
 	
+		b sprites_Done	
 	spriteY_Main_Done:
 
 		@ Draw sprite to MAIN
@@ -263,7 +317,7 @@ drawSprite:
 			bne noMoreStuff
 				noMoreBase:
 				ldr r0,=spriteY
-				mov r1,#788
+				mov r1,#SPRITE_KILL
 				str r1,[r0,r8,lsl #2]
 			b noMoreStuff
 		alienExplodes:
@@ -291,7 +345,7 @@ drawSprite:
 			bne noMoreStuff
 				noMoreAlien:
 				ldr r0,=spriteY
-				mov r1,#788
+				mov r1,#SPRITE_KILL
 				str r1,[r0,r8,lsl #2]
 
 			b noMoreStuff
@@ -322,7 +376,7 @@ drawSprite:
 			bne noMoreStuff
 				noMoreShard:
 				ldr r0,=spriteY
-				mov r1,#788
+				mov r1,#SPRITE_KILL
 				str r1,[r0,r8,lsl #2]
 
 			b noMoreStuff
@@ -337,10 +391,7 @@ drawSprite:
 		movePowerup:
 		cmp r1,#10
 		bne whatNext
-			ldr r0,=spriteY
-			ldr r1,[r0,r8,lsl #2]
-			add r1,#3							@ move it down screen
-			str r1,[r0,r8,lsl #2]
+			bl movePowerUp
 			b noMoreStuff
 
 		whatNext:
@@ -349,7 +400,7 @@ drawSprite:
 	subs r8,#1
 	bpl SLoop
 
-	mov r15,r14
+	ldmfd sp!, {pc}
 	
 	.pool
 	.end

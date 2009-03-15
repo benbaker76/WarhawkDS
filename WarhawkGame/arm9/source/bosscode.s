@@ -75,12 +75,11 @@ checkBossInit:
 		bl bossAttack	
 		b checkBossInitFail	
 	ldmfd sp!, {r1-r2, pc}
-	
+@------------------ INIT THE BOSS DATA	
 	bossInit:
 	ldr r0,=yposSub
 	ldr r0,[r0]
 	cmp r0,#352					@ scroll pos to init BOSS
-@cmp r0,#3744					@ COMMENT OUT LINE ABOVE AND ADD THIS FOR TEST!
 	bne checkBossInitFail		@ not time yet :(
 		@ here we need to lay all the sprites and data out for the boss
 		
@@ -128,12 +127,14 @@ checkBossInit:
 			add r1,#1
 			cmp r0,#64
 		bne bossSpriteLoop
+		
+		@---------- FROM HERE WE SET THE DATA
+		
 		ldr r1,=bossX					@ set X coord
 		mov r0,#144+32
 		str r0,[r1]
 		ldr r1,=bossY					@ set y coord
 		mov r0,#288-42
-@ add r0,#150				@------------------ TESTING
 		str r0,[r1]
 		@ now we need to read the bossInitLev data based on the level
 		@ and set the variables accordingly		
@@ -143,53 +144,13 @@ checkBossInit:
 		ldr r1,=bossInitLev
 		add r1, r0, lsl #5				@ add level * 32 (bytes)
 
-		ldr r0,[r1]						@ load "max X speed"
-		ldr r2,=bossMaxX
-		str r0,[r2]	
-
-		ldr r2,=bossXSpeed
-		str r0,[r2]
-
-		add r1,#4
-		ldr r0,[r1]						@ load "max y speed"
-		ldr r2,=bossMaxY
-		str r0,[r2]
-
-		add r1,#4
-		ldr r0,[r1]						@ load "boss turn speed"
-		ldr r2,=bossTurn
-		str r0,[r2]
-
-		add r1,#4
-		ldr r0,[r1]
-		ldr r2,=bossHits				@ set hits to kill
-		str r0,[r2]
-
-		add r1,#4
-		ldr r0,[r1]
-		ldr r2,=bossFireMode			@ store mode, 0=normal/1=twin fire
-		str r0,[r2]
-
-		add r1,#4
-		ldr r0,[r1]
-		ldr r2,=bossSpecial				@ store "SPECIAL" no idea yet!!
-		str r0,[r2]
-
-		add r1,#4
-		ldr r0,[r1]
-		ldr r2,=bossLeftMin				@ store Min x Coord
-		str r0,[r2]
-
-		add r1,#4
-		ldr r0,[r1]
-		ldr r2,=bossRightMax				@ store Max X Coord
-		str r0,[r2]
-
-		mov r0,#0
-		ldr r1,=bossFirePhase
-		str r0,[r1]						@ reset shot phase
-		ldr r1,=bossFireDelay
-		str r0,[r1]						@ reset fire delay
+		mov r2,#20
+		ldr r2,[r1,r2]					@ grab "SPECIAL"
+		cmp r2,#0
+			bleq bossInitStandard
+		cmp r2,#1
+			bleq bossInitTracker
+		
 		
 		bl bossDraw
 		ldmfd sp!, {r1-r2, pc}
@@ -345,69 +306,13 @@ bossAttack:
 	@ amd use r8 = left limit. r9 = right limit
 	
 	@ must look into a way to calculate this???
-	
-	ldr r8,=bossLeftMin
+	ldr r8,=bossSpecial
 	ldr r8,[r8]
-	ldr r9,=bossRightMax
-	ldr r9,[r9]
+	cmp r8,#0
+		bleq bossAttackLR
+	cmp r8,#1
+		bleq bossHunterMovement
 
-	ldr r4,=bossXDir
-	ldr r0,[r4]					@ r0/r4 0=left / 1=right
-	ldr r6,=bossX
-	ldr r3,[r6]					@ r3/r6 boss X
-	ldr r1,=bossXSpeed
-	ldr r2,[r1]	
-
-	ldr r1,=bossTurn
-	ldr r5,[r1]
-
-	ldr r1,=bossXDelay
-	ldr r7,[r1]
-	add r7,#1
-	cmp r7,r5
-	moveq r7,#0
-	str r7,[r1]
-	beq bossMoveLR
-	b noBossUpdate
-	@------ BOSS LEFT/RIGHT UPDATE
-	bossMoveLR:
-	cmp r0,#0
-	bne bossRight
-		@ move left
-		ldr r5,=bossMaxX
-		ldr r5,[r5]
-		rsb r5,r5,#0
-		ldr r1,=bossXSpeed
-		ldr r2,[r1]				@ r2 = current X speed
-		subs r2,#1
-		cmp r2,r5
-		movmi r2,r5
-		str r2,[r1]
-		cmp r3,r8			@ the compare should be (180-32)-maxBossXspeed*2 (ish)
-		movmi r0,#1
-		b noBossUpdate
-	
-	bossRight:
-		@ move right
-		ldr r5,=bossMaxX
-		ldr r5,[r5]
-		ldr r1,=bossXSpeed
-		ldr r2,[r1]				@ r2 = current X speed
-		adds r2,#1
-		cmp r2,r5
-		movpl r2,r5
-		str r2,[r1]
-		cmp r3,r9		
-		movpl r0,#0
-	@-------- END OF BOSS MOVE
-
-	noBossUpdate:	
-	str r0,[r4]
-
-	adds r3,r2
-	str r3,[r6]
-	
-	@------------- FROM HERE WE NEED TO DO SHOTS AND ADD SOME Y CODE
 	ldr r5,=bossMan
 	ldr r5,[r5]
 	cmp r5,#3
@@ -416,7 +321,7 @@ bossAttack:
 	bl bossDraw					@ redraw our boss
 	
 	ldmfd sp!, {r0-r8, pc}
-	
+
 @------------ OUR BOSSES FIRE CODE COMES IN HERE
 bossFire:
 	stmfd sp!, {r0-r8, lr}
@@ -427,8 +332,6 @@ bossFire:
 	ldr r1,[r1]
 	cmp r1,#2
 	beq bossNoNeedReset
-	
-	
 	
 	ldr r1,=bossFireDelay
 	ldr r0,[r1]					@ grab fire delay
@@ -563,7 +466,6 @@ bossFire:
 	ldr r1,[r1]					@ r1 = shot phase (0-31)
 	lsl r1,#3					@ phase * 8 (data in 2 word pairs = 8 bytes)
 	add r2,r1					@ r2 now points to speed/type
-	
 	ldr r4,[r2]					@ r4 = speed and type
 								@ we need to split these up and store!	
 	cmp r4,#0

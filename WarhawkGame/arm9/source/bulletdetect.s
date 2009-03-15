@@ -153,7 +153,7 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		beq LFPower					@ If powershot, keep the bullet going :)
 		
 			ldr r1,=spriteY+4			@ Kill the bullet
-			mov r2,#788
+			mov r2,#SPRITE_KILL
 			str r2, [r1,r0, lsl #2]
 
 		LFPower:
@@ -311,7 +311,7 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		beq RFPower					@ If powershot, keep the bullet going :)
 		
 			ldr r1,=spriteY+4			@ Kill the bullet
-			mov r2,#788
+			mov r2,#SPRITE_KILL
 			str r2, [r1,r0, lsl #2]
 
 		RFPower:
@@ -466,8 +466,8 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				@ ALIEN DETECTED!!
 				
 				ldr r8,=spriteY+4			@ Kill the bullet
-				mov r6,#788
-				str r8, [r8,r0, lsl #2]				
+				mov r6,#SPRITE_KILL
+				str r6, [r8,r0, lsl #2]				
 				
 				cmp r5,#128
 				bne standardAlienHit
@@ -677,10 +677,10 @@ alienCollideCheck:
 	stmfd sp!, {r0-r8, lr}
 											@ r1 is offset to alien
 
-ldr r5,=levelEnd
-ldr r5,[r5]
-cmp r5,#2
-beq noPlayer
+			ldr r5,=levelEnd				@ if we have destroyed the BOSS
+			ldr r5,[r5]						@ no need for a detect with aliens
+			cmp r5,#2
+			beq noPlayer
 
 
 

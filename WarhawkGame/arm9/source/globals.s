@@ -83,6 +83,7 @@
 	.global spriteSpeedX
 	.global spriteSpeedY
 	.global spriteSpeedDelay
+	.global spriteSpeedDelayX
 	.global spriteMaxSpeed
 	.global spriteTrackX
 	.global spriteTrackY
@@ -124,6 +125,7 @@
 	.global animFrame
 	.global animDelay
 	.global bossXSpeed
+	.global bossYSpeed
 	.global bossXDelay
 	.global bossYDelay
 	.global bossXDir
@@ -177,6 +179,8 @@ bossFireDelay:
 bossFirePhase:
 	.word 0
 bossXSpeed:
+	.word 0
+bossYSpeed:
 	.word 0
 bossXDelay:
 	.word 0

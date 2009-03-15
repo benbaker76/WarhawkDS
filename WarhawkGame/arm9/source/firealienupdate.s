@@ -346,7 +346,7 @@
 		str r5,[r2,r6]					@ put it back
 		cmp r5,#768						@ check if off screen
 		bmi mineShotActive
-			mov r1,#788
+			mov r1,#SPRITE_KILL
 			mov r6,#SPRITE_Y_OFFS
 			str r1,[r2,r6]
 		mineShotActive:
@@ -489,13 +489,15 @@
 			mov r8,#SPRITE_SPEED_Y_OFFS
 			ldrsb r8,[r2,r8]		@ r8=y speed
 			adds r5,r8				@ add speed to y coord
-			cmp r5,#0
+			cmp r5,#364
 				bmi directDeath
+			cmp r5,#788
+				bpl directDeath
 			str r5,[r2,r6]			@ store it back
 		noDirectY:	
 			ldmfd sp!, {r0-r10, pc}	
 		directDeath:
-			mov r1,#788
+			mov r1,#SPRITE_KILL
 			mov r6,#SPRITE_Y_OFFS
 			str r1,[r2,r6]
 	ldmfd sp!, {r0-r10, pc}	

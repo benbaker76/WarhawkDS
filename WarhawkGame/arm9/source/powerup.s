@@ -20,18 +20,11 @@
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "warhawk.h"
-#include "system.h"
-#include "video.h"
-#include "background.h"
-#include "dma.h"
-#include "interrupts.h"
-#include "sprite.h"
-#include "ipc.h"
-
 
 	.global checkPowerUp
 	.global dropShipShot
 	.global powerupCollect
+	.global movePowerUp
 	.arm
 	.align
 	.text
@@ -140,7 +133,7 @@ dropShipShot:						@------------ We have shot a drop ship!!
 	mov r0,#SPRITE_Y_OFFS
 	str r2,[r3,r0]
 	mov r1,#10
-	str r1,[r3]					@ set active to 10
+	str r1,[r3]					@ set active to 10 (this is a powerup)
 	mov r1,#29
 	mov r0,#SPRITE_OBJ_OFFS
 	str r1,[r3,r0]
@@ -148,12 +141,19 @@ dropShipShot:						@------------ We have shot a drop ship!!
 	mov r0,#SPRITE_HIT_OFFS		@ set its hit points to 2
 	str r1,[r3,r0]	
 	
+	mov r1,#0
+	mov r0,#SPRITE_SPEED_X_OFFS
+	str r1,[r3,r0]
+	mov r1,#12
+	mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+	str r1,[r3,r0]
+	
 	ldmfd sp!, {r0-r6, pc}
 	
 powerupCollect:
 	stmfd sp!, {r0-r6, lr}
 	@ r1 is the ref to the powerup - we need to remove it!
-	mov r0,#788
+	mov r0,#SPRITE_KILL
 	mov r2,#SPRITE_Y_OFFS
 	str r0,[r1,r2]
 	
@@ -167,4 +167,59 @@ powerupCollect:
 	ldr r1,=powerupLives
 	str r0,[r1]
 	
+	ldmfd sp!, {r0-r6, pc}
+	
+movePowerUp:
+	stmfd sp!, {r0-r6, lr}
+	ldr r0,=spriteY
+	ldr r1,[r0,r8,lsl #2]
+	add r1,#2							@ move it down screen
+	str r1,[r0,r8,lsl #2]
+	@ now it needs to have a fairly fast TRACK
+	ldr r0,=spriteX
+	ldr r0,[r0]
+	ldr r1,=horizDrift
+	ldr r1,[r1]
+	add r0,r1				@ r0=Players X coord
+
+	ldr r6,=spriteX
+	ldr r4,[r6,r8,lsl #2]	@ R4=powerup X (use r6 later)
+	
+	ldr r1,=spriteSpeedDelayX
+	ldr r2,[r1,r8,lsl #2]
+	subs r2,#1
+	str r2,[r1,r8,lsl #2]
+	cmp r2,#0
+	bne powerupXDone
+	mov r2,#12
+	str r2,[r1,r8,lsl #2]
+	
+	cmp r0,r4
+	bgt powerupRight
+		@ move hunter left!
+		ldr r2,=spriteSpeedX
+		add r2, r8, lsl #2
+		ldrsb r3,[r2]
+		subs r3,#1
+		cmp r3,#-2
+		movmi r3,#-2
+		str r3,[r2]				@ store new speed back
+		b powerupXDone
+	powerupRight:
+		@ move hunter left!
+		ldr r2,=spriteSpeedX
+		add r2, r8, lsl #2
+		ldrsb r3,[r2]
+		add r3,#1
+		cmp r3,#2
+		movpl r3,#2
+		str r3,[r2]				@ store new speed back
+	
+	powerupXDone:
+	
+	ldr r0,=spriteSpeedX
+	ldr r3,[r0, r8, lsl #2]	
+	adds r4,r3
+	str r4,[r6,r8, lsl #2]		@ using r6 again! :)
+		
 	ldmfd sp!, {r0-r6, pc}

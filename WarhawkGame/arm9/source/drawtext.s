@@ -109,14 +109,21 @@ drawGetReadyText:
 	ldr r0, =getReadyText			@ Load out text pointer
 	ldr r1, =11						@ x pos
 	ldr r2, =10						@ y pos
-	ldr r3, =0						@ Draw on main screen
+	ldr r3, =0						@ Draw on sub screen
 	bl drawText
 	
-	ldr r0, =getReadyText			@ Load out text pointer
-	ldr r1, =11						@ x pos
+	ldr r0, =levelText				@ Load out text pointer
+	ldr r1, =12						@ x pos
 	ldr r2, =10						@ y pos
-	ldr r3, =1						@ Draw on sub screen
+	ldr r3, =1						@ Draw on main screen
 	bl drawText
+	
+	ldr r10,=levelNum				@ Pointer to data
+	ldr r10,[r10]					@ Read value
+	mov r8,#10						@ y pos
+	mov r9,#2						@ Number of digits
+	mov r11, #18					@ x pos
+	bl drawDigits					@ Draw
 	
 	ldmfd sp!, {r0-r3, pc}
 
@@ -150,12 +157,15 @@ textDone:
 	ldmfd sp!, {r4-r6, pc}
 
 drawDigits:
+
 	@ Ok, to use this we need to pass it a few things!!!
 	@ r10 = number to display
 	@ r8 = height to display to
 	@ r9 = number of Digits to display
 	@ r11 = X coord
+	
 	stmfd sp!, {r0-r10, lr}
+	
 	cmp r9,#0						@ if you forget to set r9 (or are using it)
 	moveq r9,#4						@ we will default to 4 digits
 
@@ -193,11 +203,11 @@ drawDigits:
 
 digitsLoop:
 	ldrb r3,[r1],#1					@ Read r1 [text] and add 1 to [text] offset
-	add r3,#136						@ offset for 0. We only have chars as a tile in sub screen (+136 for our c64 digits)
+	@add r3,#136					@ offset for 0. We only have chars as a tile in sub screen (+136 for our c64 digits)
+	add r3,#58						@ offset for 0. We only have chars as a tile in sub screen
 	strh r3, [r0], #2				@ Write the tile number to our 32x32 map and move along
 	subs r2, #1						@ Move along one
 	bne digitsLoop					@ And loop back until done
-	
 	
 	ldmfd sp!, {r0-r10, pc}
 	

@@ -86,6 +86,10 @@
 #define GAMEMODE_STOPPED			0
 #define GAMEMODE_RUNNING			1
 
+@ Level count
+
+#define LEVEL_COUNT					16
+
 @ FX defines. These are bits so we can have multiple fx at once
 
 #define FX_STOP						0

@@ -90,6 +90,7 @@
 	.global spriteExplodeDelay
 	.global spriteBloom
 	.global getReadyText
+	.global levelText
 	.global spriteXText
 	.global spriteYText
 	.global spriteInstruct
@@ -306,6 +307,8 @@ energyLevel:
 	
 getReadyText:
 	.string "GET READY!\0"
+levelText:
+	.string "LEVEL\0"
 spriteXText:
 	.string "spritex:\0"
 spriteYText:

@@ -153,7 +153,8 @@ gameLoop:
 	bl checkBossInit							@ Check if we should set the offscreen boss up??
 	bl drawSprite								@ drawsprites and do update bloom effect
 	bl animateAliens
-	bl checkGameOver	
+	bl checkGameOver
+	bl checkLevelSkip							@ Check to see if we want to skip a level
 	@bl drawDebugText							@ draw some numbers :)
 
 	ldr r0,=levelEnd
@@ -284,6 +285,37 @@ levelComplete:
 	notTimeToEndDeath:
 	
 	b bossDeathLoop
+	
+@------------------------------
+
+checkLevelSkip:
+
+	ldr r1,=REG_KEYINPUT
+	ldr r2,[r1]
+	tst r2,#BUTTON_L
+	beq levelBack
+	tst r2,#BUTTON_R
+	beq levelNext
+
+	bx lr
+	
+@------------------------------ THIS IS WHERE WE ADD THE SCORES AND PREPARE FOR PREVIOUS LEVEL
+
+levelBack:
+	bl fxSineWobbleOff			@ turn the "wibble" or "wobble" off
+
+	ldr r0,=levelNum
+	ldr r1,[r0]
+	sub r1,#1
+	cmp r1,#0
+	moveq r1,#LEVEL_COUNT
+	str r1,[r0]
+
+	ldr r0,=levelEnd
+	mov r1,#0
+	str r1,[r0]
+
+	b levelLoop
 
 @------------------------------ THIS IS WHERE WE ADD THE SCORES AND PREPARE FOR NEXT LEVEL
 levelNext:
@@ -292,7 +324,7 @@ levelNext:
 	ldr r0,=levelNum
 	ldr r1,[r0]
 	add r1,#1
-	cmp r1,#17
+	cmp r1,#LEVEL_COUNT + 1
 	moveq r1,#1
 	str r1,[r0]
 

@@ -561,7 +561,7 @@ initLevel:
 	level16:
 	cmp r8,#16
 	bne levelDone
-							@ Set level 15
+							@ Set level 16
 		ldr r0,=Level15Map
 		ldr r1,=levelMap
 		str r0,[r1]
@@ -584,6 +584,8 @@ initLevel:
 		ldr r1,=starBackPal
 		str r0,[r1]	
 	levelDone:
+	
+		bl resetScrollRegisters
 	
 	@ ok, using r9 as source, copy data to colMapStore
 	

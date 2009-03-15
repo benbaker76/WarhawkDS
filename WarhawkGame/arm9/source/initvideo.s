@@ -32,9 +32,12 @@
 	.align
 	.text
 	.global initVideo
+	.global resetScrollRegisters
 	
 initVideo:
+
 	stmfd sp!, {r0-r6, lr}
+	
 	ldr r0, =REG_POWERCNT
 	ldr r1, =POWER_ALL_2D			@ All power on
 	str r1, [r0]
@@ -136,6 +139,12 @@ initVideo:
 	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
 	add r1, #(ScoreTilesLen + FontTilesLen)
 	bl dmaCopy
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+resetScrollRegisters:
+
+	stmfd sp!, {r0-r6, lr}
 
 	@ Our horizontal centre routine
 	

@@ -615,10 +615,6 @@ initLevel:
 		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
 		bl dmaCopy
 	
-		ldr r0, =fxMode							@ turn off all fx
-		ldr r1, =FX_NONE
-		str r1, [r0]
-		
 		bl levelStart
 
 	ldmfd sp!, {r0-r6, pc}
@@ -632,7 +628,11 @@ levelStart:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl DC_FlushAll							@ Flush cache
-		
+	
+	ldr r0, =fxMode							@ turn off all fx
+	ldr r1, =FX_NONE
+	str r1, [r0]
+	
 	bl resetScrollRegisters					@ Reset the scroll registers
 	bl resetSprites
 	bl initLevelSprites

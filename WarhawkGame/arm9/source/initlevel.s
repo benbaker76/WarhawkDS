@@ -585,7 +585,8 @@ initLevel:
 		str r0,[r1]	
 	levelDone:
 	
-		bl resetScrollRegisters
+		bl resetScrollRegisters			@ Reset the scroll registers
+		bl clearOAM						@ Clear the sprite memory
 	
 	@ ok, using r9 as source, copy data to colMapStore
 	

@@ -80,6 +80,7 @@ levelLoop:
 	bl initLevel
 	bl initInterruptHandler						@ initialize the interrupt handler
 	bl initSprites
+	bl clearOAM
 	bl initLevelSprites
 	
 	@ firstly, lets draw all the screen data ready for play

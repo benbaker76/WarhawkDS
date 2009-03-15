@@ -32,6 +32,7 @@
 	.align
 	.text
 	.global initSprites
+	.global clearOAM
 	
 initSprites:
 
@@ -53,7 +54,13 @@ initSprites:
 	ldr r2, =SpritesTilesLen
 	bl dmaCopy
 	ldr r1, =SPRITE_GFX_SUB
-	bl dmaCopy	
+	bl dmaCopy
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+clearOAM:
+
+	stmfd sp!, {r0-r6, lr}
 	
 	@ Clear the OAM (disable all 128 sprites for both screens)
 

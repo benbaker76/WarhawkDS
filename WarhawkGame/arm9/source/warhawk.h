@@ -85,10 +85,13 @@
 
 #define GAMEMODE_STOPPED			0
 #define GAMEMODE_RUNNING			1
+#define GAMEMODE_PAUSED				2
 
 @ Level count
 
 #define LEVEL_COUNT					16
+
+@ Scroll positions
 
 @ FX defines. These are bits so we can have multiple fx at once
 

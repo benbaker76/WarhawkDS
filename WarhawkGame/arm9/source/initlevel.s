@@ -147,21 +147,6 @@ initLevel:
 	ldr r0,=bossMan
 	str r1,[r0]				@ comment out for boss test!!!!
 	
-	ldr r0, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
-	ldr r1, =REG_BG1HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
-	ldr r2, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
-	ldr r3, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
-	ldr r4, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
-	ldr r5, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
-	mov r6, #32						@ Offset the horizontal scroll register by 32 pixels to centre the map
-	strh r6, [r0]					@ Write our offset value to REG_BG1HOFS
-	strh r6, [r1]					@ Write our offset value to REG_BG1HOFS_SUB
-	mov r6,#0
-	strh r6, [r2]					@ Write our offset value to REG_BG2HOFS
-	strh r6, [r3]					@ Write our offset value to REG_BG2HOFS_SUB
-	strh r6, [r4]					@ Write our offset value to REG_BG3HOFS
-	strh r6, [r5]					@ Write our offset value to REG_BG3HOFS_SUB	
-	
 	@ we NEED to copy colmapX to a place in ram to modify it, otherwise
 	@ when we come back to play the level - the bases will still be destroyed
 	@ from that last time!
@@ -582,12 +567,9 @@ initLevel:
 		
 		ldr r0,=StarBackPal3
 		ldr r1,=starBackPal
-		str r0,[r1]	
+		str r0,[r1]
+			
 	levelDone:
-	
-		bl DC_FlushAll					@ Flush cache
-		bl resetScrollRegisters			@ Reset the scroll registers
-		bl resetSprites					@ Clear the sprite memory
 	
 	@ ok, using r9 as source, copy data to colMapStore
 	
@@ -595,7 +577,6 @@ initLevel:
 		ldr r1,=colMapStore
 		ldr r2,=1984*4
 		bl dmaCopy
-	
 	
 	@ Load the palette into the palette subscreen area and main
 
@@ -633,11 +614,73 @@ initLevel:
 		bl dmaCopy
 		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
 		bl dmaCopy
+	
+		ldr r0, =fxMode							@ turn off all fx
+		ldr r1, =FX_NONE
+		str r1, [r0]
+		
+		bl levelStart
+
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ===========================================================
+	@ LEVEL START
+	@ ===========================================================
+	
+levelStart:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl DC_FlushAll							@ Flush cache
+		
+	bl resetScrollRegisters					@ Reset the scroll registers
+	bl resetSprites
+	bl initLevelSprites
+	
+	bl clearBG0
+	bl clearBG1
+	bl clearBG2
+	bl clearBG3	
+	
+	bl drawMapScreenMain
+	bl drawMapScreenSub
+	bl drawSFMapScreenMain
+	bl drawSFMapScreenSub
+	bl drawSBMapScreenMain
+	bl drawSBMapScreenSub
+	bl levelDrift
+	bl drawScore
+	bl drawSprite
+	bl drawGetReadyText
+	bl drawAllEnergyBars
+	@bl playInGameMusic
+		
+	@ Fade in
+	
+	@bl fxSpotlightIn
+	bl fxFadeBlackIn
+	bl fxMosaicIn
+	@bl fxScanline
+	@bl fxWipeInLeft
+	@bl fxCrossWipe
+	@bl fxSineWobbleOn
+	
+	bl DC_FlushAll							@ Flush cache
+
+	bl waitforFire							@ wait for a short while to start game
+
+	bl clearBG0
+	
+	bl gameStart
 
 	ldmfd sp!, {r0-r6, pc}
 
+	@ ------------------------------------
+
 initLevelSprites:
+
 	stmfd sp!, {r0-r6, lr}
+	
 	mov r1, #1
 	ldr r0,=firePress
 	str r1,[r0]				@ Set fire press so fire to start does not fire a bullet
@@ -656,8 +699,11 @@ initLevelSprites:
 	@ now we need to add special explosions!	
 	
 	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
 
 initLevelSpecialSprites:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	@ Restore original Explosions
@@ -734,7 +780,6 @@ initLevelSpecialSprites:
 		bl dmaCopy
 	noSkulls:
 	
-	bl DC_FlushAll					@ Flush cache
 	bl playDinkDinkSound
 	
 	ldmfd sp!, {r0-r6, pc}

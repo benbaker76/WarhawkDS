@@ -618,64 +618,6 @@ initLevel:
 		bl levelStart
 
 	ldmfd sp!, {r0-r6, pc}
-	
-	@ ===========================================================
-	@ LEVEL START
-	@ ===========================================================
-	
-levelStart:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	bl DC_FlushAll							@ Flush cache
-	
-	ldr r0, =fxMode							@ turn off all fx
-	ldr r1, =FX_NONE
-	str r1, [r0]
-	
-	bl resetScrollRegisters					@ Reset the scroll registers
-	bl resetSprites
-	bl initLevelSprites
-	
-	bl clearBG0
-	bl clearBG1
-	bl clearBG2
-	bl clearBG3	
-	
-	bl drawMapScreenMain
-	bl drawMapScreenSub
-	bl drawSFMapScreenMain
-	bl drawSFMapScreenSub
-	bl drawSBMapScreenMain
-	bl drawSBMapScreenSub
-	bl levelDrift
-	bl drawScore
-	bl drawSprite
-	bl drawGetReadyText
-	bl drawAllEnergyBars
-	@bl playInGameMusic
-		
-	@ Fade in
-	
-	@bl fxSpotlightIn
-	bl fxFadeBlackIn
-	bl fxMosaicIn
-	@bl fxScanline
-	@bl fxWipeInLeft
-	@bl fxCrossWipe
-	@bl fxSineWobbleOn
-	
-	bl DC_FlushAll							@ Flush cache
-
-	bl waitforFire							@ wait for a short while to start game
-
-	bl clearBG0
-	
-	bl gameStart
-
-	ldmfd sp!, {r0-r6, pc}
-
-	@ ------------------------------------
 
 initLevelSprites:
 

@@ -585,8 +585,9 @@ initLevel:
 		str r0,[r1]	
 	levelDone:
 	
+		bl DC_FlushAll					@ Flush cache
 		bl resetScrollRegisters			@ Reset the scroll registers
-		bl clearOAM						@ Clear the sprite memory
+		bl resetSprites					@ Clear the sprite memory
 	
 	@ ok, using r9 as source, copy data to colMapStore
 	
@@ -733,7 +734,7 @@ initLevelSpecialSprites:
 		bl dmaCopy
 	noSkulls:
 	
-	
+	bl DC_FlushAll					@ Flush cache
 	bl playDinkDinkSound
 	
 	ldmfd sp!, {r0-r6, pc}

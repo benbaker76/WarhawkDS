@@ -379,8 +379,6 @@ spriteFireSpeed:
 spriteInstruct:
 	.space 32768
 
-
-
 digits:
 	.space 32
 	

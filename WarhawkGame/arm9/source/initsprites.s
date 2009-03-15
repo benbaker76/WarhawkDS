@@ -32,7 +32,7 @@
 	.align
 	.text
 	.global initSprites
-	.global clearOAM
+	.global resetSprites
 	
 initSprites:
 
@@ -58,7 +58,7 @@ initSprites:
 	
 	ldmfd sp!, {r0-r6, pc}
 	
-clearOAM:
+resetSprites:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -75,6 +75,13 @@ clearOAM:
 	ldr r0,=0
 	ldr r1,=spriteX
 	ldr r2,=2432
+	bl dmaFillWords
+	
+	@ ------------------------ CLEAR SPRITE DATA
+	
+	mov r0, #0
+	ldr r1, =spriteActive
+	ldr r2, =(21 * 512 + 32768)
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}

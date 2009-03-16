@@ -129,6 +129,7 @@
 	.global bossXDelay
 	.global bossYDelay
 	.global bossXDir
+	.global bossYDir
 	.global bossFirePhase
 	.global bossFireDelay
 	.global bossMaxX
@@ -162,7 +163,6 @@ bossLeftMin:
 	.word 0
 bossRightMax:
 	.word 0
-
 bossSpecial:
 	.word 0
 bossFireMode:
@@ -173,7 +173,6 @@ bossMaxX:
 	.word 0
 bossMaxY:
 	.word 0
-	
 bossFireDelay:
 	.word 0
 bossFirePhase:
@@ -188,13 +187,8 @@ bossYDelay:
 	.word 0
 bossXDir:
 	.word 0
-
-animFrame:
+bossYDir:
 	.word 0
-animDelay:
-	.word 0
-
-	
 bossX:
 	.word 0
 bossY:
@@ -202,6 +196,10 @@ bossY:
 bossHits:
 	.word 0
 
+animFrame:
+	.word 0
+animDelay:
+	.word 0
 	
 mineDelay:
 	.word 0

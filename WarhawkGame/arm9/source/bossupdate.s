@@ -27,6 +27,7 @@
 	
 	.global bossAttackLR
 	.global bossHunterMovement
+	.global bossLurcherMovement
 	
 @------------ MOVE BOSS ATTACK "0=STANDARD" (LEFT/RIGHT INERTIA)
 bossAttackLR:
@@ -194,3 +195,139 @@ bossHunterMovement:
 	
 	ldmfd sp!, {r0-r8, PC}
 	
+@------------ MOVE BOSS ATTACK "2=LURCHER" (LUNGE AT PLAYER)
+bossLurcherMovement:
+	stmfd sp!, {r0-r8, lr}
+	bl bossAttackLR			@ we are still moving left/right, so use that code!
+	
+	ldr r0,=spriteX
+	ldr r0,[r0]
+	ldr r1,=horizDrift
+	ldr r1,[r1]
+	add r0,r1				@ r0=Players X coord
+	
+	@ read bossYDir (0=on line, 1=Down, 2=Up)
+	
+	ldr r1,=bossYDir
+	ldr r2,[r1]
+	cmp r2,#0
+	bne bossLurching
+		@ we are on the top line, so lets check for X coord match
+		@ if bossX+96>r0 and bossx<r0+32
+		ldr r3,=bossX
+		ldr r4,[r3]					@ r4=bossX
+		add r4,#96-8
+		cmp r4,r0
+		bmi bossLurcherDone
+		sub r4,#96-8
+		add r0,#32
+		cmp r4,r0
+		bpl bossLurcherDone
+		@ ok, we are now within range, lets make a LURCH :)
+		mov r2,#1
+		str r2,[r1]					@ set bossYDir to 1 (down)
+		mov r2,#0
+		ldr r1,=bossYSpeed
+		str r2,[r1]					@ set Y speed to 0
+		ldr r1,=bossTurn
+		ldr r3,[r1]
+		ldr r1,=bossYDelay
+		str r3,[r1]					@ reset the speed change countdown
+		b bossLurcherDone
+	
+	bossLurching:
+		@ first check and update the friction delay
+		ldr r3,=bossYDelay
+		ldr r4,[r3]
+		subs r4,#1
+		str r4,[r3]
+		ldr r4,=bossYSpeed
+		ldr r4,[r4]
+		bpl bossLurcherAdds
+		ldr r5,=bossTurn
+		ldr r4,[r5]
+		str r4,[r3]					@ resest the friction/delay to bossTurn
+	
+		cmp r2,#1
+		bne bossLurchUp
+			@ ok, boss is coming down, so we need to update the Y speed +
+			@ and check if we are below a set point, and if so, go back up!!
+			
+			ldr r3,=bossY
+			ldr r3,[r3]
+			mov r5,#640
+			ldr r6,=bossMaxY
+			ldr r6,[r6]
+			sub r5,r6
+			lsl r6,#1
+			sub r5,r6
+			cmp r3,r5
+			bmi bossLurcherDownUpdate
+				mov r3,#2
+				str r3,[r1]			@ set movement to UP
+				b bossLurcherDone
+			bossLurcherDownUpdate:
+			ldr r3,=bossYSpeed
+			ldr r4,[r3]
+			ldr r5,=bossMaxY
+			ldr r5,[r5]
+			adds r4,#1
+			cmp r4,r5
+			movgt r4,r5
+			str r4,[r3]
+			b bossLurcherAdds
+	
+		bossLurchUp:
+			ldr r5,=bossY
+			ldr r3,[r5]
+			ldr r6,=438
+			ldr r7,=bossMaxY		@ max Y speed
+			ldr r7,[r7]
+			lsl r7,#4
+			add r6,r7
+			cmp r3,r6
+			bgt bossLurcherReturnUpdateFaster
+				Ldr r7,=bossYSpeed
+				ldrsb r4,[r7]
+				cmp r4,#-1
+				bge bossLurcherNoSlow
+					add r4,#1
+					str r4,[r7]
+				bossLurcherNoSlow:
+				ldr r6,=438
+				add r6,r4
+				cmp r3,r6
+				bge bossLurcherAdds
+			
+				mov r3,r6
+				str r3,[r5]			@ reset Y coord
+				mov r3,#0
+				str r3,[r1]			@ set movement "Done"
+				b bossLurcherAdds
+			bossLurcherReturnUpdateFaster:
+			ldr r3,=bossYSpeed
+			ldr r4,[r3]
+			ldr r5,=bossMaxY
+			ldr r5,[r5]
+			rsb r5,r5,#0
+			subs r4,#1
+			cmp r4,r5
+			movmi r4,r5
+			str r4,[r3]
+			b bossLurcherAdds
+	
+	bossLurcherAdds:
+			ldr r5,=bossY
+			ldr r6,[r5]
+			adds r6,r4
+			str r6,[r5]
+	
+
+	
+	
+	
+	
+	bossLurcherDone:
+	
+	
+	ldmfd sp!, {r0-r8, pc}

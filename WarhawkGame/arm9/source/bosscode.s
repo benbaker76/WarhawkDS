@@ -145,11 +145,13 @@ checkBossInit:
 		add r1, r0, lsl #5				@ add level * 32 (bytes)
 
 		mov r2,#20
-		ldr r2,[r1,r2]					@ grab "SPECIAL"
+		ldr r2,[r1,r2]					@ grab "SPECIAL VALUE"
 		cmp r2,#0
 			bleq bossInitStandard
 		cmp r2,#1
 			bleq bossInitTracker
+		cmp r2,#2
+			bleq bossInitLurcher
 		
 		
 		bl bossDraw
@@ -312,13 +314,23 @@ bossAttack:
 		bleq bossAttackLR
 	cmp r8,#1
 		bleq bossHunterMovement
+	cmp r8,#2
+		bleq bossLurcherMovement
 
 	ldr r5,=bossMan
-	ldr r5,[r5]
+	ldr r5,[r5]					@ if boss is exploding, do not fire!
 	cmp r5,#3
-	bllt bossFire					@ do our fire checks, and shoot if needed
+	bllt bossFire				@ do our fire checks, and shoot if needed
 	
 	bl bossDraw					@ redraw our boss
+	
+	
+	ldr r10,=bossY
+	ldr r10,[r10]
+	mov r8,#0						@ y pos
+	mov r9,#3						@ Number of digits
+	mov r11, #9						@ x pos
+	bl drawDigits					@ Draw	
 	
 	ldmfd sp!, {r0-r8, pc}
 

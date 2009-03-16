@@ -27,6 +27,7 @@
 	
 	.global bossInitStandard
 	.global bossInitTracker
+	.global bossInitLurcher
 	
 	@ r1= Pointer to start of bosses level based data (8 words)
 	@ 1 - max X speed 	= maximum X speed allowed			bossMaxX
@@ -141,4 +142,63 @@ bossInitTracker:
 	ldr r1,=bossYDelay
 	str r0,[r1]						@ reset the turn counter	
 	
+	ldmfd sp!, {r0-r8, pc}
+	
+@------------------ INIT FOR TYPE 2 (LURCHER)
+bossInitLurcher:
+	stmfd sp!, {r0-r8, lr}
+	ldr r0,[r1]						@ load "max X speed"
+	ldr r2,=bossMaxX
+	str r0,[r2]	
+
+	add r1,#4
+	ldr r0,[r1]						@ load "max y speed"
+	ldr r2,=bossMaxY
+	str r0,[r2]
+
+	add r1,#4
+	ldr r0,[r1]						@ load "boss turn speed"
+	ldr r2,=bossTurn
+	str r0,[r2]
+	ldr r2,=bossYDelay
+	str r0,[r2]
+
+	add r1,#4
+	ldr r0,[r1]
+	ldr r2,=bossHits				@ set hits to kill
+	str r0,[r2]
+
+	add r1,#4
+	ldr r0,[r1]
+	ldr r2,=bossFireMode			@ store mode, 0=normal/1=twin fire
+	str r0,[r2]
+
+	add r1,#4
+	ldr r0,[r1]
+	ldr r2,=bossSpecial				@ store "SPECIAL"
+	str r0,[r2]
+	
+	add r1,#4
+	ldr r0,[r1]
+	ldr r2,=bossLeftMin				@ store Min x Coord
+	str r0,[r2]
+
+	add r1,#4
+	ldr r0,[r1]
+	ldr r2,=bossRightMax			@ store Max X Coord
+	str r0,[r2]
+
+	mov r0,#0
+	ldr r1,=bossFirePhase
+	str r0,[r1]						@ reset shot phase
+	ldr r1,=bossFireDelay
+	str r0,[r1]						@ reset fire delay
+	
+	ldr r1,=bossYSpeed
+	str r0,[r1]
+	ldr r1,=bossYDir
+	str r0,[r1]
+	ldr r1,=bossYDelay
+	str r0,[r1]
+			
 	ldmfd sp!, {r0-r8, pc}

@@ -20,9 +20,7 @@
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 	.arm
-	.align
-	.data
-	
+
 	.global alienDescript
 	.global alienWave
 	.global alienLevel

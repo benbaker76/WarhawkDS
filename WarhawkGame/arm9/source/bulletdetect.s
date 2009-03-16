@@ -20,13 +20,6 @@
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "warhawk.h"
-#include "system.h"
-#include "video.h"
-#include "background.h"
-#include "dma.h"
-#include "interrupts.h"
-#include "sprite.h"
-#include "ipc.h"
 
 @
 @ This should really just be for detection code!!! (RENAMED)

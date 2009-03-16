@@ -255,12 +255,22 @@ bossLurcherMovement:
 			
 			ldr r3,=bossY
 			ldr r3,[r3]
-			mov r5,#640
-			ldr r6,=bossMaxY
-			ldr r6,[r6]
-			sub r5,r6
-			lsl r6,#1
-			sub r5,r6
+			ldr r5,=591
+			
+			ldr r7,=bossRightMax	@ replacement CODE SECTION???
+			ldr r7,[r7]
+			ldr r8,=bossMaxY
+			ldr r8,[r8]
+			sub r7, r8, lsl #4
+			sub r7,r8
+			sub r7,#64+48
+			add r5,r7
+				
+	@		ldr r6,=bossMaxY
+	@		ldr r6,[r6]
+	@		sub r5,r6
+	@		lsl r6,#1
+	@		sub r5,r6
 			cmp r3,r5
 			bmi bossLurcherDownUpdate
 				mov r3,#2
@@ -283,6 +293,7 @@ bossLurcherMovement:
 			ldr r6,=438
 			ldr r7,=bossMaxY		@ max Y speed
 			ldr r7,[r7]
+			add r6,r7
 			lsl r7,#4
 			add r6,r7
 			cmp r3,r6
@@ -293,17 +304,17 @@ bossLurcherMovement:
 				bge bossLurcherNoSlow
 					add r4,#1
 					str r4,[r7]
+					b bossLurcherAdds
 				bossLurcherNoSlow:
 				ldr r6,=438
 				add r6,r4
 				cmp r3,r6
 				bge bossLurcherAdds
-			
-				mov r3,r6
-				str r3,[r5]			@ reset Y coord
+				ldr r6,=438
+				str r6,[r5]			@ reset Y coord
 				mov r3,#0
 				str r3,[r1]			@ set movement "Done"
-				b bossLurcherAdds
+				b bossLurcherDone
 			bossLurcherReturnUpdateFaster:
 			ldr r3,=bossYSpeed
 			ldr r4,[r3]

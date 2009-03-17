@@ -28,6 +28,7 @@
 	.global bossAttackLR
 	.global bossHunterMovement
 	.global bossLurcherMovement
+	.global bossCraneMovement
 	
 @------------ MOVE BOSS ATTACK "0=STANDARD" (LEFT/RIGHT INERTIA)
 bossAttackLR:
@@ -333,12 +334,61 @@ bossLurcherMovement:
 			adds r6,r4
 			str r6,[r5]
 	
-
-	
-	
-	
-	
 	bossLurcherDone:
+	
+	
+	ldmfd sp!, {r0-r8, pc}
+
+@------------ MOVE BOSS ATTACK "3=CRANE" (Track Y and follow sine)
+bossCraneMovement:
+	stmfd sp!, {r0-r8, lr}
+	bl bossAttackLR			@ we are still moving left/right, so use that code!
+	@ r0=Players Y coord / r1=Boss Y coord
+	ldr r0,=spriteY
+	ldr r0,[r0]
+	ldr r8,=bossY
+	ldr r1,[r8]				@ we will use this later (r8)
+	add r1,#32
+	
+	ldr r2,=bossYDelay
+	ldr r3,[r2]
+	subs r3,#1				@ decrement the X delay
+	str r3,[r2]
+	ldr r3,=bossYSpeed
+	ldr r3,[r3]
+	bpl bossCraneDone
+	ldr r4,=bossTurn
+	ldr r4,[r4]
+	str r4,[r2]				@ reset the delay
+		
+	cmp r0,r1
+	bgt bossCraneDown
+		@ move hunter left!
+		ldr r2,=bossYSpeed
+		ldrsb r3,[r2]
+		subs r3,#1
+		ldr r4,=bossMaxY
+		ldr r4,[r4]
+		rsb r4,r4,#0
+		cmp r3,r4
+		movmi r3,r4
+		str r3,[r2]			@ store new speed back
+		b bossCraneDone
+	bossCraneDown:
+		@ move hunter left!
+		ldr r2,=bossYSpeed
+		ldrsb r3,[r2]
+		add r3,#1
+		ldr r4,=bossMaxY
+		ldr r4,[r4]
+		cmp r3,r4
+		movpl r3,r4
+		str r3,[r2]			@ store new speed back	
+		
+	bossCraneDone:
+	ldr r1,[r8]
+	adds r1,r3
+	str r1,[r8]		
 	
 	
 	ldmfd sp!, {r0-r8, pc}

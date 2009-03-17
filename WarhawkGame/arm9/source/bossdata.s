@@ -33,27 +33,27 @@ bossInitLev:
 	@ turning spd 	= Speed of turning (> is slower)	bossTurn
 	@ hits			= hits to kill the boss
 	@ fire mode		= 0=single, 1=double, ??			bossFireMode
-	@ special		= 0=normal, 1= homing boss, 2
+	@ special		= 0=normal, 1= homing boss, 2=Lurcher, 3=Crane
 	@ X left		= Min X move coord
 	@ X right		= Max X move coord
 	@1
-	.word 4,2,8,35,0,0,143,207
+	.word 4,2,8,35,0,0,143,207			@ Standard
 	@2
-	.word 4,2,6,35,1,0,143,207
+	.word 2,2,8,45,1,3,83,267			@ Crane Test
 	@3
-	.word 5,3,10,35,0,1,143,207
+	.word 5,3,10,35,0,1,143,207			@ homing test
 	@4
 	 .word 4,8,8,35,0,2,143,207			@ LURCHER TEST!
 	@5
-	.word 4,2,8,35,0,0,143,207
+	.word 4,4,10,50,0,3,173,177			@ Crane Test
 	@6
-	.word 2,2,14,35,0,1,143,207
+	.word 2,2,14,35,0,1,143,207			@ homing Test
 	@7
 	.word 6,8,6,35,0,2,163,187			@ LURCHER TEST!
 	@8
 	.word 4,2,8,35,0,0,143,207
 	@9
-	.word 4,2,8,35,0,0,143,207
+	.word 4,4,10,50,0,3,173,177			@ Crane Test
 	@10
 	.word 4,2,8,35,0,0,143,207
 	@11

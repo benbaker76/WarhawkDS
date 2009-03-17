@@ -323,12 +323,12 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		
 		mov r0,#SPRITE_Y_OFFS
 		ldr r10,[r1,r0]		
-		cmp r10,#800					@ check if alien off screen - and kill it
-			bmi alienOK
-				mov r0,#0			@ uh oh - kill time!
-				str r0,[r1]			@ store 0 in sprite active
-				b doDetect
-			alienOK:
+		cmp r10,#SPRITE_KILL					@ check if alien off screen - and kill it
+		bmi alienOK
+			mov r0,#0			@ uh oh - kill time!
+			str r0,[r1]			@ store 0 in sprite active
+			b doDetect
+		alienOK:
 		@
 		@	This is where we need to check for alien fire and init if needed
 		@	sptFireTypeOffs = fire type (0=none) this is our first check

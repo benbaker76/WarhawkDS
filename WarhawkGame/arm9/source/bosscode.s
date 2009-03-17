@@ -148,6 +148,8 @@ checkBossInit:
 			bleq bossInitTracker
 		cmp r2,#2
 			bleq bossInitLurcher
+		cmp r2,#3
+			bleq bossInitCrane
 		
 		
 		bl bossDraw
@@ -312,6 +314,8 @@ bossAttack:
 		bleq bossHunterMovement
 	cmp r8,#2
 		bleq bossLurcherMovement
+	cmp r8,#3
+		bleq bossCraneMovement
 
 	ldr r5,=bossMan
 	ldr r5,[r5]					@ if boss is exploding, do not fire!

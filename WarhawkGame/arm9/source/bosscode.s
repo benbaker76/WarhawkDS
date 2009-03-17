@@ -319,14 +319,13 @@ bossAttack:
 	bllt bossFire				@ do our fire checks, and shoot if needed
 	
 	bl bossDraw					@ redraw our boss
-	
-	
-	ldr r10,=bossY
-	ldr r10,[r10]
-	mov r8,#0						@ y pos
-	mov r9,#3						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw	
+		
+@	ldr r10,=bossY
+@	ldr r10,[r10]
+@	mov r8,#0						@ y pos
+@	mov r9,#3						@ Number of digits
+@	mov r11, #9						@ x pos
+@	bl drawDigits					@ Draw	
 	
 	ldmfd sp!, {r0-r8, pc}
 

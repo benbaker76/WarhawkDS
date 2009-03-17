@@ -153,17 +153,32 @@ initReversed:
 
 	mov r0,#SPRITE_IDENT_OFFS
 	str r6,[r3,r0]				@ store the sprite ident (r6 set earlier)
-
+	ldr r6,=0xffff				@ use for anding
 	mov r1,#0					@ r1=REF to alienDescript data (just add to this)
 								@ Now we will dump the data in our sprite table
 	ldr r0,=SPRITE_X_OFFS
 	ldr r2,[r4,r1]
+	and r2,r6
 	str r2,[r3,r0]				@ store X coord
+	ldr r2,[r4,r1]
+	lsr r2,#16
+	ldr r0,=SPRITE_BURST_NUM_OFFS
+	str r2,[r3,r0]
+	ldr r0,=SPRITE_BURST_NUM_COUNT_OFFS
+	str r2,[r3,r0]				@ store burst fire number and backup
+
 	
 	add r1,#4
 	ldr r0,=SPRITE_Y_OFFS
 	ldr r2,[r4,r1]
+	and r2,r6
 	str r2,[r3,r0]				@ store y coord
+	ldr r2,[r4,r1]
+	lsr r2,#16
+	ldr r0,=SPRITE_BURST_DELAY_OFFS
+	str r2,[r3,r0]
+	ldr r0,=SPRITE_BURST_DELAY_COUNT_OFFS
+	str r2,[r3,r0]				@ store burst fire delay and backup	
 	
 	add r1,#4
 	ldr r0,=SPRITE_SPEED_X_OFFS
@@ -192,7 +207,6 @@ initReversed:
 	str r2,[r3,r0]				@ store sprites Object (Image)
 	
 	add r1,#4
-	ldr r6,=0xffff			
 	ldr r2,[r4,r1]				@ this value if split as 2 16bit words
 	and r7,r2,r6
 	mov r0,#SPRITE_HIT_OFFS
@@ -211,10 +225,10 @@ initReversed:
 	lsr r2,#8					@ r2= shot delay
 	mov r0,#SPRITE_FIRE_MAX_OFFS
 	str r2,[r3,r0]				@ store the fire delay maximum value for use later
-	mov r0,#SPRITE_FIRE_DELAY_OFFS
-	str r2,[r3,r0]				@ set our counter to max also, this is our countdown
-
 	mov r2,#0
+	mov r0,#SPRITE_FIRE_DELAY_OFFS
+	str r2,[r3,r0]				@ set our counter to 0, this is our countdown
+	
 	mov r0,#SPRITE_ANGLE_OFFS
 	str r2,[r3,r0]				@ store sprite angle (0 init) (WILL WE USE THIS?)
 	mov r0,#SPRITE_BLOOM_OFFS
@@ -326,16 +340,59 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		@	
 		@	Now, we need to update the fire delay to see if it is time to fire
 		@
+		
+
 			mov r0,#SPRITE_FIRE_DELAY_OFFS
 			ldr r9,[r1,r0]				@ get fire delay
 			subs r9,#1					@ take 1 off the count
 			str r9,[r1,r0]				@ put it back
-
-
-			bpl doDetect				@ if not 0, no fire mate!
+			bpl doDetect				@ if this is not 0, do nothing
+				mov r9,#0
+				str r9,[r1,r0]			@ set to 0
+			
+				mov r0,#SPRITE_BURST_NUM_COUNT_OFFS
+				ldr r9,[r1,r0]							@ load "backup" burst number
+				cmp r9,#0								@ if this is "0", no need for burst!
+				beq fireAsNormal						@ so it is a standart timed shot	
+					
+					mov r0,#SPRITE_BURST_DELAY_OFFS		@ load the burst delay
+					ldr r9,[r1,r0]
+					subs r9,#1							@ decrement the counter
+					str r9,[r1,r0]						@ store it back
+					bpl doDetect						@ if not time, dont fire
+					
+					mov r2,#SPRITE_BURST_DELAY_COUNT_OFFS
+					ldr r9,[r1,r2]
+					str r9,[r1,r0]						@ reset the delay
+					
+					mov r0,#SPRITE_BURST_NUM_OFFS		@ load the shots to fire
+					ldr r9,[r1,r0]
+					cmp r9,#0							@ have we any shots left?
+					bne fireBurstShot
+						@ burst of shots has finished, so reset counters
+						mov r2,#SPRITE_BURST_NUM_COUNT_OFFS
+						ldr r9,[r1,r2]
+						str r9,[r1,r0]					@ reset the number of burst shots
+						mov r0,#SPRITE_FIRE_DELAY_OFFS
+						mov r2,#SPRITE_FIRE_MAX_OFFS
+						ldr r9,[r1,r2]			@ load the delay max
+						str r9,[r1,r0]			@ and reset the counter
+						b doDetect
+					fireBurstShot:
+					subs r9,#1
+					str r9,[r1,r0]
+					mov r2,#SPRITE_BURST_DELAY_COUNT_OFFS
+					ldr r9,[r1,r2]						@ load reset value
+					mov r0,#SPRITE_BURST_DELAY_OFFS		@ load the burst delay
+					str r9,[r1,r0]						@ reset the delay						
+					b fireAlienShotNow
+						
+				fireAsNormal:
+				mov r0,#SPRITE_FIRE_DELAY_OFFS
 				mov r2,#SPRITE_FIRE_MAX_OFFS
 				ldr r9,[r1,r2]			@ load the delay max
 				str r9,[r1,r0]			@ and reset the counter
+				fireAlienShotNow:
 				cmp r10,#384-48			@ Make sure alien is at least NEARLY on screen before firing
 				bmi doDetect			@ if no, just forget it
 				bl alienFireInit		@ time to fire, r3=fire type, r1=offset to alien

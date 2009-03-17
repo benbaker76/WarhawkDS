@@ -143,6 +143,10 @@
 	.global bossRightMax
 	.global explodeSpriteBoss
 	.global explodeSpriteBossCount
+	.global spriteBurstNum
+	.global spriteBurstNumCount
+	.global spriteBurstDelay
+	.global spriteBurstDelayCount
 	
 explodeSpriteBossCount:
 	.word 0
@@ -376,6 +380,14 @@ spriteBloom:
 spriteIdent:
 	.space 512
 spriteFireSpeed:
+	.space 512
+spriteBurstNum:
+	.space 512
+spriteBurstNumCount:
+	.space 512
+spriteBurstDelay:
+	.space 512
+spriteBurstDelayCount:
 	.space 512
 	
 spriteInstruct:

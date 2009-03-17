@@ -317,7 +317,7 @@ alienDescript:
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @46	-	DIRECT bullet tester
-	.word 150,451,0,1024,0,40,0x30014,0x0411					@ inits	- bullet 10100 00010101
+	.word 0x00040096,0x000201c3,0,1024,0,40,0x30014,0xF11		@ inits	- bullet 10100 00010101
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @47	- DEMO POSS ALIEN WAVE
@@ -329,8 +329,10 @@ alienDescript:
 @34
 	@ Alien define structure
 
-	.word 180		@ init X				@ initial X coord
-	.word 450		@ init y				@ initial Y coord
+	.word 180		@ init X				@ initial X coord (LOW 16)
+					@ fire burst amount		@ Amount of bullets to fire in burst (0=none) (HIGH 16)
+	.word 450		@ init y				@ initial Y coord (LOW 16)
+					@ fire burst delay		@ delay between burst shots (HIGH 16)
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
 	.word 1024		@ init speed y			@ (set to 1024 to signal linear mode)
 	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)

@@ -579,12 +579,15 @@ bossExploder:
 	beloop:
 	ldr r0,=explodeSpriteBoss
 	ldr r1,[r0]						@ r1=number of sprite to explode!
+	beloop2:
 	ldr r2,=spriteActive
 	add r2, r1, lsl #2				@ r2=offs to sprite
 	ldr r3,[r2]						@ r3=spriteActive
 	cmp r3,#0
+	moveq r7,#0
 	beq useForBossExplode
 	cmp r3,#128
+	moveq r7,r3
 	beq useForBossExplode
 		@	ok, this is an active alien, or bullet!! (but if it is an explosion, ignore it)
 		cmp r3,#4					@ if >=4, let it do its stuff! (drawsprite.s will handle it)
@@ -658,8 +661,13 @@ bossExploder:
 			@ do a random bloom
 			bl getRandom
 			and r8,#0x2F		@ i know it is out of palette range, but give a shimmer!! :) (cheating)
-			mov r7,#SPRITE_BLOOM_OFFS
-			str r8,[r2,r7]
+			mov r6,#SPRITE_BLOOM_OFFS
+			str r8,[r2,r6]
+			cmp r7,#128
+			bne notFreeForBoss
+			add r1,#1
+			@str r1,[r2]
+			b beloop2
 	notFreeForBoss:
 
 	add r1,#1
@@ -675,7 +683,7 @@ bossExploder:
 	
 	ldr r5,=explodeSpriteBossCount
 	ldr r6,[r5]
-	cmp r6,#2						@ this is "HOW LONG FOR IT????" (tie this to Explosion sound)
+	cmp r6,#1						@ this is "HOW LONG FOR IT????" (tie this to Explosion sound)
 	ble stillExplodingBoss
 		ldr r6,=levelEnd
 		mov r8,#3

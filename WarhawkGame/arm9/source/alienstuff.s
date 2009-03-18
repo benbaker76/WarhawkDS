@@ -32,6 +32,7 @@
 	.global initHunterMine
 	.global animateAliens
 	.global initAlien
+	.global explodeIdentAlien
 
 checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	stmfd sp!, {r0-r4, lr}
@@ -1080,17 +1081,101 @@ stmfd sp!, {r0, lr}
 		
 	animateAliensDelay:
 ldmfd sp!, {r0, pc}
-	
-	
 
-	.data
-	.align
-	
-seedpointer: 
-        .long    seed  
-seed: 
-        .long    0x55555555 
-        .long    0x55555555
+
+explodeIdentAlien:
+	stmfd sp!, {r0-r8, lr}
+	@ r8=IDENT
+	mov r7,#111
+	ldr r6,=spriteIdent+68
+	fireIdentExplodeLoop:
+	ldr r3,[r6,r7,lsl #2]
+	cmp r3,r8
+		bne fireIdentExplodeMissed
+		@ ok, we have found a matching ident
+		@ so, set this to EXPLODE
+			push {r8}
+			ldr r2,=spriteActive+68
+			mov r3,#4					@ set to an explosion
+			str r3,[r2,r7,lsl #2]		@
+			mov r3,#6					@ set first explosion frame
+			ldr r2,=spriteObj+68
+			str r3,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0xf
+			add r3,r8,#4					@ set the delay on explosion
+			ldr r2,=spriteExplodeDelay+68
+			str r3,[r2,r7,lsl #2]
+			@ from here we add a little shift to x/y to muddle the explosions slighlty
+			ldr r2,=spriteX+68
+			ldr r3,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0x7
+			subs r8,#3
+			adds r3,r8
+			str r3,[r2,r7,lsl #2]
+			ldr r2,=spriteY+68
+			ldr r3,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0x7
+			subs r8,#3
+			adds r3,r8
+			str r3,[r2,r7,lsl #2]
+			ldr r2,=spriteBloom+68
+			bl getRandom
+			and r8,#0x2f
+			str r8,[r2,r7,lsl #2]	
+		
+			@ ok, now add another random explosion to it
+				mov r9,#63
+				ldr r2,=spriteActive+68
+				findFreeSpriteX:
+					ldr r3,[r2, r9, lsl #2]
+					cmp r3,#0
+					beq foundFreeSpriteX
+					subs r9,#1
+				bpl findFreeSpriteX
+				b fireIdentExplodeNot
+				
+				foundFreeSpriteX:
+
+			mov r3,#4					@ set to an explosion
+			str r3,[r2,r9,lsl #2]		@
+			mov r3,#6					@ set first explosion frame
+			ldr r2,=spriteObj+68
+			str r3,[r2,r9,lsl #2]
+			bl getRandom
+			and r8,#0xF
+			add r3,r8,#12					@ set the delay on explosion
+			ldr r2,=spriteExplodeDelay+68
+			str r3,[r2,r9,lsl #2]
+			@ from here we add a little shift to x/y to muddle the explosions slighlty
+			ldr r2,=spriteX+68
+			ldr r3,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0x20
+			subs r8,#15
+			adds r3,r8
+			str r3,[r2,r9,lsl #2]
+			ldr r2,=spriteY+68
+			ldr r3,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0x20
+			subs r8,#15
+			adds r3,r8
+			str r3,[r2,r9,lsl #2]
+			ldr r2,=spriteBloom+68
+			bl getRandom
+			and r8,#0x2f
+			str r8,[r2,r9,lsl #2]	
+			
+		fireIdentExplodeNot:
+		pop {r8}
+		fireIdentExplodeMissed:
+		subs r7,#1
+	bpl fireIdentExplodeLoop	
+
+	ldmfd sp!, {r0-r8, pc}
 	
 	.pool
 	.end

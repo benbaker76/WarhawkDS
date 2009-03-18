@@ -574,47 +574,7 @@ explodeSNoIdent:
 	b dropCheck
 
 explodeSIdent:	
-	mov r7,#63
-	ldr r6,=spriteIdent+68
-	fireIdentExplodeLoop:
-	ldr r3,[r6,r7,lsl #2]
-	cmp r3,r8
-		bne fireIdentExplodeNot
-		@ ok, we have found a matching ident
-		@ so, set this to EXPLODE
-			ldr r2,=spriteActive+68
-			mov r3,#4					@ set to an explosion
-			str r3,[r2,r7,lsl #2]		@
-			mov r3,#6					@ set first explosion frame
-			ldr r2,=spriteObj+68
-			str r3,[r2,r7,lsl #2]
-			mov r3,#4					@ set the delay on explosion
-			ldr r2,=spriteExplodeDelay+68
-			str r3,[r2,r7,lsl #2]
-			@ from here we add a little shift to x/y to muddle the explosions slighlty
-			push {r8}
-			ldr r2,=spriteX+68
-			ldr r3,[r2,r7,lsl #2]
-			bl getRandom
-			and r8,#0x7
-			subs r8,#3
-			adds r3,r8
-			str r3,[r2,r7,lsl #2]
-			ldr r2,=spriteY+68
-			ldr r3,[r2,r7,lsl #2]
-			bl getRandom
-			and r8,#0x7
-			subs r8,#3
-			adds r3,r8
-			str r3,[r2,r7,lsl #2]
-			ldr r2,=spriteBloom+68
-			bl getRandom
-			and r8,#0x1f
-			str r8,[r2,r7,lsl #2]				
-			pop {r8}
-		fireIdentExplodeNot:
-		subs r7,#1
-	bpl fireIdentExplodeLoop	
+	bl explodeIdentAlien
 	ldr r8,=adder+7				@ add 184 to the score (dont ask why?)
 	mov r6,#4
 	strb r6,[r8]
@@ -675,8 +635,6 @@ alienCollideCheck:
 			cmp r5,#2
 			beq noPlayer
 
-
-
 			ldr r5,=spriteX
 			ldr r3,[r5]						@ r3 is player x
 			ldr r5,=spriteY
@@ -712,8 +670,6 @@ alienCollideCheck:
 				bne notPowerup
 					bl powerupCollect
 					b acNoDestroy
-				
-				
 				notPowerup:
 				
 				ldr r6,=spriteBloom
@@ -820,47 +776,8 @@ explodeNonIdent:
 		
 explodeIdent:
 		@ r6=ident to explode
-		mov r7,#111
-		ldr r5,=spriteIdent+68
-		alienBigExplodeLoop:
-			ldr r3,[r5,r7,lsl #2]
-			cmp r3,r6
-			bne alienExplodeNot
-				@ ok, we have found a matching ident
-				@ so, set this to EXPLODE
-				ldr r2,=spriteActive+68
-				mov r3,#4					@ set to an explosion
-				str r3,[r2,r7,lsl #2]		@
-				mov r3,#6					@ set first explosion frame
-				ldr r2,=spriteObj+68
-				str r3,[r2,r7,lsl #2]
-				mov r3,#4					@ set the delay on explosion
-				ldr r2,=spriteExplodeDelay+68
-				str r3,[r2,r7,lsl #2]
-				@ from here we add a little shift to x/y to muddle the explosions slighlty
-				push {r8}
-				ldr r2,=spriteX+68
-				ldr r3,[r2,r7,lsl #2]
-				bl getRandom
-				and r8,#0x7
-				subs r8,#3
-				adds r3,r8
-				str r3,[r2,r7,lsl #2]
-				ldr r2,=spriteY+68
-				ldr r3,[r2,r7,lsl #2]
-				bl getRandom
-				and r8,#0x7
-				subs r8,#3
-				adds r3,r8
-				str r3,[r2,r7,lsl #2]
-				ldr r2,=spriteBloom+68
-				bl getRandom
-				and r8,#0x1f
-				str r8,[r2,r7,lsl #2]				
-				pop {r8}
-				alienExplodeNot:
-			subs r7,#1
-		bpl alienBigExplodeLoop
+		mov r8,r6
+		bl explodeIdentAlien
 		ldr r8,=adder+7				@ add 42 to the score (dont ask why?)
 		mov r6,#2
 		strb r6,[r8]

@@ -489,7 +489,7 @@ initLevel:
 		ldr r1,=levelPal
 		str r0,[r1]
 		
-		ldr r0,=StarBackPal3
+		ldr r0,=StarBackPal1
 		ldr r1,=starBackPal
 		str r0,[r1]	
 	level14:
@@ -514,7 +514,7 @@ initLevel:
 		ldr r1,=levelPal
 		str r0,[r1]
 		
-		ldr r0,=StarBackPal3
+		ldr r0,=StarBackPal2
 		ldr r1,=starBackPal
 		str r0,[r1]
 	level15:
@@ -565,7 +565,7 @@ initLevel:
 		ldr r1,=levelPal
 		str r0,[r1]
 		
-		ldr r0,=StarBackPal3
+		ldr r0,=StarBackPal1
 		ldr r1,=starBackPal
 		str r0,[r1]
 			

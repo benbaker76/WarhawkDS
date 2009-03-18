@@ -27,6 +27,7 @@
 #include "interrupts.h"
 #include "sprite.h"
 #include "ipc.h"
+#include "efs.h"
 
 	.arm
 	.align
@@ -73,6 +74,12 @@ main:
 	bl initVideo
 	
 	bl initInterruptHandler						@ initialize the interrupt handler
+	bl initAudioStream
+	
+	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
+	mov r1, #0
+	bl EFS_Init
+	
 	bl initSprites
 	
 	bl initData									@ setup actual game data

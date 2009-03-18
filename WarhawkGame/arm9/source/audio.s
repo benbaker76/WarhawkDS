@@ -29,7 +29,7 @@
 	.align
 	.text
 	
-	.global playInGameMusic
+@	.global playInGameMusic
 	.global playBlasterSound							@ Use = Normal Fire
 	.global playExplosionSound
 	.global playAlienExplodeSound
@@ -45,20 +45,20 @@
 	.global playLowSound
 	.global playSteelSound
 
-playInGameMusic:
-	stmfd sp!, {r0-r1, lr}
-
-	ldr r0, =IPC_SOUND_LEN(0)							@ Get the IPC sound length address
-	ldr r1, =ingame_wav_end								@ Get the sample end
-	ldr r2, =ingame_wav									@ Get the same start
-	sub r1, r2											@ Sample end - start = size
-	str r1, [r0]										@ Write the sample size
-	
-	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
-	ldr r1, =ingame_wav									@ Get the sample address
-	str r1, [r0]										@ Write the value
-	
-	ldmfd sp!, {r0-r1, pc} 							@ restore registers and return
+@playInGameMusic:
+@	stmfd sp!, {r0-r1, lr}
+@
+@	ldr r0, =IPC_SOUND_LEN(0)							@ Get the IPC sound length address
+@	ldr r1, =ingame_wav_end								@ Get the sample end
+@	ldr r2, =ingame_wav									@ Get the same start
+@	sub r1, r2											@ Sample end - start = size
+@	str r1, [r0]										@ Write the sample size
+@	
+@	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
+@	ldr r1, =ingame_wav									@ Get the sample address
+@	str r1, [r0]										@ Write the value
+@	
+@	ldmfd sp!, {r0-r1, pc} 							@ restore registers and return
 	
 playBlasterSound:
 	stmfd sp!, {r0-r2, lr}

@@ -216,7 +216,13 @@ irqDummy:
 
 	bx lr
 	
+#ifdef ARM7
+	.text
+#endif
+
+#ifdef ARM9
 	.section .itcm
+#endif
 	
 irqTable:
 	.space (MAX_INTERRUPTS * 8)			@ MAX_INTERRUPTS * (32 bit handler + 32 bit mask)

@@ -47,7 +47,11 @@ initInterruptHandler:
 	ldr r1, =interruptHandlerHBlank			@ Function Address
 	bl irqSet								@ Set the interrupt
 	
-	ldr r0, =(IRQ_VBLANK | IRQ_HBLANK)		@ Interrupts
+	ldr r0, =IRQ_TIMER1						@ TIMER0 interrupt
+	ldr r1, =interruptHandlerTimer1			@ Function Address
+	bl irqSet
+	
+	ldr r0, =(IRQ_VBLANK | IRQ_HBLANK | IRQ_TIMER1)		@ Interrupts
 	bl irqEnable							@ Enable
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -115,6 +119,16 @@ interruptHandlerHBlank:
 	blne fxCrossWipeHBlank
 	
 interruptHandlerHBlankDone:
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+interruptHandlerTimer1:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl audioStreamTimer1
 	
 	ldmfd sp!, {r0-r6, pc}
 	

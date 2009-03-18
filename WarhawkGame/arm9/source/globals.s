@@ -116,6 +116,7 @@
 	.global energy
 	.global energyText
 	.global gameOverText
+	.global inGameText
 	.global mineDelay
 	.global hunterDelay
 	.global mineTimerCounter
@@ -312,31 +313,34 @@ energyLevel:
 	.word 0, 0, 0, 0, 0, 0, 0, 0, 0
 	
 getReadyText:
-	.string "GET READY!\0"
+	.asciz "GET READY!"
 levelText:
-	.string "LEVEL\0"
+	.asciz "LEVEL"
 spriteXText:
-	.string "spritex:\0"
+	.asciz "spritex:"
 spriteYText:
-	.string "spritey:\0"
+	.asciz "spritey:"
 vofsSubText:
-	.string "vofssub:\0"
+	.asciz "vofssub:"
 yposSubText:
-	.string "ypossub:\0"
+	.asciz "ypossub:"
 blockXText:
-	.string "blockx:\0"
+	.asciz "blockx:"
 blockYText:
-	.string "blocky:\0"
+	.asciz "blocky:"
 tileNumText:
-	.string "tilenum:\0"
+	.asciz "tilenum:"
 scrollPixelText:
-	.string "scroll pix:\0"
+	.asciz "scroll pix:"
 pixelOffsetText:
-	.string "pixeloff:\0"
+	.asciz "pixeloff:"
 energyText:
-	.string "energy:\0"
+	.asciz "energy:"
 gameOverText:
-	.string "GAME OVER!\0"
+	.asciz "GAME OVER!"
+inGameText:
+	.asciz "/InGame.raw"
+
 	.section .bss
 
 spriteActive:

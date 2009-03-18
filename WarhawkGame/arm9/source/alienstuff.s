@@ -340,6 +340,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 			beq doDetect				@ if not, that is it!
 		@	
 		@	Now, we need to update the fire delay to see if it is time to fire
+		@	but also account for burst fire and random fire!
 		@
 		
 
@@ -354,7 +355,27 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 				mov r0,#SPRITE_BURST_NUM_COUNT_OFFS
 				ldr r9,[r1,r0]							@ load "backup" burst number
 				cmp r9,#0								@ if this is "0", no need for burst!
-				beq fireAsNormal						@ so it is a standart timed shot	
+				beq fireAsNormal						@ so it is a standart timed shot
+				cmp r9,#RANDOM_FIRE						@ check if random fire?
+				bne notRandomFire
+					@ ok, we need to grab "burst delay" and get a random number
+					@ if this is >= "burst delay" then FIRE!!!
+					mov r0,#SPRITE_BURST_DELAY_COUNT_OFFS
+					ldr r9,[r1,r0]
+					bl getRandom
+					ldr r0,=0x1FFF
+					and r8,r0
+					cmp r8,r9			@ if the random number is > than your number = FIRE
+					blt doDetect
+					b fireAsNormal
+				
+				
+				
+				
+				
+				
+				
+				notRandomFire:
 					
 					mov r0,#SPRITE_BURST_DELAY_OFFS		@ load the burst delay
 					ldr r9,[r1,r0]

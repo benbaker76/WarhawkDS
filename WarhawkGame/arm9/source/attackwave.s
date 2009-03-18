@@ -323,7 +323,7 @@ alienDescript:
 	.word 5,600,0,0,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @46	-	DIRECT bullet tester
-	.word 0x00040096,0x000201c3,0,1024,0,40,0x30014,0xF11		@ inits	- bullet 10100 00010101
+	.word 0x80000096,0x1F7201c3,0,1024,0,40,0x30014,0x11		@ inits	- bullet 10100 00010101
 	.word 3,50,7,50,0,0,0,0,0,0,0,0								@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0	
 @47	- DEMO POSS ALIEN WAVE
@@ -337,8 +337,10 @@ alienDescript:
 
 	.word 180		@ init X				@ initial X coord (LOW 16)
 					@ fire burst amount		@ Amount of bullets to fire in burst (0=none) (HIGH 16)
+					@ set random			@ or - set to 32768 for random fire!
 	.word 450		@ init y				@ initial Y coord (LOW 16)
 					@ fire burst delay		@ delay between burst shots (HIGH 16)
+					@ random freq			@ or - set to random level (0-8191 = higher is less)
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
 	.word 1024		@ init speed y			@ (set to 1024 to signal linear mode)
 	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
@@ -347,6 +349,7 @@ alienDescript:
 											@ upper 16 = shot speed (shot)
 	.word 19220		@ init 'fire type' 		@ Lower 8 bits = type, 0=none
 											@ the rest is delay (shifted 8 left)
+											@ set delay to 0 for "random fire"
 	.word 0,0		@ track x,y 1			@ tracking coordinate (as in coords.png)
 	.word 0,0		@ track x,y 2
 	.word 0,0		@ track x,y 3
@@ -367,10 +370,6 @@ Auto KIll
 
 Perhaps adding a track value of 2048 will instantly kill the alien. This could be handy for taking
 an alien off the side of the screen for both trackers and linear?
-
-
-one thing we do need to think about is the other attack types in Warhawk
-we could have seperate code for each, I really do not know how to fit them in at the moment
 
 Each level will have a wavePattern desctription
 

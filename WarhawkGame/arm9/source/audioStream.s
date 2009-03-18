@@ -96,6 +96,9 @@ playAudioStream:
 	ldr r1, =(BUFFER_SIZE / 2)							@ Read the bufferSize address
 	
 	bl readFileStream									@ Read the next buffer of audio file
+	
+	bl DC_FlushAll										@ Flush cache
+	
 	bl playBuffer
 	
 	ldr r0, =TIMER0_CR
@@ -162,7 +165,7 @@ audioStreamTimer1:
 	
 	bl readFileStream									@ Read the next BUFFER_SIZE of audio file
 	
-	bl DC_FlushAll
+	bl DC_FlushAll										@ Flush cache
 	
 	ldr r0, =bufferPos									@ Read the bufferPos address
 	ldr r1, [r0]										@ Read the bufferPos value

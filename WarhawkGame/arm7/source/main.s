@@ -136,6 +136,10 @@ playSound:
 
 	mov r3, r0, lsl #4
 	
+	ldr r0, =SCHANNEL_CR(0)
+	add r0, r3
+	str r1, [r0]
+	
 	ldr r0, =SCHANNEL_TIMER(0)
 	add r0, r3
 	ldr r1, =SOUND_FREQ(11025)					@ Frequency currently hard-coded to 11025 Hz

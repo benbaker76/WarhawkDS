@@ -85,12 +85,11 @@ playAudioStream:
 	bl memcpy											@ Copy filename to fileName
 		
 	ldr r0, =fileName
-	ldr r1, =(BUFFER_SIZE / 2)
-	ldr r2, =fileSize									@ Read fileSize address
 	
 	bl initFileStream									@ Initialize the file stream
 	
-	str r0, [r2]										@ Write the filesize to it
+	ldr r1, =fileSize									@ Read fileSize address
+	str r0, [r1]										@ Write the filesize to it
 	
 	ldr r0, =buffer										@ Buffer address
 	ldr r1, =(BUFFER_SIZE / 2)							@ Read the bufferSize address
@@ -165,26 +164,24 @@ audioStreamTimer1:
 	
 	bl readFileStream									@ Read the next BUFFER_SIZE of audio file
 	
-	bl DC_FlushAll										@ Flush cache
+	bl DC_FlushAll										@ Clear cache
 	
 	ldr r0, =bufferPos									@ Read the bufferPos address
 	ldr r1, [r0]										@ Read the bufferPos value
-	ldr r2, =fileSize									@ Read the file size address
+	ldr r2, =fileSize									@ Read the fileSize address
 	ldr r2, [r2]										@ Read the fileSize value
+	cmp r1, r2											@ Compare bufferPos to fileSize
+	movgt r1, #0										@ if greater than reset bufferPos
+	
+	push { r0-r2 }
+	
+	blgt resetFileStream
+	
+	pop { r0-r2 }
+	
 	ldr r3, =(BUFFER_SIZE / 2)							@ Read the buffer size
 	add r1, r3											@ Add buffer size to bufferPos
-	sub r3, r2, r3										@ fileSize - buffer size
-	cmp r1, r3											@ Compare bufferPos to (fileSize - buffer size)
-	@movgt r1, #0										@ if greater than reset bufferPos
-	@blxgt resetFileStream
 	str r1, [r0]										@ Write value back to bufferPos
-	
-	@ldr r8, =bufferPos
-	@ldr r8, [r8]
-	@mov r9, r3
-	@ldr r0, =debugString
-	
-	@bl drawDebugString
 		
 	ldmfd sp!, {r0-r6, pc}								@ Return
 	

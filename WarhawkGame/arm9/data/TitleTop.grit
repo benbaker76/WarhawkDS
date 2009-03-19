@@ -24,11 +24,6 @@
 -gB8
 
 #-------------------------------------------------------
-# Map layout for regular backgrounds. 16-bit entries, but a flat map (i.e., not broken down into screenblocks). 
-#-------------------------------------------------------
--mLf
-
-#-------------------------------------------------------
 # Create header file in asm format 
 #-------------------------------------------------------
 -fha

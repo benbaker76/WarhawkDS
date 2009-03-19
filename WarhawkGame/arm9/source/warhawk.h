@@ -1,6 +1,8 @@
 #include "..\build\Font.h"
 #include "..\build\Score.h"
 #include "..\build\Energy.h"
+#include "..\build\TitleTop.h"
+#include "..\build\TitleBottom.h"
 #include "..\build\StarFront.h"
 #include "..\build\StarBack.h"
 #include "..\build\Sprites.h"
@@ -86,6 +88,11 @@
 #define GAMEMODE_STOPPED			0
 #define GAMEMODE_RUNNING			1
 #define GAMEMODE_PAUSED				2
+#define GAMEMODE_TITLE				3
+#define GAMEMODE_GETREADY			4
+#define GAMEMODE_HISCORE			5
+#define GAMEMODE_BOSSDIE			6
+#define GAMEMODE_GAMEOVER			7
 
 @ Level count
 

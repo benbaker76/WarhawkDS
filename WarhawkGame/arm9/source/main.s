@@ -82,19 +82,26 @@ main:
 	
 	bl initSprites
 	
-	bl initData									@ setup actual game data
-	bl initLevel
+	bl showTitleScreen
 
 	@ ------------------------------------
 	
-gameLoop:
+mainLoop:
 
 	bl swiWaitForVBlank							@ Wait for vblank
 	
 	ldr r0, =gameMode
 	ldr r1, [r0]
+	cmp r1, #GAMEMODE_RUNNING
+	beq gameLoop
 	cmp r1, #GAMEMODE_STOPPED
-	beq gameLoopDone
+	beq mainLoopDone
+	cmp r1, #GAMEMODE_TITLE
+	bleq updateTitleScreen
+	
+	b mainLoop
+
+gameLoop:
 
 	bl moveShip									@ check and move your ship
 	bl alienFireMove							@ check and move alien bullets
@@ -124,9 +131,9 @@ gameLoop:
 	cmp r0,#2
 	bleq levelComplete
 	
-gameLoopDone:
+mainLoopDone:
 
-	b gameLoop									@ our main loop
+	b mainLoop									@ our main loop
 		
 	.pool
 	.end

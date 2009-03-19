@@ -126,7 +126,7 @@ levelStart:
 	bl drawAllEnergyBars
 	@bl playInGameMusic
 	
-	ldr r0, =inGameText						@ Read the path to the file
+	ldr r0, =inGameRawText					@ Read the path to the file
 	bl playAudioStream						@ Play the audio stream
 		
 	@ Fade in

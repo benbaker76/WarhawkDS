@@ -41,7 +41,7 @@ clearBG0:
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG0_MAP_BASE)
-	ldr r2, =1024
+	ldr r2, =2048
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
 	bl dmaFillWords

@@ -7,10 +7,10 @@
 @ timer clock / 1024 (~32.7284 kHz)
 #define CLOCKDIVIDER_1024			3
 
-#define TIMERFREQTOTICKS_1(freq) {-0x2000000 / freq}
-#define TIMERFREQTOTICKS_64(freq) {(-0x2000000 >> 6) / freq}
-#define TIMERFREQTOTICKS_256(freq) {(-0x2000000 >> 8) / freq}
-#define TIMERFREQTOTICKS_1024(freq) {(-0x2000000 >> 10) / freq}
+#define TIMERFREQTOTICKS_1(freq) (-0x2000000 / freq)
+#define TIMERFREQTOTICKS_64(freq) ((-0x2000000 >> 6) / freq)
+#define TIMERFREQTOTICKS_256(freq) ((-0x2000000 >> 8) / freq)
+#define TIMERFREQTOTICKS_1024(freq) ((-0x2000000 >> 10) / freq)
 
 #define TIMER_FREQ(n)    (-0x2000000/(n))
 #define TIMER_FREQ_64(n)  (-(0x2000000>>6)/(n))

@@ -54,6 +54,8 @@
 	.global delaySB
 	.global score
 	.global adder
+	.global hofsSF
+	.global hofsSB
 	.global vofsMain
 	.global vofsSFMain
 	.global vofsSBMain
@@ -116,7 +118,9 @@
 	.global energy
 	.global energyText
 	.global gameOverText
-	.global inGameText
+	.global inGameRawText
+	.global titleRawText
+	.global gameOverRawText
 	.global mineDelay
 	.global hunterDelay
 	.global mineTimerCounter
@@ -267,6 +271,11 @@ score:
 	.word 0,0
 adder:
 	.word 0,0
+	
+hofsSF:
+	.word 0
+hofsSB:
+	.word 0
 
 vofsMain:
 	.word 256+32
@@ -338,8 +347,12 @@ energyText:
 	.asciz "energy:"
 gameOverText:
 	.asciz "GAME OVER!"
-inGameText:
+inGameRawText:
 	.asciz "/InGame.raw"
+titleRawText:
+	.asciz "/Title.raw"
+gameOverRawText:
+	.asciz "/Title.raw"
 
 	.section .bss
 

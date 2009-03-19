@@ -547,21 +547,21 @@ initLevel:
 	cmp r8,#16
 	bne levelDone
 							@ Set level 16
-		ldr r0,=Level15Map
+		ldr r0,=Level16Map
 		ldr r1,=levelMap
 		str r0,[r1]
 
-		ldr r0,=Level15Tiles
+		ldr r0,=Level16Tiles
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
-		ldr r0,=Level15TilesLen
+		ldr r0,=Level16TilesLen
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
 		ldr r9,=colMap16
 
-		ldr r0,=Level15Pal
+		ldr r0,=Level16Pal
 		ldr r1,=levelPal
 		str r0,[r1]
 		
@@ -697,11 +697,17 @@ initLevelSpecialSprites:
 	ldreq r0, =SpritesLev12Tiles
 	ldreq r2, =SpritesLev12TilesLen
 	cmp r8,#13
-	ldreq r0, =SpritesLev12Tiles
-	ldreq r2, =SpritesLev12TilesLen
+	ldreq r0, =SpritesLev13Tiles
+	ldreq r2, =SpritesLev13TilesLen
 	cmp r8,#14
 	ldreq r0, =SpritesLev14Tiles
 	ldreq r2, =SpritesLev14TilesLen	
+	cmp r8,#15
+	ldreq r0, =SpritesLev15Tiles
+	ldreq r2, =SpritesLev15TilesLen
+	cmp r8,#16
+	ldreq r0, =SpritesLev16Tiles
+	ldreq r2, =SpritesLev16TilesLen	
 	ldr r1, =SPRITE_GFX
 	add r1, #21504
 	bl dmaCopy

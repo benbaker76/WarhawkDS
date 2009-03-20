@@ -35,47 +35,6 @@
 	.global fireCheck
 	.global moveBullets
 
-waitforFire:
-	@ Messy bit just to wait for button to start
-	@ This is a delay that can be skipped by FIRE
-	@ Not great, but serves its purpose for now
-	
-	stmfd sp!, {r0-r6, lr}
-	
-	mov r4,#180
-	
-	buttpause1:
-	
-		bl waitforVblank
-		bl scrollStars
-		bl waitforNoVblank
-	
-		ldr r1,=REG_KEYINPUT
-		ldr r2,[r1]
-		tst r2,#BUTTON_A
-		beq buttpause2
-		subs r4,#1
-		bne buttpause1
-	
-	buttpause2:
-	
-		bl waitforVblank
-		bl scrollStars
-		bl waitforNoVblank
-	
-		ldr r1,=REG_KEYINPUT
-		ldr r2,[r1]
-		tst r2,#BUTTON_A
-		bne butta
-		subs r4,#1
-		bne buttpause2
-		
-	butta:	
-		ldr r0,=firePress
-		mov r1,#0
-		str r1,[r0]
-	ldmfd sp!, {r0-r6, pc}
-
 fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 	stmfd sp!, {r0-r6, lr}
 	

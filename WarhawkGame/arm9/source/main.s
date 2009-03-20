@@ -82,7 +82,7 @@ main:
 	
 	bl initSprites
 	
-	bl showTitleScreen
+	bl initTitleScreen
 
 	@ ------------------------------------
 	
@@ -90,14 +90,20 @@ mainLoop:
 
 	bl swiWaitForVBlank							@ Wait for vblank
 	
+	@bl timerTimer3
+		
 	ldr r0, =gameMode
 	ldr r1, [r0]
 	cmp r1, #GAMEMODE_RUNNING
 	beq gameLoop
 	cmp r1, #GAMEMODE_STOPPED
 	beq mainLoopDone
-	cmp r1, #GAMEMODE_TITLE
+	cmp r1, #GAMEMODE_GETREADY
+	bleq updateGetReady
+	cmp r1, #GAMEMODE_CREDITS
 	bleq updateTitleScreen
+	cmp r1, #GAMEMODE_HISCORE
+	bleq updateHiScore
 	
 	b mainLoop
 

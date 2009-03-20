@@ -31,25 +31,27 @@
 	.arm
 	.align
 	.text
+	.global initTitleScreen
 	.global showTitleScreen
 	.global updateTitleScreen
+	.global drawCreditText
 
-showTitleScreen:
+initTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_TITLE
-	str r1, [r0]
-
 	@ Write the palette
 
 	ldr r0, =TitleTopPal
 	ldr r1, =BG_PALETTE
 	ldr r2, =TitleTopPalLen
 	bl dmaCopy
+	mov r3, #0
+	strh r3, [r1]
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
+	mov r3, #0
+	strh r3, [r1]
 
 	@ Write the tile data
 	
@@ -80,16 +82,41 @@ showTitleScreen:
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
 	
-	bl drawCreditText
-	
 	ldr r0, =titleRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 	
+	bl showTitleScreen
+	
+	bl fxSpotlightIn
+	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showTitleScreen:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_CREDITS
+	str r1, [r0]
+
+	bl drawCreditText
+	
+	ldr r0, =15									@ 15 seconds
+	ldr r1, =timerDoneCredits					@ Callback function address
+	
+	bl startTimer
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
 	
 drawCreditText:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl clearBG0
 
 	ldr r0, =proteusDevelopmentsText			@ Load out text pointer
 	ldr r1, =3									@ x pos
@@ -141,7 +168,7 @@ drawCreditText:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
-@---------------------------------
+	@---------------------------------
 
 updateTitleScreen:
 
@@ -153,6 +180,7 @@ updateTitleScreen:
 	ldr r4, =GAMEMODE_RUNNING
 	tst r2, #BUTTON_START
 	streq r4, [r3]
+	bleq stopTimer
 	bleq initData								@ setup actual game data
 	bleq initLevel
 	
@@ -160,7 +188,20 @@ updateTitleScreen:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
-@---------------------------------
+	@---------------------------------
+
+timerDoneCredits:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_HISCORE
+	str r1, [r0]
+	bl showHiScore
+	
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	
+	@---------------------------------
 
 	.data
 	.align

@@ -141,11 +141,9 @@ levelStart:
 	
 	bl DC_FlushAll							@ Flush cache
 
-	bl waitforFire							@ wait for a short while to start game
-
 	bl clearBG0
 	
-	bl gameStart
+	bl initGetReady
 
 	ldmfd sp!, {r0-r6, pc}
 
@@ -257,7 +255,7 @@ levelFinishDone:
 	bl levelNext
 	
 	ldmfd sp!, {r0-r2, pc}
-	
+
 	@ ------------------------------------
 	
 	.pool

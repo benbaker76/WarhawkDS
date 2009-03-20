@@ -84,7 +84,7 @@ playMusic:
 	
 	ldr r0, =SCHANNEL_TIMER(0)
 	ldr r1, =SCHANNEL_TIMER(1)
-	ldr r2, =SOUND_FREQ(32000)					@ Frequency currently hard-coded to 22050 Hz
+	ldr r2, =SOUND_FREQ(22050)					@ Frequency currently hard-coded to 22050 Hz
 	strh r2, [r0]
 	strh r2, [r1]
 	

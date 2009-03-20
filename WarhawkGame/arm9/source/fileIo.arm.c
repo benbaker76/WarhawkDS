@@ -6,8 +6,6 @@
 #include "efs_lib.h"    // include EFS lib
 
 char *pfileBuffer = NULL;
-//char *pfileStreamBuffer = NULL;
-
 FILE *pFileStream = NULL;
 
 int readFile(char *fileName)
@@ -97,6 +95,7 @@ int initFileStream(char *fileName)
 	if(fstat(pFileStream->_file, &fileStat) != 0)
 	{
 		fclose(pFileStream);
+		
 		return 0;
 	}
 
@@ -146,10 +145,12 @@ int readFileSize(char *fileName)
 	return fileStat.st_size;
 }
 
-int readHiScoreName(char *pBuffer, int index)
+int readHiScoreValue(int index)
 {
 	FILE *pFile;
 	size_t result;
+	char buffer[32];
+	int score = 0;
 	
 	pFile = fopen("/HiScore.dat", "r");
 	
@@ -165,46 +166,9 @@ int readHiScoreName(char *pBuffer, int index)
 		return 0;
 	}
 		
-	result = fread(pBuffer, 1, 3, pFile);
-	
-	if(result != 0)
-	{
-		fclose(pFile);
-		
-		return 0;
-	}
-	
-	pBuffer[3] = '\0';
-	
-	fclose(pFile);
-	
-	return 1;
-}
-
-int readHiScoreValue(int index)
-{
-	FILE *pFile;
-	size_t result;
-	char buffer[32];
-	int score = 0;
-	
-	pFile = fopen("/HiScore.dat", "r");
-	
-	if(pFile == NULL)
-		return 0;
-		
-	result = fseek(pFile, index * 12 + 3, SEEK_SET);
-	
-	if(result != 0)
-	{
-		fclose(pFile);
-		
-		return 0;
-	}
-		
 	result = fread(buffer, 1, 7, pFile);
 	
-	if(result != 0)
+	if(result != 7)
 	{
 		fclose(pFile);
 		
@@ -220,18 +184,17 @@ int readHiScoreValue(int index)
 	return score;
 }
 
-int writeHiScore(int index, char *pName, int score)
+int readHiScoreName(char *pBuffer, int index)
 {
 	FILE *pFile;
 	size_t result;
-	char buffer[32];
 	
-	pFile = fopen("/HiScore.dat", "w");
+	pFile = fopen("/HiScore.dat", "r");
 	
 	if(pFile == NULL)
 		return 0;
 		
-	result = fseek(pFile, index * 12, SEEK_SET);
+	result = fseek(pFile, index * 12 + 7, SEEK_SET);
 	
 	if(result != 0)
 	{
@@ -239,27 +202,124 @@ int writeHiScore(int index, char *pName, int score)
 		
 		return 0;
 	}
-	
-	strcpy(buffer, pName);
 		
-	result = fwrite(buffer, 1, 3, pFile);
+	result = fread(pBuffer, 1, 3, pFile);
 	
-	if(result != 0)
+	if(result != 3)
 	{
 		fclose(pFile);
 		
 		return 0;
 	}
 	
-	sprintf(buffer, "%d", score);
+	pBuffer[3] = '\0';
 	
-	result = fwrite(buffer, 1, 7, pFile);
+	fclose(pFile);
 	
-	if(result != 0)
-	{
-		fclose(pFile);
-		
+	return 1;
+}
+
+int writeHiScore(char *pName, int score)
+{
+	FILE *pFile;
+	size_t result;
+	char buffer[8];
+	char hiScoreBuffer[8];
+	int hiScore = 0;
+	char hiScoreNewBuffer[8];
+	int hiScoreNew = 0;
+	int i;
+	
+	strncpy(hiScoreNewBuffer, pName, 3);
+	hiScoreNew = score;
+	
+	pFile = fopen("/HiScore.dat", "r+");
+	
+	if(pFile == NULL)
 		return 0;
+	
+	for(i=0; i<10; i++)
+	{
+		result = fread(buffer, 1, 7, pFile);
+		
+		if(result != 7)
+		{
+			fclose(pFile);
+			
+			return 0;
+		}
+		
+		buffer[7] = '\0';
+		
+		hiScore = atoi(buffer);
+		
+		if(hiScoreNew > hiScore)
+		{
+			result = fread(hiScoreBuffer, 1, 3, pFile);
+			
+			if(result != 3)
+			{
+				fclose(pFile);
+				
+				return 0;
+			}
+			
+			hiScoreBuffer[3] = '\0';
+			
+			result = fseek(pFile, -10, SEEK_CUR);
+			
+			if(result != 0)
+			{
+				fclose(pFile);
+				
+				return 0;
+			}
+
+			sprintf(buffer, "%07d", hiScoreNew);
+			
+			result = fwrite(buffer, 1, 7, pFile);
+			
+			if(result != 7)
+			{
+				fclose(pFile);
+				
+				return 0;
+			
+			}
+			
+			result = fwrite(hiScoreNewBuffer, 1, 3, pFile);
+			
+			if(result != 3)
+			{
+				fclose(pFile);
+				
+				return 0;
+			
+			}
+			
+			hiScoreNew = hiScore;
+			strncpy(hiScoreNewBuffer, hiScoreBuffer, 3);
+			
+			result = fseek(pFile, 2, SEEK_CUR);
+			
+			if(result != 0)
+			{
+				fclose(pFile);
+				
+				return 0;
+			}
+		}
+		else
+		{
+			result = fseek(pFile, 5, SEEK_CUR);
+			
+			if(result != 0)
+			{
+				fclose(pFile);
+				
+				return 0;
+			}
+		}
 	}
 	
 	fclose(pFile);

@@ -31,22 +31,11 @@
 	.arm
 	.align
 	.text
-	.global gameStart
 	.global gameStop
 	.global gamePause
+	.global initGetReady
+	.global updateGetReady
 	.global checkGameOver
-	
-gameStart:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_RUNNING
-	str r1, [r0]
-		
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ------------------------------------
 	
 gameStop:
 
@@ -71,6 +60,53 @@ gamePause:
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ------------------------------------
+
+initGetReady:
+
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_GETREADY
+	str r1, [r0]
+
+	bl drawGetReadyText
+	
+	ldr r0, =3									@ 3 seconds
+	ldr r1, =timerDoneGetReady					@ Callback function address
+	
+	bl startTimer
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+updateGetReady:
+	
+	stmfd sp!, {r0-r6, lr}
+	
+	bl scrollStars
+	
+	ldr r1,=REG_KEYINPUT
+	ldr r2,[r1]
+	tst r2,#BUTTON_A
+	bleq stopTimer
+	bleq timerDoneGetReady
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+timerDoneGetReady:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_RUNNING
+	str r1, [r0]
+	
+	bl clearBG0
+	
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	
+	@---------------------------------
 	
 checkGameOver:
 

@@ -29,7 +29,7 @@
 #include "timers.h"
 
 	#define BUFFER_SIZE		4096
-	#define AUDIO_FREQ		32000
+	#define AUDIO_FREQ		22050
 
 	.arm
 	.align
@@ -44,7 +44,7 @@ initAudioStream:
 	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =TIMER0_DATA
-	ldr r1, =TIMER_FREQ(AUDIO_FREQ)
+	ldr r1, =SOUND_FREQ(AUDIO_FREQ) * 2
 	strh r1, [r0]
 	
 	ldr r0, =TIMER0_CR

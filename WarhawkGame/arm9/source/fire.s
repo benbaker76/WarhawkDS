@@ -49,12 +49,18 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		ldr r8,[r0]			@ r1= fire pressed duration
 		mov r2,#0
 		str r2,[r0]			@ RESET "firepress" to 0
+		ldr r0,=fireTrap
+		str r2,[r0]
 		cmp r8,#1
 		bpl initFire		@ Fire
-		
+		notTimeToFire:
 		ldmfd sp!, {r0-r6, pc}
 	fireDown:
 	@ FIRE PRESSED
+		ldr r0,=fireTrap
+		ldr r0,[r0]
+		cmp r0,#0
+		bne notTimeToFire
 		ldr r0,=powerUp				@ check if autofire is on and fire pressed
 		ldr r0, [r0]
 		cmp r0,#1

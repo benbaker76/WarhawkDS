@@ -47,6 +47,7 @@
 	.global pixelOffsetText
 	.global pressMe
 	.global firePress
+	.global fireTrap
 	.global horizDrift
 	.global powerUp
 	.global powerUpDelay
@@ -256,6 +257,8 @@ craterFrame:
 pressMe:
 	.word 0
 firePress:
+	.word 0
+fireTrap:
 	.word 0
 horizDrift:
 	.word 0

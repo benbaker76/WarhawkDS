@@ -624,10 +624,13 @@ initLevelSprites:
 	stmfd sp!, {r0-r6, lr}
 	
 	mov r1, #1
-	ldr r0,=firePress
-	str r1,[r0]				@ Set fire press so fire to start does not fire a bullet
 	ldr r0,=spriteActive
 	str r1,[r0]				@ make sure our ship is visible
+	ldr r0,=fireTrap
+	str r1,[r0]
+	mov r1, #0
+	ldr r0,=firePress
+	str r1,[r0]				@ Set fire press so fire to start does not fire a bullet
 
 	mov r1,#176
 	ldr r0,=spriteX

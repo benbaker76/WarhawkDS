@@ -113,6 +113,11 @@ alienFireInit:
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
+	cmp r3,#19
+		bleq initBossSpreadShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
 	@ etc!
 
 

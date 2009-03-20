@@ -29,6 +29,8 @@
 	.global bossHunterMovement
 	.global bossLurcherMovement
 	.global bossCraneMovement
+	.global bossSine1Movement
+	.global bossSine2Movement
 	
 @------------ MOVE BOSS ATTACK "0=STANDARD" (LEFT/RIGHT INERTIA)
 bossAttackLR:
@@ -390,5 +392,46 @@ bossCraneMovement:
 	adds r1,r3
 	str r1,[r8]		
 	
+	ldmfd sp!, {r0-r8, pc}
+	
+@------------ MOVE BOSS ATTACK "4=Sine1" (Sine Y move)
+bossSine1Movement:
+	stmfd sp!, {r0-r8, lr}
+	bl bossAttackLR			@ we are still moving left/right, so use that code!
+	
+	ldr r0,=bossYSpeed
+	ldr r1,[r0]
+	ldr r2,=bossSine1
+	ldrb r2,[r2,r1]			@ r2=Y poss in sine
+	ldr r3,=438
+	add r2,r3
+	ldr r4,=bossY
+	str r2,[r4]
+	
+	add r1,#1
+	cmp r1,#320
+	moveq r1,#0
+	str r1,[r0]
+	
+	ldmfd sp!, {r0-r8, pc}
+	
+@------------ MOVE BOSS ATTACK "5=Sine2" (Sine Y move)
+bossSine2Movement:
+	stmfd sp!, {r0-r8, lr}
+	bl bossAttackLR			@ we are still moving left/right, so use that code!
+	
+	ldr r0,=bossYSpeed
+	ldr r1,[r0]
+	ldr r2,=bossSine2
+	ldrb r2,[r2,r1]			@ r2=Y poss in sine
+	ldr r3,=438
+	add r2,r3
+	ldr r4,=bossY
+	str r2,[r4]
+	
+	add r1,#1
+	cmp r1,#440
+	moveq r1,#0
+	str r1,[r0]
 	
 	ldmfd sp!, {r0-r8, pc}

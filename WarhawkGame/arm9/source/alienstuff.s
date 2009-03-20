@@ -1100,9 +1100,28 @@ stmfd sp!, {r0, lr}
 		mov r2,#512*5
 		bl dmaCopy
 		
+		@ Meteors
+		
+		ldr r0,=meteorFrame
+		ldr r1,[r0]
+		add r1,#1
+		cmp r1,#16
+		moveq r1,#0
+		str r1,[r0]
+
+		ldr r0, =SpritesMeteorTiles
+		add r0,r1, lsl #9							@ r0 = source of data			
+		ldr r1,=SPRITE_GFX
+		add r1,#512*36								@ r1 = destination
+		mov r2,#512									@ r2 = length
+		bl dmaCopy
+		ldr r1,=SPRITE_GFX_SUB
+		add r1,#512*36
+		mov r2,#512
+		bl dmaCopy		
+			
 	animateAliensDelay:
 ldmfd sp!, {r0, pc}
-
 
 explodeIdentAlien:
 	stmfd sp!, {r0-r8, lr}

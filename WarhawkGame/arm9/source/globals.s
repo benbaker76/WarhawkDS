@@ -129,6 +129,7 @@
 	.global spriteIdent
 	.global spriteFireSpeed
 	.global animFrame
+	.global meteorFrame
 	.global animDelay
 	.global bossXSpeed
 	.global bossYSpeed
@@ -147,6 +148,7 @@
 	.global powerupLives
 	.global bossLeftMin
 	.global bossRightMax
+	.global bossSpreadAngle
 	.global explodeSpriteBoss
 	.global explodeSpriteBossCount
 	.global spriteBurstNum
@@ -169,6 +171,8 @@ gameMode:
 fxMode:
 	.word 0
 
+bossSpreadAngle:
+	.word 0
 bossLeftMin:
 	.word 0
 bossRightMax:
@@ -209,6 +213,8 @@ bossHits:
 animFrame:
 	.word 0
 animDelay:
+	.word 0
+meteorFrame:
 	.word 0
 	
 mineDelay:

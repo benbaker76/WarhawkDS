@@ -41,10 +41,10 @@ initLevel:
 	mov r1,#0
 	ldr r0,=levelEnd
 	str r1,[r0]				@ Flag is SET for end of level	
-	ldr r0,=powerUp
-	str r1,[r0]				@ set to one for autofire
-	ldr r0,=powerUpDelay
-	str r1,[r0]				@ clear the fire delay
+@	ldr r0,=powerUp
+@	str r1,[r0]				@ set to one for autofire (on the original this carries on)
+@	ldr r0,=powerUpDelay
+@	str r1,[r0]				@ clear the fire delay
 	ldr r0,=waveNumber
 	str r1,[r0]				@ make sure we always start at wave 0
 	ldr r0,=bossMan

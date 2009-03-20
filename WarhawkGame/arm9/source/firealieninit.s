@@ -42,6 +42,7 @@
 	.global initRippleShotPhase2
 	.global initDirectShot
 	.global initSpreadShot
+	.global initBossSpreadShot
 
 @
 @	Every init in this code should also have a "move" function in firealienupdate.s
@@ -671,6 +672,109 @@
 
 	iSpreadNo:
 	ldmfd sp!, {r3, pc}
+
+@
+@ "INIT" - "Boss Spread Shot 19" (this is only for bosses)
+	initBossSpreadShot:
+	stmfd sp!, {r3, lr}
+
+		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+		cmp r2,#255					@ 255=not found
+		beq iBossSpreadNo			@ so, we cannot init a bullet :(
+		@ make r4,r6 x/y to shoot to in relation to bossX/bossY
+
+			@ r1= offset for alien
+			@ r2= offset for bullet
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r7,[r1,r0]			@ copy the aliens Y
+			str r7,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			mov r3,#17
+			str r3,[r2,r0]			@ store r3 as our bullets type
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
+			ldr r12,[r1,r0]		@ copy the bullet speed
+			str r12,[r2,r0]		@ paste it in our bullet speed
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r8,#27				@ pick object 27
+			str r8,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r8,#8				@ an 8 sets the sprite active (visible)
+			str r8,[r2]				@ set ACTIVE (this will always be r2 with no offset)
+
+			ldr r10,=bossSpreadAngle
+			ldr r10,[r10]				@ r0= current angle
+			ldr r11,=bossSpreadX
+			ldrsb r11,[r11,r10]	@ r1=offset to boss
+	@		ldr r4,=bossX
+	@		ldr r4,[r4]
+			adds r4,r6,r11
+			
+			ldr r11,=bossSpreadY
+			ldrsb r11,[r11,r10]	@ r1=offset to boss
+	@		ldr r5,=bossY
+	@		ldr r5,[r5]
+			adds r5,r7,r11
+			
+			add r10,#1
+			cmp r10,#47
+			moveq r10,#0
+			ldr r11,=bossSpreadAngle
+			str r10,[r11]
+
+
+
+			mov r10,r12						@ Store the X/Y speeds
+			mov r11,r12						@ we will need r12 later
+			
+			cmp r5,r7
+			rsble r11,r11,#0
+			suble r9,r7,r5
+			subgt r9,r5,r7			
+				cmp r4,r6
+				rsble r10,r10,#0
+				suble r8,r6,r4
+				subgt r8,r4,r6
+				cmp r8,r9
+				bmi directBSOddQuad
+					push {r0-r2}
+					mov r0,r8					@ divide this number
+					add r9,r12					@ we also need to divide by the SPEED
+					mov r1,r9					@ by this number
+						bl divf32				@ r0=result 20.12	
+					mov r9,r0					@ move the whole to r9
+					mov r8,#0	
+					pop {r0-r2}
+				b bossSpreadDone
+				directBSOddQuad:
+					push {r0-r2}
+					mov r0,r9					@ divide this number
+					add r8,r12					@ we also need to divide by the SPEED
+					mov r1,r8					@ by this number
+						bl divf32				@ r0=result 20.12	
+					mov r8,r0					@ move the whole to r9
+					mov r9,#0	
+					pop {r0-r2}	
+					
+		bossSpreadDone:
+		mov r0,#SPRITE_TRACK_X_OFFS
+		str r8,[r2,r0]				@ store X delay			@ Whole number
+		mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+		str r8,[r2,r0]										@ whole number
+		mov r0,#SPRITE_TRACK_Y_OFFS
+		str r9,[r2,r0]				@ store y delay
+		mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
+		str r9,[r2,r0]				@ store the X and Y speeds
+		mov r0,#SPRITE_SPEED_X_OFFS
+		str r10,[r2,r0]
+		mov r0,#SPRITE_SPEED_Y_OFFS
+		str r11,[r2,r0]
+		
+		iBossSpreadNo:	
+		
+	ldmfd sp!, {r3, pc}
+
 
 
 	.pool

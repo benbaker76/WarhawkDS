@@ -150,7 +150,10 @@ checkBossInit:
 			bleq bossInitLurcher
 		cmp r2,#3
 			bleq bossInitCrane
-		
+		cmp r2,#4
+			bleq bossInitSine
+		cmp r2,#5
+			bleq bossInitSine		
 		
 		bl bossDraw
 		ldmfd sp!, {r1-r2, pc}
@@ -316,6 +319,10 @@ bossAttack:
 		bleq bossLurcherMovement
 	cmp r8,#3
 		bleq bossCraneMovement
+	cmp r8,#4
+		bleq bossSine1Movement
+	cmp r8,#5
+		bleq bossSine2Movement
 
 	ldr r5,=bossMan
 	ldr r5,[r5]					@ if boss is exploding, do not fire!

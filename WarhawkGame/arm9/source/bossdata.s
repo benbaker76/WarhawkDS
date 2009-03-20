@@ -33,7 +33,7 @@ bossInitLev:
 	@ turning spd 	= Speed of turning (> is slower)	bossTurn
 	@ hits			= hits to kill the boss
 	@ fire mode		= 0=single, 1=double, ??			bossFireMode
-	@ special		= 0=normal, 1= homing boss, 2=Lurcher, 3=Crane
+	@ special		= 0=normal, 1= homing boss, 2=Lurcher, 3=Crane, 4=sine1, 5=sine2
 	@ X left		= Min X move coord
 	@ X right		= Max X move coord
 	@1
@@ -51,11 +51,11 @@ bossInitLev:
 	@7
 	.word 6,8,6,35,0,2,163,187			@ LURCHER TEST!
 	@8
-	.word 4,2,8,35,0,0,143,207
+	.word 4,2,8,35,0,4,143,207			@ Sine 1 test
 	@9
 	.word 4,4,10,50,0,3,173,177			@ Crane Test
 	@10
-	.word 4,2,8,35,0,0,143,207
+	.word 4,4,10,35,1,5,173,177			@ Sine 2 test
 	@11
 	.word 4,2,8,35,0,0,143,207
 	@12
@@ -85,6 +85,7 @@ bossFireLev:
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
 	@2
 	.word 0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4
 	.word 0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,4,0x00040011,40,0,0,0,0
@@ -102,11 +103,22 @@ bossFireLev:
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@5
 	.space 256
+	@6
 	.space 256
+	@7
 	.space 256
+	@8
+	.word 0x00020013,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	@9
 	.space 256
-	.space 256
-	.space 256
+	@10
+	.word 0x00020013,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.space 256
 	.space 256
 	@13

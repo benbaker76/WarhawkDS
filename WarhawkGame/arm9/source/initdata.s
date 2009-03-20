@@ -40,6 +40,10 @@ initData:
 	ldr r0,=levelNum
 	mov r1,#1
 	str r1,[r0]
+	
+	ldr r0,=bossSpreadAngle
+	mov r1,#0
+	str r1,[r0]
 
 	@ to add:-
 	@ reset score

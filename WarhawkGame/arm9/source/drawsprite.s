@@ -66,28 +66,25 @@ drawSprite:
 	cmp r1,#0							@ Is sprite active? (anything other than 0)
 	bne sprites_Drawn					@ if so, draw it!
 										@ if not Kill sprite
-		@ Kill sprite on both screens!!!!!
-		@ note: read the setting - daft prat!!!
-	killSprite:
+		killSprite:
+		mov r3, #ATTR0_DISABLED			@ Kill the sprite on Main Screen
+		ldr r0,=BUF_ATTRIBUTE0
+		add r0,r8, lsl #3
+		strh r3,[r0]
+
 		ldr r0,=spriteActive
 		ldr r2,[r0,r8, lsl #2]
-		cmp r2,#128				@ if it is a boss - dont kill it!!!
-		bne sprites_Must_Kill	@ we have to treat a boss differently
-			mov r3, #ATTR0_DISABLED			@ Kill the SAME number sprite on Main Screen
-			ldr r0,=BUF_ATTRIBUTE0
-			add r0,r8, lsl #3
-			strh r3,[r0]
-		b sprites_Done
+		cmp r2,#128						@ if it is a boss - dont kill it!!!
+		beq sprites_Done				@ we have to treat a boss differently
 		
 		sprites_Must_Kill:
 		cmp r1,#SCREEN_MAIN_WHITESPACE+32
 		bge sprites_Really_Dead
 		
-		ldr r0,=spriteActive				@ r2 is pointer to the sprite active setting
-		ldr r1,[r0,r8, lsl #2]				@ add sprite number * 4
-		cmp r1,#0							@ Is sprite active? (anything other than 0)
-		bne sprites_Drawn					@ if so, draw it!		
-		
+		ldr r0,=spriteActive			@ r2 is pointer to the sprite active setting
+		ldr r1,[r0,r8, lsl #2]			@ add sprite number * 4
+		cmp r1,#0						@ Is sprite active? (anything other than 0)
+		bne sprites_Drawn				@ if so, draw it!		
 		
 		sprites_Really_Dead:
 		mov r1,#0

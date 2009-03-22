@@ -73,16 +73,17 @@ main:
 	bl gameStop
 	bl initVideo
 	
+	bl resetSprites
+	
 	bl initInterruptHandler						@ initialize the interrupt handler
 	bl initAudioStream
+	
+	bl initSprites
+	bl initLoadingScreen
 	
 	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
 	mov r1, #0
 	bl EFS_Init
-	
-	bl initSprites
-	
-	bl initTitleScreen
 
 	@ ------------------------------------
 	
@@ -90,8 +91,6 @@ mainLoop:
 
 	bl swiWaitForVBlank							@ Wait for vblank
 	
-	@bl timerTimer3
-		
 	ldr r0, =gameMode
 	ldr r1, [r0]
 	cmp r1, #GAMEMODE_RUNNING
@@ -100,6 +99,8 @@ mainLoop:
 	beq mainLoopDone
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
+	cmp r1, #GAMEMODE_LOADING
+	bleq updateLoadingScreen
 	cmp r1, #GAMEMODE_CREDITS
 	bleq updateTitleScreen
 	cmp r1, #GAMEMODE_HISCORE

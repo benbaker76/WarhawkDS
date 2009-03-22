@@ -200,6 +200,8 @@ levelComplete:
 	@ to wait for all explosions to have finished, then set levelEnd to 3
 	@ That should be easy, will keep the exploding stuff in bosscode.s
 	
+	bl fxColorCycleOn
+	
 	ldr r0,=explodeSpriteBoss
 	mov r1,#17
 	str r1,[r0]									@ set current sprite number
@@ -252,6 +254,7 @@ notTimeToEndDeath:
 	
 levelFinishDone:
 
+	bl fxColorCycleOff
 	bl levelNext
 	
 	ldmfd sp!, {r0-r2, pc}

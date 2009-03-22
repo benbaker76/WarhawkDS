@@ -89,6 +89,8 @@ initTitleScreen:
 	
 	bl fxSpotlightIn
 	
+	bl fxColorTextOn
+	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
@@ -180,6 +182,7 @@ updateTitleScreen:
 	ldr r4, =GAMEMODE_RUNNING
 	tst r2, #BUTTON_START
 	streq r4, [r3]
+	bleq fxColorTextOff
 	bleq stopTimer
 	bleq initData								@ setup actual game data
 	bleq initLevel

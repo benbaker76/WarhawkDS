@@ -1,6 +1,7 @@
 #include "..\build\Font.h"
 #include "..\build\Score.h"
 #include "..\build\Energy.h"
+#include "..\build\Loading.h"
 #include "..\build\TitleTop.h"
 #include "..\build\TitleBottom.h"
 #include "..\build\StarFront.h"
@@ -89,11 +90,12 @@
 #define GAMEMODE_STOPPED			0
 #define GAMEMODE_RUNNING			1
 #define GAMEMODE_PAUSED				2
-#define GAMEMODE_CREDITS			3
-#define GAMEMODE_HISCORE			4
-#define GAMEMODE_GETREADY			5
-#define GAMEMODE_BOSSDIE			6
-#define GAMEMODE_GAMEOVER			7
+#define GAMEMODE_LOADING			3
+#define GAMEMODE_CREDITS			4
+#define GAMEMODE_HISCORE			5
+#define GAMEMODE_GETREADY			6
+#define GAMEMODE_BOSSDIE			7
+#define GAMEMODE_GAMEOVER			8
 
 @ Level count
 
@@ -119,6 +121,9 @@
 #define FX_WIPE_OUT_UP				BIT(12)
 #define FX_WIPE_OUT_DOWN			BIT(13)
 #define FX_CROSSWIPE				BIT(14)
+#define FX_COLOR_CYCLE				BIT(15)
+#define FX_COLOR_TEXT				BIT(16)
+#define FX_COLOR_CYCLE_TEXT			BIT(17)
 
 #define SPRITE_TYPE_MINE			8192
 #define SPRITE_TYPE_HUNTER			16384

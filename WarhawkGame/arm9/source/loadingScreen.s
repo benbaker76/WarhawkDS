@@ -31,118 +31,100 @@
 	.arm
 	.align
 	.text
-	.global showHiScore
-	.global updateHiScore
+	.global initLoadingScreen
+	.global showLoadingScreen
+	.global updateLoadingScreen
 
-showHiScore:
+initLoadingScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	@ int writeHiScore(char *pName, int score)
+	@ Write the palette
+
+	ldr r0, =TitleTopPal
+	ldr r1, =BG_PALETTE
+	ldr r2, =TitleTopPalLen
+	bl dmaCopy
+	mov r3, #0
+	strh r3, [r1]
+	ldr r1, =BG_PALETTE_SUB
+	bl dmaCopy
+	mov r3, #0
+	strh r3, [r1]
+
+	@ Write the tile data
 	
-	@ldr r0, =benText
-	@ldr r1, =21000
-	@bl writeHiScore
-	@bl DC_FlushAll
+	ldr r0 ,=LoadingTiles
+	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+	ldr r2, =LoadingTilesLen
+	bl dmaCopy
+
+	ldr r0, =LoadingTiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =LoadingTilesLen
+	bl dmaCopy
+	
+	@ Write map
+	
+	ldr r0, =LoadingMap
+	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
+	ldr r2, =LoadingMapLen
+	bl dmaCopy
+
+	ldr r0, =LoadingMap
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =LoadingMapLen
+	bl dmaCopy
+	
+	bl showLoadingScreen
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showLoadingScreen:
+
+	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_HISCORE
+	ldr r1, =GAMEMODE_LOADING
 	str r1, [r0]
-	
-	bl clearBG0
 
-	bl drawHiScoreText
-	
-	ldr r0, =15									@ 15 seconds
-	ldr r1, =timerDoneHiScore					@ Callback function address
+	ldr r0, =2									@ 15 seconds
+	ldr r1, =timerDoneLoading					@ Callback function address
 	
 	bl startTimer
 	
+	bl fxColorCycleTextOn
+	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-drawHiScoreText:
+updateLoadingScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r5, =0
-	
-drawHiScoreTextLoop:
-
-	mov r0, r5
-	
-	bl readHiScoreValue
-	
-	mov r10, r0									@ value
-	mov r8, #10									@ y pos
-	add r8, r5									@ add y offset
-	mov r9, #7									@ Number of digits
-	mov r11, #10								@ x pos
-	bl drawDigits				
-
-	ldr r0, =buffer
-	mov r1, r5
-	
-	bl readHiScoreName
-	
-	ldr r0, =buffer
-	ldr r1, =19									@ x pos
-	ldr r2, =10									@ y pos
-	add r2, r5
-	ldr r3, =1									@ Draw on sub screen
-	bl drawText
-
-	add r5, #1
-	cmp r5, #10
-	bne drawHiScoreTextLoop
-	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
+	
+timerDoneLoading:
 
-updateHiScore:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r1, =REG_KEYINPUT
-	ldr r2, [r1]
-	ldr r3, =gameMode
-	ldr r4, =GAMEMODE_RUNNING
-	tst r2, #BUTTON_START
-	streq r4, [r3]
-	bleq fxColorTextOff
-	bleq stopTimer
-	bleq initData								@ setup actual game data
-	bleq initLevel
-	
-	bl scrollStarsHoriz
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-
-timerDoneHiScore:
-	
 	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_CREDITS
 	str r1, [r0]
-	bl showTitleScreen
+	bl fxColorCycleTextOff
+	bl initTitleScreen
 	
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
-	@---------------------------------	
+	@---------------------------------
 
 	.data
 	.align
-
-buffer:
-	.space 4
-	
-benText:
-	.asciz "BEN"
 	
 	.pool
 	.end

@@ -99,7 +99,11 @@ interruptHandlerVBlank:
 	blne fxWipeOutDownVBlank
 	tst r0, #FX_CROSSWIPE
 	blne fxCrossWipeVBlank
-		
+	tst r0, #FX_COLOR_CYCLE
+	blne fxColorCycleVBlank
+	tst r0, #FX_COLOR_CYCLE_TEXT
+	blne fxColorTextVBlank
+	
 interruptHandlerVBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -121,6 +125,10 @@ interruptHandlerHBlank:
 	blne fxScanlineHBlank
 	tst r0, #FX_CROSSWIPE
 	blne fxCrossWipeHBlank
+	tst r0, #FX_COLOR_TEXT
+	blne fxColorTextHBlank
+	tst r0, #FX_COLOR_CYCLE_TEXT
+	blne fxColorCycleTextHBlank
 	
 interruptHandlerHBlankDone:
 	

@@ -34,9 +34,12 @@
 	
 	.global getRandom
 
-@ call and r8 returns value
+	@ call and r8 returns value
+
 getRandom:
+
 	stmfd sp!, {r0-r7,r9-r12, lr}
+	
 	ldr     ip, =seedpointer
 	ldmia   ip, {r8, r9}
 	tst     r9, r9, lsr #1				@ to bit into carry
@@ -45,16 +48,16 @@ getRandom:
 	eor     r2, r2, r8, lsl #12		@ concenate the 38 bit value
 	eor     r8, r2, r2, lsr #20		@ de-concentate
 	stmia   ip, {r8, r9}
+	
 	ldmfd sp!, {r0-r7,r9-r12, pc}
 	
 	.data
 	.align
 	
 seedpointer: 
-        .long    seed  
+	.long seed  
 seed: 
-        .long    0x55555555 
-        .long    0x55555555
+	.long 0x55555555 
+	.long 0x55555555
 
-.end
-	stmfd sp!, {lr}
+	.end

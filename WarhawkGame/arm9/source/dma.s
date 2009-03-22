@@ -50,20 +50,16 @@ dmaTransfer:
 	mov r6, #12
 	mul r6, r0							@ multiply channel by 12 and store
 	ldr r5, =DMA_CR(0)					@ load dma register
-	add r5, r6							@ add offset
 	mov r7, #0							@ zero
-	str r7, [r5]						@ reset
+	str r7, [r5, r6]					@ reset
 	ldr r5, =DMA_SRC(0)					@ load src base address
-	add r5, r6							@ add offset
-	str r1, [r5]						@ store source
+	str r1, [r5, r6]					@ store source
 	ldr r5, =DMA_DEST(0)				@ load dest base address
-	add r5, r6							@ add offset
-	str r2, [r5]						@ store dest
+	str r2, [r5, r6]					@ store dest
 	ldr r5, =DMA_CR(0)					@ load dma register
-	add r5, r6							@ add offset
-	mov r6, r3							@ count
-	orr r6, r4							@ count | mode
-	str r6, [r5]						@ store
+	mov r7, r3							@ count
+	orr r7, r4							@ count | mode
+	str r7, [r5, r6]					@ store
 	
 	ldmfd sp!, {r5-r7, pc}				@ restore and return
 	
@@ -82,16 +78,13 @@ dmaCopyWords:
 	mov r5, #12
 	mul r5, r0							@ multiply channel by 12 and store
 	ldr r4, =DMA_SRC(0)					@ load src base address
-	add r4, r5							@ add offset
-	str r1, [r4]						@ store source
+	str r1, [r4, r5]					@ store source
 	ldr r4, =DMA_DEST(0)				@ load dest base address
-	add r4, r5							@ add offset
-	str r2, [r4]						@ store dest
+	str r2, [r4, r5]					@ store dest
 	ldr r4, =DMA_CR(0)					@ load dma register
-	add r4, r5							@ add offset
 	ldr r6, =DMA_COPY_WORDS				@ load bit mask
 	orr r6, r3, lsr #2					@ DMA_COPY_WORDS | (size >> 2)
-	str r6, [r4]						@ store
+	str r6, [r4, r5]					@ store
 	bl dmaWait							@ wait to finish
 	
 	ldmfd sp!, {r4-r6, pc}				@ restore and return
@@ -111,16 +104,13 @@ dmaCopyHalfWords:
 	mov r5, #12
 	mul r5, r0							@ multiply channel by 12 and store
 	ldr r4, =DMA_SRC(0)					@ load src base address
-	add r4, r5							@ add offset
-	str r1, [r4]						@ store source
+	str r1, [r4, r5]					@ store source
 	ldr r4, =DMA_DEST(0)				@ load dest base address
-	add r4, r5							@ add offset
-	str r2, [r4]						@ store dest
+	str r2, [r4, r5]					@ store dest
 	ldr r4, =DMA_CR(0)					@ load dma register
-	add r4, r5							@ add offset
 	ldr r6, =DMA_COPY_HALFWORDS			@ load bit mask
 	orr r6, r3, lsr #1					@ DMA_COPY_HALFWORDS | (size >> 1)
-	str r6, [r4]						@ store
+	str r6, [r4, r5]					@ store
 	bl dmaWait							@ wait to finish
 	
 	ldmfd sp!, {r4-r6, pc}				@ restore and return
@@ -199,16 +189,13 @@ dmaCopyHalfWordsAsync:
 	mov r5, #12
 	mul r5, r0							@ multiply channel by 12 and store
 	ldr r4, =DMA_SRC(0)					@ load src base address
-	add r4, r5							@ add offset
-	str r1, [r4]						@ store source
+	str r1, [r4, r5]					@ store source
 	ldr r4, =DMA_DEST(0)				@ load dest base address
-	add r4, r5							@ add offset
-	str r2, [r4]						@ store dest
+	str r2, [r4, r5]					@ store dest
 	ldr r4, =DMA_CR(0)					@ load dma register
-	add r4, r5							@ add offset
 	ldr r6, =DMA_COPY_HALFWORDS			@ load bit mask
 	orr r6, r3, lsr #1					@ DMA_COPY_HALFWORDS | (size >> 1)
-	str r6, [r4]						@ store
+	str r6, [r4, r5]					@ store
 	
 	ldmfd sp!, {r3-r4, pc}				@ restore and return
 	
@@ -308,11 +295,10 @@ dmaWait:
 	mov r5, #12
 	mul r5, r0
 	ldr r4, =DMA_CR(0)
-	add r4, r5
 
 dmaWaitLoop:
 
-	ldr r5, [r4]						@ read the value
+	ldr r5, [r4, r5]					@ read the value
 	tst r5, #DMA_BUSY					@ test busy bit
 	bne dmaWaitLoop						@ set so loop
 	

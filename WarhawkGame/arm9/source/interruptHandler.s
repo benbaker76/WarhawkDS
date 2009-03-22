@@ -101,6 +101,8 @@ interruptHandlerVBlank:
 	blne fxCrossWipeVBlank
 	tst r0, #FX_COLOR_CYCLE
 	blne fxColorCycleVBlank
+	tst r0, #FX_COLOR_TEXT
+	blne fxColorTextVBlank
 
 interruptHandlerVBlankDone:
 	

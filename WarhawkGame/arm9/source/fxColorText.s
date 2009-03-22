@@ -36,6 +36,7 @@
 	.global fxColorTextOn
 	.global fxColorTextOff
 	.global fxColorTextHBlank
+	.global fxColorTextVBlank
 	.global fxColorCycleTextOn
 	.global fxColorCycleTextOff
 	.global fxColorCycleTextHBlank
@@ -123,6 +124,27 @@ fxColorTextHBlank:
 		
 	strh r2, [r0, r3]
 	strh r2, [r1, r3]
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	@ ---------------------------------------
+	
+fxColorTextVBlank:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =hiScorePal
+	ldrh r3, [r0]
+	
+	ldr r0, =hiScorePal
+	ldr r1, =hiScorePal
+	add r0, #2
+	ldr r2, =(255 * 2)
+	bl dmaCopy
+	
+	ldr r0, =hiScorePal
+	ldr r1, =(255 * 2)
+	strh r3, [r0, r1]
 	
 	ldmfd sp!, {r0-r6, pc}
 

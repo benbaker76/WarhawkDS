@@ -36,6 +36,8 @@
 	.global levelStart
 	.global levelBack
 	.global levelNext
+	.global levelGetReady
+	.global updateGetReady
 	.global levelComplete
 
 checkLevelControl:
@@ -143,7 +145,7 @@ levelStart:
 
 	bl clearBG0
 	
-	bl initGetReady
+	bl levelGetReady
 
 	ldmfd sp!, {r0-r6, pc}
 
@@ -182,6 +184,57 @@ levelNext:
 	ldmfd sp!, {r0-r2, pc}
 
 	@ ------------------------------------
+	
+levelGetReady:
+
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_GETREADY
+	str r1, [r0]
+	
+	bl fxColorTextOn
+
+	bl drawGetReadyText
+	
+	ldr r0, =3									@ 3 seconds
+	ldr r1, =timerDoneGetReady					@ Callback function address
+	
+	bl startTimer
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+updateGetReady:
+	
+	stmfd sp!, {r0-r6, lr}
+	
+	bl scrollStars
+	
+	ldr r1,=REG_KEYINPUT
+	ldr r2,[r1]
+	tst r2,#BUTTON_A
+	bleq stopTimer
+	bleq timerDoneGetReady
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+timerDoneGetReady:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_RUNNING
+	str r1, [r0]
+	
+	bl clearBG0
+	
+	bl fxColorTextOff
+	
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	
+	@---------------------------------
 
 levelComplete:
 

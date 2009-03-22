@@ -205,19 +205,19 @@ alienDescript:
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 
 @17	
-	.word 0x000000B4,0x0000012C,2,1024,0,52,8,0					@ inits
+	.word 0x000000B4,0x0000012C,2,1024,0,52,12,0					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @18	
-	.word 0x000400D4,0x0004012C,2,1024,0,53,0x40008,0x2803 		@ fie is 40 delay and fire down (fire type 7) 00101000 00000111
+	.word 0x000400D4,0x0004012C,2,1024,0,53,0x4000c,0x2803 		@ fie is 40 delay and fire down (fire type 7) 00101000 00000111
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @19	
-	.word 0x000400F4,0x0004012C,2,1024,0,54,0x40008,0x2803		@ inits
+	.word 0x000400F4,0x0004012C,2,1024,0,54,0x4000c,0x2803		@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 @20	
-	.word 0x00000114,0x0000012C,2,1024,0,55,8,0					@ inits
+	.word 0x00000114,0x0000012C,2,1024,0,55,12,0					@ inits
 	.word 5,800,0,0,0,0,0,0,0,0,0,0					@ Track points
 	.word 0,0,0,0,0,0,0,0,0,0,0,0
 
@@ -343,7 +343,8 @@ alienDescript:
 					@ random freq			@ or - set to random level (0-8191 = higher is less)
 	.word 0 		@ init speed X			@ (this is overal speed in linear mode)
 	.word 1024		@ init speed y			@ (set to 1024 to signal linear mode)
-	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest)
+	.word 3 		@ init maxSpeed			@ (on ones that attack you - 5 is the fastest) (LOW 16)
+											@ (high 16) friction for a curve alien
 	.word 35		@ init spriteObj		@ Sprite to use for image
 	.word 20		@ init hits to kill		@ lower 16 = Hits (0=one shot)
 											@ upper 16 = shot speed (shot)

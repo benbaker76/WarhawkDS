@@ -200,7 +200,14 @@ initReversed:
 	add r1,#4
 	ldr r0,=SPRITE_SPEED_MAX_OFFS
 	ldr r2,[r4,r1]
-	str r2,[r3,r0]				@ store sprites maximum speed
+	and r2,r6
+	str r2,[r3,r0]				@ store sprites maximum speed (low 16)
+	ldr r2,[r4,r1]
+	lsr r2,#12
+	cmp r2,#0
+	mov r2,#5
+	ldr r0,=SPRITE_SPEED_DELAY_OFFS
+	str r2,[r3,r0]
 
 	add r1,#4
 	mov r0,#SPRITE_OBJ_OFFS
@@ -567,11 +574,13 @@ aliensLinear:
 aliensTracker:
 	mov r0,#SPRITE_X_OFFS
 	ldr r10,[r1,r0]				@ x coord
+	mov r0,#SPRITE_SPEED_DELAY_OFFS	@ the "friction" reset
+	ldr r9,[r1,r0]
 	mov r0,#SPRITE_TRACK_X_OFFS
 	ldr r8,[r1,r0]				 	@ track x coord
 		cmp r8,#1024				@ if the track is a simple 1024, then track player
 		moveq r11,#9				@ if tracking player, increase turning curve
-		movne r11,#5				@ else, leave as standard
+		movne r11,r9				@ else, leave as standard
 		bne notYouX
 			ldr r0,=spriteX			@ load your X
 			ldr r8,[r0]				@ r8= your X
@@ -636,11 +645,13 @@ aliensTracker:
 
 	mov r0,#SPRITE_Y_OFFS			@ these offset values WILL be defined in global.s later!
 	ldr r10,[r1,r0]			@ y coord
+	mov r0,#SPRITE_SPEED_DELAY_OFFS	@ the "friction" reset
+	ldr r9,[r1,r0]
 	mov r0,#SPRITE_TRACK_Y_OFFS
 	ldr r8,[r1,r0] 			@ track y
 		cmp r8,#1024			@ if 1024, track your ship
 		moveq r11,#9			@ if 1024, wider turn curve
-		movne r11,#5			@ else, normal
+		movne r11,r9			@ else, normal
 		bne notYouY
 			ldr r0,=spriteY
 			ldr r8,[r0]			@ make tracking point your Y coord

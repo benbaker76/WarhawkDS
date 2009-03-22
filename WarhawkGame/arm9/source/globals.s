@@ -155,6 +155,7 @@
 	.global spriteBurstNumCount
 	.global spriteBurstDelay
 	.global spriteBurstDelayCount
+	.global spriteSpeedDelay
 	
 explodeSpriteBossCount:
 	.word 0
@@ -414,6 +415,8 @@ spriteBurstNumCount:
 spriteBurstDelay:
 	.space 512
 spriteBurstDelayCount:
+	.space 512
+spriteSpeedDelay:
 	.space 512
 	
 spriteInstruct:

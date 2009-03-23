@@ -80,6 +80,8 @@ fxColorCycleVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl DC_FlushAll
+	
 	ldr r0, =BG_PALETTE
 	ldrh r3, [r0]
 	

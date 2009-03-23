@@ -1,1 +1,0 @@
-StarBack.o: StarBack.s

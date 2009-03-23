@@ -79,11 +79,12 @@ main:
 	bl initAudioStream
 	
 	bl initSprites
-	bl initLoadingScreen
 	
 	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
 	mov r1, #0
 	bl EFS_Init
+	
+	bl initLoadingScreen
 
 	@ ------------------------------------
 	

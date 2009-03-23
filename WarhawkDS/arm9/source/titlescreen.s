@@ -82,14 +82,14 @@ initTitleScreen:
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
 	
-	ldr r0, =titleRawText						@ Read the path to the file
-	bl playAudioStream							@ Play the audio stream
-	
 	bl showTitleScreen
 	
 	bl fxSpotlightIn
 	
 	bl fxColorTextOn
+	
+	ldr r0, =titleRawText						@ Read the path to the file
+	bl playAudioStream							@ Play the audio stream
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

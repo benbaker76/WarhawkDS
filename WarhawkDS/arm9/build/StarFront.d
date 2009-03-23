@@ -1,1 +1,0 @@
-StarFront.o: StarFront.s

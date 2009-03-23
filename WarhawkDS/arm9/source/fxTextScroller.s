@@ -126,9 +126,9 @@ fxTextScrollerHBlank:
 	ldr r0, =REG_VCOUNT
 	ldrb r0, [r0]
 	
-	cmp r0, #165
+	cmp r0, #158
 	blt fxTextScrollerHBlankDone
-	cmp r0, #176
+	cmp r0, #169
 	bgt fxTextScrollerHBlankDone
 	
 	ldr r2, =WIN0_X0						@ Top pos
@@ -160,7 +160,7 @@ fxTextScrollerVBlank:
 	
 	ldr r1, =scrollPos
 	ldr r1, [r1]
-	ldr r2, =21									@ y pos
+	ldr r2, =20									@ y pos
 	ldr r3, =0									@ Draw on sub screen
 	ldr r4, =1									@ Maximum number of characters
 	bl drawTextCount

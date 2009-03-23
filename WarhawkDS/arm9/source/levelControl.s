@@ -187,11 +187,11 @@ levelNext:
 	@ ------------------------------------
 	
 levelGetReady:
-
+	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_GETREADY
 	str r1, [r0]
-	
+
 	bl fxCopperTextOn
 
 	bl drawGetReadyText
@@ -211,9 +211,9 @@ updateGetReady:
 	
 	bl scrollStars
 	
-	ldr r1,=REG_KEYINPUT
-	ldr r2,[r1]
-	tst r2,#BUTTON_A
+	ldr r1, =REG_KEYINPUT
+	ldr r2, [r1]
+	tst r2, #BUTTON_A
 	bleq stopTimer
 	bleq timerDoneGetReady
 	

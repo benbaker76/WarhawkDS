@@ -235,7 +235,7 @@ drawStartSpritesLoop:
 	add r0, r4, lsl #3
 	mov r2, #7
 	add r0, r2, lsl #3
-	mov r5, #148
+	mov r5, #172
 	and r5, #0xFF
 	orr r1, r5
 	strh r1, [r0]
@@ -245,7 +245,7 @@ drawStartSpritesLoop:
 	add r0, r4, lsl #3
 	mov r2, #7
 	add r0, r2, lsl #3
-	mov r5, #80
+	mov r5, #38
 	add r5, r4, lsl #4
 	ldr r6, =0x1FF
 	and r5, r6
@@ -263,7 +263,7 @@ drawStartSpritesLoop:
 	strh r1, [r0]
 	
 	add r4, #1
-	cmp r4, #6
+	cmp r4, #11
 	bne drawStartSpritesLoop
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
@@ -387,7 +387,7 @@ updateTitleScreen:
 	ldr r2, [r1]
 	ldr r3, =gameMode
 	ldr r4, =GAMEMODE_RUNNING
-	tst r2, #BUTTON_A
+	tst r2, #BUTTON_START
 	streq r4, [r3]
 	bleq fxSpotlightOff
 	bleq fxTextScrollerOff

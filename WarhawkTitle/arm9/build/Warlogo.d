@@ -1,1 +1,0 @@
-Warlogo.o: Warlogo.s

@@ -1,1 +1,0 @@
-Wartop.o: Wartop.s

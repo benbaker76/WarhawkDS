@@ -1,1 +1,0 @@
-Fire.o: Fire.s

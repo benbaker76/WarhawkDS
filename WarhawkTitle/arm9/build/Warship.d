@@ -1,1 +1,0 @@
-Warship.o: Warship.s

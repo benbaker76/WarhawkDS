@@ -235,7 +235,7 @@ drawStartSpritesLoop:
 	add r0, r4, lsl #3
 	mov r2, #7
 	add r0, r2, lsl #3
-	mov r5, #172
+	mov r5, #160
 	and r5, #0xFF
 	orr r1, r5
 	strh r1, [r0]

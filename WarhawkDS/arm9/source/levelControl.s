@@ -191,7 +191,7 @@ levelGetReady:
 	ldr r1, =GAMEMODE_GETREADY
 	str r1, [r0]
 	
-	bl fxColorTextOn
+	bl fxCopperTextOn
 
 	bl drawGetReadyText
 	
@@ -230,7 +230,7 @@ timerDoneGetReady:
 	
 	bl clearBG0
 	
-	bl fxColorTextOff
+	bl fxCopperTextOff
 	
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	

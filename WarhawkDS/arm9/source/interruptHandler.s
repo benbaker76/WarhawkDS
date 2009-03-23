@@ -101,8 +101,8 @@ interruptHandlerVBlank:
 	blne fxCrossWipeVBlank
 	tst r0, #FX_COLOR_CYCLE
 	blne fxColorCycleVBlank
-	tst r0, #FX_COLOR_TEXT
-	blne fxColorTextVBlank
+	tst r0, #FX_COPPER_TEXT
+	blne fxCopperTextVBlank
 
 interruptHandlerVBlankDone:
 	
@@ -125,8 +125,8 @@ interruptHandlerHBlank:
 	blne fxScanlineHBlank
 	tst r0, #FX_CROSSWIPE
 	blne fxCrossWipeHBlank
-	tst r0, #FX_COLOR_TEXT
-	blne fxColorTextHBlank
+	tst r0, #FX_COPPER_TEXT
+	blne fxCopperTextHBlank
 	tst r0, #FX_COLOR_CYCLE_TEXT
 	blne fxColorCycleTextHBlank
 	

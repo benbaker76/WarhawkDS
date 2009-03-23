@@ -86,7 +86,7 @@ initTitleScreen:
 	
 	bl fxSpotlightIn
 	
-	bl fxColorTextOn
+	bl fxCopperTextOn
 	
 	ldr r0, =titleRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
@@ -182,7 +182,7 @@ updateTitleScreen:
 	ldr r4, =GAMEMODE_RUNNING
 	tst r2, #BUTTON_START
 	streq r4, [r3]
-	bleq fxColorTextOff
+	bleq fxCopperTextOff
 	bleq stopTimer
 	bleq initData								@ setup actual game data
 	bleq initLevel

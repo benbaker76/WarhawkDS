@@ -122,7 +122,7 @@
 #define FX_WIPE_OUT_DOWN			BIT(13)
 #define FX_CROSSWIPE				BIT(14)
 #define FX_COLOR_CYCLE				BIT(15)
-#define FX_COLOR_TEXT				BIT(16)
+#define FX_COPPER_TEXT				BIT(16)
 #define FX_COLOR_CYCLE_TEXT			BIT(17)
 
 #define SPRITE_TYPE_MINE			8192

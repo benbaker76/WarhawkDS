@@ -33,34 +33,34 @@
 	.arm
 	.align
 	.text
-	.global fxColorTextOn
-	.global fxColorTextOff
-	.global fxColorTextHBlank
-	.global fxColorTextVBlank
+	.global fxCopperTextOn
+	.global fxCopperTextOff
+	.global fxCopperTextHBlank
+	.global fxCopperTextVBlank
 	.global fxColorCycleTextOn
 	.global fxColorCycleTextOff
 	.global fxColorCycleTextHBlank
 
-fxColorTextOn:
+fxCopperTextOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	orr r1, #FX_COLOR_TEXT
+	orr r1, #FX_COPPER_TEXT
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
 	
-fxColorTextOff:
+fxCopperTextOff:
 
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_COLOR_TEXT)
+	and r1, #~(FX_COPPER_TEXT)
 	str r1, [r0]
 	
 	ldr r0, =BG_PALETTE
@@ -107,7 +107,7 @@ fxColorCycleTextOff:
 
 	@ ---------------------------------------
 	
-fxColorTextHBlank:
+fxCopperTextHBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -117,7 +117,7 @@ fxColorTextHBlank:
 	ldrh r2, [r2]
 	add r2, #1
 	lsl r2, #1
-	ldr r3, =hiScorePal
+	ldr r3, =colorPal
 	ldrh r2, [r3, r2]
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
 	ldr r4, =COLOR_WHITE
@@ -129,22 +129,22 @@ fxColorTextHBlank:
 
 	@ ---------------------------------------
 	
-fxColorTextVBlank:
+fxCopperTextVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
 	bl DC_FlushAll
 	
-	ldr r0, =hiScorePal
+	ldr r0, =colorPal
 	ldrh r3, [r0]
 	
-	ldr r0, =hiScorePal
-	ldr r1, =hiScorePal
+	ldr r0, =colorPal
+	ldr r1, =colorPal
 	add r0, #2
 	ldr r2, =(255 * 2)
 	bl dmaCopy
 	
-	ldr r0, =hiScorePal
+	ldr r0, =colorPal
 	ldr r1, =(255 * 2)
 	strh r3, [r0, r1]
 	
@@ -195,7 +195,7 @@ colorOffset:
 colorWait:
 	.word 0
 	
-hiScorePal:
+colorPal:
 	.hword 0x44ce,0x44ce,0x5511,0x5d73,0x65f6,0x5d73,0x5511,0x44ce
 	.hword 0x5d6d,0x5d6d,0x6a32,0x6ed6,0x777b,0x6ed6,0x6a32,0x5d6d
 	.hword 0x1e4a,0x1e4a,0x26cd,0x2eee,0x4332,0x2eee,0x26cd,0x1e4a

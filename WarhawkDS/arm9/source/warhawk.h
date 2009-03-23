@@ -5,6 +5,7 @@
 #include "..\build\TitleTop.h"
 #include "..\build\TitleBottom.h"
 #include "..\build\LogoSprites.h"
+#include "..\build\StartSprites.h"
 #include "..\build\StarFront.h"
 #include "..\build\StarBack.h"
 #include "..\build\Sprites.h"

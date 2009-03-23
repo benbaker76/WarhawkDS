@@ -28,6 +28,8 @@
 #include "sprite.h"
 #include "ipc.h"
 
+	#define FONT_COLOR_OFFSET	11
+
 	.arm
 	.align
 	.text
@@ -100,6 +102,12 @@ initTitleScreen:
 	ldr r2, =LogoSpritesTilesLen
 	bl dmaCopy
 	
+	ldr r0, =StartSpritesTiles
+	ldr r1, =SPRITE_GFX
+	add r1, #LogoSpritesTilesLen
+	ldr r2, =StartSpritesTilesLen
+	bl dmaCopy
+	
 	bl drawSFMapScreenMain
 	bl drawSFMapScreenSub
 	bl drawSBMapScreenMain
@@ -108,6 +116,8 @@ initTitleScreen:
 	bl showCredits
 	
 	bl fxCopperTextOn
+	
+	bl drawStartSprites
 	
 	bl fxSpotlightIn
 	
@@ -212,6 +222,93 @@ drawCreditText:
 	
 	@---------------------------------
 	
+drawStartSprites:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	mov r4, #0
+	
+drawStartSpritesLoop:
+	
+	ldr r0, =OBJ_ATTRIBUTE0(0)
+	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
+	add r0, r4, lsl #3
+	mov r2, #7
+	add r0, r2, lsl #3
+	mov r5, #148
+	and r5, #0xFF
+	orr r1, r5
+	strh r1, [r0]
+	
+	ldr r0, =OBJ_ATTRIBUTE1(0)
+	ldr r1, =(ATTR1_SIZE_16)
+	add r0, r4, lsl #3
+	mov r2, #7
+	add r0, r2, lsl #3
+	mov r5, #80
+	add r5, r4, lsl #4
+	ldr r6, =0x1FF
+	and r5, r6
+	orr r1, r5
+	strh r1, [r0]
+	
+	ldr r0, =OBJ_ATTRIBUTE2(0)
+	add r0, r4, lsl #3
+	mov r2, #7
+	mov r3, #ATTR2_PRIORITY(0)
+	add r0, r2, lsl #3
+	mov r1, r4, lsl #2
+	add r1, r2, lsl #4
+	orr r1, r3
+	strh r1, [r0]
+	
+	add r4, #1
+	cmp r4, #6
+	bne drawStartSpritesLoop
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+updateStartSprites:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =SPRITE_PALETTE
+	ldr r1, =FONT_COLOR_OFFSET
+	add r0, r1, lsl #1
+	ldr r2, =pulseValue
+	ldr r3, [r2]
+	
+	ldr r4, =pulseDirection
+	ldr r5, [r4]
+	cmp r5, #0
+	bne updateStartSpritesBackward
+	
+	add r3, #1
+	cmp r3, #0x1F
+	moveq r5, #1
+	str r3, [r2]
+	str r5, [r4]
+	strh r3, [r0]	
+	b updateStartSpritesDone
+	
+updateStartSpritesBackward:
+
+	sub r3, #1
+	cmp r3, #0
+	moveq r5, #0
+	str r3, [r2]
+	str r5, [r4]
+	strh r3, [r0]
+	
+updateStartSpritesDone:
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+	
 updateLogoSprites:
 
 	stmfd sp!, {r0-r6, lr}
@@ -259,8 +356,10 @@ updateLogoSpritesLoop:
 	strh r1, [r0]
 	
 	ldr r0, =OBJ_ATTRIBUTE2(0)
-	mov r1, r4, lsl #4
 	add r0, r4, lsl #3
+	mov r1, r4, lsl #4
+	mov r3, #ATTR2_PRIORITY(1)
+	orr r1, r3
 	strh r1, [r0]
 	
 	add r4, #1
@@ -282,12 +381,13 @@ updateTitleScreen:
 	
 	bl scrollStarsHoriz
 	bl updateLogoSprites
+	bl updateStartSprites
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
 	ldr r3, =gameMode
 	ldr r4, =GAMEMODE_RUNNING
-	tst r2, #BUTTON_START
+	tst r2, #BUTTON_A
 	streq r4, [r3]
 	bleq fxSpotlightOff
 	bleq fxTextScrollerOff
@@ -304,6 +404,12 @@ updateTitleScreen:
 	.align
 	
 vblCounter:
+	.word 0
+
+pulseValue:
+	.word 0
+	
+pulseDirection:
 	.word 0
 	
 proteusDevelopmentsText:

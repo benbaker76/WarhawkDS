@@ -135,7 +135,7 @@ drawSprite:
 		sub r1,#32						@ take our height off
 		and r1,#0xff					@ Y is only 0-255
 		orr r2,r1						@ or with our attributes from earlier
-		str r2,[r0]					@ store it in sprite attribute0
+		strh r2,[r0]					@ store it in sprite attribute0
 		@ Draw X to MAIN screen
 		ldr r0,=spriteX					@ get X coord mem space
 		ldr r1,[r0,r8,lsl #2]			@ add ,Rx for offsets later!

@@ -32,13 +32,18 @@
 	.align
 	.text
 	.global initTitleScreen
-	.global showTitleScreen
+	.global showCredits
 	.global updateTitleScreen
+	.global updateLogoSprites
 	.global drawCreditText
 
 initTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_TITLESCREEN
+	str r1, [r0]
 	
 	@ Write the palette
 
@@ -77,36 +82,71 @@ initTitleScreen:
 	ldr r2, =TitleBottomMapLen
 	bl dmaCopy
 	
+	@ Sprites
+	
+	bl resetSprites
+	
+	@ Load the palette into the palette subscreen area and main
+
+	ldr r0, =SpritePal
+	ldr r1, =SPRITE_PALETTE
+	ldr r2, =512
+	bl dmaCopy
+
+	@ Write the tile data to VRAM
+
+	ldr r0, =LogoSpritesTiles
+	ldr r1, =SPRITE_GFX
+	ldr r2, =LogoSpritesTilesLen
+	bl dmaCopy
+	
 	bl drawSFMapScreenMain
 	bl drawSFMapScreenSub
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
 	
-	bl showTitleScreen
-	
-	bl fxSpotlightIn
+	bl showCredits
 	
 	bl fxCopperTextOn
 	
+	bl fxSpotlightIn
+	
 	ldr r0, =titleRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
+	
+	ldr r0, =2									@ 15 seconds
+	ldr r1, =showTextScroller					@ Callback function address
+	
+	bl startTimer
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-showTitleScreen:
+showTextScroller:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_CREDITS
-	str r1, [r0]
+	bl stopTimer
+	bl fxTextScrollerOn
+	
+	ldr r0, =15									@ 15 seconds
+	ldr r1, =showCredits						@ Callback function address
+	
+	bl startTimer
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showCredits:
 
+	stmfd sp!, {r0-r6, lr}
+	
 	bl drawCreditText
 	
 	ldr r0, =15									@ 15 seconds
-	ldr r1, =timerDoneCredits					@ Callback function address
+	ldr r1, =showHiScore						@ Callback function address
 	
 	bl startTimer
 	
@@ -118,7 +158,7 @@ drawCreditText:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl clearBG0
+	bl clearBG0Sub
 
 	ldr r0, =proteusDevelopmentsText			@ Load out text pointer
 	ldr r1, =3									@ x pos
@@ -171,10 +211,77 @@ drawCreditText:
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
+	
+updateLogoSprites:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	mov r4, #0
+	
+updateLogoSpritesLoop:
+	
+	ldr r0, =OBJ_ATTRIBUTE0(0)
+	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
+	add r0, r4, lsl #3
+	ldr r3, =SIN_bin
+	ldr r5, =vblCounter
+	ldr r5, [r5]
+	add r5, r4, lsl #5
+	ldr r6, =0x1FF
+	and r5, r6
+	lsl r5, #1
+	add r3, r5
+	ldrsh r5, [r3]
+	lsr r5, #6
+	add r5, #64
+	and r5, #0xFF
+	orr r1, r5
+	strh r1, [r0]
+	
+	ldr r0, =OBJ_ATTRIBUTE1(0)
+	ldr r1, =(ATTR1_SIZE_32)
+	add r0, r4, lsl #3
+	ldr r3, =SIN_bin
+	ldr r5, =vblCounter
+	ldr r5, [r5]
+	add r5, r4, lsl #5
+	ldr r6, =0x1FF
+	and r5, r6
+	lsl r5, #1
+	add r3, r5
+	ldrsh r5, [r3]
+	lsr r5, #6
+	add r5, #16
+	add r5, r4, lsl #5
+	ldr r6, =0x1FF
+	and r5, r6
+	orr r1, r5
+	strh r1, [r0]
+	
+	ldr r0, =OBJ_ATTRIBUTE2(0)
+	mov r1, r4, lsl #4
+	add r0, r4, lsl #3
+	strh r1, [r0]
+	
+	add r4, #1
+	cmp r4, #7
+	bne updateLogoSpritesLoop
+	
+	ldr r0, =vblCounter
+	ldr r1, [r0]
+	add r1, #2
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
 
 updateTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl scrollStarsHoriz
+	bl updateLogoSprites
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
@@ -182,32 +289,22 @@ updateTitleScreen:
 	ldr r4, =GAMEMODE_RUNNING
 	tst r2, #BUTTON_START
 	streq r4, [r3]
+	bleq fxSpotlightOff
+	bleq fxTextScrollerOff
 	bleq fxCopperTextOff
 	bleq stopTimer
 	bleq initData								@ setup actual game data
 	bleq initLevel
 	
-	bl scrollStarsHoriz
-	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-
-timerDoneCredits:
-
-	stmfd sp!, {r0-r1, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_HISCORE
-	str r1, [r0]
-	bl showHiScore
-	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 
 	.data
 	.align
+	
+vblCounter:
+	.word 0
 	
 proteusDevelopmentsText:
 	.asciz "@2009 PROTEUS DEVELOPMENTS"

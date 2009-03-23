@@ -90,7 +90,7 @@ showLoadingScreen:
 	ldr r1, =GAMEMODE_LOADING
 	str r1, [r0]
 
-	ldr r0, =2									@ 15 seconds
+	ldr r0, =1									@ 1 second
 	ldr r1, =timerDoneLoading					@ Callback function address
 	
 	bl startTimer
@@ -113,9 +113,6 @@ timerDoneLoading:
 
 	stmfd sp!, {r0-r1, lr}
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_CREDITS
-	str r1, [r0]
 	bl fxColorCycleTextOff
 	bl initTitleScreen
 	

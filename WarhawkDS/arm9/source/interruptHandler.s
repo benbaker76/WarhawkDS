@@ -103,6 +103,8 @@ interruptHandlerVBlank:
 	blne fxColorCycleVBlank
 	tst r0, #FX_COPPER_TEXT
 	blne fxCopperTextVBlank
+	tst r0, #FX_TEXT_SCROLLER
+	blne fxTextScrollerVBlank
 
 interruptHandlerVBlankDone:
 	
@@ -129,6 +131,8 @@ interruptHandlerHBlank:
 	blne fxCopperTextHBlank
 	tst r0, #FX_COLOR_CYCLE_TEXT
 	blne fxColorCycleTextHBlank
+	tst r0, #FX_TEXT_SCROLLER
+	blne fxTextScrollerHBlank
 	
 interruptHandlerHBlankDone:
 	

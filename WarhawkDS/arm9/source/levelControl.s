@@ -108,6 +108,7 @@ levelStart:
 	
 	bl resetScrollRegisters					@ Reset the scroll registers
 	bl resetSprites
+	bl initSprites
 	bl initLevelSprites
 	
 	bl clearBG0

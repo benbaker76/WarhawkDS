@@ -32,6 +32,7 @@
 	.align
 	.text
 	.global clearBG0
+	.global clearBG0Sub
 	.global clearBG1
 	.global clearBG2
 	.global clearBG3
@@ -44,6 +45,16 @@ clearBG0:
 	ldr r2, =2048
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
+	bl dmaFillWords
+
+	ldmfd sp!, {r0-r6, pc}
+	
+clearBG0Sub:
+	stmfd sp!, {r0-r6, lr} 
+
+	mov r0, #0
+	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
+	ldr r2, =2048
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}

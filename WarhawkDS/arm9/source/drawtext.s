@@ -34,9 +34,11 @@
 	.global drawDebugText
 	.global drawGetReadyText
 	.global drawText
+	.global drawTextCount
 	.global drawDigits
 	
 drawDebugText:
+
 	stmfd sp!, {r0-r10, lr}
 	
 	ldr r0, =spriteXText			@ Load out text pointer
@@ -99,8 +101,9 @@ drawDebugText:
 	mov r11, #0						@ x pos
 	bl drawDigits					@ Draw
 
-
 	ldmfd sp!, {r0-r10, pc}
+
+	@ ---------------------------------------------
 	
 drawGetReadyText:
 
@@ -126,6 +129,8 @@ drawGetReadyText:
 	bl drawDigits					@ Draw
 	
 	ldmfd sp!, {r0-r3, pc}
+	
+	@ ---------------------------------------------
 
 drawText:
 	
@@ -136,25 +141,63 @@ drawText:
 
 	stmfd sp!, {r4-r6, lr} 
 	
-	ldr r4, =BG_MAP_RAM(BG0_MAP_BASE)	@ make r4 a pointer to main
-	ldr r5, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB) @ make r5 a pointer to sub
+	ldr r4, =BG_MAP_RAM(BG0_MAP_BASE)	@ Pointer to main
+	ldr r5, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB) @ Pointer to sub
 	cmp r3, #1						@ Draw on sub screen?
 	moveq r4, r5					@ Yes so store subscreen pointer
 	add r4, r1, lsl #1				@ Add x position
 	add r4, r2, lsl #6				@ Add y multiplied by 64
 
-textLoop:
+drawTextLoop:
+
 	ldrb r5, [r0], #1				@ Read r1 [text] and add 1 to [text] offset
 	cmp r5, #0						@ Null character?
-	beq textDone					@ Yes so were done
+	beq drawTextDone					@ Yes so were done
 	sub r5, #32						@ ASCII character - 32 to get tile offset
 	add r5, #42						@ Skip 42 tiles (score digits)
 	strh r5, [r4], #2				@ Write the tile number to our 32x32 map and move along
-	bl textLoop
+	b drawTextLoop
 
-textDone:
+drawTextDone:
 	
 	ldmfd sp!, {r4-r6, pc}
+	
+	@ ---------------------------------------------
+	
+drawTextCount:
+	
+	@ r0 = pointer to null terminated text
+	@ r1 = x pos
+	@ r2 = y pos
+	@ r3 = 0 = Main, 1 = Sub
+	@ r4 = max number of characters
+
+	stmfd sp!, {r4-r6, lr} 
+	
+	ldr r5, =BG_MAP_RAM(BG0_MAP_BASE)	@ Pointer to main
+	ldr r6, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB) @ Pointer to sub
+	cmp r3, #1						@ Draw on sub screen?
+	moveq r5, r6					@ Yes so store subscreen pointer
+	add r5, r1, lsl #1				@ Add x position
+	add r5, r2, lsl #6				@ Add y multiplied by 64
+	subs r4, #1
+
+drawTextCountLoop:
+
+	ldrb r6, [r0], #1				@ Read r1 [text] and add 1 to [text] offset
+	cmp r6, #0						@ Null character?
+	beq drawTextCountDone			@ Yes so were done
+	sub r6, #32						@ ASCII character - 32 to get tile offset
+	add r6, #42						@ Skip 42 tiles (score digits)
+	strh r6, [r5], #2				@ Write the tile number to our 32x32 map and move along
+	subs r4, #1
+	bpl drawTextCountLoop
+
+drawTextCountDone:
+	
+	ldmfd sp!, {r4-r6, pc}
+	
+	@ ---------------------------------------------
 
 drawDigits:
 
@@ -210,6 +253,8 @@ digitsLoop:
 	bne digitsLoop					@ And loop back until done
 	
 	ldmfd sp!, {r0-r10, pc}
+	
+	@ ---------------------------------------------
 	
 	.pool
 	.end

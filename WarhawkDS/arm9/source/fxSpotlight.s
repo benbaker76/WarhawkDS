@@ -32,6 +32,7 @@
 	.text
 	.global fxSpotlightIn
 	.global fxSpotlightOut
+	.global fxSpotlightOff
 	.global fxSpotlightInVBlank
 	.global fxSpotlightOutVBlank
 
@@ -50,11 +51,13 @@ fxSpotlightInit:
 	str r1, [r0]
 	
 	ldr r2, =WIN_IN							@ Make bg's appear inside the window
-	ldr r3, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
+	ldr r3, [r2]
+	orr r3, #(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r3, [r2]
 	
 	ldr r2, =SUB_WIN_IN						@ Make bg's appear inside the window
-	ldr r3, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
+	ldr r3, [r2]
+	orr r3, #(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r3, [r2]
 	
 	ldr r2, =WIN0_Y0						@ Top pos
@@ -127,15 +130,11 @@ fxSpotlightInVBlank:
 	bl dmaCircle
 	
 	ldr r0,	=radius							@ radius
-	ldr r1, =fxMode							@ mode
-	ldr r2, [r0]							@ Read radius value
-	add r2, #4								@ Add to radius
-	ldr r3, [r1]							@ Get fxMode value
-	cmp r2, #164							@ Radius == 164?
-	andeq r3, #~(FX_SPOTLIGHT_IN)			@ Yes turn off effect
-	bleq clearWindow
-	str r2, [r0]							@ Write back radius
-	str r3, [r1]							@ Write fxMode back
+	ldr r1, [r0]							@ Read radius value
+	add r1, #4								@ Add to radius
+	cmp r1, #164							@ Radius == 164?
+	bleq fxSpotlightOff
+	str r1, [r0]							@ Write back radius
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -160,23 +159,24 @@ fxSpotlightOutVBlank:
 	bl dmaCircle
 	
 	ldr r0,	=radius							@ radius
-	ldr r1, =fxMode							@ mode
-	ldr r2, [r0]							@ Read radius value
-	add r2, #4								@ Add to radius
-	ldr r3, [r1]							@ Get fxMode value
-	cmp r2, #164							@ Radius == 164?
-	andeq r3, #~(FX_SPOTLIGHT_OUT)			@ Yes turn off effect
-	bleq clearWindow
-	str r2, [r0]							@ Write back radius
-	str r3, [r1]							@ Write fxMode back
+	ldr r1, [r0]							@ Read radius value
+	add r1, #4								@ Add to radius
+	cmp r1, #164							@ Radius == 164?
+	bleq fxSpotlightOff
+	str r1, [r0]							@ Write back radius
 	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
 	
-clearWindow:
+fxSpotlightOff:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	and r1, #~(FX_SPOTLIGHT_IN | FX_SPOTLIGHT_OUT)
+	str r1, [r0]
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -188,13 +188,13 @@ clearWindow:
 	and r1, #~(DISPLAY_WIN0_ON)
 	str r1, [r0]
 	
-	ldr r2, =WIN_IN							@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
+	ldr r0, =WIN_IN
+	mov r1, #0
+	strh r1, [r0]
 	
-	ldr r2, =SUB_WIN_IN						@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
+	ldr r0, =SUB_WIN_IN
+	mov r1, #0
+	strh r1, [r0]
 
 	ldmfd sp!, {r0-r6, pc}
 	

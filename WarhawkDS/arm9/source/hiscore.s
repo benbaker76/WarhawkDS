@@ -32,7 +32,6 @@
 	.align
 	.text
 	.global showHiScore
-	.global updateHiScore
 
 showHiScore:
 
@@ -45,16 +44,12 @@ showHiScore:
 	@bl writeHiScore
 	@bl DC_FlushAll
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_HISCORE
-	str r1, [r0]
-	
-	bl clearBG0
+	bl clearBG0Sub
 
 	bl drawHiScoreText
 	
 	ldr r0, =15									@ 15 seconds
-	ldr r1, =timerDoneHiScore					@ Callback function address
+	ldr r1, =showCredits						@ Callback function address
 	
 	bl startTimer
 	
@@ -100,40 +95,6 @@ drawHiScoreTextLoop:
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
-
-updateHiScore:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r1, =REG_KEYINPUT
-	ldr r2, [r1]
-	ldr r3, =gameMode
-	ldr r4, =GAMEMODE_RUNNING
-	tst r2, #BUTTON_START
-	streq r4, [r3]
-	bleq fxCopperTextOff
-	bleq stopTimer
-	bleq initData								@ setup actual game data
-	bleq initLevel
-	
-	bl scrollStarsHoriz
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-
-timerDoneHiScore:
-	
-	stmfd sp!, {r0-r1, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_CREDITS
-	str r1, [r0]
-	bl showTitleScreen
-	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
-	
-	@---------------------------------	
 
 	.data
 	.align

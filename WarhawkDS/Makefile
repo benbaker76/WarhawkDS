@@ -20,7 +20,7 @@ all: $(TARGET).nds
 
 #---------------------------------------------------------------------------------
 $(TARGET).nds	:	$(TARGET).arm7 $(TARGET).arm9
-	ndstool	-c $(TARGET).nds -7 $(TARGET).arm7 -9 $(TARGET).arm9 -d efsroot
+	ndstool	-c $(TARGET).nds -7 $(TARGET).arm7 -9 $(TARGET).arm9 -d efsroot -b WarhawkDS.bmp "Warhawk DS;By Flash & HeadKaze;www.retrobytesportal.com"
 	efs $(TARGET).nds
 
 #---------------------------------------------------------------------------------

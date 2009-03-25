@@ -43,10 +43,6 @@ initTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_TITLESCREEN
-	str r1, [r0]
-	
 	@ Write the palette
 
 	ldr r0, =TitleTopPal
@@ -130,6 +126,12 @@ initTitleScreen:
 	ldr r1, =showTextScroller					@ Callback function address
 	
 	bl startTimer
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_TITLESCREEN
+	str r1, [r0]
+	
+	bl fxFadeBlackIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

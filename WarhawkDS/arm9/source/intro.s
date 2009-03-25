@@ -28,98 +28,122 @@
 #include "sprite.h"
 #include "ipc.h"
 
+	#define FONT_COLOR_OFFSET	11
+
 	.arm
 	.align
 	.text
-	.global initLoadingScreen
-	.global showLoadingScreen
-	.global updateLoadingScreen
+	.global showIntro1
+	.global showIntro2
 
-initLoadingScreen:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	@ Write the palette
-
-	ldr r0, =TitleTopPal
-	ldr r1, =BG_PALETTE
-	ldr r2, =TitleTopPalLen
-	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
-
-	@ Write the tile data
-	
-	ldr r0 ,=LoadingTiles
-	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
-	ldr r2, =LoadingTilesLen
-	bl dmaCopy
-
-	ldr r0, =LoadingTiles
-	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =LoadingTilesLen
-	bl dmaCopy
-	
-	@ Write map
-	
-	ldr r0, =LoadingMap
-	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
-	ldr r2, =LoadingMapLen
-	bl dmaCopy
-
-	ldr r0, =LoadingMap
-	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =LoadingMapLen
-	bl dmaCopy
-	
-	bl showLoadingScreen
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-showLoadingScreen:
+showIntro1:
 
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_LOADING
+	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
+	
+	@ Write the palette
 
-	ldr r0, =1									@ 1 second
-	ldr r1, =timerDoneLoading					@ Callback function address
+	ldr r0, =ProteusPal
+	ldr r1, =BG_PALETTE
+	ldr r2, =ProteusPalLen
+	bl dmaCopy
+	ldr r1, =BG_PALETTE_SUB
+	bl dmaCopy
+
+	@ Write the tile data
+	
+	ldr r0 ,=ProteusTiles
+	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+	ldr r2, =ProteusTilesLen
+	bl dmaCopy
+
+	ldr r0, =HeadsoftTiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =HeadsoftTilesLen
+	bl dmaCopy
+	
+	@ Write map
+	
+	ldr r0, =ProteusMap
+	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
+	ldr r2, =ProteusMapLen
+	bl dmaCopy
+
+	ldr r0, =HeadsoftMap
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =HeadsoftMapLen
+	bl dmaCopy
+	
+	@ Sprites
+	
+	bl fxFadeWhiteIn
+	
+	ldr r0, =2									@ 2 seconds
+	ldr r1, =showIntro2							@ Callback function address
 	
 	bl startTimer
 	
-	bl fxColorCycleTextOn
-	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-updateLoadingScreen:
+showIntro2:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_INTRO
+	str r1, [r0]
+	
+	@ Write the palette
+
+	ldr r0, =ProteusPal
+	ldr r1, =BG_PALETTE
+	ldr r2, =ProteusPalLen
+	bl dmaCopy
+	ldr r1, =BG_PALETTE_SUB
+	bl dmaCopy
+
+	@ Write the tile data
+	
+	ldr r0 ,=RetrobytesTiles
+	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+	ldr r2, =RetrobytesTilesLen
+	bl dmaCopy
+
+	ldr r0, =WebTiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =WebTilesLen
+	bl dmaCopy
+	
+	@ Write map
+	
+	ldr r0, =RetrobytesMap
+	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
+	ldr r2, =RetrobytesMapLen
+	bl dmaCopy
+
+	ldr r0, =WebMap
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =WebMapLen
+	bl dmaCopy
+	
+	@ Sprites
+	
+	bl fxFadeWhiteIn
+	
+	ldr r0, =2									@ 2 seconds
+	ldr r1, =initTitleScreen					@ Callback function address
+	
+	bl startTimer
+	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-timerDoneLoading:
-
-	stmfd sp!, {r0-r1, lr}
-	
-	bl fxColorCycleTextOff
-	bl showIntro1
-	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
-	
-	@---------------------------------
-
 	.data
 	.align
 	

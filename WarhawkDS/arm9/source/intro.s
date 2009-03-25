@@ -81,7 +81,7 @@ showIntro1:
 	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =2									@ 2 seconds
+	ldr r0, =3									@ 2 seconds
 	ldr r1, =showIntro2							@ Callback function address
 	
 	bl startTimer
@@ -135,8 +135,8 @@ showIntro2:
 	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =2									@ 2 seconds
-	ldr r1, =initTitleScreen					@ Callback function address
+	ldr r0, =3									@ 2 seconds
+	ldr r1, =initLoadingScreen					@ Callback function address
 	
 	bl startTimer
 	

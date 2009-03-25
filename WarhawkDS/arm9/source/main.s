@@ -80,7 +80,7 @@ main:
 	mov r1, #0
 	bl EFS_Init
 	
-	bl initLoadingScreen
+	bl showIntro1
 
 	@ ------------------------------------
 	

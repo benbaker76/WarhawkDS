@@ -54,26 +54,26 @@ initLoadingScreen:
 
 	@ Write the tile data
 	
-	ldr r0 ,=LoadingTiles
+	ldr r0 ,=LoadingTopTiles
 	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
-	ldr r2, =LoadingTilesLen
+	ldr r2, =LoadingTopTilesLen
 	bl dmaCopy
 
-	ldr r0, =LoadingTiles
+	ldr r0, =LoadingBottomTiles
 	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =LoadingTilesLen
+	ldr r2, =LoadingBottomTilesLen
 	bl dmaCopy
 	
 	@ Write map
 	
-	ldr r0, =LoadingMap
+	ldr r0, =LoadingTopMap
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
-	ldr r2, =LoadingMapLen
+	ldr r2, =LoadingTopMapLen
 	bl dmaCopy
 
-	ldr r0, =LoadingMap
+	ldr r0, =LoadingBottomMap
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =LoadingMapLen
+	ldr r2, =LoadingBottomMapLen
 	bl dmaCopy
 	
 	bl showLoadingScreen
@@ -90,7 +90,7 @@ showLoadingScreen:
 	ldr r1, =GAMEMODE_LOADING
 	str r1, [r0]
 
-	ldr r0, =1									@ 1 second
+	ldr r0, =3									@ 1 second
 	ldr r1, =timerDoneLoading					@ Callback function address
 	
 	bl startTimer
@@ -114,7 +114,7 @@ timerDoneLoading:
 	stmfd sp!, {r0-r1, lr}
 	
 	bl fxColorCycleTextOff
-	bl showIntro1
+	bl initTitleScreen
 	
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	

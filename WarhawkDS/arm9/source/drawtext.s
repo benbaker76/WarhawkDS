@@ -139,7 +139,7 @@ drawText:
 	@ r2 = y pos
 	@ r3 = 0 = Main, 1 = Sub
 
-	stmfd sp!, {r4-r6, lr} 
+	stmfd sp!, {r0-r6, lr} 
 	
 	ldr r4, =BG_MAP_RAM(BG0_MAP_BASE)	@ Pointer to main
 	ldr r5, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB) @ Pointer to sub
@@ -160,7 +160,7 @@ drawTextLoop:
 
 drawTextDone:
 	
-	ldmfd sp!, {r4-r6, pc}
+	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------------
 	
@@ -172,7 +172,7 @@ drawTextCount:
 	@ r3 = 0 = Main, 1 = Sub
 	@ r4 = max number of characters
 
-	stmfd sp!, {r4-r6, lr} 
+	stmfd sp!, {r0-r6, lr} 
 	
 	ldr r5, =BG_MAP_RAM(BG0_MAP_BASE)	@ Pointer to main
 	ldr r6, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB) @ Pointer to sub
@@ -195,7 +195,7 @@ drawTextCountLoop:
 
 drawTextCountDone:
 	
-	ldmfd sp!, {r4-r6, pc}
+	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------------
 

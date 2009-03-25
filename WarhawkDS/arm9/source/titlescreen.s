@@ -114,6 +114,7 @@ initTitleScreen:
 	bl drawSBMapScreenSub
 	
 	bl showCredits
+	@bl showHiScore
 	
 	bl fxCopperTextOn
 	@bl fxStarfieldOn

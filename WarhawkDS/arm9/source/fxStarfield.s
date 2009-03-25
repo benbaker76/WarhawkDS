@@ -57,12 +57,7 @@ fxStarfieldOn:
 	
 	@ Clear the tile data
 	
-	mov r0, #0
-	ldr r1, =BG_TILE_RAM_SUB(STAR_TILE_BASE_SUB)
-	ldr r2, =(32 * 24 * 32)
-	bl dmaFillWords
-	ldr r1, =BG_TILE_RAM(STAR_TILE_BASE)
-	bl dmaFillWords
+	bl clearStars
 	
 	@ set the screen up to use numbered tiles from 0-767, a hybrid bitmap!	
 	
@@ -306,25 +301,12 @@ clearStars:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r2, #STAR_COUNT								@ Set numstars-1
-	sub r3, #1
-	mov r5, #STAR_COLOR_OFFSET						@ set palette number to use
-	ldr r3, =starXCoord								@ r4=3= coords of X
-	ldr r4, =starYCoord								@ r4= coords of Y
-
-clearStarsLoop:
-
-	ldrb r0, [r3, r2]								@ make r0 = x coord
-	ldrb r1, [r4, r2]								@ make r1 = y corrd
-	
-	ldr r6, =BG_TILE_RAM_SUB(STAR_TILE_BASE_SUB)	@ set where we are drawing them
-	bl unplotStar
-	ldr r6, =BG_TILE_RAM(STAR_TILE_BASE)			@ set where we are drawing them
-	bl unplotStar
-	
-	subs r2, #1										@ go to next star (in reverse)
-	
-	bpl clearStarsLoop								@ have we done star 0 yet? if not go back to loop1
+	mov r0, #0
+	ldr r1, =BG_TILE_RAM_SUB(STAR_TILE_BASE_SUB)
+	ldr r2, =(32 * 24 * 32)
+	bl dmaFillWords
+	ldr r1, =BG_TILE_RAM(STAR_TILE_BASE)
+	bl dmaFillWords
 	
 	ldmfd sp!, {r0-r6, pc}
 	

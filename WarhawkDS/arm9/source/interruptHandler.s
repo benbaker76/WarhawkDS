@@ -105,6 +105,8 @@ interruptHandlerVBlank:
 	blne fxCopperTextVBlank
 	tst r0, #FX_TEXT_SCROLLER
 	blne fxTextScrollerVBlank
+	tst r0, #FX_STARFIELD
+	blne fxStarfieldVBlank
 
 interruptHandlerVBlankDone:
 	

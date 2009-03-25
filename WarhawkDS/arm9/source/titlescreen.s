@@ -116,6 +116,7 @@ initTitleScreen:
 	bl showCredits
 	
 	bl fxCopperTextOn
+	@bl fxStarfieldOn
 	
 	bl drawStartSprites
 	
@@ -389,6 +390,7 @@ updateTitleScreen:
 	ldr r4, =GAMEMODE_RUNNING
 	tst r2, #BUTTON_START
 	streq r4, [r3]
+	@bleq fxStarfieldOff
 	bleq fxSpotlightOff
 	bleq fxTextScrollerOff
 	bleq fxCopperTextOff

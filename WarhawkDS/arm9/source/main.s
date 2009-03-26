@@ -106,6 +106,24 @@ mainLoop:
 
 	b mainLoop
 
+
+	ldr r0, =REG_BG2PA_SUB			@ these are rotation backgrounds so you must set the rotation attributes: 
+	ldr r1, =2048				@ these are fixed point numbers with the low 8 bits the fractional part
+	strh r1, [r0]					@ this basicaly gives it a 1:1 translation in x and y so you get a nice flat bitmap
+	
+	ldr r0, =REG_BG2PB_SUB
+	ldr r1, =2048
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG2PC_SUB
+	ldr r1, =2048
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG2PD_SUB
+	ldr r1, =2048
+	strh r1, [r0]
+
+
 gameLoop:
 
 	bl moveShip									@ check and move your ship

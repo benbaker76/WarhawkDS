@@ -77,11 +77,9 @@ showIntro1:
 	ldr r2, =HeadsoftMapLen
 	bl dmaCopy
 	
-	@ Sprites
-	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =3									@ 2 seconds
+	ldr r0, =2									@ 2 seconds
 	ldr r1, =showIntro2							@ Callback function address
 	
 	bl startTimer
@@ -131,12 +129,10 @@ showIntro2:
 	ldr r2, =WebMapLen
 	bl dmaCopy
 	
-	@ Sprites
-	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =3									@ 2 seconds
-	ldr r1, =initLoadingScreen					@ Callback function address
+	ldr r0, =2									@ 2 seconds
+	ldr r1, =showLoadingScreen					@ Callback function address
 	
 	bl startTimer
 	

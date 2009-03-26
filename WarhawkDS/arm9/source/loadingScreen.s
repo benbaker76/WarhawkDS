@@ -31,13 +31,16 @@
 	.arm
 	.align
 	.text
-	.global initLoadingScreen
 	.global showLoadingScreen
 	.global updateLoadingScreen
 
-initLoadingScreen:
+showLoadingScreen:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_LOADING
+	str r1, [r0]
 	
 	@ Write the palette
 
@@ -76,34 +79,12 @@ initLoadingScreen:
 	ldr r2, =LoadingBottomMapLen
 	bl dmaCopy
 	
-	bl showLoadingScreen
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-showLoadingScreen:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_LOADING
-	str r1, [r0]
-
 	ldr r0, =3									@ 1 second
 	ldr r1, =timerDoneLoading					@ Callback function address
 	
 	bl startTimer
 	
 	bl fxColorCycleTextOn
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-updateLoadingScreen:
-
-	stmfd sp!, {r0-r6, lr}
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

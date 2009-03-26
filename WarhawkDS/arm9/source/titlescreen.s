@@ -43,6 +43,12 @@ initTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl stopTimer
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_TITLESCREEN
+	str r1, [r0]
+	
 	@ Write the palette
 
 	ldr r0, =TitleTopPal
@@ -122,14 +128,10 @@ initTitleScreen:
 	ldr r0, =titleRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 	
-	ldr r0, =2									@ 15 seconds
+	ldr r0, =2									@ 2 seconds
 	ldr r1, =showTextScroller					@ Callback function address
 	
 	bl startTimer
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_TITLESCREEN
-	str r1, [r0]
 	
 	bl fxFadeBlackIn
 	

@@ -47,6 +47,11 @@ initSystem:
 	ldr r1, =0x04001008
 	bl dmaFillWords
 	
+	mov r0, #0						@ Clear IPC
+	ldr r1, =IPC
+	mov r2, #256
+	bl dmaFillWords
+	
 	ldr r0, =VRAM_CR
 	mov r1, #0
 	strb r1, [r0]
@@ -96,8 +101,6 @@ mainLoop:
 	beq mainLoopDone
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
-	cmp r1, #GAMEMODE_LOADING
-	bleq updateLoadingScreen
 	cmp r1, #GAMEMODE_TITLESCREEN
 	bleq updateTitleScreen
 

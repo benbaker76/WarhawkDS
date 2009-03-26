@@ -70,7 +70,7 @@ interruptHandlerVBlank:
 	ldr r0, [r0]
 	
 	cmp r0, #0
-	bleq interruptHandlerHBlank
+	beq interruptHandlerVBlankDone
 	tst r0, #FX_FADE_BLACK_IN
 	blne fxFadeBlackInVBlank
 	tst r0, #FX_FADE_BLACK_OUT
@@ -122,7 +122,7 @@ interruptHandlerHBlank:
 	ldr r0, [r0]
 	
 	cmp r0, #0
-	bleq interruptHandlerHBlankDone
+	beq interruptHandlerHBlankDone
 	tst r0, #FX_SINE_WOBBLE
 	blne fxSineWobbleHBlank
 	tst r0, #FX_SCANLINE
@@ -144,21 +144,21 @@ interruptHandlerHBlankDone:
 	
 interruptHandlerTimer1:
 
-	stmfd sp!, {r0-r6, lr}
+	push { lr }
 	
 	bl audioStreamTimer1
 	
-	ldmfd sp!, {r0-r6, pc}
+	pop { pc }
 	
 	@ ------------------------------------
 	
 interruptHandlerTimer3:
 
-	stmfd sp!, {r0-r6, lr}
+	push { lr }
 	
 	bl timerTimer3
 	
-	ldmfd sp!, {r0-r6, pc}
+	pop { pc }
 	
 	@ ------------------------------------
 	

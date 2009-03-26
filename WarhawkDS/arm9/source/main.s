@@ -99,13 +99,15 @@ mainLoop:
 	beq gameLoop
 	cmp r1, #GAMEMODE_STOPPED
 	beq mainLoopDone
-	cmp r1, #GAMEMODE_GETREADY
-	bleq updateGetReady
+	cmp r1, #GAMEMODE_INTRO
+	bleq updateIntro
+	cmp r1, #GAMEMODE_LOADING
+	bleq updateLoading
 	cmp r1, #GAMEMODE_TITLESCREEN
 	bleq updateTitleScreen
-
+	cmp r1, #GAMEMODE_GETREADY
+	bleq updateGetReady
 	b mainLoop
-
 
 	ldr r0, =REG_BG2PA_SUB			@ these are rotation backgrounds so you must set the rotation attributes: 
 	ldr r1, =2048				@ these are fixed point numbers with the low 8 bits the fractional part

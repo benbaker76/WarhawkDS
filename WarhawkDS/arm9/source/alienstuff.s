@@ -48,8 +48,8 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	sub r4,#1
 	add r2,r4, lsl #9				@ add to alienLevel, LEVEL*512 (128 words)
 	
-	ldr r5,[r2, r3, lsl #3]			@ r5=current alien level scroll used to generate
-	cmp r5,#0						@ if the wave is 0, then All done!
+	ldr r5,[r2, r3, lsl #3]		@ r5=current alien level scroll used to generate
+	cmp r5,#0						@ if the scroll is 0, then All done!
 	beq initWaveAliensDone
 	ldr r4,=yposSub				
 	ldr r4,[r4]						@ r4= our scroll position
@@ -110,6 +110,11 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	stmfd sp!, {r0-r10, lr}
 
 								@ set r1 to the alien movement number you wish to activate
+	@ the high 16 of r1 is used as an X offset.... so, we need to strip it...
+	mov r9,r1, lsr #16			@ r9 is now an offset for the x plane....
+	ldr r8,=0xFFFF
+	and r1,r8
+	
 	ldr r4,=alienDescript		@ r4=LOCATION OF ALIEN DESCRIPTION
 	add r4,r1, lsl #7			@ add it to aliendescrip so we know where to grab from
 								@ now er need to find a blank alien
@@ -160,6 +165,7 @@ initReversed:
 	ldr r0,=SPRITE_X_OFFS
 	ldr r2,[r4,r1]
 	and r2,r6
+	add r2,r9					@ add the wave X offset
 	str r2,[r3,r0]				@ store X coord
 	ldr r2,[r4,r1]
 	lsr r2,#16
@@ -203,9 +209,9 @@ initReversed:
 	and r2,r6
 	str r2,[r3,r0]				@ store sprites maximum speed (low 16)
 	ldr r2,[r4,r1]
-	lsr r2,#12
+	lsr r2,#16
 	cmp r2,#0
-	mov r2,#5
+	moveq r2,#5
 	ldr r0,=SPRITE_SPEED_DELAY_OFFS
 	str r2,[r3,r0]
 
@@ -216,27 +222,27 @@ initReversed:
 	
 	add r1,#4
 	ldr r2,[r4,r1]				@ this value if split as 2 16bit words
-	and r7,r2,r6
+	and r2,r6
 	mov r0,#SPRITE_HIT_OFFS
-	str r7,[r3,r0]				@ store sprites hits to kill (lower 16)
-	sub r2,r7
+	str r2,[r3,r0]				@ store sprites hits to kill (lower 16)
+	ldr r2,[r4,r1]
 	lsr r2,#16
 	mov r0,#SPRITE_FIRE_SPEED_OFFS
 	str r2,[r3,r0]				@ store sprites shot speed (upper 16)
 
 	add r1,#4					@ Move our pointer to the shot setting
 	ldr r2,[r4,r1]
-	and r7,r6					@ r7= shot type (lower 16)
+	and r2,r6					@ r7= shot type (lower 16)
 	mov r0,#SPRITE_FIRE_TYPE_OFFS
-	str r7,[r3,r0]				@ store the byte value of the Fire Type
+	str r2,[r3,r0]				@ store the byte value of the Fire Type
 	ldr r2,[r4,r1]
 	lsr r2,#16					@ r2= shot delay (upper 16)
 	mov r0,#SPRITE_FIRE_MAX_OFFS
 	str r2,[r3,r0]				@ store the fire delay maximum value for use later
-	mov r2,#0
 	mov r0,#SPRITE_FIRE_DELAY_OFFS
 	str r2,[r3,r0]				@ set our counter to 0, this is our countdown
 	
+	mov r2,#0
 	mov r0,#SPRITE_ANGLE_OFFS
 	str r2,[r3,r0]				@ store sprite angle (0 init) (WILL WE USE THIS?)
 	mov r0,#SPRITE_BLOOM_OFFS
@@ -370,8 +376,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 					mov r0,#SPRITE_BURST_DELAY_COUNT_OFFS
 					ldr r9,[r1,r0]
 					bl getRandom
-					ldr r0,=0x1FFF
-					and r8,r0
+					lsr r8,#16			@ r8 = halfword
 					cmp r8,r9			@ if the random number is > than your number = FIRE
 					blt doDetect
 					b fireAsNormal
@@ -556,13 +561,21 @@ aliensLinear:
 		moveq r3,#0			@ if direction if 0 = loop pattern
 		beq linInstruct
 		cmp r4,#2048
-		bne linNoKill
-			mov r4,#0
-			str r4,[r1]
-			b noMatchLin
-		linNoKill:
+		beq killTracker
+		
+	@ code for speed change??? (ulp!)
+	ldr r0,=0xFFFF
+	and r4,r0				@ trackX is lower 16 bits	
 	mov r0,#SPRITE_TRACK_X_OFFS
 	str r4,[r1,r0]			@ store (r4) the new trackX
+	ldr r4,[r2,r3]
+	lsr r4,#16
+	cmp r4,#0
+	beq noLinearSpeedChange
+		sub r4,#1						@ get new speed
+		mov r0,#SPRITE_SPEED_X_OFFS		
+		str r4,[r1,r0]					@ write new speed
+	noLinearSpeedChange:
 	add r3,#4				@ add 4 to the spriteInstruct position
 	ldr r4,[r2,r3]			@ r4=next piece of tracking data (distance)
 	mov r0,#SPRITE_TRACK_Y_OFFS
@@ -579,8 +592,10 @@ aliensTracker:
 	mov r0,#SPRITE_TRACK_X_OFFS
 	ldr r8,[r1,r0]				 	@ track x coord
 		cmp r8,#1024				@ if the track is a simple 1024, then track player
-		moveq r11,#9				@ if tracking player, increase turning curve
-		movne r11,r9				@ else, leave as standard
+	@	moveq r11,#9				@ if tracking player, increase turning curve
+	@	movne r11,r9				@ else, leave as standard
+	@
+
 		bne notYouX
 			ldr r0,=spriteX			@ load your X
 			ldr r8,[r0]				@ r8= your X
@@ -597,7 +612,7 @@ aliensTracker:
 	str r6,[r1,r0]					@ put it back
 	cmp r6,#0						@ if <> 0
 	bne xDone						@ carry on
-	mov r6,r11						@ else reset counter
+	mov r6,r9						@ else reset counter
 	str r6,[r1,r0]					@ store it and allow update of speed
 
 	cmp r10,r8						@ is sprite l/r of track x?
@@ -650,8 +665,8 @@ aliensTracker:
 	mov r0,#SPRITE_TRACK_Y_OFFS
 	ldr r8,[r1,r0] 			@ track y
 		cmp r8,#1024			@ if 1024, track your ship
-		moveq r11,#9			@ if 1024, wider turn curve
-		movne r11,r9			@ else, normal
+	@	moveq r11,#9			@ if 1024, wider turn curve
+	@	movne r11,r9			@ else, normal
 		bne notYouY
 			ldr r0,=spriteY
 			ldr r8,[r0]			@ make tracking point your Y coord
@@ -665,7 +680,7 @@ aliensTracker:
 	str r6,[r1,r0]				@ put it back
 	cmp r6,#0					@ if <>0
 	bne yDone					@ carry on
-	mov r6,r11					@ else reset counter
+	mov r6,r9					@ else reset counter
 	str r6,[r1,r0]				@ store it and allow update of speed
 
 	cmp r10,r8					@ is sprite below track y?
@@ -769,13 +784,23 @@ aliensTracker:
 		moveq r3,#0			@ if track x if 0 = loop pattern
 		beq loopInstruct
 	cmp r4,#2048
-		bne trackNoKill
-			mov r4,#0
-			str r4,[r0]
-			b noMatch
-		trackNoKill:
+		beq killTracker
+		
+		
+	@ code for speed change??? (ulp!)
+	ldr r0,=0xFFFF
+	and r4,r0				@ trackX is lower 16 bits	
 	mov r0,#SPRITE_TRACK_X_OFFS
 	str r4,[r1,r0]			@ store (r4) the new trackX
+	ldr r4,[r2,r3]
+	lsr r4,#16
+	cmp r4,#0
+	beq noTrackerSpeedChange
+		sub r4,#1						@ get new speed
+		mov r0,#SPRITE_SPEED_MAX_OFFS		
+		str r4,[r1,r0]					@ write new speed
+	noTrackerSpeedChange:				
+
 	add r3,#4				@ add 4 to the spriteInstruct position
 	ldr r4,[r2,r3]			@ r4=next piece of tracking data (the trackY)
 	mov r0,#SPRITE_TRACK_Y_OFFS
@@ -784,6 +809,13 @@ aliensTracker:
 	noMatch:
 	mov r15,r14
 	
+	killTracker:
+	
+		mov r0,#SPRITE_Y_OFFS
+		mov r10,#SPRITE_KILL
+		str r10,[r1,r0]
+
+	mov r15,r14
 	
 initHunterMine:
 @-------------- THIS CODE IS ONLY FOR INITIALISING HUNTERS AND MINES

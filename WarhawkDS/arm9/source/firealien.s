@@ -35,13 +35,6 @@
 	.global alienFireMove
 	.global findAlienFire
 	
-	@ Fire types
-	@ 1-4	=	Directional 1=up, 2=right, 3=down, 4=left (speed 2)
-	@ 5-6	=	Directional with Vertical move 5=right, 6=left (move down with scroller) (Speed 2)
-	@ 7-10	=	Directional 7=up, 8=right, 9=down, 10=left (speed 4)
-	@ 11-12	=	Directional with Vertical move 5=right, 6=left (move down with scroller) (Speed 4)
-	@ 13	=	Standard "Warhawk" tracker shot
-
 @
 @----------------- INITIALISE A SHOT 
 @

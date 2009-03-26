@@ -226,11 +226,11 @@ initReversed:
 
 	add r1,#4					@ Move our pointer to the shot setting
 	ldr r2,[r4,r1]
-	and r7,r2,#0xFF				@ r7= shot type (lower 8 bits)
+	and r7,r6					@ r7= shot type (lower 16)
 	mov r0,#SPRITE_FIRE_TYPE_OFFS
 	str r7,[r3,r0]				@ store the byte value of the Fire Type
-	sub r2,r7
-	lsr r2,#8					@ r2= shot delay
+	ldr r2,[r4,r1]
+	lsr r2,#16					@ r2= shot delay (upper 16)
 	mov r0,#SPRITE_FIRE_MAX_OFFS
 	str r2,[r3,r0]				@ store the fire delay maximum value for use later
 	mov r2,#0

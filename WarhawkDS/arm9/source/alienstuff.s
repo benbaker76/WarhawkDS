@@ -999,7 +999,6 @@ moveMine:
 	ldr r5,[r1,r2]							@ r5 = the mines speed
 	mov r2,#SPRITE_Y_OFFS
 	ldr r6,[r1,r2]							@ r6 = the mines Y coord
-	
 	add r6,r5
 	str r6,[r1,r2]	
 	mov r15,r14

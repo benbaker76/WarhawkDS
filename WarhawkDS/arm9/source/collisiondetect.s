@@ -558,9 +558,16 @@ meteorShot:
 	beq alienHitDeduct
 	
 	@ so, on a standard shot, we need to move the mine back a bit
+	@ so, we need to grab the speed and use that..
+	
+	mov r5,#SPRITE_SPEED_Y_OFFS
+	ldr r5,[r4,r5]
+	lsl r5,#1
+	add r5,#4
+
 	mov r8,#SPRITE_Y_OFFS
 	ldr r7,[r4,r8]
-	subs r7,#8
+	subs r7,r5
 	str r7,[r4,r8]
 	b multishotBloom
 	

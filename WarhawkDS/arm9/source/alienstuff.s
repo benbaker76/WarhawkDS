@@ -899,7 +899,7 @@ initHunterMine:
 					mov r1,#36
 					str r1,[r3,r0]			@ set sprite to display
 					mov r0,#SPRITE_HIT_OFFS
-					mov r1,#4				@ set number of hits (shooting does nothing with a meteor)
+					mov r1,#19				@ set number of hits (shooting does nothing with a meteor)
 					str r1,[r3,r0]
 					mov r0,#SPRITE_FIRE_TYPE_OFFS
 					mov r1,#0				@ set it to never fire

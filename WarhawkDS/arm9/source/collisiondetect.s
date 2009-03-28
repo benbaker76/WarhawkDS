@@ -21,11 +21,6 @@
 
 #include "warhawk.h"
 
-@
-@ This should really just be for detection code!!! (RENAMED)
-@
-
-
 	.arm
 	.align
 	.text
@@ -413,7 +408,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	ldr r7, [r7,r0, lsl #2]	@ r7 = 3 normal shot / 4 Power shot!
 								@ use this is a match is found!
 	cmp r7,#4					@ If powershot,
-	moveq r7,#12				@ power is UPPED
+	moveq r7,#10				@ power is UPPED
 	movne r7,#1					@ else, just the normal 1	
 	
 	mov r3,#111					@ Alien index (sprites 17 - 80 = 64)
@@ -469,9 +464,10 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				standardAlienHit:
 				
 				@ ok, now we need to see how many hits to kill
-				cmp r5,#2					@ this is a mine!
-				beq multishotBloom
-				
+				cmp r5,#2					@ this is a meteor!
+				beq meteorShot
+
+				alienHitDeduct:
 				mov r8,#SPRITE_HIT_OFFS
 				ldr r6,[r4,r8]
 				subs r6,r7
@@ -536,7 +532,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 
 			mov r8,#SPRITE_IDENT_OFFS
 			ldr r8,[r4,r8]
-			cmp r8,#2
+			cmp r8,#3
 			bmi explodeSNoIdent
 			cmp r8,#4
 			beq explodeSNoIdent
@@ -553,6 +549,20 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		bpl detectAlienLoop
 	
 	ldmfd sp!, {r0-r8, pc}
+
+meteorShot:
+	@ this code alters the way meteors work when shot
+	@ r4=offeset to mine
+	@ if r7=10, this is a powershot
+	cmp r7,#10
+	beq alienHitDeduct
+	
+	@ so, on a standard shot, we need to move the mine back a bit
+	mov r8,#SPRITE_Y_OFFS
+	ldr r7,[r4,r8]
+	subs r7,#8
+	str r7,[r4,r8]
+	b multishotBloom
 	
 explodeSNoIdent:
 	mov r6,#4

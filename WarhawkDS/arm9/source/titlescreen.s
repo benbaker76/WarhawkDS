@@ -125,7 +125,7 @@ initTitleScreen:
 	
 	bl fxSpotlightIn
 	
-	ldr r0, =titleRawText						@ Read the path to the file
+	ldr r0, =ppotRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 	
 	ldr r0, =2									@ 2 seconds

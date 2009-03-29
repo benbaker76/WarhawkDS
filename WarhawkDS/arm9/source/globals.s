@@ -121,6 +121,7 @@
 	.global gameOverText
 	.global inGameRawText
 	.global titleRawText
+	.global ppotRawText
 	.global gameOverRawText
 	.global mineDelay
 	.global hunterDelay
@@ -362,7 +363,9 @@ inGameRawText:
 titleRawText:
 	.asciz "/Title.raw"
 gameOverRawText:
-	.asciz "/Title.raw"
+	.asciz "/GameOver.raw"
+ppotRawText:
+	.asciz "/PPOT.raw"
 
 	.section .bss
 

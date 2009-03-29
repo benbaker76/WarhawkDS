@@ -60,6 +60,8 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	initWave:
 		add r2,#4					@ ok, add 4 (1 word) to r2
 		ldr r4,[r2, r3, lsl #3] 	@ r4 is now the attack wave number to init	
+		cmp r4,#0					@ if the wave is 0, then there is no need to init one!
+		beq initWaveAliensDone
 		add r3,#1					@ add 1 to wave number
 		str r3,[r1]					@ and store it back
 		@ we need to strip the ident from r4

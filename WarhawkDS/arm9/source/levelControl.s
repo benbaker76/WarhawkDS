@@ -270,6 +270,7 @@ levelComplete:
 	@str r1,[r0]
 
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
+	bl playBossExplodeSound
 
 bossDeathLoop:
 

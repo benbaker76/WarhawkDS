@@ -149,7 +149,7 @@ gameLoop:
 	bl checkGameOver							@ check if the game is over
 	bl checkLevelControl						@ check to see if we want to change level
 	
-	@bl drawDebugText							@ draw some numbers :)
+	bl drawDebugText							@ draw some numbers :)
 
 	ldr r0,=levelEnd
 	ldr r0,[r0]

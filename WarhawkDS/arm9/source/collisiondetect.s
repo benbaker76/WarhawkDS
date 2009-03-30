@@ -63,6 +63,11 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	detectBGL2:
 	bl playExplosionSound
 
+	ldr r9,=basesLeft
+	ldr r8,[r9]
+	sub r8,#1					@ deduct one from the base count
+	str r8,[r9]
+
 	lsl r6,#2 					@ times by 4
 	ldr r9,=craterFrame			@ get our frame for use as a crater
 	ldr r8,[r9]
@@ -220,6 +225,11 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	mov r11,#0
 	detectBGR2:
 	bl playExplosionSound
+
+	ldr r9,=basesLeft
+	ldr r8,[r9]
+	sub r8,#1					@ deduct one from the base count
+	str r8,[r9]
 
 	lsl r6,#2 					@ times by 4
 	ldr r9,=craterFrame			@ get our frame for use as a crater

@@ -41,10 +41,6 @@ initLevel:
 	mov r1,#0
 	ldr r0,=levelEnd
 	str r1,[r0]				@ Flag is SET for end of level	
-@	ldr r0,=powerUp
-@	str r1,[r0]				@ set to one for autofire (on the original this carries on)
-@	ldr r0,=powerUpDelay
-@	str r1,[r0]				@ clear the fire delay
 	ldr r0,=waveNumber
 	str r1,[r0]				@ make sure we always start at wave 0
 	ldr r0,=bossMan
@@ -53,6 +49,8 @@ initLevel:
 	str r1,[r0]				@ reset anim frames
 	ldr r0,=firePress
 	str r1,[r0]
+	ldr r0,=basesLeft
+	str r1,[r0]				@ reset the base counter (count later)
 	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub
@@ -79,11 +77,6 @@ initLevel:
 	str r0,[r1]
 	ldr r1,=pixelOffsetSBMain
 	str r0,[r1]
-	
-	
-	
-	
-	
 
 	mov r0,#256
 	ldr r1,=vofsSFMain
@@ -572,11 +565,22 @@ initLevel:
 	levelDone:
 	
 	@ ok, using r9 as source, copy data to colMapStore
+	@ and if we find a non-zero value, add to basesLeft
+
+	mov r3,#0					@ base count
+	ldr r1,=colMapStore			@ location for data
+	ldr r0,=1984				@ out counter (size of colmap in bytes)
+		colMapFill:
+		ldrb r2,[r9,r0]
+		cmp r2,#0				@ is it non-zero
+		addne r3,#1				@ if so, add to base count
+		strb r2,[r1,r0]
+
+	subs r0,#1
+	bpl colMapFill
 	
-		mov r0,r9
-		ldr r1,=colMapStore
-		ldr r2,=1984*4
-		bl dmaCopy
+	ldr r1,=basesLeft
+	str r3,[r1]					@ store the numbers of bases on the level
 	
 	@ Load the palette into the palette subscreen area and main
 

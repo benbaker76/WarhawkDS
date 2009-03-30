@@ -34,6 +34,7 @@
 
 	.global gameMode
 	.global fxMode
+	.global basesLeft
 	.global bossMan
 	.global bossX
 	.global bossY
@@ -167,7 +168,8 @@ powerupLives:
 	.word 0
 delayPowerUp:
 	.word 0
-
+basesLeft:
+	.word 0
 gameMode:
 	.word 0
 fxMode:

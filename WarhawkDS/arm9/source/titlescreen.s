@@ -280,6 +280,8 @@ updateStartSprites:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl updateStartSpritesDone
+	
 	ldr r0, =SPRITE_PALETTE
 	ldr r1, =FONT_COLOR_OFFSET
 	add r0, r1, lsl #1

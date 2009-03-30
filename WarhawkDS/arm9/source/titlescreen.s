@@ -280,10 +280,8 @@ updateStartSprites:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl updateStartSpritesDone
-	
 	ldr r0, =SPRITE_PALETTE
-	ldr r1, =FONT_COLOR_OFFSET
+	ldr r1, =10
 	add r0, r1, lsl #1
 	ldr r2, =pulseValue
 	ldr r3, [r2]

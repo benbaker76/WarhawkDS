@@ -30,13 +30,36 @@
 	.align
 	.text
 	
-	.global paletteGrey
+	.global paletteRed
+	.global paletteBleach
+	.global paletteRestore
 	
 	
-	@ was gonna add a function to take all 3 RGB values and find the average and store that in each
+	@ was gonna add a function to take all 3 RGB values and find the average and store that in each to make it grey
 	@ but i think this looked great anyway?
 	
-paletteGrey:
+paletteRed:
+	stmfd sp!, {r0-r6, lr}
+
+		ldr r1, =BG_PALETTE
+		ldr r2, =BG_PALETTE_SUB
+		
+	mov r0,#255
+	add r0,#256
+	
+	redLoop:
+		ldrh r3,[r1,r0]
+		
+		and r3,#0xf
+		strh r3,[r1,r0]
+		strh r3,[r2,r0]
+		
+		subs r0,#1
+		cmp r0,#1
+	bpl redLoop
+	ldmfd sp!, {r0-r6, pc}
+	
+paletteBleach:
 	stmfd sp!, {r0-r6, lr}
 	
 		@ well, it isnt, but i like the look???
@@ -48,14 +71,44 @@ paletteGrey:
 	mov r0,#255
 	add r0,#256
 	
-	greyLoop:
+	bleachLoop:
 		ldrh r3,[r1,r0]
+
+		add r3,#128
 		
-		and r3,#0xf
 		strh r3,[r1,r0]
 		strh r3,[r2,r0]
 		
 		subs r0,#1
-	bpl greyLoop
+	bpl bleachLoop
 	ldmfd sp!, {r0-r6, pc}
+
+paletteRestore:
+	stmfd sp!, {r0-r6, lr}
+
+		ldr r0, =levelPal
+		ldr r0,[r0]
+		ldr r1, =BG_PALETTE
+		ldr r2, =512
+		bl dmaCopy
+		mov r3, #0
+		strh r3, [r1]
+		ldr r1, =BG_PALETTE_SUB
+		bl dmaCopy
+		strh r3, [r1]
+		
+		@ Load the star back palette
+
+		ldr r0, =starBackPal
+		ldr r0,[r0]
+		ldr r1, =BG_PALETTE
+		ldr r2, =32
+		bl dmaCopy
+		mov r3, #0
+		strh r3, [r1]
+		ldr r1, =BG_PALETTE_SUB
+		bl dmaCopy
+		strh r3, [r1]
+	ldmfd sp!, {r0-r6, pc}
+
 

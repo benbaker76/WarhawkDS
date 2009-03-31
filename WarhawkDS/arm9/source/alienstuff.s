@@ -78,7 +78,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	cmp r7,#SPRITE_TYPE_MINE		@ Check for a "MINE FIELD" request
 	bne noMines
 				ldr r4,=mineTimerCounter
-				mov r6,#700									@ set duration of mines to init (Base this on LEVEL)
+				mov r6,#600									@ set duration of mines to init (Base this on LEVEL)
 				str r6,[r4]
 				ldr r4,=mineDelay
 				mov r6,#0
@@ -88,7 +88,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	cmp r7,#SPRITE_TYPE_HUNTER								@ Check for a "HUNTER" request
 	bne noHunter
 				ldr r4,=hunterTimerCounter
-				mov r6,#700									@ set duration of hunters to init (Base this on LEVEL)
+				mov r6,#600									@ set duration of hunters to init (Base this on LEVEL)
 				str r6,[r4]
 				ldr r4,=hunterDelay
 				mov r6,#0

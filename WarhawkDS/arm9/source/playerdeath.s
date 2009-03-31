@@ -66,7 +66,12 @@ playerDeathActive:										@ --- PHASE 1
 	ldr r1,=powerUp
 	mov r0,#1
 	str r0,[r1]
-
+	ldr r1,=spriteBloom
+	mov r0,#0x2f
+	str r0,[r1]				@ make a little "FLASH"
+	bl playAlienExplodeScreamSound
+	@ need a little effect to say - "YOU ARE DYING" IE. FLASH BACKGROUND... hmmm....
+	
 	@ WANTED TO STOP THE MUSIC HERE - CANT!!! :(
 	@bl stopAudioStream
 
@@ -164,10 +169,15 @@ playerDeathMidExplode:									@ --- PHASE 2
 		ldr r1,=spriteActive
 		mov r3,#0
 		str r3,[r1]			@ turn off players ship
-		bl paletteGrey
+		bl paletteRed
 		@---- PLAY BIG PLAYER EXPLODE NOISE HERE
 		bl playBossExplodeSound		@ we will use this for now!!	
+		ldmfd sp!, {r0-r6, pc}	
 	midExplodeCountdownNo:
+	
+	cmp r1,#170
+	blgt paletteBleach			@ do that flash effect
+	bleq paletteRestore			@ put the palette BACK
 	
 	
 	ldmfd sp!, {r0-r6, pc}

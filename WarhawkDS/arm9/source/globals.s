@@ -158,6 +158,9 @@
 	.global spriteBurstDelay
 	.global spriteBurstDelayCount
 	.global spriteSpeedDelay
+	.global playerDeath
+	.global playerDeathDelay
+	.global playerMidDelay
 	
 explodeSpriteBossCount:
 	.word 0
@@ -432,6 +435,12 @@ digits:
 	
 waveNumber:
 	.word 0
-
+playerDeath:
+	.word 0
+playerDeathDelay:
+	.word 0
+playerMidDelay:
+	.word 0
+	
 	.pool
 	.end

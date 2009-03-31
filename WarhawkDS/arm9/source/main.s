@@ -87,6 +87,8 @@ main:
 	
 	bl showIntro1
 
+
+
 	@ ------------------------------------
 	
 mainLoop:
@@ -108,22 +110,6 @@ mainLoop:
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
 	b mainLoop
-
-	ldr r0, =REG_BG2PA_SUB			@ these are rotation backgrounds so you must set the rotation attributes: 
-	ldr r1, =2048				@ these are fixed point numbers with the low 8 bits the fractional part
-	strh r1, [r0]					@ this basicaly gives it a 1:1 translation in x and y so you get a nice flat bitmap
-	
-	ldr r0, =REG_BG2PB_SUB
-	ldr r1, =2048
-	strh r1, [r0]
-	
-	ldr r0, =REG_BG2PC_SUB
-	ldr r1, =2048
-	strh r1, [r0]
-	
-	ldr r0, =REG_BG2PD_SUB
-	ldr r1, =2048
-	strh r1, [r0]
 
 
 gameLoop:
@@ -148,8 +134,9 @@ gameLoop:
 	bl animateAliens							@ animate the alien sprites
 	bl checkGameOver							@ check if the game is over
 	bl checkLevelControl						@ check to see if we want to change level
+	bl playerDeathCheck							@ check and do DEATH stuff
 	
-	bl drawDebugText							@ draw some numbers :)
+@	bl drawDebugText							@ draw some numbers :)
 
 	ldr r0,=levelEnd
 	ldr r0,[r0]

@@ -341,12 +341,6 @@ drawSprite:
 		cmp r1,#4								@ -------------- Alien explosion
 		bne shardAnimates
 			
-			ldr r0,=spriteY						@ Load Y coord
-			ldr r1,[r0,r8,lsl #2]
-			str r1,[r0,r8,lsl #2]
-			cmp r1,#768
-			bpl noMoreAlien
-			
 			ldr r0,=spriteExplodeDelay			@ check our animation delay
 			ldr r1,[r0,r8,lsl #2]
 			subs r1,#1							@ take 1 off the count					
@@ -360,7 +354,6 @@ drawSprite:
 			str r1,[r0,r8,lsl #2]				@ store it back
 			cmp r1,#13							@ are we at the end frame?
 			bne noMoreStuff
-				noMoreAlien:
 				ldr r0,=spriteY
 				mov r1,#SPRITE_KILL
 				str r1,[r0,r8,lsl #2]
@@ -407,8 +400,62 @@ drawSprite:
 			b noMoreStuff
 		movePowerup:
 		cmp r1,#10
-		bne whatNext
+		bne movePlayerExplosion
 			bl movePowerUp
+			b noMoreStuff
+
+		movePlayerExplosion:
+		cmp r1,#11								@ -------------- Player explosion
+		bne slowPlayerExplosion
+			
+			ldr r0,=spriteY						@ Load Y coord
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#1
+			str r1,[r0,r8,lsl #2]
+			cmp r1,#768
+			bpl noMorePexp
+			
+			ldr r0,=spriteExplodeDelay			@ check our animation delay
+			ldr r1,[r0,r8,lsl #2]
+			subs r1,#2							@ take 1 off the count					
+			movmi r1,#4							@ and reset if <0
+			str r1,[r0,r8,lsl #2]
+			bpl noMoreStuff
+			
+			ldr r0,=spriteObj
+			ldr r1,[r0,r8,lsl #2]				@ load anim frame
+			add r1,#1							@ add 1
+			str r1,[r0,r8,lsl #2]				@ store it back
+			cmp r1,#13							@ are we at the end frame?
+			bne noMoreStuff
+				noMorePexp:
+				ldr r0,=spriteY
+				mov r1,#SPRITE_KILL
+				str r1,[r0,r8,lsl #2]
+
+			b noMoreStuff
+
+		slowPlayerExplosion:
+		cmp r1,#12								@ -------------- Player explosion
+		bne whatNext
+
+			ldr r0,=spriteExplodeDelay			@ check our animation delay
+			ldr r1,[r0,r8,lsl #2]
+			subs r1,#1							@ take 1 off the count					
+			movmi r1,#10						@ and reset if <0
+			str r1,[r0,r8,lsl #2]
+			bpl noMoreStuff
+			
+			ldr r0,=spriteObj
+			ldr r1,[r0,r8,lsl #2]				@ load anim frame
+			add r1,#1							@ add 1
+			str r1,[r0,r8,lsl #2]				@ store it back
+			cmp r1,#13							@ are we at the end frame?
+			bne noMoreStuff
+				ldr r0,=spriteY
+				mov r1,#SPRITE_KILL
+				str r1,[r0,r8,lsl #2]
+
 			b noMoreStuff
 
 		whatNext:

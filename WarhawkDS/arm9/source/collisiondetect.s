@@ -29,6 +29,7 @@
 	.global detectALN
 	.global alienCollideCheck
 	.global drawShard
+	.global detectShipAsFire
 	
 @-------------- DETECT Left BULLET
 detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A BASE
@@ -655,8 +656,12 @@ drawShard:
 							@	The detection (apart from alien bullet) needs a tidy - too many add and subs
 alienCollideCheck:
 	stmfd sp!, {r0-r8, lr}
+	
+			ldr r5,=playerDeath		@ if you are in major explode, no detection with ship
+			ldr r5,[r5]
+			cmp r5,#3
+			bpl noPlayer
 											@ r1 is offset to alien
-
 			ldr r5,=levelEnd				@ if we have destroyed the BOSS
 			ldr r5,[r5]						@ no need for a detect with aliens
 			cmp r5,#2
@@ -691,7 +696,12 @@ alienCollideCheck:
 			add r4,#16
 			cmp r6,r4
 			bpl noPlayer
-			
+				
+				ldr r10,=playerDeath
+				ldr r10,[r10]
+				cmp r10,#0
+				bne noDyingBlooms
+				
 				ldr r8,[r1]					@ load the ACTIVE value
 				cmp r8,#10
 				bne notPowerup
@@ -702,6 +712,8 @@ alienCollideCheck:
 				ldr r6,=spriteBloom
 				mov r7,#16
 				str r7,[r6]						@ make shp flash
+			
+				noDyingBlooms:
 			
 				bl playSteelSound			@ activate sound for YOUR ship being hit!
 			
@@ -734,6 +746,14 @@ alienCollideCheck:
 					beq alienSingleBloom
 					cmp r6,#5
 					beq alienSingleBloom
+					
+					cmp r6,#128
+					bne playerDyingBlooms
+						cmp r10,#0
+						bne acNoDestroy
+					playerDyingBlooms:
+					
+					
 						@ ok, for this ident, we need to flash all matching
 						@ and decrement the hits and store the value in ALL idents
 						@ r7=hits left
@@ -816,5 +836,177 @@ explodeIdent:
 		bl playAlienExplodeSound	@ HK - we really need a meatier explode here?
 
 		b noPlayer
+		
+		
+		
+detectShipAsFire:		
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r1, =spriteX			@ DO X COORD CONVERSION
+	ldr r1, [r1]				@ r1=our x coord
+	ldr r2,=horizDrift
+	ldr r2,[r2]
+	add r1,r2
+	sub r1, #64					@ our sprite starts at 64 (very left of map) + 10 for left bullet
+	add r1, #16					@ our left bullet is right a bit in the sprite
+	lsr r1, #5					@ divide x by 32
+	ldr r2, =spriteY			@ DO Y COORD CONVERSION
+	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
+	sub r2, #384				@ take 384 off our coord, as this is the top of the screen
+	add r2,#24					@ make middle of sprites Y
+	lsr r2,#5					@ convert to a 32 block
+	lsl r2,#5					
+	ldr r3,=yposSub
+	ldr r3,[r3]					@ load the yposSub
+	sub r3,#160					@ take that bloody 160 off
+	add r3,r2					@ add our scroll and bullet y together
+	lsr r3,#5					@ divide by 32 (our blocks)
+	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
+	add r3,r1					@ add our X, r3 is now an offset to our collision data
+
+	ldr r4,=colMapStore
+	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
+	cmp r6,#0					@ if we find a 0 = no hit!
+	beq no_hit
+	cmp r6,#3					@ 1 and 2 = Hit!
+	bpl no_hit
+	mov r11,#0
+	bl playExplosionSound
+
+	lsl r6,#2 					@ times by 4
+	ldr r9,=craterFrame			@ get our frame for use as a crater
+	ldr r8,[r9]
+	add r8,#1					@ add one to it
+	cmp r8,#4					@ are we at crater 5 (0-4)
+	moveq r8,#0					@ if so, reset back to the first crater
+	str r8,[r9]					@ store it back
+	add r6,r8					@ and add it to our collmap ref!
+	strb r6, [r4, r3]			@ store CRATER in collmap (as 4 or 8) + frame (0-3)
+	mov r9,r6					@ save r6 in r9 for the crater draw
+
+		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
+		ldr r4, =spriteY			@ DO Y COORD CONVERSION
+		ldr r4, [r4]
+
+		add r4,#24
+		lsr r4,#5					@ convert to a 32 block
+		lsl r4,#5
+
+
+		ldr r2,=spriteX
+		ldr r2,[r2]
+		ldr r1,=horizDrift
+		ldr r1,[r1]
+		add r2,r1
+		add r2,#16
+
+		ldr r1,=575
+		cmp r4,r1
+		bpl bottomSX
+			ldr r1,=vofsSub		@---- Draw Crater on Top Screen
+			ldr r1,[r1]
+			sub r4,#384
+			add r1,r4
+			lsr r1,#5
+			lsl r1,#2	
+			sub r2,#64					@ 64 - 6 (bullet offset)
+			lsr r2, #5
+			lsl r2, #2
+			mov r0,r2
+			bl drawCraterBlockSub	
+			b nononoX
+			
+		bottomSX:
+			ldr r1,=vofsSub		@---- Draw crater on Bottom Screen
+			ldr r1,[r1]
+			sub r4,#576
+			add r1,r4
+			lsr r1,#5
+			lsl r1,#2	
+			sub r2,#64						@ 64 - 6 (bullet offset)
+			lsr r2, #5
+			lsl r2, #2
+			mov r0,r2
+			push {r0}
+			bl drawCraterBlockMain
+			pop {r0}
+
+			cmp r4,#33
+			bpl nononoX
+				ldr r1,=vofsSub				@ Draw Crater on Top Screen
+				ldr r1,[r1]
+				add r1,#192
+				add r1,r4
+				lsr r1,#5
+				lsl r1,#2	
+				bl drawCraterBlockSub
+
+		nononoX:
+		pop {r0-r4}	
+@--------------- end of CRATER draw code
+	
+		bl initBaseExplodePlayer	@ Draw the EXPLOSION for players location
+
+		ldr r0,=adder+7				@ add 25 to the score
+		mov r1,#5
+		strb r1,[r0]
+		sub r0,#1
+		mov r1,#2
+		strb r1,[r0]
+		sub r0,#1
+		bl addScore
+		ldmfd sp!, {r0-r6, pc}	
+		
+initBaseExplodePlayer:
+	stmfd sp!, {r0-r6, lr}
+	ldr r4,=spriteActive
+	mov r6,#127
+	expFindBaseP:
+		ldr r5,[r4,r6, lsl #2]
+		cmp r5,#0
+		beq startBaseExpP
+		sub r6,#1
+		cmp r6,#111
+	bne expFindBaseP
+	ldmfd sp!, {r0-r6, pc}
+		
+	startBaseExpP:
+									@ r6 is our ref to the explosion sprite
+									@ calculate the x/y to plot explosion
+		ldr r1, =spriteX			@ DO X COORD CONVERSION
+		ldr r1, [r1]				@ r1=our x coord
+		add r1, #16
+		ldr r2, =horizDrift
+		ldr r2,[r2]
+		add r1,r2
+		lsr r1, #5					@ divide x by 32
+		lsl r1, #5					@ multiply by 32
+		ldr r2, =spriteY			@ DO Y COORD CONVERSION
+		ldr r2, [r2]				@ r2=our y coord
+		add r2,#24
+		ldr r3,=pixelOffsetMain		@ load our pixeloffset (1-32)
+		ldr r3,[r3]
+		subs r3,#1					@ try to compensate for pixeloffs being 1-32 (need 0-31)
+		movmi r3,#31				@ pixel offset is now 0-31
+		lsr r2, #5					@ divide bullet coord by 32
+		lsl r2, #5					@ times by 32	: this aligns to a block of 32x32
+		add r2,r3					@ add them together
+
+		sub r2,#30					@ re align (for some reason 32 is not quite correct)
+									@ r4 is sprite active register already
+	mov r5,#5						@ and r6 is the sprite number to use for explosion
+	str r5,[r4,r6, lsl #2]			@ set sprite to "base explosion"
+	ldr r4,=spriteObj
+	mov r5,#12						@ sprite 13-1 as added to on first update in drawsprite.s
+	str r5,[r4,r6, lsl #2]			@ set object to explosion frame
+	ldr r4,=spriteX
+	str r1,[r4,r6, lsl #2]			@ store r1 as X, calculated above
+	ldr r4,=spriteY
+	str r2,[r4,r6, lsl #2]			@ store r2 as Y, calculated above
+	ldr r4,=spriteExplodeDelay
+	mov r2,#4						@ Set sprite delay for anim (once evey 4 updates seems to work nice)
+	str r2,[r4,r6, lsl #2]
+
+	ldmfd sp!, {r0-r6, pc}			@ all done
 	.pool
 	.end

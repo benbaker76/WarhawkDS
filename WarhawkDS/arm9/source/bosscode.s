@@ -236,6 +236,12 @@ bossIsShot:
 		ldr r8,[r8]
 		cmp r8,#2
 		beq heBeDead
+		
+		ldr r8,=playerDeath
+		ldr r8,[r8]				@ if player is dying, boss CANNOT die.. else a stray bullet
+		cmp r8,#0				@ could kill the boss and you would clear the level - DEAD ??
+		bne heBeDead
+		
 				@ ok, now we need to see how many hits to kill
 		ldr r8,=bossHits
 		ldr r6,[r8]
@@ -291,9 +297,6 @@ bossIsDead:
 	mov r0,#4
 	str r0,[r1]
 
-	
-@	bl fxFadeWhiteOut			@ Just for the HELL OF IT!!
-	
 	ldmfd sp!, {r0-r8, pc}
 
 @------------------ BOSS ATTACK CODE	
@@ -330,13 +333,6 @@ bossAttack:
 	bllt bossFire				@ do our fire checks, and shoot if needed
 	
 	bl bossDraw					@ redraw our boss
-		
-@	ldr r10,=bossY
-@	ldr r10,[r10]
-@	mov r8,#0						@ y pos
-@	mov r9,#3						@ Number of digits
-@	mov r11, #9						@ x pos
-@	bl drawDigits					@ Draw	
 	
 	ldmfd sp!, {r0-r8, pc}
 

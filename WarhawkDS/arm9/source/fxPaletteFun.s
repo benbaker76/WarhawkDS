@@ -25,85 +25,37 @@
 #include "background.h"
 #include "dma.h"
 #include "interrupts.h"
-#include "sprite.h"
-#include "ipc.h"
 
 	.arm
 	.align
 	.text
-	.global gameStop
-	.global gamePause
-	.global checkGameOver
 	
-gameStop:
-
+	.global paletteGrey
+	
+	
+	@ was gonna add a function to take all 3 RGB values and find the average and store that in each
+	@ but i think this looked great anyway?
+	
+paletteGrey:
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_STOPPED
-	str r1, [r0]
+		@ well, it isnt, but i like the look???
+	
+
+		ldr r1, =BG_PALETTE
+		ldr r2, =BG_PALETTE_SUB
 		
-	ldmfd sp!, {r0-r6, pc}
+	mov r0,#255
+	add r0,#256
 	
-	@ ------------------------------------
-	
-gamePause:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_PAUSED
-	str r1, [r0]
+	greyLoop:
+		ldrh r3,[r1,r0]
 		
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ------------------------------------
-	
-checkGameOver:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =energy
-	ldr r1, [r0]
-	cmp r1, #0
-	bne checkGameOverDone
-
-@-----------------
-
-ldr r0,=playerDeath
-ldr r1,[r0]
-cmp r1,#0
-bne checkGameOverDone
-mov r1,#1
-str r1,[r0]
-b checkGameOverDone
-
-
-
-@-----------------
-	beq checkGameOverDone
-	bl fxFadeBlackOut
-	bl fxMosaicOut
-	
-	bl drawAllEnergyBars	
-
-	ldr r0, =gameOverText						@ Load out text pointer
-	ldr r1, =11									@ x pos
-	ldr r2, =10									@ y pos
-	ldr r3, =0									@ Draw on main screen
-	bl drawText
-	
-	ldr r0, =gameOverText						@ Load out text pointer
-	ldr r1, =11									@ x pos
-	ldr r2, =10									@ y pos
-	ldr r3, =1									@ Draw on sub screen
-	bl drawText
-	
-	bl gameStop
-	
-checkGameOverDone:
+		and r3,#0xf
+		strh r3,[r1,r0]
+		strh r3,[r2,r0]
 		
+		subs r0,#1
+	bpl greyLoop
 	ldmfd sp!, {r0-r6, pc}
 
-	.pool
-	.end

@@ -51,6 +51,10 @@ initLevel:
 	str r1,[r0]
 	ldr r0,=basesLeft
 	str r1,[r0]				@ reset the base counter (count later)
+	ldr r0,=playerDeath
+	str r1,[r0]
+	ldr r0,=playerDeathDelay
+	str r1,[r0]
 	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub

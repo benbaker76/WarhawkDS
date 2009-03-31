@@ -36,7 +36,7 @@
 	.text
 	.global initAudioStream
 	.global playAudioStream
-	.global stopAudioStream
+	.global stopAudioStream			@ this leaves the sound playing (last bit) HK (continuous tone)
 	.global audioStreamTimer1
 	
 initAudioStream:

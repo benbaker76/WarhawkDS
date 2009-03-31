@@ -169,6 +169,14 @@ alienFireMove:
 	
 				@ and from here we need to check if the bullet is on our ship
 				@ and if so, deplete energy, mainloop will act on a 0 and kill us!
+				
+				ldr r6,=playerDeath
+				ldr r6,[r6]
+				cmp r6,#0
+				bne testSkip
+				
+				
+				
 				ldr r6,=levelEnd
 				ldr r6,[r6]
 				cmp r6,#2

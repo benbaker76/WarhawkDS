@@ -107,8 +107,13 @@ fxPaletteFadeToRedLoop:
 	orr r3, r5
 	strh r3, [r1], #2
 	
-	subs r2, #1	
-	bpl fxPaletteFadeToRedLoop
+	sub r2, #1
+	cmp r2, #240
+	subeq r2, #1
+	addeq r0, #2
+	addeq r1, #2
+	cmp r2, #0
+	bne fxPaletteFadeToRedLoop
 	
 	ldr r0, =fadeToRedValue
 	ldr r1, [r0]

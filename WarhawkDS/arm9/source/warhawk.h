@@ -11,6 +11,7 @@
 #include "..\build\TitleBottom.h"
 #include "..\build\LogoSprites.h"
 #include "..\build\StartSprites.h"
+#include "..\build\CursorSprite.h"
 #include "..\build\StarFront.h"
 #include "..\build\StarBack.h"
 #include "..\build\Sprites.h"
@@ -103,6 +104,7 @@
 #define GAMEMODE_GETREADY			6
 #define GAMEMODE_BOSSDIE			7
 #define GAMEMODE_GAMEOVER			8
+#define GAMEMODE_HISCORE_ENTRY		9
 
 @ Level count
 

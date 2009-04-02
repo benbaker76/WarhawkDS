@@ -124,6 +124,7 @@
 	.global titleRawText
 	.global ppotRawText
 	.global gameOverRawText
+	.global hiScoreRawText
 	.global mineDelay
 	.global hunterDelay
 	.global mineTimerCounter
@@ -369,6 +370,8 @@ titleRawText:
 	.asciz "/Title.raw"
 gameOverRawText:
 	.asciz "/GameOver.raw"
+hiScoreRawText:
+	.asciz "/HiScore.raw"
 ppotRawText:
 	.asciz "/PPOT.raw"
 

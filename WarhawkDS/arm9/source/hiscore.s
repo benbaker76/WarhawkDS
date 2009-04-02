@@ -39,43 +39,19 @@
 	.align
 	.text
 	.global showHiScore
+	.global showHiScoreEntry
+	.global updateHiScoreEntry
 
 showHiScore:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =hiscoreDatText
-	ldr r1, =hiscoreBuffer
+	ldr r0, =hiScoreDatText
+	ldr r1, =hiScoreBuffer
 	
 	bl readFileBuffer
 	
-	@ldr r0, =1234567
-	@ldr r1, =hiscoreBuffer
-	
-	@bl int2Ascii
-	
-	@ldr r0, =hiscoreBuffer
-	
-	@bl ascii2Int
-	
-	
-	
-	@ldr r0, =41000
-	@ldr r1, =benText
-	
-	@bl addHiScore
-	
-	
-	
-	@ldr r0, =41000
-	@bl getHiScoreIndex
-	
-	@mov r8, r0
-	@ldr r0, =debugString
-	@bl drawDebugString
-	
-	
-	
+	bl DC_FlushAll
 	
 	bl clearBG0Sub
 
@@ -90,11 +66,185 @@ showHiScore:
 	
 	@---------------------------------
 	
+showHiScoreEntry:
+
+	@ r0 - hiscore value
+
+	stmfd sp!, {r0-r6, lr}
+	
+	mov r6, r0
+	
+	ldr r0, =hiScoreDatText
+	ldr r1, =hiScoreBuffer
+	
+	bl readFileBuffer
+	
+	bl DC_FlushAll
+	
+	mov r0, r6
+	bl getHiScoreIndex
+	
+	ldr r1, =hiScoreIndex
+	str r0, [r1]
+	
+	cmp r0, #-1
+	bleq initTitleScreen
+	beq showHiScoreEntryDone
+	
+	ldr r0, =nameAAA
+	ldr r1, =nameEntryBuffer
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	
+	mov r0, r6
+	ldr r1, =nameEntryBuffer
+	bl addHiScore
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_HISCORE_ENTRY
+	str r1, [r0]
+	
+	ldr r0, =CursorSpritePal
+	ldr r1, =SPRITE_PALETTE_SUB
+	ldr r2, =CursorSpritePalLen
+	bl dmaCopy
+	
+	bl resetSprites
+
+	@ Write the tile data to VRAM
+
+	ldr r0, =CursorSpriteTiles
+	ldr r1, =SPRITE_GFX_SUB
+	ldr r2, =CursorSpriteTilesLen
+	bl dmaCopy
+	
+	bl clearBG0Sub
+	
+	ldr r0, =wellDoneText						@ Load out text pointer
+	ldr r1, =11									@ x pos
+	ldr r2, =5									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =enterNameText						@ Load out text pointer
+	ldr r1, =5									@ x pos
+	ldr r2, =7									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =hiScoreRawText						@ Read the path to the file
+	bl playAudioStream							@ Play the audio stream
+
+	bl drawHiScoreText
+	
+	bl fxCopperTextOn
+	bl fxStarfieldOn
+	
+showHiScoreEntryDone:
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+updateHiScoreEntry:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =nameEntryBuffer
+	ldr r1, =cursorPos
+	ldr r2, [r1]
+	ldrb r3, [r0, r2]
+	
+	ldr r4, =REG_KEYINPUT
+	ldr r5, [r4]
+	tst r5, #BUTTON_UP
+	addeq r3, #1
+	tst r5, #BUTTON_DOWN
+	subeq r3, #1
+	
+	cmp r3, #32
+	movlt r3, #32
+	cmp r3, #90
+	movgt r3, #90
+	
+	strb r3, [r0, r2]
+	
+	ldr r0, =nameEntryBuffer
+	ldr r1, =cursorPos
+	ldr r2, [r1]
+	ldr r3, [r0, r2]
+	
+	ldr r4, =REG_KEYINPUT
+	ldr r5, [r4]
+	tst r5, #BUTTON_LEFT
+	subeq r2, #1
+	tst r5, #BUTTON_RIGHT
+	addeq r2, #1
+	
+	cmp r2, #0
+	movlt r2, #0
+	cmp r2, #2
+	movgt r2, #2
+	
+	str r2, [r1]
+	
+	ldr r0, =nameEntryBuffer					@ buffer
+	ldr r1, =19									@ x
+	ldr r2, =hiScoreIndex						@ y
+	ldr r2, [r2]
+	add r2, #10
+	ldr r3, =1									@ sub=1 main=0
+	ldr r4, =3									@ characters
+	bl drawTextCount
+	
+	bl drawCursorSprite
+	
+	ldr r0, =REG_KEYINPUT
+	ldr r1, [r0]
+	tst r1, #BUTTON_A
+	bleq saveHiScore
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+drawCursorSprite:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)
+	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
+	orr r1, #(10 * 8 + 2)
+	ldr r2, =hiScoreIndex
+	ldr r2, [r2]
+	add r1, r2, lsl #3
+	strh r1, [r0]
+	
+	ldr r0, =OBJ_ATTRIBUTE1_SUB(0)
+	ldr r1, =(ATTR1_SIZE_8)
+	orr r1, #(19 * 8)
+	ldr r2, =cursorPos
+	ldr r2, [r2]
+	add r1, r2, lsl #3
+	strh r1, [r0]
+	
+	ldr r0, =OBJ_ATTRIBUTE2_SUB(0)
+	mov r1, #ATTR2_PRIORITY(0)
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
 drawHiScoreText:
 
 	stmfd sp!, {r0-r6, lr}
 
-	ldr r0, =hiscoreBuffer
+	ldr r0, =hiScoreBuffer
 	ldr r5, =0
 	
 drawHiScoreTextLoop:
@@ -130,12 +280,12 @@ getHiScoreIndex:
 	stmfd sp!, {r1-r4, lr}
 	
 	@ r0 = hiscore value
-	@ r0 = return index (0=No hiscore, or number)
+	@ r0 = return index (-1=No hiscore, or number)
 	
 	mov r4, r0
 	
-	ldr r1, =hiscoreBuffer
-	mov r2, #0
+	ldr r1, =hiScoreBuffer
+	mov r2, #-1
 	mov r3, #0
 	
 getHiScoreIndexLoop:
@@ -177,7 +327,7 @@ addHiScore:
 	mov r6, r1
 	ldr r7, =nameBuffer
 
-	ldr r1, =hiscoreBuffer
+	ldr r1, =hiScoreBuffer
 	ldr r4, =0
 	
 addHiScoreLoop:
@@ -232,6 +382,45 @@ addHiScoreContinue:
 	bne addHiScoreLoop
 	
 	ldmfd sp!, {r0-r7, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+saveHiScore:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =nameEntryBuffer
+	ldr r1, =hiScoreBuffer
+	ldr r2, =hiScoreIndex
+	ldr r2, [r2]
+	mov r3, #HISCORE_ENTRY_SIZE
+	mul r2, r3
+	add r2, #HISCORE_VALUE_SIZE
+	add r1, r2
+	
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	
+	ldr r0, =hiScoreDatText
+	ldr r1, =hiScoreBuffer
+	ldr r2, =HISCORE_TOTAL_SIZE
+	bl writeFileBuffer
+	
+	bl DC_FlushAll
+	
+	@ldr r0, =hiScoreBuffer
+	@bl drawDebugString
+	
+	bl fxCopperTextOff
+	bl fxStarfieldOff
+	
+	bl initTitleScreen
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -313,17 +502,32 @@ ascii2IntLoop:
 	.data
 	.align
 	
-nameBuffer:
-	.space 3
-
-hiscoreBuffer:
-	.space HISCORE_TOTAL_SIZE
+cursorPos:
+	.word 0
 	
-hiscoreDatText:
+hiScoreIndex:
+	.word 0
+	
+hiScoreDatText:
 	.asciz "/HiScore.dat"
 	
-benText:
-	.asciz "BEN"
+wellDoneText:
+	.asciz "WELL DONE!"
+	
+enterNameText:
+	.asciz "PLEASE ENTER YOUR NAME"
+	
+hiScoreBuffer:
+	.space HISCORE_TOTAL_SIZE
+
+nameBuffer:
+	.asciz "   "
+	
+nameEntryBuffer:
+	.asciz "   "
+	
+nameAAA:
+	.asciz "AAA"
 	
 	.pool
 	.end

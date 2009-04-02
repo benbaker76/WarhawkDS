@@ -46,7 +46,7 @@ int readFile(char *fileName)
 
 	fclose(pFile);
 	
-	return fileStat.st_size;
+	return result;
 }
 
 int readFileBuffer(char *fileName, char *pBuffer)
@@ -79,32 +79,22 @@ int readFileBuffer(char *fileName, char *pBuffer)
 
 	fclose(pFile);
 	
-	return fileStat.st_size;
+	return result;
 }
 
-int writeFileBuffer(char *fileName, char *pBuffer)
+int writeFileBuffer(char *fileName, char *pBuffer, int size)
 { 
 	FILE *pFile;
-	struct stat fileStat;
 	size_t result;
-	
-	if(pfileBuffer != NULL)
-		free(pfileBuffer);
 
 	pFile = fopen(fileName, "wb");
 	
 	if(pFile == NULL)
 		return 0;
 
-	if(fstat(pFile->_file, &fileStat) != 0)
-	{
-		fclose(pFile);
-		return 0;
-	}
-
-	result = fwrite(pBuffer, 1, fileStat.st_size, pFile);
+	result = fwrite(pBuffer, 1, size, pFile);
 	
-	if(result != fileStat.st_size)
+	if(result != size)
 	{
 		fclose(pFile);
 		return 0;
@@ -112,7 +102,7 @@ int writeFileBuffer(char *fileName, char *pBuffer)
 
 	fclose(pFile);
 	
-	return fileStat.st_size;
+	return result;
 }
 
 /* int readFileStream(char *fileName, char *pBuffer, int pos, int size)

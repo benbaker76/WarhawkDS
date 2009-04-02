@@ -77,6 +77,7 @@ initSystem:
 main:
 	bl gameStop
 	bl initVideo
+	bl initMainTiles
 	
 	bl initInterruptHandler						@ initialize the interrupt handler
 	bl initAudioStream
@@ -85,9 +86,10 @@ main:
 	mov r1, #0
 	bl EFS_Init
 	
-	bl showIntro1
-
-
+	@bl showIntro1
+	
+	ldr r0, =34000
+	bl showHiScoreEntry
 
 	@ ------------------------------------
 	
@@ -109,6 +111,8 @@ mainLoop:
 	bleq updateTitleScreen
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
+	cmp r1, #GAMEMODE_HISCORE_ENTRY
+	bleq updateHiScoreEntry
 	b mainLoop
 
 

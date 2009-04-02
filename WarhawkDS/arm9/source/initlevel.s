@@ -585,8 +585,8 @@ initLevel:
 	
 	ldr r1,=basesLeft
 	str r3,[r1]					@ store the numbers of bases on the level
-	
-	@ Load the palette into the palette subscreen area and main
+
+		@ Load the palette into the palette subscreen area and main
 
 		ldr r0, =levelPal
 		ldr r0,[r0]

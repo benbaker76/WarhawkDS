@@ -32,6 +32,7 @@
 	.align
 	.text
 	.global initVideo
+	.global initMainTiles
 	.global resetScrollRegisters
 	
 initVideo:
@@ -94,7 +95,14 @@ initVideo:
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
 	strh r1, [r0]
 	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+initMainTiles:
 
+	stmfd sp!, {r0-r6, lr}
+	
 	@ Write the tile data to VRAM FrontStar BG2
 
 	ldr r0, =StarFrontTiles
@@ -141,6 +149,8 @@ initVideo:
 	bl dmaCopy
 	
 	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
 	
 resetScrollRegisters:
 
@@ -194,13 +204,11 @@ resetScrollRegisters:
 	ldr r0, =REG_BG3VOFS_SUB		@ Load our vertical scroll register for BG3 on the sub screen
 	ldr r2, =vofsSBSub				@ Set our scroll counter to start sub screen
 	ldrh r2, [r2]
-	strh r2, [r0]	
-
-
-
-
+	strh r2, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
 	
 	.pool
 	.end

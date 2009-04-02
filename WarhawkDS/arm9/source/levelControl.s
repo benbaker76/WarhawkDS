@@ -106,6 +106,7 @@ levelStart:
 	ldr r1, =FX_NONE
 	str r1, [r0]
 	
+	bl initMainTiles
 	bl resetScrollRegisters					@ Reset the scroll registers
 	bl resetSprites
 	bl initSprites

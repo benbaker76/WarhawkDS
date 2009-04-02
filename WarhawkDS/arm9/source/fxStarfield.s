@@ -28,9 +28,9 @@
 #include "windows.h"
 
 	#define STAR_COUNT					512
-	#define STAR_COLOR_OFFSET			6
-	#define STAR_TILE_BASE				BG2_TILE_BASE
-	#define STAR_TILE_BASE_SUB			BG2_TILE_BASE_SUB
+	#define STAR_COLOR_OFFSET			11
+	#define STAR_TILE_BASE				5
+	#define STAR_TILE_BASE_SUB			5
 
 	.arm
 	.align

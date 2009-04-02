@@ -38,11 +38,12 @@
 	.arm
 	.align
 	.text
+	.global readHiScore
 	.global showHiScore
 	.global showHiScoreEntry
 	.global updateHiScoreEntry
-
-showHiScore:
+	
+readHiScore:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -52,6 +53,14 @@ showHiScore:
 	bl readFileBuffer
 	
 	bl DC_FlushAll
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+
+showHiScore:
+
+	stmfd sp!, {r0-r6, lr}
 	
 	bl clearBG0Sub
 
@@ -73,13 +82,6 @@ showHiScoreEntry:
 	stmfd sp!, {r0-r6, lr}
 	
 	mov r6, r0
-	
-	ldr r0, =hiScoreDatText
-	ldr r1, =hiScoreBuffer
-	
-	bl readFileBuffer
-	
-	bl DC_FlushAll
 	
 	mov r0, r6
 	bl getHiScoreIndex

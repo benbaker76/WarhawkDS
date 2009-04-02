@@ -86,6 +86,8 @@ main:
 	mov r1, #0
 	bl EFS_Init
 	
+	bl readHiScore
+	
 	@bl showIntro1
 	
 	ldr r0, =34000

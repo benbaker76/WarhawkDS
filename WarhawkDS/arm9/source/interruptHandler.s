@@ -107,6 +107,8 @@ interruptHandlerVBlank:
 	blne fxTextScrollerVBlank
 	tst r0, #FX_STARFIELD
 	blne fxStarfieldVBlank
+	tst r0, #FX_PALETTE_FADE_TO_RED
+	blne fxPaletteFadeToRedVBlank
 
 interruptHandlerVBlankDone:
 	

@@ -169,15 +169,15 @@ playerDeathMidExplode:									@ --- PHASE 2
 		ldr r1,=spriteActive
 		mov r3,#0
 		str r3,[r1]			@ turn off players ship
-		bl paletteRed
+		bl fxPaletteFadeToRed
 		@---- PLAY BIG PLAYER EXPLODE NOISE HERE
 		bl playBossExplodeSound		@ we will use this for now!!	
 		ldmfd sp!, {r0-r6, pc}	
 	midExplodeCountdownNo:
 	
 	cmp r1,#170
-	blgt paletteBleach			@ do that flash effect
-	bleq paletteRestore			@ put the palette BACK
+	blgt fxPaletteBleach			@ do that flash effect
+	bleq fxPaletteRestore			@ put the palette BACK
 	
 	
 	ldmfd sp!, {r0-r6, pc}

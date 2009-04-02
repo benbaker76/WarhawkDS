@@ -32,6 +32,7 @@
 	
 	.global fxPaletteFadeToRed
 	.global fxPaletteFadeToRedVBlank
+	.global fxPaletteInvert
 	.global fxPaletteBleach
 	.global fxPaletteRestore
 	
@@ -128,7 +129,14 @@ fxPaletteBleach:
 	stmfd sp!, {r0-r6, lr}
 	
 	@ well, it isnt, but i like the look???
-
+	
+	ldr r0, =BG_PALETTE
+	ldr r1, =bgPalette
+	ldr r2, =256*2
+	bl dmaCopy
+	ldr r0, =BG_PALETTE_SUB
+	ldr r1, =bgPaletteSub
+	bl dmaCopy
 
 	ldr r1, =BG_PALETTE
 	ldr r2, =BG_PALETTE_SUB
@@ -152,34 +160,54 @@ fxPaletteBleachLoop:
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
+	
+fxPaletteInvert:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	@ well, it isnt, but i like the look???
+	
+	ldr r0, =BG_PALETTE
+	ldr r1, =bgPalette
+	ldr r2, =256*2
+	bl dmaCopy
+	ldr r0, =BG_PALETTE_SUB
+	ldr r1, =bgPaletteSub
+	bl dmaCopy
+
+	ldr r0, =BG_PALETTE
+	ldr r1, =BG_PALETTE_SUB
+		
+	mov r2, #255
+	
+fxPaletteInvertLoop:
+	
+	ldrh r3, [r0]
+	ldrh r4, [r1]
+	ldrh r5, =0xFFFF
+	eor r3, r5
+	eor r4, r5
+	strh r3, [r0], #2
+	strh r4, [r1], #2
+	
+	subs r2, #1
+	bpl fxPaletteInvertLoop
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
 
 fxPaletteRestore:
 
 	stmfd sp!, {r0-r6, lr}
 
-	ldr r0, =levelPal
-	ldr r0,[r0]
+	ldr r0, =bgPalette
 	ldr r1, =BG_PALETTE
-	ldr r2, =512
+	ldr r2, =256*2
 	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
+	ldr r0, =bgPaletteSub	
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
-	strh r3, [r1]
-	
-	@ Load the star back palette
-
-	ldr r0, =starBackPal
-	ldr r0,[r0]
-	ldr r1, =BG_PALETTE
-	ldr r2, =32
-	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-	strh r3, [r1]
 		
 	ldmfd sp!, {r0-r6, pc}
 
@@ -190,6 +218,12 @@ fxPaletteRestore:
 	
 fadeToRedValue:
 	.word 0
+	
+bgPalette:
+	.space 256*2								@ Palette Backup
+	
+bgPaletteSub:
+	.space 256*2								@ Palette Backup
 	
 	.pool
 	.end

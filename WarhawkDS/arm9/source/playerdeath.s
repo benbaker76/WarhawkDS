@@ -176,7 +176,7 @@ playerDeathMidExplode:									@ --- PHASE 2
 	midExplodeCountdownNo:
 	
 	cmp r1,#170
-	blgt fxPaletteBleach			@ do that flash effect
+	blgt fxPaletteInvert			@ do that flash effect
 	bleq fxPaletteRestore			@ put the palette BACK
 	
 	

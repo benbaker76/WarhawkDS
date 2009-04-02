@@ -83,6 +83,21 @@ showHiScoreEntry:
 	
 	mov r6, r0
 	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_HISCORE_ENTRY
+	str r1, [r0]
+	
+	ldr r0, =fxMode						@ Get fxMode address
+	ldr r1, =FX_NONE					@ Get fxMode value
+	str r1, [r0]
+	
+	bl initMainTiles
+	bl resetScrollRegisters
+	bl clearBG0
+	bl clearBG1
+	bl clearBG2
+	bl clearBG3
+	
 	mov r0, r6
 	bl getHiScoreIndex
 	
@@ -105,11 +120,7 @@ showHiScoreEntry:
 	mov r0, r6
 	ldr r1, =nameEntryBuffer
 	bl addHiScore
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_HISCORE_ENTRY
-	str r1, [r0]
-	
+
 	ldr r0, =CursorSpritePal
 	ldr r1, =SPRITE_PALETTE_SUB
 	ldr r2, =CursorSpritePalLen
@@ -162,25 +173,26 @@ updateHiScoreEntry:
 	ldrb r3, [r0, r2]
 	
 	ldr r8,=hiScoreKeyPress
-	ldr r7,[r8]				@ we should never need to reset this value, the code does it for us
+	ldr r7,[r8]									@ we should never need to reset this value, the code does it for us
 	
 	ldr r4, =REG_KEYINPUT
 	ldr r5, [r4]
 	
 	mov r4,r5
-	and r4,#241				@ check all the used keys for entry are clear!
+	and r4,#241									@ check all the used keys for entry are clear!
 	cmp r4,#241
-	moveq r7,#0				@ if so, set to 0
-	addne r7,#1				@ if not, a key is pressed, so add 1
+	moveq r7,#0									@ if so, set to 0
+	addne r7,#1									@ if not, a key is pressed, so add 1
 	
-	cmp r7,#16				@ if we are at 16, reset to 0 to allow movement
-	movpl r7,#0				@ 16 is a delay you may want to adjust to suit?
-	bpl highEntryOK
+	cmp r7,#16									@ if we are at 16, reset to 0 to allow movement
+	movpl r7,#0									@ 16 is a delay you may want to adjust to suit?
+	bpl hiScoreEntryOK
 	
-	cmp r7,#1				@ if it is 1, keep pressed (from no-key pressed)
-	bne noEntry
+	cmp r7,#1									@ if it is 1, keep pressed (from no-key pressed)
+	bne hiScoreEntrySkip
 	
-	highEntryOK:
+hiScoreEntryOK:
+	
 	tst r5, #BUTTON_UP
 	addeq r3, #1
 	tst r5, #BUTTON_DOWN
@@ -221,7 +233,7 @@ updateHiScoreEntry:
 	ldr r4, =3									@ characters
 	bl drawTextCount
 
-	noEntry:
+hiScoreEntrySkip:
 	
 	bl drawCursorSprite
 

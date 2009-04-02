@@ -155,6 +155,12 @@ updateIntro:
 	bleq initData								@ setup actual game data
 	bleq initLevel
 	
+	ldr r1, =REG_KEYINPUT
+	ldr r2, [r1]
+	tst r2, #BUTTON_A
+	bleq stopTimer
+	bleq initTitleScreen
+	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------

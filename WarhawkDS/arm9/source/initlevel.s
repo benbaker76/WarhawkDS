@@ -33,6 +33,8 @@
 	.text
 	.global initLevel
 	.global initLevelSprites
+	.global initMainTiles
+	.global initLevelScrollRegisters
 	
 initLevel:
 
@@ -627,6 +629,8 @@ initLevel:
 
 	ldmfd sp!, {r0-r6, pc}
 
+	@ ------------------------------------
+
 initLevelSprites:
 
 	stmfd sp!, {r0-r6, lr}
@@ -743,5 +747,118 @@ initLevelSpecialSprites:
 	
 	ldmfd sp!, {r0-r6, pc}
 	
+	@ ------------------------------------
+
+initMainTiles:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	@ Write the tile data to VRAM FrontStar BG2
+
+	ldr r0, =StarFrontTiles
+	ldr r1, =BG_TILE_RAM(BG2_TILE_BASE)
+	ldr r2, =StarFrontTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG2_TILE_BASE_SUB)
+	bl dmaCopy
+
+	@ Write the tile data to VRAM BackStar BG3
+
+	ldr r0, =StarBackTiles
+	ldr r1, =BG_TILE_RAM(BG3_TILE_BASE)
+	add r1, #StarFrontTilesLen
+	ldr r2, =StarBackTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG3_TILE_BASE_SUB)
+	add r1, #StarFrontTilesLen
+	bl dmaCopy
+
+	ldr r0, =ScoreTiles
+	ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+	ldr r2, =ScoreTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
+	bl dmaCopy
+	
+	ldr r0, =FontTiles
+	ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+	add r1, #ScoreTilesLen
+	ldr r2, =FontTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
+	add r1, #ScoreTilesLen
+	bl dmaCopy
+	
+	ldr r0, =EnergyTiles
+	ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+	add r1, #(ScoreTilesLen + FontTilesLen)
+	ldr r2, =EnergyTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
+	add r1, #(ScoreTilesLen + FontTilesLen)
+	bl dmaCopy
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+initLevelScrollRegisters:
+
+	stmfd sp!, {r0-r6, lr}
+
+	@ Our horizontal centre routine
+	
+	ldr r0, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
+	ldr r1, =REG_BG1HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	ldr r2, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
+	ldr r3, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
+	ldr r4, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
+	ldr r5, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
+	mov r6, #32						@ Offset the horizontal scroll register by 32 pixels to centre the map
+	strh r6, [r0]					@ Write our offset value to REG_BG1HOFS
+	strh r6, [r1]					@ Write our offset value to REG_BG1HOFS_SUB
+	mov r6, #0
+	strh r6, [r2]					@ Write our offset value to REG_BG2HOFS
+	strh r6, [r3]					@ Write our offset value to REG_BG2HOFS_SUB
+	strh r6, [r4]					@ Write our offset value to REG_BG3HOFS
+	strh r6, [r5]					@ Write our offset value to REG_BG3HOFS_SUB
+
+		
+	@ Our vertical scrolling routine
+
+	ldr r0, =REG_BG1VOFS			@ Load our vertical scroll register for BG1 on the main screen
+	ldr r2, =vofsMain				@ Set our scroll counter to start main screen
+	ldrh r2, [r2]
+	strh r2, [r0]					@ Load the value into the scroll register
+
+	ldr r0, =REG_BG1VOFS_SUB		@ Load our vertical scroll register for BG1 on the sub screen
+	ldr r2, =vofsSub				@ Set our scroll counter to start sub screen
+	ldrh r2, [r2]
+	strh r2, [r0]					@ Load the value into the scroll register
+	
+	ldr r0, =REG_BG2VOFS			@ Load our vertical scroll register for BG2 on the main screen
+	ldr r2, =vofsSFMain				@ Set our scroll counter to start main screen
+	ldrh r2, [r2]
+	strh r2, [r0]					@ Load the value into the scroll register
+
+	ldr r0, =REG_BG2VOFS_SUB		@ Load our vertical scroll register for BG2 on the sub screen
+	ldr r2, =vofsSFSub				@ Set our scroll counter to start sub screen
+	ldrh r2, [r2]
+	strh r2, [r0]					@ Load the value into the scroll register
+
+	ldr r0, =REG_BG3VOFS			@ Load our vertical scroll register for BG3 on the main screen
+	ldr r2, =vofsSBMain				@ Set our scroll counter to start main screen
+	ldrh r2, [r2]
+	strh r2, [r0]					@ Load the value into the scroll register
+
+	ldr r0, =REG_BG3VOFS_SUB		@ Load our vertical scroll register for BG3 on the sub screen
+	ldr r2, =vofsSBSub				@ Set our scroll counter to start sub screen
+	ldrh r2, [r2]
+	strh r2, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+
 	.pool
 	.end

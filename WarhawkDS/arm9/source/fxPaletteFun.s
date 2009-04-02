@@ -48,6 +48,14 @@ fxPaletteFadeToRed:
 	mov r1, #0
 	str r1, [r0]
 	
+	ldr r0, =BG_PALETTE
+	ldr r1, =bgPalette
+	ldr r2, =256*2
+	bl dmaCopy
+	ldr r0, =BG_PALETTE_SUB
+	ldr r1, =bgPaletteSub
+	bl dmaCopy
+	
 	ldr r0, =fxMode
 	ldr r1, [r0]
 	orr r1, #FX_PALETTE_FADE_TO_RED

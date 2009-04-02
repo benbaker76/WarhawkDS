@@ -40,6 +40,8 @@ fxSpotlightInit:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl fxTextScrollerOff
+	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
 	orr r1, #DISPLAY_WIN0_ON
@@ -55,9 +57,17 @@ fxSpotlightInit:
 	orr r3, #(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r3, [r2]
 	
+	ldr r2, =WIN_OUT
+	mov r3, #0
+	strh r3, [r2]
+	
 	ldr r2, =SUB_WIN_IN						@ Make bg's appear inside the window
 	ldr r3, [r2]
 	orr r3, #(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
+	strh r3, [r2]
+	
+	ldr r2, =SUB_WIN_OUT
+	mov r3, #0
 	strh r3, [r2]
 	
 	ldr r2, =WIN0_Y0						@ Top pos
@@ -83,7 +93,8 @@ fxSpotlightInit:
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
-	fxSpotlightIn:
+
+fxSpotlightIn:
 
 	stmfd sp!, {r0-r6, lr}
 	

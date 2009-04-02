@@ -43,11 +43,40 @@ initTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl stopTimer
-	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_TITLESCREEN
 	str r1, [r0]
+	
+	ldr r0, =fxMode						@ Get fxMode address
+	ldr r1, =FX_NONE					@ Get fxMode value
+	str r1, [r0]
+	
+	bl initMainTiles
+	bl resetScrollRegisters
+	bl clearBG0
+	bl clearBG1
+	bl clearBG2
+	bl clearBG3
+	
+	mov r0, #256
+	ldr r1, =vofsSFMain
+	str r0, [r1]
+	ldr r1, =vofsSBMain
+	str r0, [r1]
+	ldr r1, =vofsSFSub
+	str r0, [r1]
+	ldr r1, =vofsSBSub
+	str r0, [r1]
+
+	mov r0, #736
+	ldr r1, =yposSFMain
+	str r0, [r1]
+	ldr r1, =yposSBMain
+	str r0, [r1]
+	ldr r1, =yposSFSub
+	str r0, [r1]
+	ldr r1, =yposSBSub
+	str r0, [r1]
 	
 	@ Write the palette
 
@@ -116,24 +145,20 @@ initTitleScreen:
 	bl drawSBMapScreenSub
 	
 	bl showCredits
-	@bl showHiScore
-	
-	bl fxCopperTextOn
-	@bl fxStarfieldOn
 	
 	bl drawStartSprites
 	
-	bl fxSpotlightIn
-	
 	ldr r0, =ppotRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
+	
+	bl fxCopperTextOn
+	bl fxSpotlightIn	
+	bl fxFadeBlackIn
 	
 	ldr r0, =2									@ 2 seconds
 	ldr r1, =showTextScroller					@ Callback function address
 	
 	bl startTimer
-	
-	bl fxFadeBlackIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -143,7 +168,6 @@ showTextScroller:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl stopTimer
 	bl fxTextScrollerOn
 	
 	ldr r0, =15									@ 15 seconds
@@ -388,6 +412,11 @@ updateTitleScreen:
 	bl scrollStarsHoriz
 	bl updateLogoSprites
 	bl updateStartSprites
+	
+	@ldr r1, =REG_KEYINPUT
+	@ldr r2, [r1]
+	@tst r2, #BUTTON_A
+	@bleq initTitleScreen
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]

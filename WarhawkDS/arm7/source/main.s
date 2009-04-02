@@ -35,9 +35,14 @@ interruptHandlerVBlank:
 	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
+	cmp r1, #-1									@ Stop music value?
+	bleq stopMusic								@ Stop music						
+
+	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
+	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
 	blne playMusic								@ If so lets play the sound
-
+	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
@@ -74,6 +79,7 @@ mainLoop:
 	@ ------------------------------------
 	
 playMusic:
+
 	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =SCHANNEL_CR(0)
@@ -116,6 +122,24 @@ playMusic:
 	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(0)) @ SOUND_FORMAT_ADPCM
 	str r2, [r0]
 	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(127)) @ SOUND_FORMAT_ADPCM
+	str r2, [r1]
+
+	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
+	mov r1, #0
+	str r1, [r0]								@ Clear the value so it wont play again
+
+	ldmfd sp!, {r0-r3, pc} 					@ restore rgisters and return
+	
+	@ ------------------------------------
+	
+stopMusic:
+
+	stmfd sp!, {r0-r3, lr}
+	
+	ldr r0, =SCHANNEL_CR(0)
+	ldr r1, =SCHANNEL_CR(1)
+	ldr r2, =0
+	str r2, [r0]
 	str r2, [r1]
 
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC

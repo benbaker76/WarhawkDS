@@ -40,7 +40,7 @@ startTimer:
 	@ r0 - timer count in seconds
 	@ r1 - callback function address
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r6, lr}
 	
 	bl stopTimer
 	
@@ -70,13 +70,13 @@ startTimer:
 	ldr r1, =(TIMER_ENABLE | TIMER_IRQ_REQ | TIMER_CASCADE)
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r2, pc}								@ Return
+	ldmfd sp!, {r0-r6, pc}								@ Return
 	
 	@ ---------------------------------------------
 
 stopTimer:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =TIMER2_CR
 	ldrh r1, [r0]
@@ -88,13 +88,13 @@ stopTimer:
 	and r1, #~(TIMER_ENABLE)
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r1, pc}								@ Return
+	ldmfd sp!, {r0-r6, pc}								@ Return
 	
 	@ ---------------------------------------------
 
 timerTimer3:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =timerElapsed
 	ldr r1, [r0]
@@ -124,7 +124,7 @@ timerReturn:
 	@ldr r0, =debugString
 	@bl drawDebugString
 
-	ldmfd sp!, {r0-r2, pc}								@ Return
+	ldmfd sp!, {r0-r6, pc}								@ Return
 	
 	@ ---------------------------------------------
 

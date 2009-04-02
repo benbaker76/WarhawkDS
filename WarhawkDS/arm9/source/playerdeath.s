@@ -73,7 +73,7 @@ playerDeathActive:										@ --- PHASE 1
 	@ need a little effect to say - "YOU ARE DYING" IE. FLASH BACKGROUND... hmmm....
 	
 	@ WANTED TO STOP THE MUSIC HERE - CANT!!! :(
-	@bl stopAudioStream
+	bl stopAudioStream
 
 	ldmfd sp!, {r0-r6, pc}			
 	
@@ -287,14 +287,10 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 playerIsAllDead:										@ --- PHASE 5
 	@ ok, now we need to do whatever to stop the game and go to game over???
 
-	bl resetSprites				@ clear all the sprites
-
-	bl fxSpotlightOut			@ fades but then comes back?
-
-	ldr r0, =gameMode
-	mov r1,#GAMEMODE_STOPPED
-	str r1,[r0]
+	@dr r0, =score
+	@ldr r0, [r0]
 	
-	bl fxSineWobbleOff
+	mov r0, #0				@ <--- need to place score into r0
+	bl showHiScoreEntry
 	
 	ldmfd sp!, {r0-r6, pc}

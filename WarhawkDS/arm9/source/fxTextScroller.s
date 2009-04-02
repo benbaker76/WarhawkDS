@@ -39,7 +39,10 @@ fxTextScrollerOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl stopTimer
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_TEXT_SCROLLER
+	str r1, [r0]
 	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -52,8 +55,7 @@ fxTextScrollerOn:
 	strh r3, [r2]
 	
 	ldr r2, =WIN_OUT						@ Make bg's appear inside the window
-	ldr r3, [r2]
-	orr r3, #(WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
+	mov r3, #(WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r3, [r2]
 	
 	ldr r2, =WIN0_Y0						@ Top pos
@@ -72,14 +74,21 @@ fxTextScrollerOn:
 	ldr r3, =255
 	strb r3, [r2]
 	
+	ldr r0, =textPos
+	mov r1, #0
+	str r1, [r0]
+	
 	ldr r0, =scrollPos
 	mov r1, #0
 	str r1, [r0]
 	
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	orr r1, #FX_TEXT_SCROLLER
+	ldr r0, =hofsScroll
+	mov r1, #0
 	str r1, [r0]
+	
+	ldr r0, =REG_BG0HOFS
+	mov r1, #0
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
 
@@ -94,11 +103,11 @@ fxTextScrollerOff:
 	and r1, #~(DISPLAY_WIN0_ON)
 	str r1, [r0]
 	
-	ldr r0, =REG_BG0HOFS
-	mov r1, #0
-	strb r1, [r0]
-	
 	ldr r0, =WIN_IN
+	mov r1, #0
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG0HOFS
 	mov r1, #0
 	strh r1, [r0]
 	
@@ -164,7 +173,7 @@ fxTextScrollerVBlank:
 	bl drawTextCount
 	
 	ldr r0, =hofsScroll
-	ldrb r1, [r0]
+	ldr r1, [r0]
 	ldr r2, =textPos
 	ldr r3, [r2]
 	ldr r4, =scrollPos
@@ -179,8 +188,8 @@ fxTextScrollerVBlank:
 	ldr r6, =REG_BG0HOFS
 	str r3, [r2]
 	str r5, [r4]
-	strb r1, [r6]
-	strb r1, [r0]
+	strh r1, [r6]
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
 
@@ -199,7 +208,7 @@ hofsScroll:
 	.word 0
 
 scrollText:
-	.asciz "YO FLASH! WASSUP? HOPE YOU LIKE THIS LATEST COMMIT WITH SCROLLY AND LOGO!! I GUESS WE CAN PUT A PROPER RANT HERE WITH THANKS AND GREETZ... FOR NOW THO I WILL SIGN OFF AND SAY CYA L8R! ...               "
+	.asciz "WELCOME TO THE WARHAWK DS DEMO... THIS IS ONLY A DEMO... FULL GAME COMING SOON!                 "
 	
 	.pool
 	.end

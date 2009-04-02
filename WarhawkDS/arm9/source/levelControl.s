@@ -107,7 +107,7 @@ levelStart:
 	str r1, [r0]
 	
 	bl initMainTiles
-	bl resetScrollRegisters					@ Reset the scroll registers
+	bl initLevelScrollRegisters				@ Reset the scroll registers
 	bl resetSprites
 	bl initSprites
 	bl initLevelSprites

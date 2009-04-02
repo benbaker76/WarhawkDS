@@ -146,21 +146,21 @@ interruptHandlerHBlankDone:
 	
 interruptHandlerTimer1:
 
-	push { lr }
+	stmfd sp!, {r0-r6, lr}
 	
 	bl audioStreamTimer1
 	
-	pop { pc }
+	ldmfd sp!, {r0-r6, pc}
 	
 	@ ------------------------------------
 	
 interruptHandlerTimer3:
 
-	push { lr }
+	stmfd sp!, {r0-r6, lr}
 	
 	bl timerTimer3
 	
-	pop { pc }
+	ldmfd sp!, {r0-r6, pc}
 	
 	@ ------------------------------------
 	

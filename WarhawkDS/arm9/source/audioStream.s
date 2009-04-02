@@ -117,7 +117,7 @@ playAudioStream:
 stopAudioStream:
 
 	stmfd sp!, {r0-r2, lr}
-
+	
 	ldr r0, =TIMER0_CR
 	ldrh r1, [r0]
 	and r1, #~(TIMER_ENABLE)
@@ -127,6 +127,10 @@ stopAudioStream:
 	ldrh r1, [r0]
 	and r1, #~(TIMER_ENABLE)
 	strh r1, [r0]
+	
+	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
+	ldr r1, =-1											@ Get the sample address
+	str r1, [r0]										@ Write the value
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 

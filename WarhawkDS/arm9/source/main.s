@@ -77,7 +77,6 @@ initSystem:
 main:
 	bl gameStop
 	bl initVideo
-	bl initMainTiles
 	
 	bl initInterruptHandler						@ initialize the interrupt handler
 	bl initAudioStream
@@ -88,10 +87,7 @@ main:
 	
 	bl readHiScore
 	
-@	bl showIntro1
-	
-	ldr r0, =34000
-	bl showHiScoreEntry
+	bl showIntro1
 
 	@ ------------------------------------
 	

@@ -213,7 +213,7 @@ drawCreditText:
 	bl drawText
 	
 	ldr r0, =someoneText						@ Load out text pointer
-	ldr r1, =15									@ x pos
+	ldr r1, =7									@ x pos
 	ldr r2, =19									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
@@ -438,7 +438,7 @@ musixText:
 	.asciz "- MUSIX -"
 	
 someoneText:
-	.asciz "???"
+	.asciz "PRESS PLAY ON TAPE"
 
 aRetroBytesPortalProductionText:
 	.asciz "A RETROBYTES PORTAL PRODUCTION"

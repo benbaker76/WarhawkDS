@@ -154,15 +154,33 @@ showHiScoreEntryDone:
 	
 updateHiScoreEntry:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r8, lr}
 	
 	ldr r0, =nameEntryBuffer
 	ldr r1, =cursorPos
 	ldr r2, [r1]
 	ldrb r3, [r0, r2]
 	
+	ldr r8,=hiScoreKeyPress
+	ldr r7,[r8]				@ we should never need to reset this value, the code does it for us
+	
 	ldr r4, =REG_KEYINPUT
 	ldr r5, [r4]
+	
+	mov r4,r5
+	and r4,#241				@ check all the used keys for entry are clear!
+	cmp r4,#241
+	moveq r7,#0				@ if so, set to 0
+	addne r7,#1				@ if not, a key is pressed, so add 1
+	
+	cmp r7,#16				@ if we are at 16, reset to 0 to allow movement
+	movpl r7,#0				@ 16 is a delay you may want to adjust to suit?
+	bpl highEntryOK
+	
+	cmp r7,#1				@ if it is 1, keep pressed (from no-key pressed)
+	bne noEntry
+	
+	highEntryOK:
 	tst r5, #BUTTON_UP
 	addeq r3, #1
 	tst r5, #BUTTON_DOWN
@@ -202,15 +220,19 @@ updateHiScoreEntry:
 	ldr r3, =1									@ sub=1 main=0
 	ldr r4, =3									@ characters
 	bl drawTextCount
+
+	noEntry:
 	
 	bl drawCursorSprite
+
+	str r7,[r8]
 	
 	ldr r0, =REG_KEYINPUT
 	ldr r1, [r0]
 	tst r1, #BUTTON_A
 	bleq saveHiScore
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -503,6 +525,9 @@ ascii2IntLoop:
 
 	.data
 	.align
+
+hiScoreKeyPress:
+	.word 0
 	
 cursorPos:
 	.word 0

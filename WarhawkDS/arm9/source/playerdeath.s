@@ -289,10 +289,12 @@ playerIsAllDead:										@ --- PHASE 5
 
 	bl resetSprites				@ clear all the sprites
 
+	bl fxSpotlightOut			@ fades but then comes back?
+
 	ldr r0, =gameMode
 	mov r1,#GAMEMODE_STOPPED
 	str r1,[r0]
 	
-
+	bl fxSineWobbleOff
 	
 	ldmfd sp!, {r0-r6, pc}

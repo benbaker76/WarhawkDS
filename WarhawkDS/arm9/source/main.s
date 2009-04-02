@@ -88,7 +88,7 @@ main:
 	
 	bl readHiScore
 	
-	@bl showIntro1
+@	bl showIntro1
 	
 	ldr r0, =34000
 	bl showHiScoreEntry

@@ -241,8 +241,8 @@ moveStarsLoop:
 	
 	@ we need a speed from -3 - +3
 	
-	and r8, #0x7									@ 0-7
-	subs r8, #8
+	and r8, #0x3									@ 0-7
+	subs r8, #4
 	strb r8, [r7, r3] 								@ Store Speed
 	
 	mov r6, #255
@@ -287,7 +287,12 @@ drawStarsLoop:
 	
 	ldr r6, =BG_TILE_RAM_SUB(STAR_TILE_BASE_SUB)	@ set where we are drawing them
 	bl plotStar
+	add r0,#1
+	bl plotStar
+	sub r0,#1
 	ldr r6, =BG_TILE_RAM(STAR_TILE_BASE)			@ set where we are drawing them
+	bl plotStar
+	add r0,#1
 	bl plotStar
 	
 	subs r2, #1										@ go to next star (in reverse)
@@ -342,8 +347,8 @@ newRandomStarXSpeed:
 
 	bl getRandom
 													@ we need a speed from -3 - +3
-	and r8, #0x7									@ 0-7
-	subs r8, #8
+	and r8, #0x3									@ 0-7
+	subs r8, #4
 
 @	subs r8, #3
 @	cmp r8, #0

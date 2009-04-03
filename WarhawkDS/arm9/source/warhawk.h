@@ -5,6 +5,8 @@
 #include "../build/LoadingBottom.h"
 #include "../build/Proteus.h"
 #include "../build/Headsoft.h"
+#include "../build/Infectuous.h"
+#include "../build/PPOT.h"
 #include "../build/Retrobytes.h"
 #include "../build/Web.h"
 #include "../build/TitleTop.h"

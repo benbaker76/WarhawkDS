@@ -35,6 +35,7 @@
 	.text
 	.global showIntro1
 	.global showIntro2
+	.global showIntro3
 	.global updateIntro
 
 showIntro1:
@@ -80,7 +81,7 @@ showIntro1:
 	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =2									@ 2 seconds
+	ldr r0, =3									@ 2 seconds
 	ldr r1, =showIntro2							@ Callback function address
 	
 	bl startTimer
@@ -90,6 +91,58 @@ showIntro1:
 	@---------------------------------
 	
 showIntro2:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_INTRO
+	str r1, [r0]
+	
+	@ Write the palette
+
+	ldr r0, =ProteusPal
+	ldr r1, =BG_PALETTE
+	ldr r2, =ProteusPalLen
+	bl dmaCopy
+	ldr r1, =BG_PALETTE_SUB
+	bl dmaCopy
+
+	@ Write the tile data
+	
+	ldr r0 ,=InfectuousTiles
+	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+	ldr r2, =InfectuousTilesLen
+	bl dmaCopy
+
+	ldr r0, =PPOTTiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =PPOTTilesLen
+	bl dmaCopy
+	
+	@ Write map
+	
+	ldr r0, =InfectuousMap
+	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
+	ldr r2, =InfectuousMapLen
+	bl dmaCopy
+
+	ldr r0, =PPOTMap
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =PPOTMapLen
+	bl dmaCopy
+	
+	bl fxFadeWhiteIn
+	
+	ldr r0, =3									@ 2 seconds
+	ldr r1, =showIntro3							@ Callback function address
+	
+	bl startTimer
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showIntro3:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -132,7 +185,7 @@ showIntro2:
 	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =2									@ 2 seconds
+	ldr r0, =3									@ 2 seconds
 	ldr r1, =showLoading						@ Callback function address
 	
 	bl startTimer

@@ -59,7 +59,7 @@ playerDeathActive:										@ --- PHASE 1
 	
 	mov r1,#2
 	str r1,[r0]				@ set mid explode to active
-	ldr r1,=200				@ 200 is a good length
+	ldr r1,=220				@ 200 is a good length
 	ldr r0,=playerDeathDelay
 	str r1,[r0]				@ set duration of mid explode
 	
@@ -70,11 +70,7 @@ playerDeathActive:										@ --- PHASE 1
 	mov r0,#0x2f
 	str r0,[r1]				@ make a little "FLASH"
 	bl playAlienExplodeScreamSound
-	@ need a little effect to say - "YOU ARE DYING" IE. FLASH BACKGROUND... hmmm....
 	
-	@ WANTED TO STOP THE MUSIC HERE - CANT!!! :(
-	bl stopAudioStream
-
 	ldmfd sp!, {r0-r6, pc}			
 	
 playerDeathMidExplode:									@ --- PHASE 2
@@ -164,12 +160,13 @@ playerDeathMidExplode:									@ --- PHASE 2
 		ldr r2,=playerDeath		@ time to init the MAIN explosion
 		mov r3,#3
 		str r3,[r2]
-		mov r3,#170				@ set delay for MAIN explosion
+		mov r3,#190				@ set delay for MAIN explosion
 		str r3,[r0]
 		ldr r1,=spriteActive
 		mov r3,#0
 		str r3,[r1]			@ turn off players ship
 		bl fxPaletteFadeToRed
+		bl stopAudioStream	@ stop music here
 		@---- PLAY BIG PLAYER EXPLODE NOISE HERE
 		bl playBossExplodeSound		@ we will use this for now!!	
 		ldmfd sp!, {r0-r6, pc}	
@@ -264,7 +261,10 @@ playerDeathMainExplode:									@ --- PHASE 3
 		str r3,[r2]
 		mov r3,#150				@ set delay for explode WAIT
 		str r3,[r0]
-	mainExplodeCountdownNo:	
+	mainExplodeCountdownNo:
+
+	cmp r1,#170							@ overlap the explosion sounds slightly
+		bleq playBossExplodeSound		@ we will use this for now!!
 	ldmfd sp!, {r0-r6, pc}
 	
 playerDeathMainExplodeWait:								@ --- PHASE 4
@@ -277,9 +277,15 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 	subs r1,#1
 	str r1,[r0]
 	bpl mainExplodeCountWait
+		mov r3,#200
+		str r3,[r0]
+
 		ldr r0,=playerDeath		@ set to TOTALLY finished
 		mov r3,#5
 		str r3,[r0]
+		
+		bl resetSprites
+
 	mainExplodeCountWait:	
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -287,10 +293,18 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 playerIsAllDead:										@ --- PHASE 5
 	@ ok, now we need to do whatever to stop the game and go to game over???
 
-	@dr r0, =score
-	@ldr r0, [r0]
-	
-	mov r0, #0				@ <--- need to place score into r0
+	ldr r0,=playerDeathDelay
+	ldr r3,[r0]
+	cmp r3,#0
+	beq playerIsToast
+		sub r3,#1
+		str r3,[r0]
+		ldmfd sp!, {r0-r6, pc}
+	playerIsToast:
+
+
+	ldr r0, =score
+	bl ascii2Int					@ why does this fail?
 	bl showHiScoreEntry
 	
 	ldmfd sp!, {r0-r6, pc}

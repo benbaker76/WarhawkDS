@@ -24,7 +24,6 @@
 	.align
 	.global bossInitLev
 	.global bossFireLev
-	.global bossMoveLev
 	
 bossInitLev:
 	@ This consists of 8 words (32 bytes) that describe things that the boss may do
@@ -43,7 +42,7 @@ bossInitLev:
 	@3
 	.word 5,3,10,35,0,1,143,207			@ homing test
 	@4
-	 .word 4,8,8,35,0,2,143,207			@ LURCHER TEST!
+	.word 4,8,8,35,0,2,143,207			@ LURCHER TEST!
 	@5
 	.word 4,4,10,50,0,3,173,177			@ Crane Test
 	@6
@@ -63,7 +62,7 @@ bossInitLev:
 	@13
 	.word 4,2,8,35,1,0,143,207
 	@14
-	.word 4,2,10,35,0,0,183,143
+	.word 4,2,8,60,0,0,143,207
 	@15
 	.word 3,10,2,35,0,2,73,277			@ LURCHER TEST!
 	@16
@@ -126,29 +125,9 @@ bossFireLev:
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	@14
-	.word 0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,4,0x0003000F,50,0x0001000A,50,0x000D8000,16
-	.word 0x000D8000,16,0x000D8000,16,0x000D8000,50,0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,50
+	.word 0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,4,0x0003000F,50,0x0001000A,50,0x00018000,16
+	.word 0x00018000,16,0x00018000,16,0x00018000,50,0x0005000F,4,0x0005000F,4,0x0005000F,4,0x0003000F,4,0x0003000F,50
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 	.space 256
 	.space 256
-	
-.bossMoveLev:
-	@ No idea with this at the moment?
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256
-	.space 256	
-	.space 256
-	.space 256	
-	

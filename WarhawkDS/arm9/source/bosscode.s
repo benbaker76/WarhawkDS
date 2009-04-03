@@ -36,6 +36,14 @@
 @----------------- BOSS INIT CODE	
 checkBossInit:
 	stmfd sp!, {r1-r2, lr}
+
+	ldr r0,=playerDeath
+	ldr r0,[r0]
+	cmp r0,#5
+	bne bossInitActive
+		ldmfd sp!, {r1-r2, pc}
+	bossInitActive:
+
 	@ this uses yposSub to tell when we should display the BOSS
 	@ Perhaps levelend will tell us when to move him???
 	@ not sure?
@@ -87,9 +95,9 @@ checkBossInit:
 		@ set r0 to the source based on the level
 		@ set r1 to the destination in our sprite tiles
 		ldr r0, =BossShipsTiles
-		ldr r1,=levelNum
+		ldr r1,=levelNum		@ 1-16
 		ldr r1,[r1]
-		sub r1,#1
+		sub r1,#1				@ now 0-15
 		mov r2,#9
 		mul r1,r2				@ *9 sprites per boss (level*9)*512
 		lsl r1,#9				@ multiply by 512
@@ -102,20 +110,21 @@ checkBossInit:
 		bl dmaCopy
 		ldr r1, =SPRITE_GFX_SUB
 		add r1,#55*512
+		ldr r2, =512*9			@ 9 sprites to copy (duplicted in case or error here?)
 		bl dmaCopy	
+		
 		@ OK, that is that boss sprites assigned (55-63)
 		@ now we need to activate them (113-x)
 		@ we will uses spriteActive of #128 for a boss
 		mov r0,#55					@ r0 = sprite object
 		mov r1,#113					@ r1 = sprite number
 		ldr r2,=spriteActive
+		mov r3,#128
 		bossSpriteLoop:
-			mov r3,#128
 			ldr r2,=spriteActive
 			str r3,[r2, r1, lsl #2]	@ activate the sprite
 			ldr r2,=spriteObj
 			str r0,[r2, r1, lsl #2]	@ Store the sprites image
-			mov r3,#128
 			ldr r2,=spriteIdent
 			str r3,[r2, r1, lsl #2]	@ set the ident to 128 (so the unit flashes as one)
 			
@@ -138,12 +147,11 @@ checkBossInit:
 		ldr r0,[r0]
 		sub r0,#1						@ make level 0-15
 		ldr r1,=bossInitLev
-		add r1, r0, lsl #5				@ add level * 32 (bytes)
+		add r1, r0, lsl #5				@ add level * 32 (bytes) (8 words)
 
-		mov r2,#20
 		ldr r2,[r1,r2]					@ grab "SPECIAL VALUE"
 		cmp r2,#0
-			bleq bossInitStandard
+			bleq bossInitStandard		@ used on level 1
 		cmp r2,#1
 			bleq bossInitTracker
 		cmp r2,#2
@@ -581,7 +589,7 @@ bossExploder:
 
 	beloop:
 	ldr r0,=explodeSpriteBoss
-	ldr r1,[r0]						@ r1=number of sprite to explode!
+	ldr r1,[r0]						@ r1=number of sprite to explode! (USED LATER ****)
 	beloop2:
 	ldr r2,=spriteActive
 	add r2, r1, lsl #2				@ r2=offs to sprite
@@ -682,7 +690,7 @@ bossExploder:
 		add r6,#1
 		str r6,[r5]
 	noBossExplodeWrap:
-	str r1,[r0]						@ put new sprite number back
+	str r1,[r0]						@ put new sprite number back ****
 	
 	ldr r5,=explodeSpriteBossCount
 	ldr r6,[r5]

@@ -50,7 +50,13 @@ initData:
 	ldr r0,=powerUpDelay
 	str r1,[r0]				@ clear the fire delay
 
-	@ NEED TO RESET SCORE HERE
+	@ NEED TO RESET SCORE HERE (see, was already noted HK :) )
+	
+	ldr r0,=score			@ reset (zero) score
+	mov r1,#0
+	str r1,[r0]
+	add r0,#4
+	str r1,[r0]
 
 	ldmfd sp!, {r0-r1, pc}
 	.pool

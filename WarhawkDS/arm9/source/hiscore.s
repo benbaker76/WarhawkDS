@@ -28,12 +28,16 @@
 #include "sprite.h"
 #include "ipc.h"
 
-	#define HISCORE_VALUE_SIZE		7
+	#define HISCORE_VALUE_SIZE		7	
 	#define HISCORE_NAME_SIZE		3
 	#define HISCORE_CRLF_SIZE		2
 	#define HISCORE_ENTRY_COUNT		10
 	#define HISCORE_ENTRY_SIZE		(HISCORE_VALUE_SIZE + HISCORE_NAME_SIZE + HISCORE_CRLF_SIZE)
 	#define HISCORE_TOTAL_SIZE		HISCORE_ENTRY_COUNT * HISCORE_ENTRY_SIZE
+
+
+@ HISCORE_VALUE_SIZE is set to 7 but the game score is 8 digits?
+
 
 	.arm
 	.align
@@ -42,6 +46,7 @@
 	.global showHiScore
 	.global showHiScoreEntry
 	.global updateHiScoreEntry
+	.global ascii2Int
 	
 readHiScore:
 

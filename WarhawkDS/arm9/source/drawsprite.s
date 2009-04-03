@@ -42,6 +42,14 @@
 
 drawSprite:
 	stmfd sp!, {lr}
+	
+	ldr r0,=playerDeath
+	ldr r0,[r0]
+	cmp r0,#5
+	bne drawSpriteActive
+	ldmfd sp!, {pc}
+	drawSpriteActive:
+	
 	mov r8,#127 			@ our counter for 128 sprites, do not think we need them all though
 	ldr r4,=horizDrift	 	@ here we will set r4 as an adder for sprite offset
 	ldr r4,[r4]				@ against our horizontal scroll

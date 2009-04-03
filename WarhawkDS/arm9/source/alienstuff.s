@@ -282,6 +282,13 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	@ we will have to see how much time (raster) we have when detection is going
 	@ to see if we can add more
 	stmfd sp!, {r0-r10, lr}
+		
+	ldr r0,=playerDeath
+	ldr r0,[r0]
+	cmp r0,#5
+	bne moveAlienActive
+		ldmfd sp!, {r0-r10, pc}
+	moveAlienActive:
 
 	mov r7,#63						@ 64 aliens! (63-0)
 	moveAlienLoop:

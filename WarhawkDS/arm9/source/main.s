@@ -115,6 +115,7 @@ mainLoop:
 
 
 gameLoop:
+
 	bl moveShip									@ check and move your ship
 	bl alienFireMove							@ check and move alien bullets
 	bl fireCheck								@ check for your wish to shoot!

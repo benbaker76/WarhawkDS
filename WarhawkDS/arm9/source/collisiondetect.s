@@ -654,6 +654,9 @@ drawShard:
 	
 @----------------------------- Check alien collision with ship (Seemed the best place to put it :) )
 							@	The detection (apart from alien bullet) needs a tidy - too many add and subs
+							@ r1=offset to alien base
+
+
 alienCollideCheck:
 	stmfd sp!, {r0-r8, lr}
 	

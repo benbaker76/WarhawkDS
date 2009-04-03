@@ -80,7 +80,7 @@ bossInitStandard:
 
 	add r1,#4
 	ldr r0,[r1]
-	ldr r2,=bossRightMax				@ store Max X Coord
+	ldr r2,=bossRightMax			@ store Max X Coord
 	str r0,[r2]
 
 	mov r0,#0

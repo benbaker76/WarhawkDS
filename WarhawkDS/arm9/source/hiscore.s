@@ -172,23 +172,23 @@ updateHiScoreEntry:
 	ldr r2, [r1]
 	ldrb r3, [r0, r2]
 	
-	ldr r8,=hiScoreKeyPress
-	ldr r7,[r8]									@ we should never need to reset this value, the code does it for us
+	ldr r8, =hiScoreKeyPress
+	ldr r7, [r8]								@ we should never need to reset this value, the code does it for us
 	
 	ldr r4, =REG_KEYINPUT
 	ldr r5, [r4]
 	
-	mov r4,r5
-	and r4,#241									@ check all the used keys for entry are clear!
-	cmp r4,#241
-	moveq r7,#0									@ if so, set to 0
-	addne r7,#1									@ if not, a key is pressed, so add 1
+	mov r4, r5
+	and r4, #241								@ check all the used keys for entry are clear!
+	cmp r4, #241
+	moveq r7, #0								@ if so, set to 0
+	addne r7, #1								@ if not, a key is pressed, so add 1
 	
-	cmp r7,#16									@ if we are at 16, reset to 0 to allow movement
-	movpl r7,#0									@ 16 is a delay you may want to adjust to suit?
+	cmp r7, #16									@ if we are at 16, reset to 0 to allow movement
+	movpl r7, #0								@ 16 is a delay you may want to adjust to suit?
 	bpl hiScoreEntryOK
 	
-	cmp r7,#1									@ if it is 1, keep pressed (from no-key pressed)
+	cmp r7, #1									@ if it is 1, keep pressed (from no-key pressed)
 	bne hiScoreEntrySkip
 	
 hiScoreEntryOK:
@@ -557,7 +557,16 @@ enterNameText:
 	.asciz "PLEASE ENTER YOUR NAME"
 	
 hiScoreBuffer:
-	.space HISCORE_TOTAL_SIZE
+	.string "0704016MEL\n"
+	.string "0050000ACM\n"
+	.string "0045000NAR\n"
+	.string "0040000UP \n"
+	.string "0035000BTH\n"
+	.string "0030000INU\n"
+	.string "0025000S G\n"
+	.string "0020000 PO\n"
+	.string "0015000AL \n"
+	.string "0010000NUO\n"
 
 nameBuffer:
 	.asciz "   "

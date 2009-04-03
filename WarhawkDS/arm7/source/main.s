@@ -84,7 +84,7 @@ playMusic:
 	
 	ldr r0, =SCHANNEL_CR(0)
 	ldr r1, =SCHANNEL_CR(1)
-	ldr r2, =0
+	mov r2, #0
 	str r2, [r0]
 	str r2, [r1]
 	
@@ -119,9 +119,9 @@ playMusic:
 	
 	ldr r0, =SCHANNEL_CR(0)
 	ldr r1, =SCHANNEL_CR(1)
-	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(0)) @ SOUND_FORMAT_ADPCM
+	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(0))
 	str r2, [r0]
-	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(127)) @ SOUND_FORMAT_ADPCM
+	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(127))
 	str r2, [r1]
 
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
@@ -138,7 +138,7 @@ stopMusic:
 	
 	ldr r0, =SCHANNEL_CR(0)
 	ldr r1, =SCHANNEL_CR(1)
-	ldr r2, =0
+	mov r2, #0
 	str r2, [r0]
 	str r2, [r1]
 
@@ -155,44 +155,39 @@ playSound:
 	stmfd sp!, {r0-r3, lr}
 	
 	bl getFreeChannel
-	cmp r0,#255
+	cmp r0, #255
 	beq playSoundDone
 
 	mov r3, r0, lsl #4
 	
 	ldr r0, =SCHANNEL_CR(0)
-	add r0, r3
-	str r1, [r0]
+	mov r1, #0
+	str r1, [r0, r3]
 	
 	ldr r0, =SCHANNEL_TIMER(0)
-	add r0, r3
 	ldr r1, =SOUND_FREQ(11025)					@ Frequency currently hard-coded to 11025 Hz
-	strh r1, [r0]
+	strh r1, [r0, r3]
 	
 	ldr r0, =SCHANNEL_SOURCE(0)					@ Channel source
-	add r0, r3
 	ldr r1, =IPC_SOUND_DATA(1)					@ Lets get first sound in IPC
 	ldr r2, [r1]								@ Read the value
-	str r2, [r0]								@ Write the value
+	str r2, [r0, r3]							@ Write the value
 	
 	ldr r0, =SCHANNEL_LENGTH(0)
-	add r0, r3
 	ldr r1, =IPC_SOUND_LEN(1)					@ Get the location of the sound length
 	ldr r2, [r1]								@ Read the value
 	and r2, #(~7)								@ Multiple of 4 bytes
 	and r2, #0x7FFFFFFF							@ And with 0x7FFFFFFF
 	lsr r2, #2									@ Right shift (LEN >> 2)
-	str r2, [r0]								@ Write the value
+	str r2, [r0, r3]							@ Write the value
 	
 	ldr r0, =SCHANNEL_REPEAT_POINT(0)
-	add r0, r3
 	mov r1, #0
-	strh r1, [r0]
+	strh r1, [r0, r3]
 	
 	ldr r0, =SCHANNEL_CR(0)
-	add r0, r3
 	ldr r1, =(SCHANNEL_ENABLE | SOUND_ONE_SHOT | SOUND_VOL(127) | SOUND_PAN(64) | SOUND_8BIT)
-	str r1, [r0]
+	str r1, [r0, r3]
 
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	mov r1, #0
@@ -220,9 +215,10 @@ freeChannelLoop:
 	beq freeChannelFound						@ (if not equal = channel clear)
 	subs r0, #1									@ sub one from our counter
 	bpl freeChannelLoop							@ keep looking
-	mov r0,#255
+	mov r0, #255
 
-freeChannelFound:								
+freeChannelFound:
+
 	ldmfd sp!, {r1-r3, pc}						@ restore rgisters and return
 	
 	@ ------------------------------------

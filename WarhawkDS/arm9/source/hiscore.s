@@ -557,16 +557,7 @@ enterNameText:
 	.asciz "PLEASE ENTER YOUR NAME"
 	
 hiScoreBuffer:
-	.string "0704016MEL\n"
-	.string "0050000ACM\n"
-	.string "0045000NAR\n"
-	.string "0040000UP \n"
-	.string "0035000BTH\n"
-	.string "0030000INU\n"
-	.string "0025000S G\n"
-	.string "0020000 PO\n"
-	.string "0015000AL \n"
-	.string "0010000NUO\n"
+	.incbin "../../efsroot/HiScore.dat"
 
 nameBuffer:
 	.asciz "   "

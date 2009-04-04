@@ -134,7 +134,7 @@ initLevel:
 	
 	ldr r0,=energy
 	mov r1,#71
-mov r1,#892
+@mov r1,#892
 	str r1,[r0]				@ set energy to full
 	
 	ldr r0,=animDelay

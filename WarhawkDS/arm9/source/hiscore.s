@@ -28,7 +28,7 @@
 #include "sprite.h"
 #include "ipc.h"
 
-	#define HISCORE_VALUE_SIZE		7	
+	#define HISCORE_VALUE_SIZE		8	
 	#define HISCORE_NAME_SIZE		3
 	#define HISCORE_CRLF_SIZE		2
 	#define HISCORE_ENTRY_COUNT		10
@@ -46,7 +46,7 @@
 	.global showHiScore
 	.global showHiScoreEntry
 	.global updateHiScoreEntry
-	.global ascii2Int
+	.global byte2Int
 	
 readHiScore:
 
@@ -190,13 +190,11 @@ updateHiScoreEntry:
 	addne r7, #1								@ if not, a key is pressed, so add 1
 	
 	cmp r7, #16									@ if we are at 16, reset to 0 to allow movement
-	movpl r7, #0								@ 16 is a delay you may want to adjust to suit?
-	bpl hiScoreEntryOK
+	movpl r7, #1								@ 16 is a delay you may want to adjust to suit?
 	
 	cmp r7, #1									@ if it is 1, keep pressed (from no-key pressed)
 	bne hiScoreEntrySkip
-	
-hiScoreEntryOK:
+
 	
 	tst r5, #BUTTON_UP
 	addeq r3, #1
@@ -539,6 +537,36 @@ ascii2IntLoop:
 	ldmfd sp!, {r1-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
+
+byte2Int:
+	
+	@ r0 = pointer to buffer
+	@ r0 = return value
+	
+	stmfd sp!, {r1-r6, lr}
+	
+	add r0, #HISCORE_VALUE_SIZE-1
+	
+	mov r1, #0
+	mov r2, #0
+	mov r3, #1
+
+byte2IntLoop:
+	
+	ldrb r4, [r0]
+	sub r0, #1
+	mul r4, r3
+	add r1, r4
+	mov r5, #10
+	mul r3, r5
+	add r2, #1
+	cmp r2, #HISCORE_VALUE_SIZE
+	bne byte2IntLoop
+	
+	mov r0, r1
+	
+	ldmfd sp!, {r1-r6, pc} 	
+
 
 	.data
 	.align

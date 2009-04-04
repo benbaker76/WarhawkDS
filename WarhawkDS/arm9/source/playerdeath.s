@@ -277,7 +277,7 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 	subs r1,#1
 	str r1,[r0]
 	bpl mainExplodeCountWait
-		mov r3,#200
+		mov r3,#180
 		str r3,[r0]
 
 		ldr r0,=playerDeath		@ set to TOTALLY finished
@@ -302,9 +302,8 @@ playerIsAllDead:										@ --- PHASE 5
 		ldmfd sp!, {r0-r6, pc}
 	playerIsToast:
 
-
 	ldr r0, =score
-	bl ascii2Int					@ why does this fail?
+	bl byte2Int					@ why does this fail?
 	bl showHiScoreEntry
 	
 	ldmfd sp!, {r0-r6, pc}

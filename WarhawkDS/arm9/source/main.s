@@ -87,6 +87,8 @@ main:
 	
 	bl readHiScore
 	
+@	mov r0,#8192
+@	bl showHiScoreEntry
 	bl showIntro1
 
 	@ ------------------------------------

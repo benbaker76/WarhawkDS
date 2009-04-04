@@ -19,6 +19,7 @@
 @ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include "warhawk.h"
 #include "system.h"
 #include "audio.h"
 #include "video.h"
@@ -28,7 +29,7 @@
 #include "ipc.h"
 #include "timers.h"
 
-	#define BUFFER_SIZE		4096
+	#define BUFFER_SIZE		2048
 	#define AUDIO_FREQ		22050
 
 	.arm
@@ -129,15 +130,22 @@ stopAudioStream:
 	strh r1, [r0]
 	
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
-	ldr r1, =-1											@ Get the sample address
-	str r1, [r0]										@ Write the value
+	mov r1, #-1											@ Get the sample address
+	str r1, [r0]		
+	
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_STOP_MUSIC)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 
 	@ ---------------------------------------------
 
 playBuffer:
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(0)							@ Get the IPC sound length address
 	ldr r1, =BUFFER_SIZE								@ buffer size
@@ -147,7 +155,14 @@ playBuffer:
 	ldr r1, =buffer										@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_MUSIC)
+	@strh r1, [r0]
+	
+	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 	
 	@ ---------------------------------------------
 	
@@ -202,8 +217,6 @@ bufferPos:
 	
 fileSize:
 	.word 0
-	
-	.section .bss
 	
 fileName:
 	.space 256

@@ -112,7 +112,10 @@
 
 #define LEVEL_COUNT					16
 
-@ Scroll positions
+#define AUDIO_PLAY_SOUND			0
+#define AUDIO_PLAY_MUSIC			1
+#define AUDIO_STOP_MUSIC			2
+
 
 @ FX defines. These are bits so we can have multiple fx at once
 

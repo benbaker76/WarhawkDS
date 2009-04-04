@@ -29,7 +29,6 @@
 	.align
 	.text
 	
-@	.global playInGameMusic
 	.global playBlasterSound							@ Use = Normal Fire
 	.global playExplosionSound
 	.global playAlienExplodeSound
@@ -46,21 +45,6 @@
 	.global playSteelSound
 	.global playBossExplodeSound
 
-@playInGameMusic:
-@	stmfd sp!, {r0-r1, lr}
-@
-@	ldr r0, =IPC_SOUND_LEN(0)							@ Get the IPC sound length address
-@	ldr r1, =ingame_wav_end								@ Get the sample end
-@	ldr r2, =ingame_wav									@ Get the same start
-@	sub r1, r2											@ Sample end - start = size
-@	str r1, [r0]										@ Write the sample size
-@	
-@	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
-@	ldr r1, =ingame_wav									@ Get the sample address
-@	str r1, [r0]										@ Write the value
-@	
-@	ldmfd sp!, {r0-r1, pc} 							@ restore registers and return
-	
 playBlasterSound:
 	stmfd sp!, {r0-r2, lr}
 
@@ -73,6 +57,13 @@ playBlasterSound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =blaster_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -89,6 +80,13 @@ playExplosionSound:
 	ldr r1, =explosion_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
+	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
 playAlienExplodeSound:
@@ -103,6 +101,13 @@ playAlienExplodeSound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =alien_explode_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -119,6 +124,13 @@ playAlienExplodeScreamSound:
 	ldr r1, =alien_explode_scream_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
+	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
 playElecShotSound:
@@ -133,6 +145,13 @@ playElecShotSound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =elecshot_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -149,6 +168,13 @@ playLaserShotSound:
 	ldr r1, =lasershot_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
+	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
 playShipArmourHit1Sound:
@@ -163,6 +189,13 @@ playShipArmourHit1Sound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =ship_armour_hit1_raw						@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -179,6 +212,13 @@ playShipArmourHit2Sound:
 	ldr r1, =ship_armour_hit2_raw						@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
+	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
 playClassicSound:
@@ -193,6 +233,13 @@ playClassicSound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =classic_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -209,6 +256,13 @@ playCrashBuzSound:
 	ldr r1, =crashbuz_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
+	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
 playDinkDinkSound:
@@ -223,6 +277,13 @@ playDinkDinkSound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =dinkdink_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -239,6 +300,13 @@ playHitWallSound:
 	ldr r1, =hitwall_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
+	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
 playLowSound:
@@ -253,6 +321,13 @@ playLowSound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =low_raw									@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -269,6 +344,13 @@ playSteelSound:
 	ldr r1, =steel_raw									@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
+	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
 playBossExplodeSound:
@@ -283,6 +365,13 @@ playBossExplodeSound:
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
 	ldr r1, =boss_explode_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	ldr r2, =0xf0ff
+	and r1, r2
+	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	

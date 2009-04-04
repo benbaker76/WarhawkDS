@@ -24,6 +24,10 @@
 #include "audio.h"
 #include "ipc.h"
 
+#define AUDIO_PLAY_SOUND			0
+#define AUDIO_PLAY_MUSIC			1
+#define AUDIO_STOP_MUSIC			2
+
 	.arm
 	.align
 	.text
@@ -36,19 +40,32 @@ interruptHandlerVBlank:
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #-1									@ Stop music value?
-	bleq stopMusic								@ Stop music						
-
+	bleq stopMusic								@ Stop music	
+	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
 	blne playMusic								@ If so lets play the sound
 	
-	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
-	ldr r1, [r0]								@ Read the value
-	cmp r1, #0									@ Is there data there?
-	blne playSound								@ If so lets play the sound
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
+
+	@ ------------------------------------
 	
-	ldmfd sp!, {r0-r3, pc} 					@ restore rgisters and return
+interruptHandlerIPC:
+
+	stmfd sp!, {r0-r3, lr}
+	
+	ldr r0, =REG_IPC_SYNC
+	ldrh r1, [r0]
+	and r1, #0xF
+	cmp r1, #AUDIO_PLAY_SOUND
+	bleq playSound
+	@cmp r1, #AUDIO_PLAY_MUSIC
+	@bleq playMusic
+	@cmp r1, #AUDIO_STOP_MUSIC
+	@bleq stopMusic
+	
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@ ------------------------------------
 	
@@ -59,8 +76,16 @@ main:
 	ldr r1, =interruptHandlerVBlank				@ Function Address
 	bl irqSet									@ Set the interrupt
 	
-	ldr r0, =(IRQ_VBLANK)						@ Interrupts
+	ldr r0, =IRQ_IPC_SYNC						@ IPC_SYNC interrupt
+	ldr r1, =interruptHandlerIPC				@ Function Address
+	bl irqSet									@ Set the interrupt
+	
+	ldr r0, =(IRQ_VBLANK | IRQ_IPC_SYNC)		@ Interrupts
 	bl irqEnable								@ Enable
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SYNC_IRQ_ENABLE
+	strh r1, [r0]
 	
 	ldr r0, =REG_POWERCNT
 	ldr r1, =POWER_SOUND						@ Turn on sound
@@ -123,7 +148,7 @@ playMusic:
 	str r2, [r0]
 	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(127))
 	str r2, [r1]
-
+	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	mov r1, #0
 	str r1, [r0]								@ Clear the value so it wont play again
@@ -141,7 +166,7 @@ stopMusic:
 	mov r2, #0
 	str r2, [r0]
 	str r2, [r1]
-
+	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	mov r1, #0
 	str r1, [r0]								@ Clear the value so it wont play again
@@ -154,8 +179,13 @@ playSound:
 
 	stmfd sp!, {r0-r3, lr}
 	
+	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
+	ldr r1, [r0]								@ Read the value
+	cmp r1, #0									@ Is there data there?
+	beq playSoundDone							@ If not lets not play a sound
+	
 	bl getFreeChannel
-	cmp r0, #255
+	cmp r0, #-1
 	beq playSoundDone
 
 	mov r3, r0, lsl #4
@@ -188,12 +218,12 @@ playSound:
 	ldr r0, =SCHANNEL_CR(0)
 	ldr r1, =(SCHANNEL_ENABLE | SOUND_ONE_SHOT | SOUND_VOL(127) | SOUND_PAN(64) | SOUND_8BIT)
 	str r1, [r0, r3]
-
+	
+playSoundDone:
+	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	mov r1, #0
-	str r1, [r0]								@ Clear the value so it wont play again
-
-playSoundDone:
+	str r1, [r0]					
 
 	ldmfd sp!, {r0-r3, pc} 					@ restore rgisters and return
 	
@@ -208,16 +238,16 @@ getFreeChannel:
 	mov r0, #15									@ Reset the counter
 	ldr r1, =SCHANNEL_CR(0)						@ This is the base address of the sound channel
 	
-freeChannelLoop:
+getFreeChannelLoop:
 	
 	ldr r2, [r1, r0, lsl #4]					@ Add the offset (0x04000400 + ((n)<<4))
 	tst r2, #SCHANNEL_ENABLE					@ Is the sound channel enabled?
-	beq freeChannelFound						@ (if not equal = channel clear)
+	beq getFreeChannelFound						@ (if not equal = channel clear)
 	subs r0, #1									@ sub one from our counter
-	bpl freeChannelLoop							@ keep looking
-	mov r0, #255
+	bpl getFreeChannelLoop						@ keep looking
+	mov r0, #-1
 
-freeChannelFound:
+getFreeChannelFound:
 
 	ldmfd sp!, {r1-r3, pc}						@ restore rgisters and return
 	

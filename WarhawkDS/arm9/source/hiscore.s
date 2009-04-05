@@ -86,6 +86,14 @@ showHiScoreEntry:
 	
 	mov r6, r0									@ Move the hiscore value into r6
 	
+	ldr r0, =cursorPos							@ Reset cursorPos
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =hiScoreIndex						@ Reset hiscoreIndex
+	mov r1, #0
+	str r1, [r0]
+	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_HISCORE_ENTRY				@ Set the gameMode to hiscore entry
 	str r1, [r0]								@ Store back gameMode

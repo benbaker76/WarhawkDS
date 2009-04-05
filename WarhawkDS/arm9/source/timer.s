@@ -37,7 +37,7 @@
 	
 startTimer:
 
-	@ r0 - timer count in seconds
+	@ r0 - timer count in milliseconds
 	@ r1 - callback function address
 
 	stmfd sp!, {r0-r6, lr}
@@ -63,7 +63,7 @@ startTimer:
 	strh r1, [r0]
 	
 	ldr r0, =TIMER3_DATA
-	ldr r1, =(0x10000 - 1000)
+	ldr r1, =(0x10000 - 1)								@ Change to (0x10000 - 1000) for seconds
 	strh r1, [r0]
 
 	ldr r0, =TIMER3_CR

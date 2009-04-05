@@ -69,7 +69,7 @@ showHiScore:
 
 	bl drawHiScoreText							@ Draw the hiscore text
 	
-	ldr r0, =15									@ 15 seconds
+	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showCredits						@ Callback function address
 	
 	bl startTimer								@ Start the timer
@@ -123,7 +123,7 @@ showHiScoreEntry:
 	mov r0, r6									@ Move hiscore value to r0
 	ldr r1, =nameEntryBuffer					@ Load nameEntryBuffer address
 	bl addHiScore								@ Add the hiscore
-
+	
 	ldr r0, =CursorSpritePal					@ Load the cursor sprite palette
 	ldr r1, =SPRITE_PALETTE_SUB
 	ldr r2, =CursorSpritePalLen
@@ -576,6 +576,18 @@ hiScoreIndex:
 	.word 0
 	
 	.align
+nameBuffer:
+	.asciz "   "
+
+	.align
+nameEntryBuffer:
+	.asciz "   "
+
+	.align
+nameAAA:
+	.asciz "AAA"
+	
+	.align
 hiScoreDatText:
 	.asciz "/HiScore.dat"
 	
@@ -590,18 +602,6 @@ enterNameText:
 	.align
 hiScoreBuffer:
 	.incbin "../../efsroot/HiScore.dat"
-
-	.align
-nameBuffer:
-	.asciz "   "
-
-	.align
-nameEntryBuffer:
-	.asciz "   "
-
-	.align
-nameAAA:
-	.asciz "AAA"
 	
 	.pool
 	.end

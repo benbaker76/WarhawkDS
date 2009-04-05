@@ -134,7 +134,6 @@ initLevel:
 	
 	ldr r0,=energy
 	mov r1,#71
-mov r1,#892
 	str r1,[r0]				@ set energy to full
 	
 	ldr r0,=animDelay
@@ -573,7 +572,7 @@ mov r1,#892
 	
 	@ ok, using r9 as source, copy data to colMapStore
 	@ and if we find a non-zero value, add to basesLeft
-
+	
 	mov r3,#0					@ base count
 	ldr r1,=colMapStore			@ location for data
 	ldr r0,=1984				@ out counter (size of colmap in bytes)

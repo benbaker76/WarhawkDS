@@ -81,7 +81,7 @@ showIntro1:
 	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =3									@ 2 seconds
+	ldr r0, =4000								@ 4 seconds
 	ldr r1, =showIntro2							@ Callback function address
 	
 	bl startTimer
@@ -133,7 +133,7 @@ showIntro2:
 	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =3									@ 2 seconds
+	ldr r0, =4000								@ 4 seconds
 	ldr r1, =showIntro3							@ Callback function address
 	
 	bl startTimer
@@ -185,7 +185,7 @@ showIntro3:
 	
 	bl fxFadeWhiteIn
 	
-	ldr r0, =3									@ 2 seconds
+	ldr r0, =4000								@ 4 seconds
 	ldr r1, =showLoading						@ Callback function address
 	
 	bl startTimer

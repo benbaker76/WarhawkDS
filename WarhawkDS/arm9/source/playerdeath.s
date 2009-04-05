@@ -285,6 +285,19 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 		str r3,[r0]
 		
 		bl resetSprites
+		bl fxCopperTextOn
+		
+		ldr r0, =gameOverText						@ Load out text pointer
+		ldr r1, =11									@ x pos
+		ldr r2, =12									@ y pos
+		ldr r3, =1									@ Draw on sub screen
+		bl drawText
+		
+		ldr r0, =gameOverText						@ Load out text pointer
+		ldr r1, =11									@ x pos
+		ldr r2, =12									@ y pos
+		ldr r3, =0									@ Draw on main screen
+		bl drawText
 
 	mainExplodeCountWait:	
 	
@@ -301,9 +314,22 @@ playerIsAllDead:										@ --- PHASE 5
 		str r3,[r0]
 		ldmfd sp!, {r0-r6, pc}
 	playerIsToast:
+	
+	bl fxCopperTextOff
 
 	ldr r0, =score
 	bl byte2Int					@ why does this fail?
 	bl showHiScoreEntry
 	
 	ldmfd sp!, {r0-r6, pc}
+
+	@---------------------------------
+
+	.data
+	.align
+
+gameOverText:
+	.asciz "GAME OVER!"
+
+	.pool
+	.end

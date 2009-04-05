@@ -60,6 +60,16 @@ initTitleScreen:
 	bl clearBG2
 	bl clearBG3
 	
+	ldr r0, =FontPal
+	ldr r1, =BG_PALETTE
+	ldr r2, =32
+	bl dmaCopy
+	mov r3, #0
+	strh r3, [r1]
+	ldr r1, =BG_PALETTE_SUB
+	bl dmaCopy
+	strh r3, [r1]
+	
 	mov r0, #256								@ Set scroll registers
 	ldr r1, =vofsSFMain
 	str r0, [r1]
@@ -158,7 +168,7 @@ initTitleScreen:
 	bl fxSpotlightIn	
 	bl fxFadeBlackIn
 	
-	ldr r0, =2									@ 2 seconds
+	ldr r0, =2000								@ 2 seconds
 	ldr r1, =showTextScroller					@ Callback function address
 	
 	bl startTimer
@@ -173,7 +183,7 @@ showTextScroller:
 	
 	bl fxTextScrollerOn
 	
-	ldr r0, =15									@ 15 seconds
+	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showCredits						@ Callback function address
 	
 	bl startTimer
@@ -188,7 +198,7 @@ showCredits:
 	
 	bl drawCreditText
 	
-	ldr r0, =15									@ 15 seconds
+	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showHiScore						@ Callback function address
 	
 	bl startTimer

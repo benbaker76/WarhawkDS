@@ -121,10 +121,10 @@ drawGetReadyText:
 	ldr r3, =1						@ Draw on main screen
 	bl drawText
 	
-	ldr r10,=levelNum				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#10						@ y pos
-	mov r9,#2						@ Number of digits
+	ldr r10, =levelNum				@ Pointer to data
+	ldr r10, [r10]					@ Read value
+	mov r8, #10						@ y pos
+	mov r9, #2						@ Number of digits
 	mov r11, #18					@ x pos
 	bl drawDigits					@ Draw
 	

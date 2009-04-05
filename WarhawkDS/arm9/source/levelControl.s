@@ -197,7 +197,7 @@ levelGetReady:
 
 	bl drawGetReadyText
 	
-	ldr r0, =3									@ 3 seconds
+	ldr r0, =3000								@ 3 seconds
 	ldr r1, =timerDoneGetReady					@ Callback function address
 	
 	bl startTimer
@@ -210,7 +210,9 @@ updateGetReady:
 	
 	stmfd sp!, {r0-r6, lr}
 	
-	bl scrollStars
+	bl scrollStars								@ update scroll stars
+	bl drawScore								@ update the score with any changes
+	bl drawAllEnergyBars						@ Draw the energy bars
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
@@ -308,7 +310,7 @@ notTimeToEndDeath:
 	
 levelFinishDone:
 
-	bl levelNext
+	bl showEndOfLevel
 	
 	ldmfd sp!, {r0-r2, pc}
 

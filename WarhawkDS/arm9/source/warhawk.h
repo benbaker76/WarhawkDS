@@ -105,8 +105,9 @@
 #define GAMEMODE_TITLESCREEN		5
 #define GAMEMODE_GETREADY			6
 #define GAMEMODE_BOSSDIE			7
-#define GAMEMODE_GAMEOVER			8
-#define GAMEMODE_HISCORE_ENTRY		9
+#define GAMEMODE_ENDOFLEVEL			8
+#define GAMEMODE_GAMEOVER			9
+#define GAMEMODE_HISCORE_ENTRY		10
 
 @ Level count
 
@@ -115,7 +116,6 @@
 #define AUDIO_PLAY_SOUND			0
 #define AUDIO_PLAY_MUSIC			1
 #define AUDIO_STOP_MUSIC			2
-
 
 @ FX defines. These are bits so we can have multiple fx at once
 

@@ -79,7 +79,7 @@ showLoading:
 	ldr r2, =LoadingBottomMapLen
 	bl dmaCopy
 	
-	ldr r0, =3									@ 1 second
+	ldr r0, =3000								@ 3 seconds
 	ldr r1, =timerDoneLoading					@ Callback function address
 	
 	bl startTimer

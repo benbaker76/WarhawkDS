@@ -87,8 +87,23 @@ main:
 	
 	bl readHiScore
 	
-@	mov r0,#8192
-@	bl showHiScoreEntry
+	@mov r0,#8192
+	@bl showHiScoreEntry
+
+	@ldr r0, =levelNum
+	@mov r1, #1
+	@str r1, [r0]
+	
+	@ldr r0, =basesLeft
+	@mov r1, #0
+	@str r1, [r0]
+
+	@ldr r0, =energy
+	@mov r1, #71
+	@str r1, [r0]								@ set energy to full
+
+	@bl showEndOfLevel
+	
 	bl showIntro1
 
 	@ ------------------------------------
@@ -113,6 +128,8 @@ mainLoop:
 	bleq updateGetReady
 	cmp r1, #GAMEMODE_HISCORE_ENTRY
 	bleq updateHiScoreEntry
+	cmp r1, #GAMEMODE_ENDOFLEVEL
+	bleq updateEndOfLevel
 	b mainLoop
 
 
@@ -122,7 +139,7 @@ gameLoop:
 	bl alienFireMove							@ check and move alien bullets
 	bl fireCheck								@ check for your wish to shoot!
 	bl drawScore								@ update the score with any changes
-	bl drawAllEnergyBars
+	bl drawAllEnergyBars						@ Draw the energy bars
 	bl checkPowerUp								@ check for and use powerup
 	bl checkWave								@ check if time for another alien attack
 	bl moveAliens								@ move the aliens and detect colisions with you

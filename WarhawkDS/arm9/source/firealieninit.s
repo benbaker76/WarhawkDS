@@ -389,7 +389,6 @@
 			str r6,[r2,r0]
 
 	iTripleNo:
-@	pop {r3}
 	ldmfd sp!, {r3, pc}
 	
 @
@@ -567,7 +566,7 @@
 	ldmfd sp!, {r3, pc}
 
 @
-@ "INIT" - "Spread shot 18" (This fires a spread of 3 shots)
+@ "INIT" - "Spread shot 18" (This fires a spread of 5 shots)
 	initSpreadShot:
 	stmfd sp!, {r3, lr}
 	@ we will use SPRITE_TRACK_X_OFFS and SPRITE_SPEED_DELAY_X_OFFS for X delay and backup

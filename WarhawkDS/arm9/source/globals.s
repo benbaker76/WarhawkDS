@@ -35,6 +35,7 @@
 	.global gameMode
 	.global fxMode
 	.global basesLeft
+	.global basesShot
 	.global bossMan
 	.global bossX
 	.global bossY
@@ -174,6 +175,8 @@ powerupLives:
 delayPowerUp:
 	.word 0
 basesLeft:
+	.word 0
+basesShot:
 	.word 0
 gameMode:
 	.word 0
@@ -445,7 +448,7 @@ spriteAngle:
 spriteExplodeDelay:
 	.space 512
 spriteFireType:
-	.space 512
+	.space 512  
 spriteFireDelay:
 	.space 512
 spriteFireMax:

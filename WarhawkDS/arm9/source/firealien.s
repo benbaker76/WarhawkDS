@@ -49,6 +49,7 @@ alienFireInit:
 	ldr r4,[r4]
 	ldr r5,=spriteY
 	ldr r5,[r5]
+	
 	@---------- All our inits follow from here - SEQUENTIALLY ---------@
 
 	cmp r3,#9					@ check and init standard linear shots types 1-12
@@ -175,12 +176,15 @@ alienFireMove:
 				cmp r6,#0
 				bne testSkip
 				
-				
-				
-				ldr r6,=levelEnd
+				ldr r6,=bossMan
 				ldr r6,[r6]
-				cmp r6,#2
-				beq testSkip					@ if we have completed the level, no need to check
+				cmp r6,#3
+				bpl testSkip
+				
+			@	ldr r6,=levelEnd
+			@	ldr r6,[r6]
+			@	cmp r6,#2
+			@	beq testSkip					@ if we have completed the level, no need to check
 				
 				mov r6,#SPRITE_X_OFFS
 				ldr r6,[r2,r6]

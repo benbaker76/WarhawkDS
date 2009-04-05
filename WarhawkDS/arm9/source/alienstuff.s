@@ -604,10 +604,6 @@ aliensTracker:
 	mov r0,#SPRITE_TRACK_X_OFFS
 	ldr r8,[r1,r0]				 	@ track x coord
 		cmp r8,#1024				@ if the track is a simple 1024, then track player
-	@	moveq r11,#9				@ if tracking player, increase turning curve
-	@	movne r11,r9				@ else, leave as standard
-	@
-
 		bne notYouX
 			ldr r0,=spriteX			@ load your X
 			ldr r8,[r0]				@ r8= your X
@@ -628,14 +624,14 @@ aliensTracker:
 	str r6,[r1,r0]					@ store it and allow update of speed
 
 	cmp r10,r8						@ is sprite l/r of track x?
-	beq xNone						@ it is the same
+@	beq xNone						@ it is the same
 	bpl xLeft						@ if right, go left - else, go right
 	bmi xRight						@ if left, go right
 	
 	xNone:							@ we need to make speed drop to 0
 		cmp r3,#0 @ r3 is speed
 		beq xDone
-		bpl xSlow
+		bgt xSlow
 			adds r3,#1
 			str r3,[r1,r5]
 			b xDone
@@ -677,8 +673,6 @@ aliensTracker:
 	mov r0,#SPRITE_TRACK_Y_OFFS
 	ldr r8,[r1,r0] 			@ track y
 		cmp r8,#1024			@ if 1024, track your ship
-	@	moveq r11,#9			@ if 1024, wider turn curve
-	@	movne r11,r9			@ else, normal
 		bne notYouY
 			ldr r0,=spriteY
 			ldr r8,[r0]			@ make tracking point your Y coord
@@ -696,14 +690,14 @@ aliensTracker:
 	str r6,[r1,r0]				@ store it and allow update of speed
 
 	cmp r10,r8					@ is sprite below track y?
-	beq yNone					@ if the same, slow speed down
+@	beq yNone					@ if the same, slow speed down
 	bpl yUp						@ if so, go up
 	bmi yDown					@ if not, go down
 	
 	yNone:						@ we need to make speed drop to 0
 		cmp r3,#0 @ r3 is speed
 		beq yDone
-		bpl ySlow
+		bgt ySlow
 			adds r3,#1
 			str r3,[r1,r5]
 			b yDone
@@ -752,25 +746,45 @@ aliensTracker:
 	ldr r2,[r1,r0]					@ r2=current x COORD
 	mov r0,#SPRITE_TRACK_X_OFFS
 	ldr r4,[r1,r0]					@ r4=track x COORD
-	add r2,#32						@ a 32 pixel area is too big??
+
+
+	add r2,#32
 	cmp r2,r4
-	bmi noMatch
+	blt noMatch
 	sub r2,#32
 	add r4,#32
-	cmp r2,r4
-	bpl noMatch
+	cmp r4,r2
+	blt noMatch
+
+
+@	add r2,#32						@ a 32 pixel area is too big??
+@	cmp r2,r4
+@	bmi noMatch
+@	sub r2,#32
+@	add r4,#32
+@	cmp r2,r4
+@	bpl noMatch
 	
 	mov r0,#SPRITE_Y_OFFS
 	ldr r2,[r1,r0]					@ r2=current y COORD
 	mov r0,#SPRITE_TRACK_Y_OFFS
 	ldr r4,[r1,r0]					@ r4=track Y COORD
+	
 	add r2,#32
 	cmp r2,r4
-	bmi noMatch
+	blt noMatch
 	sub r2,#32
 	add r4,#32
-	cmp r2,r4
-	bpl noMatch
+	cmp r4,r2
+	blt noMatch	
+
+@	add r2,#32
+@	cmp r2,r4
+@	bmi noMatch
+@	sub r2,#32
+@	add r4,#32
+@	cmp r2,r4
+@	bpl noMatch
 	
 	@ To get here we must be within our 16 pixel boundry of a track point.
 	@ Time to get another from ((spriteInstruct)+sprite number*128)+32

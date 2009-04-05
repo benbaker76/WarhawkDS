@@ -69,6 +69,11 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	sub r8,#1					@ deduct one from the base count
 	str r8,[r9]
 
+	ldr r9,=basesShot
+	ldr r8,[r9]
+	add r8,#1					@ add one to the base shot count
+	str r8,[r9]
+
 	lsl r6,#2 					@ times by 4
 	ldr r9,=craterFrame			@ get our frame for use as a crater
 	ldr r8,[r9]
@@ -230,6 +235,11 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	ldr r9,=basesLeft
 	ldr r8,[r9]
 	sub r8,#1					@ deduct one from the base count
+	str r8,[r9]
+	
+	ldr r9,=basesShot
+	ldr r8,[r9]
+	add r8,#1					@ add one to the base shot count
 	str r8,[r9]
 
 	lsl r6,#2 					@ times by 4
@@ -669,6 +679,12 @@ alienCollideCheck:
 			ldr r5,[r5]						@ no need for a detect with aliens
 			cmp r5,#2
 			beq noPlayer
+			
+			ldr r5,=bossMan
+			ldr r5,[r5]
+			cmp r5,#3
+			bpl noPlayer
+			
 
 			ldr r5,=spriteX
 			ldr r3,[r5]						@ r3 is player x

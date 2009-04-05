@@ -40,6 +40,8 @@ initLevel:
 
 	stmfd sp!, {r0-r6, lr}
 
+	bl initLevelDrawspriteRegisters
+
 	mov r1,#0
 	ldr r0,=levelEnd
 	str r1,[r0]				@ Flag is SET for end of level	
@@ -53,6 +55,8 @@ initLevel:
 	str r1,[r0]
 	ldr r0,=basesLeft
 	str r1,[r0]				@ reset the base counter (count later)
+	ldr r0,=basesShot
+	str r1,[r0]
 	ldr r0,=playerDeath
 	str r1,[r0]
 	ldr r0,=playerDeathDelay
@@ -134,6 +138,7 @@ initLevel:
 	
 	ldr r0,=energy
 	mov r1,#71
+@mov r1,#832
 	str r1,[r0]				@ set energy to full
 	
 	ldr r0,=animDelay
@@ -860,5 +865,16 @@ initLevelScrollRegisters:
 	
 	@ ------------------------------------
 
+initLevelDrawspriteRegisters:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	mov r0,#0
+	ldr r1,=spriteActive
+	ldr r2,=58368				@ number of bytes used by drawsprite for everything!
+	bl dmaFillWords
+	
+
+	ldmfd sp!, {r0-r6, pc}
 	.pool
 	.end

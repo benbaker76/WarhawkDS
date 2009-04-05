@@ -38,12 +38,14 @@ drawAllEnergyBars:
 	
 	ldr r0, =energy								@ Read energy address
 	ldr r0, [r0]								@ Read energy value
-	cmp r0, #24									@ Energy level 24?
-	bleq playCrashBuzSound						@ Play warning sound
-	cmp r0, #16									@ Energy level 16?
-	bleq playCrashBuzSound						@ Play warning sound
-	cmp r0, #8									@ Energy level 8?
-	bleq playCrashBuzSound						@ Play warning sound
+	
+	@cmp r0, #24								@ Energy level 24?
+	@bleq playCrashBuzSound						@ Play warning sound
+	@cmp r0, #16								@ Energy level 16?
+	@bleq playCrashBuzSound						@ Play warning sound
+	@cmp r0, #8									@ Energy level 8?
+	@bleq playCrashBuzSound						@ Play warning sound
+	
 	mov r2, #0									@ Our energy offset
 	mov r4, #64									@ Our energy level check for each energy bar
 	

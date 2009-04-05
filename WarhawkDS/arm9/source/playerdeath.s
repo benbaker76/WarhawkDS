@@ -284,7 +284,7 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 		mov r3,#5
 		str r3,[r0]
 		
-		bl resetSprites
+		bl clearOAM
 		bl fxCopperTextOn
 		
 		ldr r0, =gameOverText						@ Load out text pointer

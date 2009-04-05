@@ -108,7 +108,7 @@ levelStart:
 	
 	bl initMainTiles
 	bl initLevelScrollRegisters				@ Reset the scroll registers
-	bl resetSprites
+	bl clearOAM
 	bl initSprites
 	bl initLevelSprites
 	
@@ -128,7 +128,6 @@ levelStart:
 	bl drawSprite
 	bl drawGetReadyText
 	bl drawAllEnergyBars
-	@bl playInGameMusic
 	
 	ldr r0, =inGameRawText					@ Read the path to the file
 	bl playAudioStream						@ Play the audio stream
@@ -142,10 +141,6 @@ levelStart:
 	@bl fxWipeInLeft
 	@bl fxCrossWipe
 	@bl fxSineWobbleOn
-	
-	bl DC_FlushAll							@ Flush cache
-
-	bl clearBG0
 	
 	bl levelGetReady
 
@@ -211,8 +206,6 @@ updateGetReady:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl scrollStars								@ update scroll stars
-	bl drawScore								@ update the score with any changes
-	bl drawAllEnergyBars						@ Draw the energy bars
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]

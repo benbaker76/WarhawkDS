@@ -129,7 +129,7 @@ initTitleScreen:
 	
 	@ Sprites
 	
-	bl resetSprites
+	bl clearOAM
 	
 	@ Load the palette into the palette subscreen area and main
 
@@ -589,6 +589,11 @@ scaleSprite:
 updateTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	@ldr r1, =REG_KEYINPUT						@ Read Key Input
+	@ldr r2, [r1]
+	@tst r2, #BUTTON_A							@ Start button pressed?
+	@bleq initTitleScreen
 	
 	bl scrollStarsHoriz							@ Scroll stars
 	bl updateLogoSprites						@ Update logo sprites

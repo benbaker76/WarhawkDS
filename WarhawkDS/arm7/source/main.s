@@ -47,6 +47,11 @@ interruptHandlerVBlank:
 	cmp r1, #0									@ Is there data there?
 	blne playMusic								@ If so lets play the sound
 	
+	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
+	ldr r1, [r0]								@ Read the value
+	cmp r1, #0									@ Is there data there?
+	blne playSound								@ If so lets play the sound
+	
 	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@ ------------------------------------
@@ -76,16 +81,17 @@ main:
 	ldr r1, =interruptHandlerVBlank				@ Function Address
 	bl irqSet									@ Set the interrupt
 	
-	ldr r0, =IRQ_IPC_SYNC						@ IPC_SYNC interrupt
-	ldr r1, =interruptHandlerIPC				@ Function Address
-	bl irqSet									@ Set the interrupt
+	@ldr r0, =IRQ_IPC_SYNC						@ IPC_SYNC interrupt
+	@ldr r1, =interruptHandlerIPC				@ Function Address
+	@bl irqSet									@ Set the interrupt
 	
-	ldr r0, =(IRQ_VBLANK | IRQ_IPC_SYNC)		@ Interrupts
+	@ldr r0, =(IRQ_VBLANK | IRQ_IPC_SYNC)		@ Interrupts
+	ldr r0, =(IRQ_VBLANK)						@ Interrupts
 	bl irqEnable								@ Enable
 	
-	ldr r0, =REG_IPC_SYNC
-	ldr r1, =IPC_SYNC_IRQ_ENABLE
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldr r1, =IPC_SYNC_IRQ_ENABLE
+	@strh r1, [r0]
 	
 	ldr r0, =REG_POWERCNT
 	ldr r1, =POWER_SOUND						@ Turn on sound

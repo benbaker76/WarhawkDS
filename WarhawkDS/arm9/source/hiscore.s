@@ -129,7 +129,7 @@ showHiScoreEntry:
 	ldr r2, =CursorSpritePalLen
 	bl dmaCopy
 	
-	bl resetSprites								@ Reset all sprites
+	bl clearOAM									@ Reset all sprites
 
 	@ Write the tile data to VRAM
 

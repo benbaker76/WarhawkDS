@@ -79,6 +79,8 @@
 	.global blockCraterIndex
 	.global blockCraterCount
 	.global energyLevel
+	.global spriteDataStart
+	.global spriteDataEnd
 	.global spriteX
 	.global spriteY
 	.global spriteObj
@@ -417,6 +419,8 @@ ppotRawText:
 	.align
 	.section .bss
 
+spriteDataStart:								@ Start of sprite data
+
 spriteActive:
 	.space 512
 spriteX:
@@ -472,6 +476,8 @@ spriteSpeedDelay:
 	
 spriteInstruct:
 	.space 32768
+	
+spriteDataEnd:									@ End of sprite data
 
 digits:
 	.space 32

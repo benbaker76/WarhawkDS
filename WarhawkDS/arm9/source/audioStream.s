@@ -145,6 +145,7 @@ stopAudioStream:
 	@ ---------------------------------------------
 
 playBuffer:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(0)							@ Get the IPC sound length address

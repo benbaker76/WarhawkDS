@@ -40,7 +40,7 @@ initLevel:
 
 	stmfd sp!, {r0-r6, lr}
 
-	bl initLevelDrawspriteRegisters
+	bl clearSpriteData
 
 	mov r1,#0
 	ldr r0,=levelEnd
@@ -865,16 +865,20 @@ initLevelScrollRegisters:
 	
 	@ ------------------------------------
 
-initLevelDrawspriteRegisters:
+clearSpriteData:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r0,#0
-	ldr r1,=spriteActive
-	ldr r2,=58368				@ number of bytes used by drawsprite for everything!
+	mov r0, #0
+	ldr r1, =spriteActive
+	ldr r2, =spriteDataEnd								@ Get the sprite data end
+	ldr r3, =spriteDataStart							@ Get the sprite data start
+	sub r2, r3											@ sprite end - start = size
 	bl dmaFillWords
-	
 
 	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+
 	.pool
 	.end

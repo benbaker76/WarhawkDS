@@ -32,7 +32,7 @@
 	.align
 	.text
 	.global initSprites
-	.global resetSprites
+	.global clearOAM
 	
 initSprites:
 
@@ -58,7 +58,7 @@ initSprites:
 	
 	ldmfd sp!, {r0-r6, pc}
 	
-resetSprites:
+clearOAM:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -69,19 +69,6 @@ resetSprites:
 	ldr r2, =1024					@ 3 x 16bit attributes + 16 bit filler = 8 bytes x 128 entries in OAM
 	bl dmaFillWords
 	ldr r1, =OAM_SUB
-	bl dmaFillWords
-	
-	@ wipe all sprite data
-	ldr r0,=0
-	ldr r1,=spriteX
-	ldr r2,=2432
-	bl dmaFillWords
-	
-	@ ------------------------ CLEAR SPRITE DATA
-	
-	mov r0, #0
-	ldr r1, =spriteActive
-	ldr r2, =(21 * 512 + 32768)
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}

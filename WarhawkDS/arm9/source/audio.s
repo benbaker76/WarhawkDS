@@ -58,12 +58,12 @@ playBlasterSound:
 	ldr r1, =blaster_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -80,12 +80,12 @@ playExplosionSound:
 	ldr r1, =explosion_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -102,12 +102,12 @@ playAlienExplodeSound:
 	ldr r1, =alien_explode_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -124,12 +124,12 @@ playAlienExplodeScreamSound:
 	ldr r1, =alien_explode_scream_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -146,12 +146,12 @@ playElecShotSound:
 	ldr r1, =elecshot_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -168,12 +168,12 @@ playLaserShotSound:
 	ldr r1, =lasershot_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -190,12 +190,12 @@ playShipArmourHit1Sound:
 	ldr r1, =ship_armour_hit1_raw						@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -212,12 +212,12 @@ playShipArmourHit2Sound:
 	ldr r1, =ship_armour_hit2_raw						@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -234,12 +234,12 @@ playClassicSound:
 	ldr r1, =classic_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -256,12 +256,12 @@ playCrashBuzSound:
 	ldr r1, =crashbuz_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -278,12 +278,12 @@ playDinkDinkSound:
 	ldr r1, =dinkdink_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 
@@ -300,12 +300,12 @@ playHitWallSound:
 	ldr r1, =hitwall_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -322,12 +322,12 @@ playLowSound:
 	ldr r1, =low_raw									@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -344,12 +344,12 @@ playSteelSound:
 	ldr r1, =steel_raw									@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
@@ -366,12 +366,12 @@ playBossExplodeSound:
 	ldr r1, =boss_explode_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	ldr r2, =0xf0ff
-	and r1, r2
-	orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
-	strh r1, [r0]
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	

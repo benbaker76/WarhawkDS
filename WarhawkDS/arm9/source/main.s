@@ -97,6 +97,10 @@ main:
 	@ldr r0, =basesLeft
 	@mov r1, #0
 	@str r1, [r0]
+	
+	@ldr r0, =basesShot
+	@mov r1, #32
+	@str r1, [r0]
 
 	@ldr r0, =energy
 	@mov r1, #71

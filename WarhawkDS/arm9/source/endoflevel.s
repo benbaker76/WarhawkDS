@@ -28,6 +28,7 @@
 #include "sprite.h"
 #include "ipc.h"
 
+	#define BASES_DESTROYED_VALUE			5
 	#define TOTAL_BASE_DESTRUCT_VALUE		7500
 	#define LEVEL_COMPLETION_BONUS_VALUE	5000
 	#define ENERGY_UNIT_VALUE				10
@@ -53,16 +54,19 @@ showEndOfLevel:
 	str r1, [r0]								@ Turn off all fx
 	
 	ldr r0, =levelCount
-	mov r1, #1
+	ldr r1, =levelNum
+	ldr r1, [r1]
 	str r1, [r0]
 	
 	ldr r0, =basesLeft
 	ldr r1, [r0]
 	ldr r2, =baseCount
 	ldr r3, [r2]
+	ldr r4, =levelNum
+	ldr r5, [r4]
 	cmp r1, #0
 	movne r3, #0
-	moveq r3, #1
+	moveq r3, r5
 	str r3, [r2]
 	
 	bl initMainTiles							@ Initialize main tiles
@@ -72,7 +76,7 @@ showEndOfLevel:
 	bl clearBG2
 	bl clearBG3
 	
-	bl resetSprites								@ Reset all sprites
+	bl clearOAM									@ Reset all sprites
 	
 	ldr r0, =FontPal
 	ldr r1, =BG_PALETTE
@@ -86,37 +90,49 @@ showEndOfLevel:
 	
 	ldr r0, =wellDoneText						@ Load out text pointer
 	ldr r1, =11									@ x pos
-	ldr r2, =5									@ y pos
+	ldr r2, =3									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =levelCompletedText					@ Load out text pointer
 	ldr r1, =7									@ x pos
-	ldr r2, =7									@ y pos
+	ldr r2, =5									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =basesDestroyedText					@ Load out text pointer
+	ldr r1, =8									@ x pos
+	ldr r2, =8									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =basesDestroyedCalcText				@ Load out text pointer
+	ldr r1, =7									@ x pos
+	ldr r2, =10									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =totalBaseDestructText				@ Load out text pointer
 	ldr r1, =6									@ x pos
-	ldr r2, =11									@ y pos
+	ldr r2, =13									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =totalBaseDestructCalcText			@ Load out text pointer
 	ldr r1, =7									@ x pos
-	ldr r2, =13									@ y pos
+	ldr r2, =15									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =levelCompletionBonusText			@ Load out text pointer
 	ldr r1, =5									@ x pos
-	ldr r2, =16									@ y pos
+	ldr r2, =18									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =levelCompletionBonusCalcText		@ Load out text pointer
 	ldr r1, =7									@ x pos
-	ldr r2, =18									@ y pos
+	ldr r2, =20									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
@@ -129,7 +145,7 @@ showEndOfLevel:
 	bl fxStarfieldOn							@ Turn on starfield
 	
 	ldr r0, =2000								@ 2 seconds
-	ldr r1, =calcTotalBaseDestruct				@ Callback function address
+	ldr r1, =calcBasesDestroyed					@ Callback function address
 	
 	bl startTimer
 	
@@ -143,20 +159,42 @@ drawEndOfLevelValues:
 
 	ldr r10, =levelNum							@ Pointer to data
 	ldr r10, [r10]								@ Read value
-	mov r8, #7									@ y pos
+	mov r8, #5									@ y pos
 	mov r9, #2									@ Number of digits
 	mov r11, #13								@ x pos
 	bl drawDigits								@ Draw
 	
+	ldr r10, =basesShot							@ Pointer to data
+	ldr r10, [r10]								@ Read value
+	mov r8, #10									@ y pos
+	mov r9, #2									@ Number of digits
+	mov r11, #7									@ x pos
+	bl drawDigits								@ Draw
+	
+	ldr r10, =BASES_DESTROYED_VALUE				@ Pointer to data
+	mov r8, #10									@ y pos
+	mov r9, #4									@ Number of digits
+	mov r11, #12								@ x pos
+	bl drawDigits								@ Draw
+	
+	ldr r10, =basesShot
+	ldr r10, [r10]
+	ldr r1, =BASES_DESTROYED_VALUE
+	mul r10, r1	
+	mov r8, #10									@ y pos
+	mov r9, #6									@ Number of digits
+	mov r11, #19								@ x pos
+	bl drawDigits								@ Draw
+	
 	ldr r10, =baseCount							@ Pointer to data
 	ldr r10, [r10]								@ Read value
-	mov r8, #13									@ y pos
+	mov r8, #15									@ y pos
 	mov r9, #2									@ Number of digits
 	mov r11, #7									@ x pos
 	bl drawDigits								@ Draw
 	
 	ldr r10, =TOTAL_BASE_DESTRUCT_VALUE			@ Pointer to data
-	mov r8, #13									@ y pos
+	mov r8, #15									@ y pos
 	mov r9, #4									@ Number of digits
 	mov r11, #12								@ x pos
 	bl drawDigits								@ Draw
@@ -165,20 +203,20 @@ drawEndOfLevelValues:
 	ldr r10, [r10]
 	ldr r1, =TOTAL_BASE_DESTRUCT_VALUE
 	mul r10, r1	
-	mov r8, #13									@ y pos
+	mov r8, #15									@ y pos
 	mov r9, #6									@ Number of digits
 	mov r11, #19								@ x pos
 	bl drawDigits								@ Draw
 	
 	ldr r10, =levelCount						@ Pointer to data
 	ldr r10, [r10]								@ Read value
-	mov r8, #18									@ y pos
+	mov r8, #20									@ y pos
 	mov r9, #2									@ Number of digits
 	mov r11, #7									@ x pos
 	bl drawDigits								@ Draw
 	
 	ldr r10, =LEVEL_COMPLETION_BONUS_VALUE		@ Pointer to data
-	mov r8, #18									@ y pos
+	mov r8, #20									@ y pos
 	mov r9, #4									@ Number of digits
 	mov r11, #12								@ x pos
 	bl drawDigits								@ Draw
@@ -187,7 +225,7 @@ drawEndOfLevelValues:
 	ldr r10, [r10]
 	ldr r1, =LEVEL_COMPLETION_BONUS_VALUE
 	mul r10, r1	
-	mov r8, #18									@ y pos
+	mov r8, #20									@ y pos
 	mov r9, #6									@ Number of digits
 	mov r11, #19								@ x pos
 	bl drawDigits								@ Draw
@@ -196,17 +234,54 @@ drawEndOfLevelValues:
 	
 	@---------------------------------
 	
+calcBasesDestroyed:
+
+	stmfd sp!, {r0-r8, lr}
+	
+	ldr r2, =basesShot
+	ldr r3, [r2]
+	cmp r3, #0
+	beq calcBasesDestroyedNext
+
+	ldr r0, =adder+7							@ add 10 to the score
+	mov r1, #5
+	strb r1, [r0]
+	bl addScore
+	
+	sub r3, #1
+	str r3, [r2]
+	
+	bl playSteelSound
+	
+	ldr r0, =20									@ 20 milliseconds
+	ldr r1, =calcBasesDestroyed					@ Callback function address
+	bl startTimer
+	
+	b calcBasesDestroyedDone
+	
+calcBasesDestroyedNext:
+
+	ldr r0, =1000								@ 1 seconds
+	ldr r1, =calcTotalBaseDestruct				@ Callback function address
+	
+	bl startTimer
+	
+calcBasesDestroyedDone:
+
+	bl drawEndOfLevelValues
+	
+	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
 calcTotalBaseDestruct:
 
 	stmfd sp!, {r0-r8, lr}
 	
-	ldr r0, =baseCount
-	ldr r1, [r0]
-	cmp r1, #1
-	bne calcTotalBaseDestructDone
-	
-	sub r1, #1
-	str r1, [r0]
+	ldr r2, =baseCount
+	ldr r3, [r2]
+	cmp r3, #0
+	beq calcTotalBaseDestructNext
 
 	ldr r0, =adder+7							@ add 7500 to the score
 	mov r1, #0
@@ -222,14 +297,27 @@ calcTotalBaseDestruct:
 	strb r1, [r0]
 	bl addScore
 	
-	bl drawEndOfLevelValues
+	sub r3, #1
+	str r3, [r2]
 	
-calcTotalBaseDestructDone:
+	bl playSteelSound
+	
+	ldr r0, =20									@ 20 milliseconds
+	ldr r1, =calcTotalBaseDestruct				@ Callback function address
+	bl startTimer
+	
+	b calcTotalBaseDestructDone
+	
+calcTotalBaseDestructNext:
 
-	ldr r0, =2000								@ 2 seconds
+	ldr r0, =1000								@ 1 seconds
 	ldr r1, =calcLevelCompletionBonus			@ Callback function address
 	
 	bl startTimer
+	
+calcTotalBaseDestructDone:
+
+	bl drawEndOfLevelValues
 	
 	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
 	
@@ -239,13 +327,10 @@ calcLevelCompletionBonus:
 
 	stmfd sp!, {r0-r8, lr}
 	
-	ldr r0, =levelCount
-	ldr r1, [r0]
-	cmp r1, #1
-	bne calcLevelCompletionBonusDone
-	
-	sub r1, #1
-	str r1, [r0]
+	ldr r2, =levelCount
+	ldr r3, [r2]
+	cmp r3, #0
+	beq calcLevelCompletionBonusNext
 
 	ldr r0, =adder+7							@ add 5000 to the score
 	mov r1, #0
@@ -261,14 +346,27 @@ calcLevelCompletionBonus:
 	strb r1, [r0]
 	bl addScore
 	
-	bl drawEndOfLevelValues
+	sub r3, #1
+	str r3, [r2]
 	
-calcLevelCompletionBonusDone:
+	bl playSteelSound
+	
+	ldr r0, =20									@ 20 milliseconds
+	ldr r1, =calcLevelCompletionBonus			@ Callback function address
+	bl startTimer
+	
+	b calcLevelCompletionBonusDone
+	
+calcLevelCompletionBonusNext:
 
-	ldr r0, =2000								@ 2 seconds
+	ldr r0, =1000								@ 1 seconds
 	ldr r1, =calcEnergyRemaining				@ Callback function address
 	
 	bl startTimer
+	
+calcLevelCompletionBonusDone:
+
+	bl drawEndOfLevelValues
 	
 	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
 	
@@ -281,7 +379,7 @@ calcEnergyRemaining:
 	ldr r2, =energy
 	ldr r3, [r2]
 	cmp r3, #0
-	beq calcEnergyRemainingNextLevel
+	beq calcEnergyRemainingNext
 
 	ldr r0, =adder+7							@ add 10 to the score
 	mov r1, #0
@@ -294,15 +392,17 @@ calcEnergyRemaining:
 	sub r3, #1
 	str r3, [r2]
 	
+	bl playSteelSound
+	
 	ldr r0, =20									@ 20 milliseconds
 	ldr r1, =calcEnergyRemaining				@ Callback function address
 	bl startTimer
 	
 	b calcEnergyRemainingDone
 	
-calcEnergyRemainingNextLevel:
+calcEnergyRemainingNext:
 
-	ldr r0, =2000								@ 2 seconds
+	ldr r0, =4000								@ 2 seconds
 	ldr r1, =endOfLevelDone						@ Callback function address
 	
 	bl startTimer
@@ -352,6 +452,14 @@ wellDoneText:
 	.align
 levelCompletedText:
 	.asciz "LEVEL 00 COMPLETED"
+	
+	.align
+basesDestroyedText:
+	.asciz "BASES DESTROYED"
+	
+	.align
+basesDestroyedCalcText:
+	.asciz "00 x 0000 = 000000"
 
 	.align
 totalBaseDestructText:

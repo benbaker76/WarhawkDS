@@ -207,6 +207,7 @@ scrollPos:
 hofsScroll:
 	.word 0
 
+	.align
 scrollText:
 	.asciz "WELCOME TO THE WARHAWK DS DEMO... THIS IS ONLY A DEMO... FULL GAME COMING SOON!                 "
 	

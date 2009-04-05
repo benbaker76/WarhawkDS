@@ -115,6 +115,7 @@ fxColorCycleVBlank:
 bgPalette:
 	.space 256*2								@ Palette Backup
 	
+	.align
 bgPaletteSub:
 	.space 256*2								@ Palette Backup
 

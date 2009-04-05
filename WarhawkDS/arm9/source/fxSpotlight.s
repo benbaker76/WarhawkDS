@@ -479,8 +479,7 @@ count:
 radius:
 	.word 0
 
-	@.section .bss
-
+	.align
 winh:
 	.space ((192 + 1) * 2)					@ Window values to store into REG_WIN0H
 

@@ -224,6 +224,9 @@ irqDummy:
 	.section .itcm
 #endif
 	
+	.data
+	.align
+	
 irqTable:
 	.space (MAX_INTERRUPTS * 8)			@ MAX_INTERRUPTS * (32 bit handler + 32 bit mask)
 

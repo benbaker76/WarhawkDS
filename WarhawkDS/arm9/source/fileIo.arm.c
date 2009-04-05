@@ -82,19 +82,26 @@ int readFileBuffer(char *fileName, char *pBuffer)
 	return result;
 }
 
-int writeFileBuffer(char *fileName, char *pBuffer, int size)
+int writeFileBuffer(char *fileName, char *pBuffer)
 { 
 	FILE *pFile;
+	struct stat fileStat;
 	size_t result;
 
-	pFile = fopen(fileName, "wb");
+	pFile = fopen(fileName, "r+b");
 	
 	if(pFile == NULL)
 		return 0;
+		
+	if(fstat(pFile->_file, &fileStat) != 0)
+	{
+		fclose(pFile);
+		return 0;
+	}
 
-	result = fwrite(pBuffer, 1, size, pFile);
+	result = fwrite(pBuffer, 1, fileStat.st_size, pFile);
 	
-	if(result != size)
+	if(result != fileStat.st_size)
 	{
 		fclose(pFile);
 		return 0;
@@ -104,37 +111,6 @@ int writeFileBuffer(char *fileName, char *pBuffer, int size)
 	
 	return result;
 }
-
-/* int readFileStream(char *fileName, char *pBuffer, int pos, int size)
-{ 
-	size_t result;
-	
-	if(pFileStream == NULL)
-		pFileStream = fopen(fileName, "rb");
-	
-	if (pFileStream == NULL)
-		return 0;
-	
-	result = fseek(pFileStream, pos, SEEK_SET);
-	
-	if(result != 0)
-	{
-		fclose(pFileStream);
-		return 0;
-	}
-
-	result = fread(pBuffer, 1, size, pFileStream);
-	
-	if(result != size)
-	{
-		fclose(pFileStream);
-		return 0;
-	}
-
-	//fclose(pFile);
-	
-	return 1;
-} */
 
 int initFileStream(char *fileName)
 {

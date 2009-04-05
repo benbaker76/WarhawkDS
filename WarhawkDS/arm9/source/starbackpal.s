@@ -1,3 +1,7 @@
+	.arm
+	.align
+	.data
+	
 	.global StarBackPal1
 	.global StarBackPal2
 	.global StarBackPal3

@@ -163,8 +163,6 @@ interruptHandlerTimer3:
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ------------------------------------
-	
-die:
 
 	.pool
 	.end

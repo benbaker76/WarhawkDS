@@ -31,9 +31,25 @@
 	.arm
 	.align
 	.text
+	.global gameStart
 	.global gameStop
 	.global gamePause
 	.global checkGameOver
+	
+gameStart:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_RUNNING
+	str r1, [r0]
+
+	bleq initData								@ setup actual game data
+	bleq initLevel								@ Start level
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
 	
 gameStop:
 

@@ -54,10 +54,10 @@ initData:
 	
 	ldr r0,=score			@ reset (zero) score
 	mov r1,#0
-	str r1,[r0]
-	add r0,#4
+	str r1,[r0],#4
 	str r1,[r0]
 
 	ldmfd sp!, {r0-r1, pc}
+	
 	.pool
 	.end

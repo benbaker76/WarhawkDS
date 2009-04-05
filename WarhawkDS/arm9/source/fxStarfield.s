@@ -356,15 +356,19 @@ starloop:
 	.data
 	.align
 
+	.align
 starXCoord:
 	.space STAR_COUNT
 
+	.align
 starYCoord:
 	.space STAR_COUNT
 
+	.align
 starXSpeed:
 	.space STAR_COUNT
 
+	.align
 starYSpeed:
 	.space STAR_COUNT	
 

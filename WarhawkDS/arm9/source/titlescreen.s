@@ -29,6 +29,8 @@
 #include "ipc.h"
 
 	#define FONT_COLOR_OFFSET	11
+	#define PULSE_FORWARD		0
+	#define PULSE_BACKWARD		1
 
 	.arm
 	.align
@@ -43,22 +45,22 @@ initTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =gameMode
+	ldr r0, =gameMode							@ Set game mode
 	ldr r1, =GAMEMODE_TITLESCREEN
 	str r1, [r0]
 	
-	ldr r0, =fxMode						@ Get fxMode address
-	ldr r1, =FX_NONE					@ Get fxMode value
+	ldr r0, =fxMode								@ Get fxMode address
+	ldr r1, =FX_NONE							@ Get fxMode value
 	str r1, [r0]
 	
-	bl initMainTiles
-	bl resetScrollRegisters
-	bl clearBG0
+	bl initMainTiles							@ Initialize main tiles
+	bl resetScrollRegisters						@ Reset the scroll registers
+	bl clearBG0									@ Clear bg's
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
 	
-	mov r0, #256
+	mov r0, #256								@ Set scroll registers
 	ldr r1, =vofsSFMain
 	str r0, [r1]
 	ldr r1, =vofsSBMain
@@ -68,7 +70,7 @@ initTitleScreen:
 	ldr r1, =vofsSBSub
 	str r0, [r1]
 
-	mov r0, #736
+	mov r0, #736								@ Set scroll registers
 	ldr r1, =yposSFMain
 	str r0, [r1]
 	ldr r1, =yposSBMain
@@ -146,7 +148,8 @@ initTitleScreen:
 	
 	bl showCredits
 	
-	bl drawStartSprites
+	bl initLogoSprites
+	@bl drawStartSprites
 	
 	ldr r0, =ppotRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
@@ -202,6 +205,12 @@ drawCreditText:
 
 	ldr r0, =proteusDevelopmentsText			@ Load out text pointer
 	ldr r1, =3									@ x pos
+	ldr r2, =9									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =andHeadSoftText					@ Load out text pointer
+	ldr r1, =10									@ x pos
 	ldr r2, =10									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
@@ -236,17 +245,43 @@ drawCreditText:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
-	ldr r0, =someoneText						@ Load out text pointer
+	ldr r0, =PPOTText							@ Load out text pointer
 	ldr r1, =7									@ x pos
 	ldr r2, =19									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+
+	ldr r0, =spaceFractalText					@ Load out text pointer
+	ldr r1, =10									@ x pos
+	ldr r2, =20									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =aRetroBytesPortalProductionText	@ Load out text pointer
 	ldr r1, =1									@ x pos
-	ldr r2, =21									@ y pos
+	ldr r2, =22									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+initLogoSprites:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =OBJ_ROTATION_HDX(0)
+	ldr r1, =OBJ_ROTATION_VDY(0)
+	mov r2, #256
+	strh r2, [r0, r4]
+	strh r2, [r1]
+	
+	ldr r0, =OBJ_ROTATION_VDX(0)
+	ldr r1, =OBJ_ROTATION_HDY(0)
+	mov r2, #0
+	strh r2, [r0]
+	strh r2, [r1]
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -256,45 +291,45 @@ drawStartSprites:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r4, #0
+	mov r4, #0									@ Reset iterator
 	
 drawStartSpritesLoop:
 	
-	ldr r0, =OBJ_ATTRIBUTE0(0)
-	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
-	add r0, r4, lsl #3
-	mov r2, #7
-	add r0, r2, lsl #3
-	mov r5, #160
-	and r5, #0xFF
-	orr r1, r5
-	strh r1, [r0]
+	ldr r0, =OBJ_ATTRIBUTE0(0)					@ Attrib 0
+	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE0(n))
+	mov r2, #7									@ Skip 7 sprites (Logo Sprites)
+	add r0, r2, lsl #3							@ Add offset
+	mov r5, #160								@ Y Position 160
+	and r5, #0xFF								@ And 0xFF
+	orr r1, r5									@ Or in the Y Position
+	strh r1, [r0]								@ Write back attrib 0
 	
-	ldr r0, =OBJ_ATTRIBUTE1(0)
-	ldr r1, =(ATTR1_SIZE_16)
-	add r0, r4, lsl #3
-	mov r2, #7
-	add r0, r2, lsl #3
-	mov r5, #38
-	add r5, r4, lsl #4
-	ldr r6, =0x1FF
-	and r5, r6
-	orr r1, r5
-	strh r1, [r0]
+	ldr r0, =OBJ_ATTRIBUTE1(0)					@ Attrib 1
+	ldr r1, =(ATTR1_SIZE_16)					@ Attrib 1 settings
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE1(n))
+	mov r2, #7									@ Skip 7 sprites (Logo Spites)
+	add r0, r2, lsl #3							@ Add offset
+	mov r5, #38									@ X Position
+	add r5, r4, lsl #4							@ Each sprite * 16
+	ldr r6, =0x1FF								@ Load 0x1FF
+	and r5, r6									@ X Position And 0x1FF
+	orr r1, r5									@ Or in X Position
+	strh r1, [r0]								@ Write back to attrib 1
 	
-	ldr r0, =OBJ_ATTRIBUTE2(0)
-	add r0, r4, lsl #3
-	mov r2, #7
-	mov r3, #ATTR2_PRIORITY(0)
-	add r0, r2, lsl #3
-	mov r1, r4, lsl #2
-	add r1, r2, lsl #4
-	orr r1, r3
-	strh r1, [r0]
+	ldr r0, =OBJ_ATTRIBUTE2(0)					@ Attrib 2
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE2(n))
+	mov r3, #ATTR2_PRIORITY(0)					@ Set sprite priority
+	mov r2, #7									@ Skip 7 sprites (Logo Spites)
+	add r0, r2, lsl #3							@ Calculate tile position (* 8)
+	mov r1, r4, lsl #2							@ Iterator * 4
+	add r1, r2, lsl #4							@ Add Tile position
+	orr r1, r3									@ Orr in tile position
+	strh r1, [r0]								@ Write back to attrib 2
 	
-	add r4, #1
-	cmp r4, #11
-	bne drawStartSpritesLoop
+	add r4, #1									@ Add 1 to Iterator
+	cmp r4, #11									@ All sprites drawn?
+	bne drawStartSpritesLoop					@ No so go back and loop
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -304,102 +339,238 @@ updateStartSprites:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =SPRITE_PALETTE
-	ldr r1, =10
-	add r0, r1, lsl #1
-	ldr r2, =pulseValue
-	ldr r3, [r2]
+	mov r4, #0									@ Reset iterator
 	
-	ldr r4, =pulseDirection
-	ldr r5, [r4]
-	cmp r5, #0
-	bne updateStartSpritesBackward
+updateStartSpritesLoop:
 	
-	add r3, #1
-	cmp r3, #0x1F
-	moveq r5, #1
-	str r3, [r2]
-	str r5, [r4]
-	strh r3, [r0]	
-	b updateStartSpritesDone
+	ldr r0, =OBJ_ATTRIBUTE0(0)					@ Attrib 0
+	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE0(n))
+	mov r2, #7									@ Skip 7 sprites (Logo Sprites)
+	add r0, r2, lsl #3							@ Add offset
+	ldr r3, =SIN_bin							@ Load SIN address
+	ldr r5, =vblCounter							@ Load VBLANK counter address
+	ldr r5, [r5]								@ Load VBLANK counter value
+	add r5, r4, lsl #5							@ Add the iterator * 32
+	ldr r6, =0x1FF								@ Load 0x1FF (511)
+	and r5, r6									@ And VBLANK counter with 511
+	lsl r5, #1									@ Multiply * 2 (16 bit SIN values)
+	add r3, r5									@ Add the offset to the SIN table
+	ldrsh r5, [r3]								@ Read the SIN table value (signed 16-bit value)
+	lsr r5, #10									@ Right shift SIN value to make it smaller
+	add r5, #160								@ Add the Y offset
+	and r5, #0xFF								@ And with 0xFF so no overflow
+	orr r1, r5									@ Orr in Y offset with settings
+	strh r1, [r0]								@ Write to attrib 0
+	
+	ldr r0, =OBJ_ATTRIBUTE1(0)					@ Attrib 1
+	ldr r1, =(ATTR1_SIZE_16)					@ Attrib 1 settings
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE1(n))
+	mov r2, #7									@ Skip 7 sprites (Logo Spites)
+	add r0, r2, lsl #3							@ Add offset
+	ldr r3, =COS_bin							@ Load COS address
+	ldr r5, =vblCounter							@ Load VBLANK counter address
+	ldr r5, [r5]								@ Load VBLANK counter value
+	add r5, r4, lsl #5							@ Add the iterator * 32
+	ldr r6, =0x1FF								@ Load 0x1FF (511)
+	and r5, r6									@ And VBLANK counter with 511
+	lsl r5, #1									@ Multiply * 2 (16 bit COS values)
+	add r3, r5									@ Add the offset to the COS table
+	ldrsh r5, [r3]								@ Read the COS table value (signed 16-bit value)
+	lsr r5, #10									@ Right shift COS value to make it smaller
+	add r5, #40									@ Add the X offset
+	add r5, r4, lsl #4							@ Add Iterator * 16 to X Offset
+	ldr r6, =0x1FF								@ Load 0x1FF
+	and r5, r6									@ And with 0x1FF so no overflow
+	orr r1, r5									@ Orr in X offset with settings
+	strh r1, [r0]								@ Write to attrib 1
+	
+	ldr r0, =OBJ_ATTRIBUTE2(0)					@ Attrib 2
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE2(n))
+	mov r3, #ATTR2_PRIORITY(0)					@ Set sprite priority
+	mov r2, #7									@ Skip 7 sprites (Logo Spites)
+	add r0, r2, lsl #3							@ Calculate tile position (* 8)
+	mov r1, r4, lsl #2							@ Iterator * 4
+	add r1, r2, lsl #4							@ Add Tile position
+	orr r1, r3									@ Or in settings
+	strh r1, [r0]								@ Write to attrib 2
+	
+	add r4, #1									@ Add 1 to iterator
+	cmp r4, #11									@ Drawn 10 sprites yet?
+	bne updateStartSpritesLoop					@ No so loop
+	
+	@ ----- PULSE -----
+	
+	ldr r0, =SPRITE_PALETTE						@ Load address to sprite palette
+	ldr r1, =10									@ Color offset 10
+	add r0, r1, lsl #1							@ Add offset * 2 (16 bit value)
+	ldr r2, =pulseValue							@ Load pulseValue address
+	ldr r3, [r2]								@ Load pulseValue value
+	
+	ldr r4, =pulseDirection						@ Load pulseDirection address
+	ldr r5, [r4]								@ Load pulseDirection value
+	cmp r5, #PULSE_FORWARD						@ Are we going forward or backward?
+	bne updateStartSpritesBackward				@ Were going backward
+		
+	add r3, #1									@ Add 1 to pulseValue
+	cmp r3, #0x1F								@ Are we at 0x1F? (Pure red)
+	moveq r5, #PULSE_BACKWARD					@ Yes then set pulse backward
+	str r3, [r2]								@ Write back to pulseValue
+	str r5, [r4]								@ Write back to pulseDirection
+	strh r3, [r0]								@ Write to palette
+	b updateStartSpritesDone					@ Branch to done
 	
 updateStartSpritesBackward:
 
-	sub r3, #1
-	cmp r3, #0
-	moveq r5, #0
-	str r3, [r2]
-	str r5, [r4]
-	strh r3, [r0]
+	sub r3, #1									@ Subtract 1 from pulseValue
+	cmp r3, #0									@ Are we at 0? (Pure black)
+	moveq r5, #PULSE_FORWARD					@ Change to pulse forward
+	str r3, [r2]								@ Write back to pulseValue
+	str r5, [r4]								@ Write back to pulseDirection
+	strh r3, [r0]								@ Write to palette
 	
 updateStartSpritesDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
-	
-	
+
 updateLogoSprites:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r4, #0
+	mov r4, #0									@ Reset iterator
 	
 updateLogoSpritesLoop:
+
+	ldr r0, =OBJ_ATTRIBUTE0(0)					@ Attrib 0
+	ldr r1, =(ATTR0_COLOR_16 | ATTR0_ROTSCALE_DOUBLE | ATTR0_SQUARE)	@ Attrib 0 settings
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE0(n))
+	ldr r3, =SIN_bin							@ Load SIN address
+	ldr r5, =vblCounter							@ Load VBLANK counter address
+	ldr r5, [r5]								@ Load VBLANK counter value
+	add r5, r4, lsl #5							@ Add the iterator * 32
+	ldr r6, =0x1FF								@ Load 0x1FF (511)
+	and r5, r6									@ And VBLANK counter with 511
+	lsl r5, #1									@ Multiply * 2 (16 bit SIN values)
+	add r3, r5									@ Add the offset to the SIN table
+	ldrsh r5, [r3]								@ Read the SIN table value (signed 16-bit value)
+	lsr r5, #6									@ Right shift SIN value to make it smaller
+	add r5, #64									@ Add the Y offset
+	and r5, #0xFF								@ And with 0xFF so no overflow
+	orr r1, r5									@ Orr in Y offset with settings
+	strh r1, [r0]								@ Write to attrib 0
 	
-	ldr r0, =OBJ_ATTRIBUTE0(0)
-	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
-	add r0, r4, lsl #3
-	ldr r3, =SIN_bin
-	ldr r5, =vblCounter
-	ldr r5, [r5]
-	add r5, r4, lsl #5
-	ldr r6, =0x1FF
-	and r5, r6
-	lsl r5, #1
-	add r3, r5
-	ldrsh r5, [r3]
-	lsr r5, #6
-	add r5, #64
-	and r5, #0xFF
-	orr r1, r5
-	strh r1, [r0]
+	ldr r0, =OBJ_ATTRIBUTE1(0)					@ Attrib 1
+	ldr r1, =(ATTR1_ROTDATA(0) | ATTR1_SIZE_32)		@ Attrib 1 settings
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE1(n))
+	ldr r3, =COS_bin							@ Load COS address
+	ldr r5, =vblCounter							@ Load VBLANK counter address
+	ldr r5, [r5]								@ Load VBLANK counter value
+	add r5, r4, lsl #5							@ Add the iterator * 32
+	ldr r6, =0x1FF								@ Load 0x1FF (511)
+	and r5, r6									@ And VBLANK counter with 511
+	lsl r5, #1									@ Multiply * 2 (16 bit COS values)
+	add r3, r5									@ Add the offset to the COS table
+	ldrsh r5, [r3]								@ Read the COS table value (signed 16-bit value)
+	lsr r5, #7									@ Right shift COS value to make it smaller
+	add r5, #16									@ Add the X offset
+	add r5, r4, lsl #5							@ Add Iterator * 32 to X Offset
+	ldr r6, =0x1FF								@ Load 0x1FF
+	and r5, r6									@ And with 0x1FF so no overflow
+	orr r1, r5									@ Orr in X offset with settings
+	strh r1, [r0]								@ Write to attrib 1
+		
+	ldr r0, =OBJ_ATTRIBUTE2(0)					@ Attrib 2
+	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE2(n))
+	mov r1, r4, lsl #4							@ Iterator * 16
+	mov r3, #ATTR2_PRIORITY(1)					@ Set sprite priority
+	orr r1, r3									@ Or in settings
+	strh r1, [r0]								@ Write to attrib 2
 	
-	ldr r0, =OBJ_ATTRIBUTE1(0)
-	ldr r1, =(ATTR1_SIZE_32)
-	add r0, r4, lsl #3
-	ldr r3, =SIN_bin
-	ldr r5, =vblCounter
-	ldr r5, [r5]
-	add r5, r4, lsl #5
-	ldr r6, =0x1FF
-	and r5, r6
-	lsl r5, #1
-	add r3, r5
-	ldrsh r5, [r3]
-	lsr r5, #6
-	add r5, #16
-	add r5, r4, lsl #5
-	ldr r6, =0x1FF
-	and r5, r6
-	orr r1, r5
-	strh r1, [r0]
+	mov r0, #0
+	ldr r3, =SIN_bin							@ Load SIN address
+	ldr r5, =vblCounter							@ Load VBLANK counter address
+	ldr r1, [r5]								@ Load VBLANK counter value
+	add r1, r4, lsl #5							@ Add the iterator * 32
+	ldr r6, =0x1FF								@ Load 0x1FF (511)
+	and r1, r6									@ And VBLANK counter with 511
+	lsl r1, #1									@ Multiply * 2 (16 bit SIN values)
+	add r3, r1									@ Add the offset to the SIN table
+	ldrsh r1, [r3]								@ Read the SIN table value (signed 16-bit value)
+	lsr r1, #7									@ Right shift SIN value to make it smaller
+	add r1, #160
+	bl scaleSprite
+	@bl rotateSprite
 	
-	ldr r0, =OBJ_ATTRIBUTE2(0)
-	add r0, r4, lsl #3
-	mov r1, r4, lsl #4
-	mov r3, #ATTR2_PRIORITY(1)
-	orr r1, r3
-	strh r1, [r0]
+	add r4, #1									@ Add 1 to iterator
+	cmp r4, #7									@ Drawn 7 sprites yet?
+	bne updateLogoSpritesLoop					@ No so loop
 	
-	add r4, #1
-	cmp r4, #7
-	bne updateLogoSpritesLoop
+	ldr r0, =vblCounter							@ Load VBLANK counter
+	ldr r1, [r0]								@ Load VBLANK value
+	add r1, #4									@ Add 4 to VBLANK counter
+	str r1, [r0]								@ Store back
 	
-	ldr r0, =vblCounter
-	ldr r1, [r0]
-	add r1, #2
-	str r1, [r0]
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+rotateSprite:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	@ r0 - ATTR1_ROTDATA(r0)
+	@ r1 - angle
+
+	ldr r4, =0x1FF								@ Load our mask to r4
+	and r1, r4									@ And our mask with our angle
+	lsl r1, #1									@ Multiply by 2 (16 bit data)
+	ldr r4, =SIN_bin							@ Load the address of our SIN table
+	ldr r5, =COS_bin							@ Load the address of our COS table
+	ldrsh r2, [r4, r1]							@ Now read the SIN table
+	ldrsh r3, [r5, r1]							@ Now read the COS table
+	asr r2, #4									@ Right shift the SIN value 4 bits
+	mov r6, r2									@ Make a copy of our SIN value (-SIN[angle & 0x1FF] >> 4)
+	rsb r2, r2, #0								@ Reverse subtract to make it negative (r2=#0 - r2)
+	asr r3, #4									@ Right shift the COS value 4 bits  (c = COS[angle & 0x1FF] >> 4)
+	ldr r4, =OBJ_ROTATION_HDX(0)				@ This is the HDX address of the sprite
+	ldr r5, =OBJ_ROTATION_HDY(0)				@ This is the HDY address of the sprite
+	add r4, r0, lsl #5							@ Add r0 offset
+	add r5, r0, lsl #5							@ Add r0 offset
+	strh r3, [r4]								@ Write our COS value to HDX (hdx = c)
+	strh r6, [r5]								@ Write our SIN value to HDY (hdy = -s)
+	ldr r4, =OBJ_ROTATION_VDX(0)				@ This is the VDX address of the sprite
+	ldr r5, =OBJ_ROTATION_VDY(0)				@ This is the VDY address of the sprite
+	add r4, r0, lsl #5							@ Add r0 offset
+	add r5, r0, lsl #5							@ Add r0 offset
+	strh r2, [r4]								@ Write our SIN value to VDX (vdx = s)
+	strh r3, [r5]								@ Write our COS value to VDY (vdy = c)
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+scaleSprite:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	@ r0 - ATTR1_ROTDATA(r0)
+	@ r1 - scale
+
+	mov r2, #0
+	ldr r4, =OBJ_ROTATION_HDX(0)				@ This is the HDX address of the sprite
+	ldr r5, =OBJ_ROTATION_HDY(0)				@ This is the HDY address of the sprite
+	add r4, r0, lsl #5							@ Add r0 offset
+	add r5, r0, lsl #5							@ Add r0 offset
+	strh r1, [r4]								@ Sx
+	strh r2, [r5]								@ 0
+	ldr r4, =OBJ_ROTATION_VDX(0)				@ This is the VDX address of the sprite
+	ldr r5, =OBJ_ROTATION_VDY(0)				@ This is the VDY address of the sprite
+	add r4, r0, lsl #5							@ Add r0 offset
+	add r5, r0, lsl #5							@ Add r0 offset
+	strh r2, [r4]								@ 0
+	strh r1, [r5]								@ Sy
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -409,28 +580,18 @@ updateTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl scrollStarsHoriz
-	bl updateLogoSprites
-	bl updateStartSprites
+	bl scrollStarsHoriz							@ Scroll stars
+	bl updateLogoSprites						@ Update logo sprites
+	bl updateStartSprites						@ Update start sprites
 	
-	@ldr r1, =REG_KEYINPUT
-	@ldr r2, [r1]
-	@tst r2, #BUTTON_A
-	@bleq initTitleScreen
-	
-	ldr r1, =REG_KEYINPUT
+	ldr r1, =REG_KEYINPUT						@ Read Key Input
 	ldr r2, [r1]
-	ldr r3, =gameMode
-	ldr r4, =GAMEMODE_RUNNING
-	tst r2, #BUTTON_START
-	streq r4, [r3]
-	@bleq fxStarfieldOff
-	bleq fxSpotlightOff
-	bleq fxTextScrollerOff
-	bleq fxCopperTextOff
-	bleq stopTimer
-	bleq initData								@ setup actual game data
-	bleq initLevel
+	tst r2, #BUTTON_START						@ Start button pressed?
+	bleq fxSpotlightOff							@ Turn off the spotlight effect
+	bleq fxTextScrollerOff						@ Turn off the scroller effect
+	bleq fxCopperTextOff						@ Turn off the copper text effect
+	bleq stopTimer								@ Stop the timer
+	bleq gameStart								@ Start the game
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -448,27 +609,43 @@ pulseValue:
 pulseDirection:
 	.word 0
 	
+	.align
 proteusDevelopmentsText:
 	.asciz "@2009 PROTEUS DEVELOPMENTS"
+	
+	.align
+andHeadSoftText:
+	.asciz "AND HEADSOFT"
 
+	.align
 asmCodingText:
 	.asciz "- ASM CODING -"
 
+	.align
 flashAndHeadKazeText:
 	.asciz "FLASH AND HEADKAZE"
 	
+	.align
 graffixText:
 	.asciz "- GRAFFIX -"
 	
+	.align
 badToadAndLoboText:
 	.asciz "LOBO AND BADTOAD"
 	
+	.align
 musixText:
 	.asciz "- MUSIX -"
 	
-someoneText:
+	.align
+PPOTText:
 	.asciz "PRESS PLAY ON TAPE"
+	
+	.align
+spaceFractalText:
+	.asciz "SPACE FRACTAL"
 
+	.align
 aRetroBytesPortalProductionText:
 	.asciz "A RETROBYTES PORTAL PRODUCTION"
 	

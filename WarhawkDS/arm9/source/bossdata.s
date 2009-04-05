@@ -68,6 +68,7 @@ bossInitLev:
 	@16
 	.word 4,2,8,35,1,0,143,207
 
+	.align
 bossFireLev:
 	@ this consists of 64 words that describe the bosses firing pattern
 	@ form [speed/type], delay

@@ -200,13 +200,9 @@ updateIntro:
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
-	ldr r3, =gameMode
-	ldr r4, =GAMEMODE_RUNNING
 	tst r2, #BUTTON_START
-	streq r4, [r3]
 	bleq stopTimer
-	bleq initData								@ setup actual game data
-	bleq initLevel
+	bleq gameStart								@ Start the game
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]

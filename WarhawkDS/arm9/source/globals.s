@@ -165,6 +165,7 @@
 	
 explodeSpriteBossCount:
 	.word 0
+
 explodeSpriteBoss:
 	.word 0
 	
@@ -338,43 +339,79 @@ blockCraterCount:
 energyLevel:
 	.word 0, 0, 0, 0, 0, 0, 0, 0, 0
 	
+	.align
 getReadyText:
 	.asciz "GET READY!"
+	
+	.align
 levelText:
 	.asciz "LEVEL"
+	
+	.align
 spriteXText:
 	.asciz "spritex:"
+	
+	.align
 spriteYText:
 	.asciz "spritey:"
+	
+	.align
 vofsSubText:
 	.asciz "vofssub:"
+	
+	.align
 yposSubText:
 	.asciz "ypossub:"
+	
+	.align
 blockXText:
 	.asciz "blockx:"
+	
+	.align
 blockYText:
 	.asciz "blocky:"
+	
+	.align
 tileNumText:
 	.asciz "tilenum:"
+	
+	.align
 scrollPixelText:
 	.asciz "scroll pix:"
+	
+	.align
 pixelOffsetText:
 	.asciz "pixeloff:"
+	
+	.align
 energyText:
 	.asciz "energy:"
+	
+	.align
 gameOverText:
 	.asciz "GAME OVER!"
+	
+	.align
 inGameRawText:
 	.asciz "/InGame.raw"
+	
+	.align
 titleRawText:
 	.asciz "/Title.raw"
+	
+	.align
 gameOverRawText:
 	.asciz "/GameOver.raw"
+	
+	.align
 hiScoreRawText:
 	.asciz "/HiScore.raw"
+	
+	.align
 ppotRawText:
 	.asciz "/PPOT.raw"
 
+	.align
 	.section .bss
 
 spriteActive:

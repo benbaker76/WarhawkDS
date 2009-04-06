@@ -61,6 +61,8 @@ initLevel:
 	str r1,[r0]
 	ldr r0,=playerDeathDelay
 	str r1,[r0]
+	ldr r0,=animEnergyActive
+	str r1,[r0]
 	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub

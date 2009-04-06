@@ -165,11 +165,20 @@
 	.global playerDeath
 	.global playerDeathDelay
 	.global playerMidDelay
+	.global animEnergyPhase
+	.global animEnergyActive
+	.global animEnergyDelay
 	
 explodeSpriteBossCount:
 	.word 0
-
 explodeSpriteBoss:
+	.word 0
+	
+animEnergyPhase:
+	.word 0
+animEnergyActive:
+	.word 0
+animEnergyDelay:
 	.word 0
 	
 powerupLives:

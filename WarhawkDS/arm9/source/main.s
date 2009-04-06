@@ -144,6 +144,7 @@ gameLoop:
 	bl fireCheck								@ check for your wish to shoot!
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
+	bl drawEnergyBarFlash						@ flash is energy low
 	bl checkPowerUp								@ check for and use powerup
 	bl checkWave								@ check if time for another alien attack
 	bl moveAliens								@ move the aliens and detect colisions with you

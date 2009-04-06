@@ -29,6 +29,7 @@
 	.text
 	.global drawAllEnergyBars
 	.global drawEnergyBar
+	.global drawEnergyBarFlash
 	
 	@ ---------- Calculate energy bar levels -----------------
 	
@@ -39,12 +40,20 @@ drawAllEnergyBars:
 	ldr r0, =energy								@ Read energy address
 	ldr r0, [r0]								@ Read energy value
 	
-	@cmp r0, #24								@ Energy level 24?
-	@bleq playCrashBuzSound						@ Play warning sound
-	@cmp r0, #16								@ Energy level 16?
-	@bleq playCrashBuzSound						@ Play warning sound
-	@cmp r0, #8									@ Energy level 8?
-	@bleq playCrashBuzSound						@ Play warning sound
+	cmp r0,#24
+	bgt drawAllEnergyBarsNormal
+	
+		ldr r1,=animEnergyActive
+		ldr r3,[r1]
+		cmp r3,#0
+		bne drawAllEnergyBarsNormal
+			mov r3,#1
+			str r3,[r1]
+			ldr r1,=animEnergyPhase
+			str r3,[r1]
+			ldr r1,=animEnergyDelay
+			str r3,[r1]
+	drawAllEnergyBarsNormal:
 	
 	mov r2, #0									@ Our energy offset
 	mov r4, #64									@ Our energy level check for each energy bar
@@ -124,5 +133,62 @@ drawEnergyBar:
 	
 	ldmfd sp!, {r3-r6, pc}
 
+	@ ---------- Flash final energy bar -----------------
+	
+drawEnergyBarFlash:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0,=animEnergyActive
+	ldr r0,[r0]
+	cmp r0,#0
+	bne drawEnergyBarFlashDelay
+
+	ldmfd sp!, {r0-r6, pc}
+
+	drawEnergyBarFlashDelay:
+
+	ldr r0,=animEnergyDelay
+	ldr r1,[r0]
+	cmp r1,#0
+	beq drawEnergyBarFlashUpdate
+	sub r1,#1
+	str r1,[r0]
+	ldmfd sp!, {r0-r6, pc}
+
+	drawEnergyBarFlashUpdate:
+	
+	mov r1,#4						@ reset delay
+	str r1,[r0]
+	
+	ldr r6,=animEnergyPhase
+	ldr r5,[r6]
+	cmp r5,#0
+	bne drawEnergyBarFlashUpdate2
+	
+		mov r5,#1
+		str r5,[r6]
+
+		ldr r0, =EnergyTiles
+		ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+		add r1, #(ScoreTilesLen + FontTilesLen)
+		ldr r2, =EnergyTilesLen
+		bl dmaCopy
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	drawEnergyBarFlashUpdate2:
+
+		mov r5,#0
+		str r5,[r6]
+		
+		ldr r0, =EnergyLowTiles
+		ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+		add r1, #(ScoreTilesLen + FontTilesLen)
+		ldr r2, =EnergyTilesLen
+		bl dmaCopy
+
+	
+	ldmfd sp!, {r0-r6, pc}
 	.pool
 	.end

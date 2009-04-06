@@ -1,6 +1,7 @@
 #include "../build/Font.h"
 #include "../build/Score.h"
 #include "../build/Energy.h"
+#include "../build/EnergyLow.h"
 #include "../build/LoadingTop.h"
 #include "../build/LoadingBottom.h"
 #include "../build/Proteus.h"

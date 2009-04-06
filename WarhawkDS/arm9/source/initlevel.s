@@ -62,7 +62,7 @@ initLevel:
 	ldr r0,=playerDeathDelay
 	str r1,[r0]
 	ldr r0,=animEnergyActive
-	str r1,[r0]
+	str r1,[r0]				@ turn off the energy bar flash
 	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub

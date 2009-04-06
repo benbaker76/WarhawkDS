@@ -181,11 +181,6 @@ alienFireMove:
 				cmp r6,#3
 				bpl testSkip
 				
-			@	ldr r6,=levelEnd
-			@	ldr r6,[r6]
-			@	cmp r6,#2
-			@	beq testSkip					@ if we have completed the level, no need to check
-				
 				mov r6,#SPRITE_X_OFFS
 				ldr r6,[r2,r6]
 				mov r7,#SPRITE_Y_OFFS
@@ -216,10 +211,14 @@ alienFireMove:
 				
 					bl playSteelSound				@ activate sound for ship being hit!
 				
-					ldr r6,=energy					@ Take 1 off your energy
+					ldr r6,=energy					@ Take 2 off your energy
 					ldr r7,[r6]
-					subs r7,#1
-					movmi r7,#0
+					
+					cmp r3,#9
+					moveq r8,#1						@ only 1 unit lost if tracker
+					movne r8,#2						@ 2 lost of destructive bullets
+					subs r7,r8
+					movmi r7,#0						@ make sure we never go "negetive"
 					str r7,[r6]
 						
 					mov r6,#SPRITE_OBJ_OFFS

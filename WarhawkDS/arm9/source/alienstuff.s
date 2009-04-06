@@ -392,13 +392,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 					cmp r8,r9			@ if the random number is > than your number = FIRE
 					blt doDetect
 					b fireAsNormal
-				
-				
-				
-				
-				
-				
-				
+
 				notRandomFire:
 					
 					mov r0,#SPRITE_BURST_DELAY_OFFS		@ load the burst delay
@@ -546,6 +540,8 @@ aliensLinear:
 			str r4,[r1,r0]		
 	linPass8:
 	mov r0,#SPRITE_TRACK_Y_OFFS
+	cmp r12,#0
+	subeq r11,#1
 	subs r11,r12		@ take speed off our distance to travel
 	str r11,[r1,r0]	@ store it back
 	cmp r11,#0
@@ -624,7 +620,7 @@ aliensTracker:
 	str r6,[r1,r0]					@ store it and allow update of speed
 
 	cmp r10,r8						@ is sprite l/r of track x?
-@	beq xNone						@ it is the same
+	beq xNone						@ it is the same
 	bpl xLeft						@ if right, go left - else, go right
 	bmi xRight						@ if left, go right
 	
@@ -690,7 +686,7 @@ aliensTracker:
 	str r6,[r1,r0]				@ store it and allow update of speed
 
 	cmp r10,r8					@ is sprite below track y?
-@	beq yNone					@ if the same, slow speed down
+	beq yNone					@ if the same, slow speed down
 	bpl yUp						@ if so, go up
 	bmi yDown					@ if not, go down
 	

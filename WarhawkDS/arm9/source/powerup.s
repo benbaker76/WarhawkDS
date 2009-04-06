@@ -59,7 +59,7 @@ checkPowerUp:
 	ldr r0,=delayPowerUp				@ this is our counter
 	ldr r1,[r0]
 	add r1,#1							@ add to it
-	cmp r1,#500							@ we will use this for a test value
+	cmp r1,#400							@ we will use this for a test value
 	str r1,[r0]							@ store it back
 	bpl powerInit
 		ldmfd sp!, {r0-r6, pc}	
@@ -101,6 +101,10 @@ checkPowerUp:
 		mov r1,#352						@ set the Y coord into Whitespace!
 		str r1,[r4,r6, lsl #2]			@ store r2 as Y, calculated above
 	
+		ldr r4,=spriteHits+68
+		mov r1,#0						@ set the hits to 0
+		str r1,[r4,r6, lsl #2]			@ store r2 as Y, calculated above	
+
 	ldmfd sp!, {r0-r6, pc}
 	
 dropShipShot:						@------------ We have shot a drop ship!!

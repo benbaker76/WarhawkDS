@@ -403,7 +403,7 @@ drawSprite:
 		bne movePowerup							@ --------------- Drop ship
 			ldr r0,=spriteY
 			ldr r1,[r0,r8,lsl #2]
-			add r1,#2							@ move it down screen
+			add r1,#3							@ move it down screen
 			str r1,[r0,r8,lsl #2]
 			b noMoreStuff
 		movePowerup:

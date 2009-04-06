@@ -751,15 +751,6 @@ aliensTracker:
 	add r4,#32
 	cmp r4,r2
 	blt noMatch
-
-
-@	add r2,#32						@ a 32 pixel area is too big??
-@	cmp r2,r4
-@	bmi noMatch
-@	sub r2,#32
-@	add r4,#32
-@	cmp r2,r4
-@	bpl noMatch
 	
 	mov r0,#SPRITE_Y_OFFS
 	ldr r2,[r1,r0]					@ r2=current y COORD
@@ -774,14 +765,6 @@ aliensTracker:
 	cmp r4,r2
 	blt noMatch	
 
-@	add r2,#32
-@	cmp r2,r4
-@	bmi noMatch
-@	sub r2,#32
-@	add r4,#32
-@	cmp r2,r4
-@	bpl noMatch
-	
 	@ To get here we must be within our 16 pixel boundry of a track point.
 	@ Time to get another from ((spriteInstruct)+sprite number*128)+32
 	@ r7=sprite number
@@ -951,11 +934,11 @@ initHunterMine:
 		ldr r7,[r7]
 		mov r1,#40			@ set the duration for the next hunter based on level
 		cmp r7,#3
-		movge r1,#30
+		movge r1,#27
 		cmp r7,#7
-		movge r1,#25
+		movge r1,#22
 		cmp r7,#10
-		movge r1,#20
+		movge r1,#18
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#0					@ R0 points to the sprite that will be used for the mine

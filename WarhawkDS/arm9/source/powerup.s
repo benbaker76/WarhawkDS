@@ -93,9 +93,13 @@ checkPowerUp:
 		mov r5,#35						@ This is the Dropship Sprite
 		str r5,[r4,r6, lsl #2]			@ 
 
+		bl getRandom
+		and r8,#255
+		add r8,#80
+		
+
 		ldr r4,=spriteX+68
-		mov r1,#176+32					@ position the Dropships X coord
-		str r1,[r4,r6, lsl #2]			@ store r1 as X, calculated above
+		str r8,[r4,r6, lsl #2]			@ store r1 as X, calculated above
 
 		ldr r4,=spriteY+68
 		mov r1,#352						@ set the Y coord into Whitespace!

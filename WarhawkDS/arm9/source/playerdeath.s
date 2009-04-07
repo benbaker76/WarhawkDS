@@ -318,7 +318,6 @@ playerIsAllDead:										@ --- PHASE 5
 	bl fxCopperTextOff
 
 	ldr r0, =score
-	ldr r1, =8
 	bl byte2Int					@ why does this fail?
 	bl showHiScoreEntry
 	

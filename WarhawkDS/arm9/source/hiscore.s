@@ -138,6 +138,16 @@ showHiScoreEntry:
 	bl dmaCopy
 	
 	bl clearOAM									@ Reset all sprites
+	
+	ldr r0, =FontPal
+	ldr r1, =BG_PALETTE
+	ldr r2, =32
+	bl dmaCopy
+	mov r3, #0
+	strh r3, [r1]
+	ldr r1, =BG_PALETTE_SUB
+	bl dmaCopy
+	strh r3, [r1]
 
 	@ Write the tile data to VRAM
 

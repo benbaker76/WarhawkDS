@@ -27,7 +27,7 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FONT_COLOR_OFFSET	11
+	#define FONT_COLOR_OFFSET	255
 	#define COLOR_WHITE			0x7FFF
 
 	.arm

@@ -87,8 +87,8 @@ main:
 	
 	bl readHiScore
 	
-	@mov r0,#8192
-	@bl showHiScoreEntry
+	mov r0,#8192
+	bl showHiScoreEntry
 
 	@ldr r0, =levelNum
 	@mov r1, #1
@@ -108,7 +108,7 @@ main:
 
 	@bl showEndOfLevel
 	
-	bl showIntro1
+	@bl showIntro1
 
 	@ ------------------------------------
 	

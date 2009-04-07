@@ -28,7 +28,6 @@
 #include "sprite.h"
 #include "ipc.h"
 
-	#define FONT_COLOR_OFFSET	11
 	#define PULSE_FORWARD		0
 	#define PULSE_BACKWARD		1
 
@@ -116,16 +115,6 @@ initTitleScreen:
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
 	ldr r2, =TitleBottomMapLen
 	bl dmaCopy
-	
-	ldr r0, =FontPal
-	ldr r1, =BG_PALETTE
-	ldr r2, =32
-	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-	strh r3, [r1]
 	
 	@ Sprites
 	

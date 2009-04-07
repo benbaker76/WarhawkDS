@@ -53,7 +53,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		@ ** we need to read "firePress" and see if it >0
 		@ ** if so, fire bullet, else if >50 fire power shot
 		ldr r0,=firePress
-		ldr r8,[r0]			@ r1= fire pressed duration
+		ldr r8,[r0]			@ r8= fire pressed duration
 		mov r2,#0
 		str r2,[r0]			@ RESET "firepress" to 0
 		ldr r0,=fireTrap
@@ -89,7 +89,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		@ if so, just continue the code!
 		ldr r4,=powerUpDelay
 		ldr r3,[r4]					@ r3=our delay
-		add r3,#1					@ increment out counter
+		add r3,#1					@ increment our counter
 		cmp r3,#4					@ wait 4 refreshes before another bullet
 		moveq r3,#0					@ if it is 8, zero the delay
 		str r3,[r4]					@ put the result back
@@ -104,7 +104,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		ldr r0, [r0]
 		cmp r0,#1
 		moveq r0,#15				@ if powered up, we can allow 16 bullets
-		movne r0,#5					@ if not, just the 6
+		movne r0,#7					@ if not, just the 8
 		ldr r1, =spriteActive
 		add r1, #4					@ add 4 bytes as stored in words
 		isbulletPossible:
@@ -135,7 +135,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		add r1, #4
 		str r2,[r1,r0, lsl #2]		@ done!		
 	
-		cmp r8,#36					@ This is the "HOLD" period needed for the shot!
+		cmp r8,#31					@ This is the "HOLD" period needed for the shot!
 		bmi fireNormal				@ "POWERSHOT"
 
 			ldr r3,=spriteY

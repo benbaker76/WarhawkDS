@@ -54,7 +54,7 @@ initTitleScreen:
 	
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset the scroll registers
-	bl clearBG0									@ Clear bg's
+	bl clearBG0									@ Clear bgs
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3

@@ -63,7 +63,9 @@ initLevel:
 	str r1,[r0]
 	ldr r0,=animEnergyActive
 	str r1,[r0]				@ turn off the energy bar flash
-	
+	ldr r0,=powerUp
+	str r1,[r0]
+
 	@ set scroller data
 	ldr r0,=pixelOffsetSub
 	str r1,[r0]
@@ -130,7 +132,7 @@ initLevel:
 	ldr r1,=delaySB
 	str r0,[r1]
 
-	mov r1,#250
+	mov r1,#200
 	ldr r0,=delayPowerUp
 	str r1,[r0]
 

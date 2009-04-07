@@ -124,10 +124,10 @@ levelStart:
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
 	bl levelDrift
-	bl drawScore
 	bl drawSprite
 	bl drawGetReadyText
-	bl drawAllEnergyBars
+	@bl drawScore
+	@bl drawAllEnergyBars
 	
 	ldr r0, =inGameRawText					@ Read the path to the file
 	bl playAudioStream						@ Play the audio stream

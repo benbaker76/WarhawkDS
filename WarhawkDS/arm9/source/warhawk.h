@@ -15,6 +15,7 @@
 #include "../build/LogoSprites.h"
 #include "../build/StartSprites.h"
 #include "../build/CursorSprite.h"
+#include "../build/ArrowSprite.h"
 #include "../build/StarFront.h"
 #include "../build/StarBack.h"
 #include "../build/Sprites.h"
@@ -104,11 +105,12 @@
 #define GAMEMODE_LOADING			3
 #define GAMEMODE_INTRO				4
 #define GAMEMODE_TITLESCREEN		5
-#define GAMEMODE_GETREADY			6
-#define GAMEMODE_BOSSDIE			7
-#define GAMEMODE_ENDOFLEVEL			8
-#define GAMEMODE_GAMEOVER			9
-#define GAMEMODE_HISCORE_ENTRY		10
+#define GAMEMODE_CONTINUEGAME		6
+#define GAMEMODE_GETREADY			7
+#define GAMEMODE_BOSSDIE			8
+#define GAMEMODE_ENDOFLEVEL			9
+#define GAMEMODE_GAMEOVER			10
+#define GAMEMODE_HISCORE_ENTRY		11
 
 @ Level count
 

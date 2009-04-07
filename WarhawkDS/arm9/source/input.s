@@ -27,70 +27,46 @@
 #include "interrupts.h"
 #include "sprite.h"
 #include "ipc.h"
-#include "efs.h"
 
-	#define LEVEL_VALUE_SIZE			1
-	#define LEVEL_CRLF_SIZE				2
+	#define INPUT_DELAY				16
 
 	.arm
 	.align
 	.text
-	.global readOptions
-	.global writeOptions
-	.global optionLevelNum
+	.global readInput
+	
+readInput:
 
-readOptions:
-
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r1-r6, lr}
 	
-	ldr r0, =optionsDatText
-	ldr r1, =optionsBuffer
-	bl readFileBuffer
+	ldr r0, =buttonPress						@ Load hiScoreKeyPress address
+	ldr r1, [r0]								@ Load hiScoreKeyPress value
 	
-	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
-	ldrb r2, [r0], #LEVEL_VALUE_SIZE
-	str r2, [r1]
+	ldr r2, =REG_KEYINPUT						@ Read key input register
+	ldr r3, [r2]								@ Read key value
 	
-	add r0, #LEVEL_CRLF_SIZE
+	mov r4, r3
+	and r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A)	
+	cmp r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A)
+	moveq r1, #0								@ if so, set to 0
+	addne r1, #1								@ if not, a key is pressed, so add 1
 	
-	@ More options here
+	cmp r1, #INPUT_DELAY						@ if we are at INPUT_DELAY, reset to 0 to allow movement
+	movpl r1, #1								@ INPUT_DELAY is a delay you may want to adjust to suit?
 	
-	ldmfd sp!, {r0-r2, pc}
+	str r1, [r0]
 	
-	@------------------------------------
-
-writeOptions:
-
-	stmfd sp!, {r0-r2, lr}
+	mov r0, r1
 	
-	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
-	ldr r2, [r1]
-	strb r2, [r0], #LEVEL_VALUE_SIZE
-
-	add r0, #LEVEL_CRLF_SIZE
+	ldmfd sp!, {r1-r6, pc} 					@ restore registers and return
 	
-	@ More options here
-	
-	ldr r0, =optionsDatText
-	ldr r1, =optionsBuffer
-	bl writeFileBuffer
-	
-	ldmfd sp!, {r0-r2, pc}
-	
-	@------------------------------------
+	@---------------------------------
 
 	.data
 	.align
 
-optionLevelNum:
+buttonPress:
 	.word 0
 	
-optionsDatText:
-	.asciz "/Options.dat"
-	
-	.align
-optionsBuffer:
-	.incbin "../../efsroot/Options.dat"
-
+	.pool
+	.end

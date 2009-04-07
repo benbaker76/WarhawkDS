@@ -126,8 +126,6 @@ levelStart:
 	bl levelDrift
 	bl drawSprite
 	bl drawGetReadyText
-	@bl drawScore
-	@bl drawAllEnergyBars
 	
 	ldr r0, =inGameRawText					@ Read the path to the file
 	bl playAudioStream						@ Play the audio stream

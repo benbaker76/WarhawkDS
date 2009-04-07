@@ -168,10 +168,10 @@ showHiScoreEntry:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
+	bl drawHiScoreText							@ Draw the hiscore text
+	
 	ldr r0, =hiScoreRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
-
-	bl drawHiScoreText							@ Draw the hiscore text
 	
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldOn							@ Tune on starfield
@@ -191,24 +191,13 @@ updateHiScoreEntry:
 	ldr r2, [r1]								@ Load cursorPos value
 	ldrb r3, [r0, r2]							@ Load the ASCII character
 	
-	ldr r8, =hiScoreKeyPress					@ Load hiScoreKeyPress address
-	ldr r7, [r8]								@ Load hiScoreKeyPress value
+	bl readInput
 	
-	ldr r4, =REG_KEYINPUT						@ Read key input register
-	ldr r5, [r4]								@ Read key value
-	
-	mov r4, r5									@ check all the used keys for entry are clear!
-	and r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A)	
-	cmp r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A)
-	moveq r7, #0								@ if so, set to 0
-	addne r7, #1								@ if not, a key is pressed, so add 1
-	
-	cmp r7, #INPUT_DELAY						@ if we are at INPUT_DELAY, reset to 0 to allow movement
-	movpl r7, #1								@ INPUT_DELAY is a delay you may want to adjust to suit?
-	
-	cmp r7, #1									@ if it is 1, keep pressed (from no-key pressed)
+	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
 	bne hiScoreEntrySkip
 
+	ldr r4, =REG_KEYINPUT						@ Read key input register
+	ldr r5, [r4]								@ Read key input value
 	tst r5, #BUTTON_UP							@ Button up?
 	addeq r3, #1								@ Move ASCII character up
 	tst r5, #BUTTON_DOWN						@ Button down?
@@ -219,6 +208,7 @@ updateHiScoreEntry:
 	cmp r3, #90									@ If > 90 set to 90
 	movgt r3, #90
 	
+	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
 	strb r3, [r0, r2]							@ Write back ASCII character
 	
 	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
@@ -572,12 +562,9 @@ byte2IntLoop:
 	ldmfd sp!, {r1-r6, pc}
 	
 	@---------------------------------
-
+	
 	.data
 	.align
-
-hiScoreKeyPress:
-	.word 0
 	
 cursorPos:
 	.word 0

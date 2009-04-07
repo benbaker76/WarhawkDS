@@ -85,7 +85,10 @@ main:
 	mov r1, #0
 	bl EFS_Init
 	
+	bl readOptions
 	bl readHiScore
+	
+	@bl showContinueGame
 	
 	@ldr r0, =8192
 	@bl showHiScoreEntry
@@ -128,6 +131,8 @@ mainLoop:
 	bleq updateLoading
 	cmp r1, #GAMEMODE_TITLESCREEN
 	bleq updateTitleScreen
+	cmp r1, #GAMEMODE_CONTINUEGAME
+	bleq updateContinueGame
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
 	cmp r1, #GAMEMODE_HISCORE_ENTRY

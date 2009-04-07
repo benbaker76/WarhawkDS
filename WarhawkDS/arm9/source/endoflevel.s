@@ -81,10 +81,12 @@ showEndOfLevel:
 	ldr r0, =FontPal
 	ldr r1, =BG_PALETTE
 	ldr r2, =32
+	add r1, r2
 	bl dmaCopy
 	mov r3, #0
 	strh r3, [r1]
 	ldr r1, =BG_PALETTE_SUB
+	add r1, r2
 	bl dmaCopy
 	strh r3, [r1]
 	

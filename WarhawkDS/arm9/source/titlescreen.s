@@ -60,16 +60,6 @@ initTitleScreen:
 	bl clearBG2
 	bl clearBG3
 	
-	ldr r0, =FontPal
-	ldr r1, =BG_PALETTE
-	ldr r2, =32
-	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-	strh r3, [r1]
-	
 	mov r0, #256								@ Set scroll registers
 	ldr r1, =vofsSFMain
 	str r0, [r1]
@@ -126,6 +116,16 @@ initTitleScreen:
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
 	ldr r2, =TitleBottomMapLen
 	bl dmaCopy
+	
+	ldr r0, =FontPal
+	ldr r1, =BG_PALETTE
+	ldr r2, =32
+	bl dmaCopy
+	mov r3, #0
+	strh r3, [r1]
+	ldr r1, =BG_PALETTE_SUB
+	bl dmaCopy
+	strh r3, [r1]
 	
 	@ Sprites
 	

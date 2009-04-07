@@ -416,16 +416,8 @@ addHiScoreLoop:
 	strb r3, [r1], #1
 	ldrb r3, [r6], #1
 	strb r3, [r1], #(1 + HISCORE_CRLF_SIZE)
-	
-	ldrb r3, [r7], #1							@ Copy from buffer
-	strb r3, [r6], #1
-	ldrb r3, [r7], #1
-	strb r3, [r6], #1
-	ldrb r3, [r7], #1
-	strb r3, [r6], #1
-	
-	sub r6, #3									@ Go back
-	sub r7, #3
+
+	mov r6, r7									@ Copy from buffer
 	
 addHiScoreContinue:
 	
@@ -607,7 +599,7 @@ nameAAA:
 	
 	.align
 hiScoreDatText:
-	.asciz "/HiScore.dat"
+	.asciz "/HiScore.dat\0"
 	
 	.align
 wellDoneText:

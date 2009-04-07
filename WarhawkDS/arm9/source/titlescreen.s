@@ -473,7 +473,7 @@ updateLogoSpritesLoop:
 	add r3, r5									@ Add the offset to the COS table
 	ldrsh r5, [r3]								@ Read the COS table value (signed 16-bit value)
 	lsr r5, #7									@ Right shift COS value to make it smaller
-	add r5, #16									@ Add the X offset
+	add r5, #8									@ Add the X offset
 	add r5, r4, lsl #5							@ Add Iterator * 32 to X Offset
 	ldr r6, =0x1FF								@ Load 0x1FF
 	and r5, r6									@ And with 0x1FF so no overflow

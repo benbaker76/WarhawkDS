@@ -87,7 +87,7 @@ main:
 	
 	bl readHiScore
 	
-	@mov r0,#8192
+	@ldr r0, =8192
 	@bl showHiScoreEntry
 
 	@ldr r0, =levelNum

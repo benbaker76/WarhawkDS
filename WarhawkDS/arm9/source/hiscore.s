@@ -599,7 +599,7 @@ nameAAA:
 	
 	.align
 hiScoreDatText:
-	.asciz "/HiScore.dat\0"
+	.asciz "/HiScore.dat"
 	
 	.align
 wellDoneText:

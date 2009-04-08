@@ -184,7 +184,7 @@ showHiScoreEntryDone:
 	
 updateHiScoreEntry:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
@@ -209,12 +209,9 @@ updateHiScoreEntry:
 	movgt r3, #90
 	
 	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
-	strb r3, [r0, r2]							@ Write back ASCII character
-	
-	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
 	ldr r2, [r1]								@ Load cursorPos value
-	ldrb r3, [r0, r2]							@ Load ASCII character
+	strb r3, [r0, r2]							@ Write back ASCII character
 	
 	ldr r4, =REG_KEYINPUT						@ Read key input register
 	ldr r5, [r4]								@ Read key input value
@@ -243,14 +240,12 @@ hiScoreEntrySkip:
 	
 	bl drawCursorSprite							@ Draw the cursor sprite
 
-	str r7, [r8]								@ Write back to hiScoreKeyPress
-	
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value
 	tst r1, #BUTTON_A							@ Button A?
 	bleq saveHiScore							@ Yes, so save the hiscore
 	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -390,24 +385,24 @@ addHiScoreLoop:
 	
 	add r1, #HISCORE_VALUE_SIZE					@ Add the score size
 	
-	ldrb r3, [r1], #1							@ Copy it into nameBuffer
+	ldrb r3, [r1], #1							@ Copy current name to nameBuffer
 	strb r3, [r7], #1
 	ldrb r3, [r1], #1
 	strb r3, [r7], #1
 	ldrb r3, [r1], #1
 	strb r3, [r7], #1
 	
-	sub r1, #3									@ Go back
+	sub r1, #3									@ Go back 3 letters
 	sub r7, #3
 	
-	ldrb r3, [r6], #1							@ Copy to buffer
+	ldrb r3, [r6], #1							@ Copy last name to hiScoreBuffer
 	strb r3, [r1], #1
 	ldrb r3, [r6], #1
 	strb r3, [r1], #1
 	ldrb r3, [r6], #1
 	strb r3, [r1], #(1 + HISCORE_CRLF_SIZE)
 
-	mov r6, r7									@ Copy from buffer
+	mov r6, r7									@ Move current name pointer into r6
 	
 addHiScoreContinue:
 	

@@ -40,9 +40,9 @@ bossInitLev:
 	@2
 	.word 4,0,7,70,1,0,123,227			@ Crane Test
 	@3
-	.word 5,3,10,35,0,1,143,207			@ homing test
+	.word 5,3,10,70,0,1,143,207			@ homing test
 	@4
-	.word 4,8,8,35,0,2,143,207			@ LURCHER TEST!
+	.word 4,8,8,70,0,2,143,207			@ LURCHER TEST!
 	@5
 	.word 4,4,10,50,0,3,173,177			@ Crane Test
 	@6

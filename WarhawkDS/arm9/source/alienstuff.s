@@ -1183,7 +1183,7 @@ explodeIdentAlien:
 		@ so, set this to EXPLODE
 			push {r8}
 			ldr r2,=spriteActive+68
-			mov r3,#4					@ set to an explosion
+			mov r3,#11					@ set to an explosion
 			str r3,[r2,r7,lsl #2]		@
 			mov r3,#6					@ set first explosion frame
 			ldr r2,=spriteObj+68
@@ -1226,7 +1226,7 @@ explodeIdentAlien:
 				
 				foundFreeSpriteX:
 
-			mov r3,#4					@ set to an explosion
+			mov r3,#11					@ set to an explosion
 			str r3,[r2,r9,lsl #2]		@
 			mov r3,#6					@ set first explosion frame
 			ldr r2,=spriteObj+68

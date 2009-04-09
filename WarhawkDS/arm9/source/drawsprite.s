@@ -59,11 +59,6 @@ drawSprite:
 	moveq r4,#0				@ then we dont need to add anything
 							@ as our ship is not tied to the background
 	
-	@ If coord is <192 then plot on sub (upper)
-	@ if >256 plot on main (lower)
-	@ but, if on crossover, we need to plot 2 ships!!!
-	@ one on each screen in the correct location!!
-	@ Last section best commented!
 	ldr r0,=spriteY
 	ldr r1,[r0,r8, lsl #2]
 	cmp r1,#SCREEN_MAIN_WHITESPACE
@@ -95,18 +90,31 @@ drawSprite:
 		bne sprites_Drawn				@ if so, draw it!		
 		
 		sprites_Really_Dead:
-		mov r1,#0
-		str r1,[r0,r8,lsl#2]
+		@ this is a TOTALL kill of the sprite and ALL data!
 		
-		mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
-		ldr r0,=BUF_ATTRIBUTE0			@ if does not for some reason???
-		add r0,r8, lsl #3
-		strh r1,[r0]
-		ldr r0,=BUF_ATTRIBUTE0_SUB
-		add r0,r8, lsl #3
-		strh r1,[r0]
+			ldr r0,=spriteActive
+			add r0, r8, lsl#2
+			mov r1,#0
+			str r1,[r0]
+			add r0,#512+512+512			@ skip x/y as this effects player explosion
+			mov r2,#0
+			spriteClearLoop:	
+				str r1,[r0]
+				add r0,#512
+				add r2,#1
+				cmp r2,#22
+			bne spriteClearLoop
 
-		b sprites_Done
+		
+			mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
+			ldr r0,=BUF_ATTRIBUTE0			@ if does not for some reason???
+			add r0,r8, lsl #3
+			strh r1,[r0]
+			ldr r0,=BUF_ATTRIBUTE0_SUB
+			add r0,r8, lsl #3
+			strh r1,[r0]
+
+			b sprites_Done
 
 	sprites_Drawn:
 	@ first, update out BLOOM effect, if bloom is >0 sub 1
@@ -115,6 +123,13 @@ drawSprite:
 	cmp r1,#0
 	subne r1,#1
 	str r1,[r0,r8,lsl #2]
+
+	@ If coord is <192 then plot on sub (upper)
+	@ if >256 plot on main (lower)
+	@ but, if on crossover, we need to plot 2 ships!!!
+	@ one on each screen in the correct location!!
+	@ Last section best commented!
+
 	
 	ldr r0,=spriteY						@ Load Y coord
 	ldr r1,[r0,r8,lsl #2]				@ add ,rX for offsets
@@ -330,7 +345,7 @@ drawSprite:
 			ldr r0,=spriteExplodeDelay
 			ldr r1,[r0,r8,lsl #2]
 			subs r1,#1
-			movmi r1,#3
+			movmi r1,#4
 			str r1,[r0,r8,lsl #2]
 			bpl noMoreStuff
 			
@@ -338,7 +353,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame
 			add r1,#1							@ add 1
 			str r1,[r0,r8,lsl #2]				@ store it back
-			cmp r1,#22							@ are we at the end frame?
+			cmp r1,#23							@ are we at the end frame?
 			bne noMoreStuff
 				noMoreBase:
 				ldr r0,=spriteY
@@ -360,7 +375,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame
 			add r1,#1							@ add 1
 			str r1,[r0,r8,lsl #2]				@ store it back
-			cmp r1,#13							@ are we at the end frame?
+			cmp r1,#14							@ are we at the end frame?
 			bne noMoreStuff
 				ldr r0,=spriteY
 				mov r1,#SPRITE_KILL
@@ -434,7 +449,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame
 			add r1,#1							@ add 1
 			str r1,[r0,r8,lsl #2]				@ store it back
-			cmp r1,#13							@ are we at the end frame?
+			cmp r1,#14							@ are we at the end frame?
 			bne noMoreStuff
 				noMorePexp:
 				ldr r0,=spriteY
@@ -450,7 +465,7 @@ drawSprite:
 			ldr r0,=spriteExplodeDelay			@ check our animation delay
 			ldr r1,[r0,r8,lsl #2]
 			subs r1,#1							@ take 1 off the count					
-			movmi r1,#10						@ and reset if <0
+			movmi r1,#12						@ and reset if <0
 			str r1,[r0,r8,lsl #2]
 			bpl noMoreStuff
 			
@@ -458,7 +473,7 @@ drawSprite:
 			ldr r1,[r0,r8,lsl #2]				@ load anim frame
 			add r1,#1							@ add 1
 			str r1,[r0,r8,lsl #2]				@ store it back
-			cmp r1,#13							@ are we at the end frame?
+			cmp r1,#14							@ are we at the end frame?
 			bne noMoreStuff
 				ldr r0,=spriteY
 				mov r1,#SPRITE_KILL

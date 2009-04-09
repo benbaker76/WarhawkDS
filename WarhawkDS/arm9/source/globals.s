@@ -438,6 +438,7 @@ spriteY:
 	.space 512
 spriteSpeedX:
 	.space 512
+
 spriteSpeedY:
 	.space 512
 spriteSpeedDelayX:

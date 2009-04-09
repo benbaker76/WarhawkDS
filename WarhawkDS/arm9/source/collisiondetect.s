@@ -420,6 +420,16 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 
 	stmfd sp!, {r0-r8, lr}
 	@ First we need to grab the X and Y of the bullet and cycle trough the aliens to find a hit
+	
+	ldr r1, =playerDeath		@ we use some sprites in death with bullet values
+	ldr r1,[r1]					@ so, we need to make sure this is not used to detect against
+	cmp r1,#3					@ aliens!
+	blt detectALNActive
+	
+		ldmfd sp!, {r0-r8, pc}
+		
+	detectALNActive:
+
 	ldr r1, =spriteX+4			
 	ldr r1, [r1, r0, lsl #2]	@ r1= BULLET X
 	ldr r2, =spriteY+4			
@@ -453,24 +463,24 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			@ Do checks
 			mov r8,#SPRITE_X_OFFS
 			ldr r6,[r4,r8]					@ r6=current Alien X
-			add r6,#18						
+			add r6,#22						
 			cmp r6,r1						@ r1=Bullet x
 			bmi detectNoAlien
-			sub r6,#18
-			add r1,#18
+			sub r6,#22
+			add r1,#22
 			cmp r6,r1
-			sub r1,#18
+			sub r1,#22
 			bpl detectNoAlien
 
 			mov r8,#SPRITE_Y_OFFS
 			ldr r6,[r4,r8]					@ r6=current Alien y
-			add r6,#16
+			add r6,#22
 			cmp r6,r2						@ r2=bullet y
 			bmi detectNoAlien
-			sub r6,#16
-			add r2,#16
+			sub r6,#22
+			add r2,#22
 			cmp r6,r2
-			sub r2,#16
+			sub r2,#22
 			bpl detectNoAlien
 				@ ALIEN DETECTED!!
 				
@@ -593,14 +603,15 @@ meteorShot:
 	b multishotBloom
 	
 explodeSNoIdent:
-	mov r6,#4
+	mov r6,#4					@ set to explosion type
 	str r6,[r4]
-	mov r6,#6
+	mov r6,#6					@ set the frame to start
 	mov r8,#SPRITE_OBJ_OFFS
 	str r6,[r4,r8]
-	mov r6,#4
+	mov r6,#4					@ set initial delay for explosion
 	mov r8,#SPRITE_EXP_DELAY_OFFS
 	str r6,[r4,r8]
+	
 	ldr r8,=adder+7				@ add 78 to the score
 	mov r6,#8
 	strb r6,[r8]

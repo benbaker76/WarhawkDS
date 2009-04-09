@@ -97,17 +97,18 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	noHunter:
 		@ from here on in, we know that it is a normal attack
 		@ now we need to make r2 the index to the start of attack wave r7
+		@ r4 = ident, 0 is none!!
 		ldr r2,=alienWave
 		add r2, r7, lsl #7				@ add r2=r7*128 (each wave is 32 words)
 		mov r3,#0						@ counter to get the data an init them
 		initWaveAliens:					@ we need to pass r1 to initAliens to start them
 			ldr r1,[r2,r3, lsl #2]		@ r1+alien number*4 (one word each)
 			cmp r1,#0
-				beq initWaveAliensDone	@ if the alien descript is 0, that is it!
+			beq initWaveAliensDone		@ if the alien descript is 0, that is it!
 				bl initAlien
-			add r3,#1
-			cmp r3,#32
-		bne initWaveAliens
+				add r3,#1
+				cmp r3,#32
+			bne initWaveAliens
 	initWaveAliensDone:
 	ldmfd sp!, {r0-r4, pc}	
 	
@@ -135,7 +136,7 @@ bpl initReversed
 		ldr r2,[r3,r0, lsl #2]
 		cmp r2,#0
 		beq foundSpace
-			subs r0,#1
+		subs r0,#1
 	bpl findSpaceLoop
 	
 		ldmfd sp!, {r0-r10, pc}@ No space for the alien, so lets exit!
@@ -148,9 +149,40 @@ initReversed:
 		ldr r2,[r3,r0, lsl #2]
 		cmp r2,#0
 		beq foundSpace
-			add r0,#1
-			cmp r0,#64
+		@cmp r2,#11				@ is it an explosion?, if so, can an "ident", use it
+		@bne freeExplodeFailed
+		@	cmp r6, #6			@ is it a high ident
+		@	blt freeExplodeFailed
+		@	ldr r2,=spriteObj+68
+		@	ldr r2,[r2,r0, lsl #2]
+		@	cmp r2,#11
+		@	bgt foundSpace
+		@freeExplodeFailed:
+		add r0,#1
+		cmp r0,#64
 	bne findSpaceLoopRev
+	@ ok, we found nothing :( But is the Ship and IDENT that needs space?
+	cmp r6, #6
+	blt notAnIdent
+	
+	mov r0,#0
+	findSpaceExplodeLoop:
+		ldr r2,[r3,r0, lsl #2]
+		cmp r2,#11
+		beq spaceIsExplosion
+		cmp r2,#44
+		beq spaceIsExplosion
+		b findSpaceExplodeLoopCount
+			spaceIsExplosion:
+			ldr r2,=spriteObj+68
+			ldr r2,[r2,r0, lsl #2]
+			cmp r2,#11
+			bgt foundSpace	
+			findSpaceExplodeLoopCount:
+		add r0,#1
+		cmp r0,#64
+	bne findSpaceExplodeLoop
+	notAnIdent:
 	
 		ldmfd sp!, {r0-r10, pc}@ No space for the alien, so lets exit!	
 		

@@ -128,10 +128,10 @@ dropShipShot:						@------------ We have shot a drop ship!!
 		ldr r5,[r3,r0, lsl #2]
 		cmp r5,#0
 		beq foundPower
-			subs r0,#1
+		subs r0,#1
 	bpl findPowerLoop
 	@ WHAT will i do if there is no space???????????????? (ie, during mine storm)
-	ldmfd sp!, {r0-r10, pc}	@ No space for the alien, so lets exit!	
+	ldmfd sp!, {r0-r6, pc}	@ No space for the alien, so lets exit!	
 	
 	foundPower:
 	add r3,r0, lsl #2			@ r3 = pointer to new powerup
@@ -152,7 +152,7 @@ dropShipShot:						@------------ We have shot a drop ship!!
 	mov r1,#0
 	mov r0,#SPRITE_SPEED_X_OFFS
 	str r1,[r3,r0]
-	mov r1,#12
+	mov r1,#4
 	mov r0,#SPRITE_SPEED_DELAY_X_OFFS
 	str r1,[r3,r0]
 	

@@ -25,6 +25,7 @@
 	.global dropShipShot
 	.global powerupCollect
 	.global movePowerUp
+	
 	.arm
 	.align
 	.text
@@ -52,7 +53,7 @@ checkPowerUp:
 			ldr r0,=powerUp
 			str r1,[r0]
 			
-			@playpowerupLostSound
+			@playpowerupLostSound		@ this is for when powerup RUNS out!!
 	
 	checkPowerDelay:
 	
@@ -145,7 +146,7 @@ dropShipShot:						@------------ We have shot a drop ship!!
 	mov r1,#29
 	mov r0,#SPRITE_OBJ_OFFS
 	str r1,[r3,r0]
-	mov r1,#2
+	mov r1,#4					@ powerup takes 4 shots to destroy
 	mov r0,#SPRITE_HIT_OFFS		@ set its hit points to 2
 	str r1,[r3,r0]	
 	

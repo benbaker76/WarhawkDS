@@ -84,7 +84,6 @@ main:
 	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
 	mov r1, #0
 	bl EFS_Init
-	
 	bl readOptions
 	bl readHiScore
 	
@@ -110,7 +109,7 @@ main:
 	@str r1, [r0]								@ set energy to full
 
 	@bl showEndOfLevel
-	
+
 	bl showIntro1
 
 	@ ------------------------------------

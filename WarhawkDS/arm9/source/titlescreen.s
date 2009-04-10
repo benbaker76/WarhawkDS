@@ -204,55 +204,55 @@ drawCreditText:
 
 	ldr r0, =proteusDevelopmentsText			@ Load out text pointer
 	ldr r1, =3									@ x pos
-	ldr r2, =9									@ y pos
+	ldr r2, =7									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =andHeadSoftText					@ Load out text pointer
 	ldr r1, =10									@ x pos
-	ldr r2, =10									@ y pos
+	ldr r2, =8									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =asmCodingText						@ Load out text pointer
 	ldr r1, =9									@ x pos
-	ldr r2, =12									@ y pos
+	ldr r2, =11									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =flashAndHeadKazeText				@ Load out text pointer
 	ldr r1, =7									@ x pos
-	ldr r2, =13									@ y pos
+	ldr r2, =12									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =graffixText						@ Load out text pointer
 	ldr r1, =11									@ x pos
-	ldr r2, =15									@ y pos
+	ldr r2, =14									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =badToadAndLoboText					@ Load out text pointer
 	ldr r1, =8									@ x pos
-	ldr r2, =16									@ y pos
+	ldr r2, =15									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =musixText							@ Load out text pointer
 	ldr r1, =12									@ x pos
-	ldr r2, =18									@ y pos
+	ldr r2, =17									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =PPOTText							@ Load out text pointer
 	ldr r1, =7									@ x pos
-	ldr r2, =19									@ y pos
+	ldr r2, =18									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 
 	ldr r0, =spaceFractalText					@ Load out text pointer
 	ldr r1, =10									@ x pos
-	ldr r2, =20									@ y pos
+	ldr r2, =19									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	

@@ -452,9 +452,9 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		beq detectNoAlien
 		cmp r5,#128
 		beq bossDetect
-		cmp r5,#9
+		cmp r5,#9					@ drop ship
 		beq bossDetect
-		cmp r5,#10
+		cmp r5,#10					@ powerup
 		beq bossDetect
 		cmp r5,#4
 		bpl detectNoAlien
@@ -686,10 +686,10 @@ alienCollideCheck:
 			cmp r5,#3
 			bpl noPlayer
 											@ r1 is offset to alien
-			ldr r5,=levelEnd				@ if we have destroyed the BOSS
-			ldr r5,[r5]						@ no need for a detect with aliens
-			cmp r5,#2
-			beq noPlayer
+@			ldr r5,=levelEnd				@ if we have destroyed the BOSS
+@			ldr r5,[r5]						@ no need for a detect with aliens
+@			cmp r5,#2
+@			beq noPlayer
 			
 			ldr r5,=bossMan
 			ldr r5,[r5]
@@ -733,19 +733,31 @@ alienCollideCheck:
 				bne noDyingBlooms
 				
 				ldr r8,[r1]					@ load the ACTIVE value
-				cmp r8,#10
+				cmp r8,#10					@ have we collided with a powerup?
 				bne notPowerup
-					bl powerupCollect
+					bl powerupCollect		@ if so, collect it!
+					@bl powerupCollectSound	@ PLAY a nice sound for COLLECTION
 					b acNoDestroy
 				notPowerup:
+				cmp r8,#9					@ is it a dropship?
+				bne notDropShip				@ if so, somehow launch powerup???
+					mov r4,r1				@ how the hell???
+					bleq dropShipShot		@ ok, this works!! BUT there shoud be a energy loss
+					ldr r6,=energy					@ Take 1 off your energy
+					ldr r7,[r6]
+					subs r7,#8						@ -8 units - PENALTY
+					movmi r7,#0						@ if less than 0 make 0
+					str r7,[r6]					
+					@bl powerupCollectSound	@ PLAY a nice sound for COLLECTION	
 				
+				notDropShip:
 				ldr r6,=spriteBloom
 				mov r7,#16
 				str r7,[r6]						@ make shp flash
 			
 				noDyingBlooms:
 			
-				bl playSteelSound			@ activate sound for YOUR ship being hit!
+				bl playSteelSound				@ activate sound for YOUR ship being hit!
 			
 				ldr r6,=energy					@ Take 1 off your energy
 				ldr r7,[r6]
@@ -760,7 +772,7 @@ alienCollideCheck:
 				
 					ldr r6,=SPRITE_HIT_OFFS			@ get alien hit points
 					ldr r7,[r1,r6]
-					subs r7,#1						@ take one off
+					subs r7,#1						@ take one off (i think an ident collide shoud take more?)
 					str r7,[r1,r6]
 					cmp r7,#0						@ if alien dead?
 					bmi acDestroy					@ yes!, DESTROY it

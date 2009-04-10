@@ -356,12 +356,16 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		bl moveHunter
 		b haveWeCrashed
 	
+	
+	
 	hunterNot:
 	cmp r0,#10					@ is it a powerup!!?
 	bne powerupNot
 		b haveWeCrashed
-	
 	powerupNot:
+	
+	cmp r0,#9					@ is it a dropship?
+	beq alienPassed
 	
 	
 	cmp r0,#1

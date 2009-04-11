@@ -418,6 +418,8 @@ saveHiScore:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl stopAudioStream
+	
 	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
 	ldr r1, =hiScoreBuffer						@ Load hiScoreBuffer
 	ldr r2, =hiScoreIndex						@ Load hiScoreIndex address
@@ -436,7 +438,7 @@ saveHiScore:
 	
 	ldr r0, =hiScoreDatText						@ Write to HiScore.dat
 	ldr r1, =hiScoreBuffer
-@	bl writeFileBuffer
+	bl writeFileBuffer
 	
 	bl DC_FlushAll								@ Flush cache
 	

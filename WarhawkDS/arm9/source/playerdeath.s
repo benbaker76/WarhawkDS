@@ -59,16 +59,17 @@ playerDeathActive:										@ --- PHASE 1
 	
 	mov r1,#2
 	str r1,[r0]				@ set mid explode to active
-	ldr r1,=220				@ 200 is a good length
+	ldr r1,=220				@ 220 is a good length
 	ldr r0,=playerDeathDelay
 	str r1,[r0]				@ set duration of mid explode
 	
-	ldr r1,=powerUp
-	mov r0,#1
-	str r0,[r1]
-	ldr r1,=spriteBloom
-	mov r0,#0x2f
-	str r0,[r1]				@ make a little "FLASH"
+	ldr r0,=powerUp
+	mov r1,#1
+	str r1,[r0]
+	ldr r0,=spriteBloom
+	mov r1,#0x2f
+	str r1,[r0]				@ make a little "FLASH"
+	
 	bl playAlienExplodeScreamSound
 	
 	ldmfd sp!, {r0-r6, pc}			
@@ -97,24 +98,24 @@ playerDeathMidExplode:									@ --- PHASE 2
 	add r6, r7, lsl #2			@ r6= ident to explosion
 	
 	mov r3,#11					@ set to a player explosion
-	str r3,[r6]
+	str r3,[r6]					@ spriteActive set to 11
 	mov r3,#6
 	mov r0,#SPRITE_OBJ_OFFS
-	str r3,[r6,r0]				@ set the frame
+	str r3,[r6,r0]				@ set the frame (start at 6)
 	bl getRandom
-	and r8,#0xf
-	lsl r8,#1					@ set the delay on explosion (randomly)
+	and r8,#0xf					@ get 0-15
+	lsl r8,#1					@ set the delay on explosion (randomly) (0-31)
 	mov r0,#SPRITE_EXP_DELAY_OFFS
 	str r8,[r6,r0]
 	
 	bl getRandom
-	and r8,#0xF
-	subs r8,#7
+	and r8,#0xF					@ r8=0-15
+	subs r8,#7					@ r8= -7 to 7
 	ldr r3,=spriteX				@ get player X
-	ldr r3,[r3]
+	ldr r3,[r3]					@ r3=players X coord
 	ldr r4,=horizDrift
 	ldr r4,[r4]
-	add r3,r4
+	add r3,r4					@ r3=players x coord, horiz adjusted
 	adds r3,r8
 	mov r0,#SPRITE_X_OFFS
 	str r3,[r6,r0]				@ store explosion X
@@ -143,12 +144,11 @@ playerDeathMidExplode:									@ --- PHASE 2
 	@ ok, we need sound? Hmmmm...
 	bl getRandom
 	and r8,#0xf
-	cmp r8,#0xf
+	cmp r8,#0xf					@ randomly play a sound 1 in 16!
 	bleq playExplosionSound
 	
 	noMidExplodeYet:
 	@ ok, now we need to use players coord to check against bases (use like a bullet)
-	mov r0,#0
 	bl detectShipAsFire
 	
 	midExplodeCountdown:

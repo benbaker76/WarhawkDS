@@ -168,6 +168,10 @@
 	.global animEnergyPhase
 	.global animEnergyActive
 	.global animEnergyDelay
+	.global cheatMode
+	
+cheatMode:
+	.word 0
 	
 explodeSpriteBossCount:
 	.word 0

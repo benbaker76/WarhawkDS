@@ -101,13 +101,14 @@ checkBossInit:
 		mov r2,#9
 		mul r1,r2				@ *9 sprites per boss (level*9)*512
 		lsl r1,#9				@ multiply by 512
-		add r0,r1				@ add to base
-		
+		add r0,r1				@ add to base, r0=source of boss tiles!
+		push {r0}
 		ldr r1, =SPRITE_GFX
 		add r1,#55*512			@ boss starts as sprite 55
 
 		ldr r2, =512*9			@ 9 sprites to copy
 		bl dmaCopy
+		pop {r0}
 		ldr r1, =SPRITE_GFX_SUB
 		add r1,#55*512
 		ldr r2, =512*9			@ 9 sprites to copy (duplicted in case or error here?)
@@ -119,7 +120,7 @@ checkBossInit:
 		mov r0,#55					@ r0 = sprite object
 		mov r1,#113					@ r1 = sprite number
 		ldr r2,=spriteActive
-		mov r3,#128
+		mov r3,#128					@ spriteActive Value
 		bossSpriteLoop:
 			ldr r2,=spriteActive
 			str r3,[r2, r1, lsl #2]	@ activate the sprite
@@ -144,11 +145,13 @@ checkBossInit:
 		@ now we need to read the bossInitLev data based on the level
 		@ and set the variables accordingly		
 		ldr r0,=levelNum
-		ldr r0,[r0]
+		ldr r0,[r0]						@ level 1-16
 		sub r0,#1						@ make level 0-15
-		ldr r1,=bossInitLev
+		ldr r1,=bossInitLev				@ start of the 8 words that define a boss
 		add r1, r0, lsl #5				@ add level * 32 (bytes) (8 words)
+										@ r1=pointer to start of bossinitLev for the boss number
 
+		mov r2,#20						@ special is the 6th word value
 		ldr r2,[r1,r2]					@ grab "SPECIAL VALUE"
 		cmp r2,#0
 			bleq bossInitStandard		@ used on level 1
@@ -192,7 +195,7 @@ checkBossInitFail:
 bossDraw:
 	stmfd sp!, {r1-r6, lr}
 	ldr r6,=bossX
-	ldr r6,[r6]					@ r1 =x
+	ldr r6,[r6]					@ r6 =x (top left of boss)
 	ldr r2,=bossY
 	ldr r2,[r2]					@ r2 =y
 	

@@ -44,7 +44,11 @@ initData:
 	ldr r0,=bossSpreadAngle
 	mov r1,#0
 	str r1,[r0]
-
+	
+@	ldr r0,=cheatMode
+@	mov r1,#1
+@	str r1,[r0]
+	
 	ldr r0,=powerUp
 	str r1,[r0]				@ set to one for autofire (on the original this carries on)
 	ldr r0,=powerUpDelay

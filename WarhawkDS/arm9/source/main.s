@@ -165,6 +165,7 @@ gameLoop:
 	bl checkGameOver							@ check if the game is over
 	bl checkLevelControl						@ check to see if we want to change level
 	bl playerDeathCheck							@ check and do DEATH stuff
+	bl useCheat									@ a call to restore health if cheat is active
 	
 @	bl drawDebugText							@ draw some numbers :)
 

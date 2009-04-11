@@ -893,7 +893,7 @@ detectShipAsFire:
 	add r1, #16					@ our left bullet is right a bit in the sprite
 	lsr r1, #5					@ divide x by 32
 	ldr r2, =spriteY			@ DO Y COORD CONVERSION
-	ldr r2, [r2, r0, lsl #2]	@ r2=our BULLETS y coord	
+	ldr r2,[r2]					@ r2=our BULLETS y coord	
 	sub r2, #384				@ take 384 off our coord, as this is the top of the screen
 	add r2,#24					@ make middle of sprites Y
 	lsr r2,#5					@ convert to a 32 block
@@ -929,11 +929,9 @@ detectShipAsFire:
 		push {r0-r4}				@ We need a check for if crater at top on main, draw also base of sub
 		ldr r4, =spriteY			@ DO Y COORD CONVERSION
 		ldr r4, [r4]
-
 		add r4,#24
 		lsr r4,#5					@ convert to a 32 block
 		lsl r4,#5
-
 
 		ldr r2,=spriteX
 		ldr r2,[r2]
@@ -955,7 +953,9 @@ detectShipAsFire:
 			lsr r2, #5
 			lsl r2, #2
 			mov r0,r2
-			bl drawCraterBlockSub	
+			push {r0}
+			bl drawCraterBlockSub
+			pop {r0}
 			b nononoX
 			
 		bottomSX:
@@ -997,8 +997,10 @@ detectShipAsFire:
 		strb r1,[r0]
 		sub r0,#1
 		bl addScore
-		ldmfd sp!, {r0-r6, pc}	
-		
+	ldmfd sp!, {r0-r6, pc}	
+	
+@----------------- Draw a base explosion in ref to our players x/y
+	
 initBaseExplodePlayer:
 	stmfd sp!, {r0-r6, lr}
 	ldr r4,=spriteActive
@@ -1010,7 +1012,7 @@ initBaseExplodePlayer:
 		sub r6,#1
 		cmp r6,#111
 	bne expFindBaseP
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r6, pc}			@ return if we cannot find a spare sprite
 		
 	startBaseExpP:
 									@ r6 is our ref to the explosion sprite
@@ -1021,7 +1023,7 @@ initBaseExplodePlayer:
 		ldr r2, =horizDrift
 		ldr r2,[r2]
 		add r1,r2
-		lsr r1, #5					@ divide x by 32
+		lsr r1, #5					@ divide x by 32 (could we not jusr and #31?)
 		lsl r1, #5					@ multiply by 32
 		ldr r2, =spriteY			@ DO Y COORD CONVERSION
 		ldr r2, [r2]				@ r2=our y coord

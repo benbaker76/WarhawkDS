@@ -205,6 +205,8 @@ fxPaletteRestore:
 	ldr r0, =bgPaletteSub	
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
+	
+	bl DC_FlushAll
 		
 	ldmfd sp!, {r0-r6, pc}
 

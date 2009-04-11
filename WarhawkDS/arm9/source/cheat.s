@@ -53,10 +53,16 @@ updateCheatCheck:								@ WHY THE HELL DOES THIS FAIL - too much red wine?
 												@ it should move onto the next? madness!!
 	stmfd sp!, {r0-r8, lr}
 	
-	bl readInput
-	
-	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
-	bne updateCheatCheckDone
+	ldr r1, =REG_KEYINPUT						@ Read Key Input
+	ldr r2, [r1]
+	ldr r8,=1023								@ all buttons clear (but in DS=set?)
+	cmp r2,r8
+	beq noCheatKey								@ if no key pressed, no need to check!
+
+	ldr r5,=cheatRelease
+	ldr r6,[r5]
+	cmp r2,r6									@ are we still pressing the same key?
+	bne updateCheatCheckDone					@ if not, we can check for cheat
 	
 	ldr r1,=cheatSequence						@ the problem must be in HERE???
 	ldr r4,=cheatSection

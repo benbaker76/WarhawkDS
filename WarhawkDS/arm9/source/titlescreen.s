@@ -34,13 +34,13 @@
 	.arm
 	.align
 	.text
-	.global initTitleScreen
+	.global showTitleScreen
 	.global showCredits
 	.global updateTitleScreen
 	.global updateLogoSprites
 	.global drawCreditText
 
-initTitleScreen:
+showTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -92,7 +92,7 @@ initTitleScreen:
 	bl dmaCopy
 	mov r3, #0
 	strh r3, [r1]
-
+	
 	@ Write the tile data
 	
 	ldr r0 ,=TitleTopTiles
@@ -274,7 +274,7 @@ initLogoSprites:
 	ldr r0, =OBJ_ROTATION_HDX(0)
 	ldr r1, =OBJ_ROTATION_VDY(0)
 	mov r2, #256
-	strh r2, [r0, r4]
+	strh r2, [r0]
 	strh r2, [r1]
 	
 	ldr r0, =OBJ_ROTATION_VDX(0)

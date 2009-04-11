@@ -208,7 +208,7 @@ updateIntro:
 	ldr r2, [r1]
 	tst r2, #BUTTON_A
 	bleq stopTimer
-	bleq initTitleScreen
+	bleq showTitleScreen
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

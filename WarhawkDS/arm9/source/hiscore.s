@@ -116,7 +116,7 @@ showHiScoreEntry:
 	str r0, [r1]								@ Write hiscore index
 	
 	cmp r0, #-1									@ Is the hiscore index -1? (No hiscore entry)
-	bleq initTitleScreen						@ Yes then go back to the title screen
+	bleq showTitleScreen						@ Yes then go back to the title screen
 	beq showHiScoreEntryDone					@ And were done
 	
 	ldr r0, =nameAAA							@ Load "AAA" address
@@ -446,7 +446,7 @@ saveHiScore:
 	bl fxCopperTextOff							@ Turn off copper text
 	bl fxStarfieldOff							@ Turn off starfield
 
-	bl initTitleScreen							@ Go back to titlescreen
+	bl showTitleScreen							@ Go back to titlescreen
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

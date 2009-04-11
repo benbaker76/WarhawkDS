@@ -95,7 +95,7 @@ timerDoneLoading:
 	stmfd sp!, {r0-r1, lr}
 	
 	bl fxColorCycleTextOff
-	bl initTitleScreen
+	bl showTitleScreen
 	
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	

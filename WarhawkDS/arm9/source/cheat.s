@@ -56,7 +56,7 @@ updateCheatCheck:								@ WHY THE HELL DOES THIS FAIL - too much red wine?
 	bl readInput
 	
 	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
-	bne updateCheatCheckSkip
+	bne updateCheatCheckDone
 	
 	ldr r1,=cheatSequence						@ the problem must be in HERE???
 	ldr r4,=cheatSection
@@ -79,21 +79,21 @@ updateCheatCheck:								@ WHY THE HELL DOES THIS FAIL - too much red wine?
 		ldr r0,=cheatSection
 		str r4,[r0]								@ store the new count back (we are now on the next phase)
 	
-			ldmfd sp!, {r0-r8, pc}				@ and quit!
+			b updateCheatCheckDone				@ and quit!
 		
 	keyMissed:									@ you did not press the correct key
 	ldr r0,=cheatSection						@ so, reset back to the first
 	mov r1,#0
 	str r1,[r0]
 
-		ldmfd sp!, {r0-r8, pc}					@ and quit
+	b updateCheatCheckDone						@ and quit
 
 	noCheatKey:
 	ldr r0,=cheatRelease						@ clear key press code
 	mov r8,#0
 	str r8,[r0]									@ store 1023 in key code (all keys released)
 	
-		ldmfd sp!, {r0-r8, pc}
+	b updateCheatCheckDone
 	
 	activateCheat:
 	
@@ -103,7 +103,7 @@ updateCheatCheck:								@ WHY THE HELL DOES THIS FAIL - too much red wine?
 	ldr r3, =0									@ Draw on SUB screen
 	bl drawText
 	
-updateCheatCheckSkip:
+updateCheatCheckDone:
 
 	ldr r10,=cheatSection
 	ldr r10,[r10]								@ Read value

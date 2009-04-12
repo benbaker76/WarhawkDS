@@ -879,17 +879,17 @@ explodeIdent:
 
 		b noPlayer
 		
-		
+@ there is a bug from here on!!!
 		
 detectShipAsFire:		
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r9, lr}
 	
 	ldr r1, =bossMan
 	ldr r1,[r1]
 	cmp r1,#0
 	beq detectShipAsFireOK
 	
-		ldmfd sp!, {r0-r6, pc}
+		ldmfd sp!, {r0-r9, pc}
 	
 	detectShipAsFireOK:
 	
@@ -918,9 +918,9 @@ detectShipAsFire:
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
 	cmp r6,#0					@ if we find a 0 = no hit!
-	beq no_hit
+	beq playerAsShotFail
 	cmp r6,#3					@ 1 and 2 = Hit!
-	bpl no_hit
+	bpl playerAsShotFail
 	mov r11,#0
 	bl playExplosionSound
 
@@ -1006,7 +1006,9 @@ detectShipAsFire:
 		strb r1,[r0]
 		sub r0,#1
 		bl addScore
-	ldmfd sp!, {r0-r6, pc}	
+		
+		playerAsShotFail:
+	ldmfd sp!, {r0-r9, pc}	
 	
 @----------------- Draw a base explosion in ref to our players x/y
 	

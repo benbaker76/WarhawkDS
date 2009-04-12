@@ -71,7 +71,7 @@ pop {r8-r11}
 	cmp r5,#0						@ if the scroll is 0, then All done!
 	bne readyToInit
 
-	b initWaveAliensDone
+	ldmfd sp!, {r0-r4, pc}
 
 	readyToInit:
 

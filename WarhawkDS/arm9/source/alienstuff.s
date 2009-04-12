@@ -41,7 +41,6 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	@ waveNumber is the digit we need to use to pull the data
 	ldr r1,=waveNumber
 	ldr r3,[r1]						@ r3=current wave number to look for
-	ldr r2,=alienLevel
 
 cmp r3,#127
 ble waveInitPossible
@@ -61,10 +60,11 @@ pop {r8-r11}
 
 
 
-
+	ldr r2,=alienLevel
 	ldr r4,=levelNum				@ we need to modify alienLevel based on game level
 	ldr r4,[r4]						@ r4=current level
 	sub r4,#1
+
 	add r2,r4, lsl #10				@ add to alienLevel, LEVEL*1024 (256 words)
 	
 	ldr r5,[r2, r3, lsl #3]		@ r5=current alien level scroll used to generate
@@ -93,14 +93,11 @@ pop {r8-r11}
 	initWave:
 		add r2,#4					@ ok, add 4 (1 word) to r2
 		ldr r4,[r2, r3, lsl #3] 	@ r4 is now the attack wave number to init	
-
-		add r3,#1					@ add 1 to wave number
-		cmp r3,#128
-		movgt r3,#128
-		str r3,[r1]					@ and store it back
-		
 		cmp r4,#0					@ if the wave is 0, then there is no need to init one!
 		beq initWaveAliensDone
+
+		add r3,#1					@ add 1 to wave number
+		str r3,[r1]					@ and store it back
 		
 		@ we need to strip the ident from r4
 		

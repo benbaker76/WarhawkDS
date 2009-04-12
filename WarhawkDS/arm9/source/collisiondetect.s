@@ -884,6 +884,15 @@ explodeIdent:
 detectShipAsFire:		
 	stmfd sp!, {r0-r6, lr}
 	
+	ldr r1, =bossMan
+	ldr r1,[r1]
+	cmp r1,#0
+	beq detectShipAsFireOK
+	
+		ldmfd sp!, {r0-r6, pc}
+	
+	detectShipAsFireOK:
+	
 	ldr r1, =spriteX			@ DO X COORD CONVERSION
 	ldr r1, [r1]				@ r1=our x coord
 	ldr r2,=horizDrift

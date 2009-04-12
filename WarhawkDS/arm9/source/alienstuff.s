@@ -43,6 +43,14 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	ldr r3,[r1]						@ r3=current wave number to look for
 	ldr r2,=alienLevel
 
+cmp r3,#127
+ble waveInitPossible
+
+	ldmfd sp!, {r0-r4, pc}
+
+waveInitPossible:
+
+
 push {r8-r11}
 mov r10,r3
 mov r8,#10						@ y pos
@@ -62,11 +70,6 @@ pop {r8-r11}
 	ldr r5,[r2, r3, lsl #3]		@ r5=current alien level scroll used to generate
 	cmp r5,#0						@ if the scroll is 0, then All done!
 	bne readyToInit
-
-		add r3,#1					@ add 1 to wave number
-		cmp r3,#128
-		movgt r3,#128
-		str r3,[r1]					@ and store it back
 
 	b initWaveAliensDone
 
@@ -115,7 +118,13 @@ mov r11, #0						@ x pos
 bl drawDigits	
 pop {r8-r11}
 
-
+push {r8-r11}
+mov r10,r7
+mov r8,#14						@ y pos
+mov r9,#6						@ Number of digits
+mov r11, #10						@ x pos
+bl drawDigits	
+pop {r8-r11}
 
 
 	cmp r7,#SPRITE_TYPE_MINE		@ Check for a "MINE FIELD" request

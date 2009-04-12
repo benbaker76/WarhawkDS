@@ -71,6 +71,13 @@ pop {r8-r11}
 	cmp r5,#0						@ if the scroll is 0, then All done!
 	bne readyToInit
 
+	ldr r0, =getReadyText			@ Load out text pointer
+	ldr r1, =11						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =0						@ Draw on sub screen
+	bl drawText
+
+
 	ldmfd sp!, {r0-r4, pc}
 
 	readyToInit:

@@ -46,11 +46,20 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	ldr r4,=levelNum				@ we need to modify alienLevel based on game level
 	ldr r4,[r4]						@ r4=current level
 	sub r4,#1
-	add r2,r4, lsl #9				@ add to alienLevel, LEVEL*512 (128 words)
+	add r2,r4, lsl #10				@ add to alienLevel, LEVEL*1024 (256 words)
 	
 	ldr r5,[r2, r3, lsl #3]		@ r5=current alien level scroll used to generate
 	cmp r5,#0						@ if the scroll is 0, then All done!
-	beq initWaveAliensDone
+	bne readyToInit
+
+		add r3,#1					@ add 1 to wave number
+		cmp r3,#128
+		movgt r3,#128
+		str r3,[r1]					@ and store it back
+
+	b initWaveAliensDone
+
+	readyToInit:
 	ldr r4,=yposSub				
 	ldr r4,[r4]						@ r4= our scroll position
 	cmp r5,r4						@ is this the same as r5?
@@ -62,6 +71,8 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		ldr r4,[r2, r3, lsl #3] 	@ r4 is now the attack wave number to init	
 
 		add r3,#1					@ add 1 to wave number
+		cmp r3,#128
+		movgt r3,#128
 		str r3,[r1]					@ and store it back
 		
 		cmp r4,#0					@ if the wave is 0, then there is no need to init one!

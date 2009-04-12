@@ -91,7 +91,7 @@ ldr r1,[r0]
 cmp r1,#0
 bne checkGameOverDone
 mov r1,#1
-str r1,[r0]
+str r1,[r0];
 b checkGameOverDone
 
 

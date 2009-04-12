@@ -152,7 +152,7 @@ bpl initReversed
 	
 		ldmfd sp!, {r0-r10, pc}@ No space for the alien, so lets exit!
 
-initReversed:	
+initReversed:					@	We scan from start to finish here to find spare slots
 	mov r0,#0					@ SPRITE R0 points to the sprite that will be used for the alien
 								@ we need to use a loop here to FIND a spare sprite
 								@ and this will be used to init the alien!!
@@ -160,15 +160,7 @@ initReversed:
 		ldr r2,[r3,r0, lsl #2]
 		cmp r2,#0
 		beq foundSpace
-		@cmp r2,#11				@ is it an explosion?, if so, can an "ident", use it
-		@bne freeExplodeFailed
-		@	cmp r6, #6			@ is it a high ident
-		@	blt freeExplodeFailed
-		@	ldr r2,=spriteObj+68
-		@	ldr r2,[r2,r0, lsl #2]
-		@	cmp r2,#11
-		@	bgt foundSpace
-		@freeExplodeFailed:
+
 		add r0,#1
 		cmp r0,#64
 	bne findSpaceLoopRev
@@ -181,7 +173,7 @@ initReversed:
 		ldr r2,[r3,r0, lsl #2]
 		cmp r2,#11
 		beq spaceIsExplosion
-		cmp r2,#44
+		cmp r2,#4
 		beq spaceIsExplosion
 		b findSpaceExplodeLoopCount
 			spaceIsExplosion:

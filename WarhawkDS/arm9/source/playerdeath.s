@@ -56,15 +56,7 @@ playerDeathCheck:
 playerDeathActive:										@ --- PHASE 1
 	cmp r1,#1				@ do we need to init the DEATH?
 	bne playerDeathMidExplode
-	
-push {r8-r11}
-mov r10,#1					@ Read value
-mov r8,#2						@ y pos
-mov r9,#1						@ Number of digits
-mov r11, #0						@ x pos
-bl drawDigits					@ Draw	
-pop {r8-r11}
-	
+
 	mov r1,#2
 	str r1,[r0]				@ set mid explode to active (store in player death)
 	ldr r1,=220				@ 220 is a good length
@@ -91,14 +83,6 @@ playerDeathMidExplode:									@ --- PHASE 2
 
 	@ ok, now we need to find a space to activate an explosion... much like an ident explode
 
-push {r8-r11}
-mov r10,#2					@ Read value
-mov r8,#2						@ y pos
-mov r9,#1						@ Number of digits
-mov r11, #0					@ x pos
-bl drawDigits					@ Draw	
-pop {r8-r11}
-	
 	mov r7,#111
 	ldr r6,=spriteActive+68
 	midDeathHuntLoop:
@@ -162,15 +146,7 @@ pop {r8-r11}
 	and r8,#0xf
 	cmp r8,#0xf					@ randomly play a sound 1 in 16!
 	bleq playExplosionSound
-	
-push {r8-r11}
-mov r10,#5						@ Read value
-mov r8,#2						@ y pos
-mov r9,#1						@ Number of digits
-mov r11, #2						@ x pos
-bl drawDigits					@ Draw	
-pop {r8-r11}	
-	
+
 	noMidExplodeYet:
 	@ ok, now we need to use players coord to check against bases (use like a bullet)
 	bl detectShipAsFire
@@ -200,14 +176,6 @@ pop {r8-r11}
 	blgt fxPaletteInvert			@ do that flash effect
 	bleq fxPaletteRestore			@ put the palette BACK
 
-push {r8-r11}
-mov r10,#6						@ Read value
-mov r8,#2						@ y pos
-mov r9,#1						@ Number of digits
-mov r11, #4						@ x pos
-bl drawDigits					@ Draw	
-pop {r8-r11}		
-	
 	ldmfd sp!, {r0-r6, pc}
 		
 playerDeathMainExplode:									@ --- PHASE 3

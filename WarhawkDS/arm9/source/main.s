@@ -167,7 +167,7 @@ gameLoop:
 	bl playerDeathCheck							@ check and do DEATH stuff
 	bl useCheat									@ a call to restore health if cheat is active
 	
-@	bl drawDebugText							@ draw some numbers :)
+	bl drawDebugText							@ draw some numbers :)
 
 	ldr r0,=levelEnd
 	ldr r0,[r0]

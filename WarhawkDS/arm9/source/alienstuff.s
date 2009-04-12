@@ -43,6 +43,17 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	ldr r3,[r1]						@ r3=current wave number to look for
 	ldr r2,=alienLevel
 
+push {r8-r11}
+mov r10,r3
+mov r8,#10						@ y pos
+mov r9,#6						@ Number of digits
+mov r11, #0						@ x pos
+bl drawDigits	
+pop {r8-r11}
+
+
+
+
 	ldr r4,=levelNum				@ we need to modify alienLevel based on game level
 	ldr r4,[r4]						@ r4=current level
 	sub r4,#1
@@ -60,6 +71,16 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	b initWaveAliensDone
 
 	readyToInit:
+
+push {r8-r11}
+mov r10,r5
+mov r8,#12						@ y pos
+mov r9,#6						@ Number of digits
+mov r11, #0						@ x pos
+bl drawDigits	
+pop {r8-r11}
+
+
 	ldr r4,=yposSub				
 	ldr r4,[r4]						@ r4= our scroll position
 	cmp r5,r4						@ is this the same as r5?
@@ -82,9 +103,20 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		
 		ldr r5,=0xffff
 		and r7,r4,r5				@ r7= alien type (lower 16 bits)
-		sub r4,r7
+@		sub r4,r7
 		lsr r4,#16					@ r4= ident
 		mov r6,r4					@ move to r6 for later
+
+push {r8-r11}
+mov r10,r6
+mov r8,#14						@ y pos
+mov r9,#6						@ Number of digits
+mov r11, #0						@ x pos
+bl drawDigits	
+pop {r8-r11}
+
+
+
 
 	cmp r7,#SPRITE_TYPE_MINE		@ Check for a "MINE FIELD" request
 	bne noMines
@@ -181,15 +213,25 @@ initReversed:					@	We scan from start to finish here to find spare slots
 			ldr r2,[r2,r0, lsl #2]
 			cmp r2,#11
 			bgt foundSpace	
-			findSpaceExplodeLoopCount:
+		findSpaceExplodeLoopCount:
 		add r0,#1
 		cmp r0,#64
 	bne findSpaceExplodeLoop
 	notAnIdent:
 	
-		ldmfd sp!, {r0-r10, pc}@ No space for the alien, so lets exit!	
+		ldmfd sp!, {r0-r10, pc}	@ No space for the alien, so lets exit!	
 		
 	foundSpace:
+
+push {r8-r11}
+mov r10,r0
+mov r8,#16						@ y pos
+mov r9,#8						@ Number of digits
+mov r11, #0						@ x pos
+bl drawDigits	
+pop {r8-r11}
+
+
 
 	mov r5,r0					@ store the sprite number for later retrieval
 	

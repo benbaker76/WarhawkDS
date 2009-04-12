@@ -158,7 +158,7 @@ drawEnergyBarFlash:
 
 	drawEnergyBarFlashUpdate:
 	
-	mov r1,#4						@ reset delay
+	mov r1,#8						@ reset delay
 	str r1,[r0]
 	
 	ldr r6,=animEnergyPhase

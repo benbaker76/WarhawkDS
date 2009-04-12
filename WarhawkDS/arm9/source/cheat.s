@@ -103,14 +103,10 @@ updateCheatCheck:
 		beq activateCheatON
 @---------- Cheats off
 	
-	ldr r0, =cheatInActiveText		@ Load our text pointer
-	ldr r1, =8						@ x pos
-	ldr r2, =1						@ y pos
-	ldr r3, =0						@ Draw on main screen
-	bl drawText	
-	
-	@ we would need to change sprites back to "WARHAWK" is we use suggestion below!!
-	@ what do you think?
+	ldr r0, =LogoSpritesTiles
+	ldr r1, =SPRITE_GFX
+	ldr r2, =LogoSpritesTilesLen
+	bl dmaCopy
 	
 	mov r2,#0
 	str r2,[r5]
@@ -122,14 +118,11 @@ updateCheatCheck:
 @---------- Cheats on
 	
 	activateCheatON:
-	ldr r0, =cheatActiveText		@ Load our text pointer
-	ldr r1, =8						@ x pos
-	ldr r2, =1						@ y pos
-	ldr r3, =0						@ Draw on main screen
-	bl drawText	
-	
-	@ what would be really fun is to change the warhawk sprites to "CHEATER" :) 
-	@ what do you think?
+
+	ldr r0, =CheatSpritesTiles
+	ldr r1, =SPRITE_GFX
+	ldr r2, =LogoSpritesTilesLen
+	bl dmaCopy
 	
 	mov r2,#1
 	str r2,[r5]

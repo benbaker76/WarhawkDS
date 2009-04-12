@@ -82,42 +82,19 @@ checkGameOver:
 	ldr r0, =energy
 	ldr r1, [r0]
 	cmp r1, #0
-	bne checkGameOverDone
+	beq acivatePlayerDeath
 
-@-----------------
-
-ldr r0,=playerDeath
-ldr r1,[r0]
-cmp r1,#0
-bne checkGameOverDone
-mov r1,#1
-str r1,[r0];
-b checkGameOverDone
-
-
-
-@-----------------
-	beq checkGameOverDone
-	bl fxFadeBlackOut
-	bl fxMosaicOut
+	ldmfd sp!, {r0-r6, pc}
 	
-	bl drawAllEnergyBars	
+	@-----------------
 
-	ldr r0, =gameOverText						@ Load out text pointer
-	ldr r1, =11									@ x pos
-	ldr r2, =10									@ y pos
-	ldr r3, =0									@ Draw on main screen
-	bl drawText
-	
-	ldr r0, =gameOverText						@ Load out text pointer
-	ldr r1, =11									@ x pos
-	ldr r2, =10									@ y pos
-	ldr r3, =1									@ Draw on sub screen
-	bl drawText
-	
-	bl gameStop
-	
-checkGameOverDone:
+acivatePlayerDeath:
+
+	ldr r0,=playerDeath
+	ldr r1,[r0]
+	cmp r1,#0
+	moveq r1,#1
+	str r1,[r0];
 		
 	ldmfd sp!, {r0-r6, pc}
 

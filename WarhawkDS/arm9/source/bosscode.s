@@ -81,12 +81,13 @@ checkBossInit:
 	ldmfd sp!, {r1-r2, pc}
 @------------------ INIT THE BOSS DATA	
 	bossInit:
+	
 	ldr r0,=yposSub
 	ldr r0,[r0]
 	cmp r0,#352					@ scroll pos to init BOSS
 	bne checkBossInitFail		@ not time yet :(
 		@ here we need to lay all the sprites and data out for the boss
-		
+	
 		mov r1,#1
 		ldr r0,=bossMan
 		str r1,[r0]				@ set to "scroll mode" (So he will move with scroll only!)

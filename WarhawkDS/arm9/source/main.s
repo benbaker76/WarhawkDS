@@ -108,7 +108,7 @@ main:
 	@mov r1, #71
 	@str r1, [r0]								@ set energy to full
 
-	@bl showEndOfLevel
+@	bl showEndOfLevel
 
 	bl showIntro1
 
@@ -167,7 +167,7 @@ gameLoop:
 	bl playerDeathCheck							@ check and do DEATH stuff
 	bl useCheat									@ a call to restore health if cheat is active
 	
-	bl drawDebugText							@ draw some numbers :)
+@	bl drawDebugText							@ draw some numbers :)
 
 	ldr r0,=levelEnd
 	ldr r0,[r0]

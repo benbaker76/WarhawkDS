@@ -42,21 +42,21 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	ldr r1,=waveNumber
 	ldr r3,[r1]						@ r3=current wave number to look for
 
-cmp r3,#127
-ble waveInitPossible
+	cmp r3,#127
+	ble waveInitPossible
 
 	ldmfd sp!, {r0-r4, pc}
 
-waveInitPossible:
+	waveInitPossible:
 
 
-push {r8-r11}
-mov r10,r3
-mov r8,#10						@ y pos
-mov r9,#6						@ Number of digits
-mov r11, #0						@ x pos
-bl drawDigits	
-pop {r8-r11}
+@push {r8-r11}
+@mov r10,r3
+@mov r8,#10						@ y pos
+@mov r9,#6						@ Number of digits
+@mov r11, #0						@ x pos
+@bl drawDigits	
+@pop {r8-r11}
 
 
 
@@ -71,24 +71,25 @@ pop {r8-r11}
 	cmp r5,#0						@ if the scroll is 0, then All done!
 	bne readyToInit
 
-	ldr r0, =getReadyText			@ Load out text pointer
-	ldr r1, =11						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =0						@ Draw on sub screen
-	bl drawText
-
+@	ldr r0, =getReadyText			@ Load out text pointer
+@	ldr r1, =11						@ x pos
+@	ldr r2, =10						@ y pos
+@	ldr r3, =0						@ Draw on sub screen
+@	bl drawText
+	add r3,#1
+	str r3,[r1]
 
 	ldmfd sp!, {r0-r4, pc}
 
 	readyToInit:
 
-push {r8-r11}
-mov r10,r5
-mov r8,#12						@ y pos
-mov r9,#6						@ Number of digits
-mov r11, #0						@ x pos
-bl drawDigits	
-pop {r8-r11}
+@push {r8-r11}
+@mov r10,r5
+@mov r8,#12						@ y pos
+@mov r9,#6						@ Number of digits
+@mov r11, #0						@ x pos
+@bl drawDigits	
+@pop {r8-r11}
 
 
 	ldr r4,=yposSub				
@@ -110,25 +111,25 @@ pop {r8-r11}
 		
 		ldr r5,=0xffff
 		and r7,r4,r5				@ r7= alien type (lower 16 bits)
-@		sub r4,r7
+		sub r4,r7
 		lsr r4,#16					@ r4= ident
 		mov r6,r4					@ move to r6 for later
 
-push {r8-r11}
-mov r10,r6
-mov r8,#14						@ y pos
-mov r9,#6						@ Number of digits
-mov r11, #0						@ x pos
-bl drawDigits	
-pop {r8-r11}
+@push {r8-r11}
+@mov r10,r6
+@mov r8,#14						@ y pos
+@mov r9,#6						@ Number of digits
+@mov r11, #0						@ x pos
+@bl drawDigits	
+@pop {r8-r11}
 
-push {r8-r11}
-mov r10,r7
-mov r8,#14						@ y pos
-mov r9,#6						@ Number of digits
-mov r11, #10						@ x pos
-bl drawDigits	
-pop {r8-r11}
+@push {r8-r11}
+@mov r10,r7
+@mov r8,#14						@ y pos
+@mov r9,#6						@ Number of digits
+@mov r11, #10						@ x pos
+@bl drawDigits	
+@pop {r8-r11}
 
 
 	cmp r7,#SPRITE_TYPE_MINE		@ Check for a "MINE FIELD" request
@@ -236,13 +237,13 @@ initReversed:					@	We scan from start to finish here to find spare slots
 		
 	foundSpace:
 
-push {r8-r11}
-mov r10,r0
-mov r8,#16						@ y pos
-mov r9,#8						@ Number of digits
-mov r11, #0						@ x pos
-bl drawDigits	
-pop {r8-r11}
+@push {r8-r11}
+@mov r10,r0
+@mov r8,#16						@ y pos
+@mov r9,#8						@ Number of digits
+@mov r11, #0						@ x pos
+@bl drawDigits	
+@pop {r8-r11}
 
 
 

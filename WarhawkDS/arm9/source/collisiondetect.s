@@ -709,21 +709,21 @@ alienCollideCheck:
 			ldr r6,[r1,r8]					@ r6=current Alien X
 
 			@ simple detect code!!!
-			add r6,#16						
+			add r6,#20						
 			cmp r6,r3						@ r3=player x
 			bmi noPlayer
-			sub r6,#16
-			add r3,#16
+			sub r6,#20
+			add r3,#20
 			cmp r6,r3
 			bpl noPlayer
 
 			mov r8,#SPRITE_Y_OFFS
 			ldr r6,[r1,r8]					@ r6=current Alien y
-			add r6,#16
+			add r6,#18
 			cmp r6,r4						@ r4=player y
 			bmi noPlayer
-			sub r6,#16
-			add r4,#16
+			sub r6,#18
+			add r4,#18
 			cmp r6,r4
 			bpl noPlayer
 				

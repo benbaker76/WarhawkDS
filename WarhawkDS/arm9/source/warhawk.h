@@ -12,9 +12,12 @@
 #include "../build/Web.h"
 #include "../build/TitleTop.h"
 #include "../build/TitleBottom.h"
+#include "../build/Congratulations.h"
+#include "../build/LargeShip.h"
 #include "../build/LogoSprites.h"
 #include "../build/CheatSprites.h"
 #include "../build/StartSprites.h"
+#include "../build/FireSprites.h"
 #include "../build/CursorSprite.h"
 #include "../build/ArrowSprite.h"
 #include "../build/StarFront.h"
@@ -52,7 +55,6 @@
 #include "../build/SpritesLev14.h"
 #include "../build/SpritesLev15.h"
 #include "../build/SpritesLev16.h"
-
 #include "../build/ExplodeOriginal.h"
 #include "../build/ExplodeSkull.h"
 
@@ -112,6 +114,7 @@
 #define GAMEMODE_ENDOFLEVEL			9
 #define GAMEMODE_GAMEOVER			10
 #define GAMEMODE_HISCORE_ENTRY		11
+#define GAMEMODE_ENDOFGAME			12
 
 @ Level count
 

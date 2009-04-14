@@ -142,8 +142,7 @@ showEndOfLevel:
 	bl playAudioStream							@ Play the audio stream
 
 	bl fxCopperTextOn							@ Turn on copper text fx
-@	bl fxStarfieldOn							@ Turn on starfield
-	bl fxStarfieldDownOn						@ Turn on starfield (completion version)
+	bl fxStarfieldOn							@ Turn on starfield
 	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =calcBasesDestroyed					@ Callback function address

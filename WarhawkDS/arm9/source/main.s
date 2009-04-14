@@ -110,7 +110,9 @@ main:
 
 @	bl showEndOfLevel
 
-	bl showIntro1
+	bl showEndOfGame
+
+@	bl showIntro1
 
 	@ ------------------------------------
 	
@@ -138,6 +140,8 @@ mainLoop:
 	bleq updateHiScoreEntry
 	cmp r1, #GAMEMODE_ENDOFLEVEL
 	bleq updateEndOfLevel
+	cmp r1, #GAMEMODE_ENDOFGAME
+	bleq updateEndOfGame
 	b mainLoop
 
 

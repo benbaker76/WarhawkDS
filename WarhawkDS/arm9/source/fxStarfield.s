@@ -29,6 +29,9 @@
 
 	#define STAR_COUNT					768
 	#define STAR_COLOR_OFFSET			11
+	#define STAR_COLOR_TRAIL_OFFSET_1	12
+	#define STAR_COLOR_TRAIL_OFFSET_2	13
+	#define STAR_COLOR_TRAIL_OFFSET_3	14
 	#define STAR_TILE_BASE				5
 	#define STAR_TILE_BASE_SUB			5
 
@@ -312,17 +315,17 @@ drawStarsLoop:
 	ldrb r0, [r3, r2]								@ make r0 = x coord
 	ldr r1, [r4, r2, lsl #2]						@ make r1 = y corrd
 
-	mov r5,#11
+	mov r5,#STAR_COLOR_OFFSET
 	bl plotStarDual
 	add r1,#1
 	bl plotStarDual
-	mov r5,#12
+	mov r5,#STAR_COLOR_TRAIL_OFFSET_1
 	sub r1,#1
 	add r0,#1
 	bl plotStarDual
 	add r1,#1
 	bl plotStarDual
-	mov r5,#13
+	mov r5,#STAR_COLOR_TRAIL_OFFSET_2
 	sub r1,#1
 	add r0,#1
 	bl plotStarDual
@@ -402,13 +405,13 @@ drawStarsDownLoop:
 	
 	mov r5,#STAR_COLOR_OFFSET						@ set palette number to use	
 	bl plotStarDual									@ draw 3 pixel for a trail effect!
-	mov r5,#12
+	mov r5,#STAR_COLOR_TRAIL_OFFSET_1
 	sub r1,#1
 	bl plotStarDual
-	mov r5,#13
+	mov r5,#STAR_COLOR_TRAIL_OFFSET_2
 	sub r1,#1
 	bl plotStarDual
-	mov r5,#14
+	mov r5,#STAR_COLOR_TRAIL_OFFSET_3
 	sub r1,#1
 	bl plotStarDual
 	subs r2, #1										@ go to next star (in reverse)

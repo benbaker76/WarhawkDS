@@ -128,6 +128,7 @@
 	.global ppotRawText
 	.global gameOverRawText
 	.global hiScoreRawText
+	.global endOfGameRawText
 	.global mineDelay
 	.global hunterDelay
 	.global mineTimerCounter
@@ -424,6 +425,10 @@ gameOverRawText:
 	.align
 hiScoreRawText:
 	.asciz "/HiScore.raw"
+	
+	.align
+endOfGameRawText:
+	.asciz "/EndOfGame.raw"
 	
 	.align
 ppotRawText:

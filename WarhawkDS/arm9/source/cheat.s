@@ -121,7 +121,7 @@ updateCheatCheck:
 
 	ldr r0, =CheatSpritesTiles
 	ldr r1, =SPRITE_GFX
-	ldr r2, =LogoSpritesTilesLen
+	ldr r2, =CheatSpritesTilesLen
 	bl dmaCopy
 	
 	mov r2,#1

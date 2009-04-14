@@ -13,6 +13,7 @@
 #include "../build/TitleTop.h"
 #include "../build/TitleBottom.h"
 #include "../build/LogoSprites.h"
+#include "../build/CheatSprites.h"
 #include "../build/StartSprites.h"
 #include "../build/CursorSprite.h"
 #include "../build/ArrowSprite.h"

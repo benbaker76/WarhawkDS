@@ -438,6 +438,7 @@ saveHiScore:
 	
 	ldr r0, =hiScoreDatText						@ Write to HiScore.dat
 	ldr r1, =hiScoreBuffer
+	ldr r2, =HISCORE_TOTAL_SIZE
 	bl writeFileBuffer
 	
 	bl DC_FlushAll								@ Flush cache

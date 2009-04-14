@@ -111,7 +111,8 @@ interruptHandlerVBlank:
 	blne fxPaletteFadeToRedVBlank
 	tst r0, #FX_STARFIELD_DOWN
 	blne fxStarfieldDownVBlank
-
+	tst r0, #FX_STARFIELD_MULTI
+	blne fxStarfieldMultiVBlank
 interruptHandlerVBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}

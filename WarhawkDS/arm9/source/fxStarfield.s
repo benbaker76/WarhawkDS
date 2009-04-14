@@ -43,6 +43,8 @@
 	.global fxStarfieldVBlank
 	.global fxStarfieldDownVBlank
 	.global fxStarfieldDownOn
+	.global fxStarfieldMultiVBlank
+	.global fxStarfieldMultiOn
 
 fxStarfieldOn:
 
@@ -203,6 +205,17 @@ fxStarfieldDownVBlank:
 	
 	ldmfd sp!, {r0-r6, pc}
 
+	@ ---------------------------------------
+
+fxStarfieldMultiVBlank:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl clearStars									@ clear them (could use a dma to clear the screen?)
+	bl moveStarsMulti									@ move em, based on x/y speeds
+	bl drawStarsMulti									@ draw the new ones :)
+	
+	ldmfd sp!, {r0-r6, pc}
 	@ ---------------------------------------
 	
 plotStarDual:
@@ -512,20 +525,208 @@ starloopDual:
 	ldmfd sp!, {r0-r6, pc}	
 	
 	@ ---------------------------------------
+
+	@ ---------------------------------------
+
+fxStarfieldMultiOn:
+
+	stmfd sp!, {r0-r6, lr}
 	
+	@ Turn off BG3
+	
+	ldr r0, =REG_DISPCNT							@ Turn off bg3
+	ldr r1, [r0]
+	eor r1, #DISPLAY_BG3_ACTIVE
+	str r1, [r0]
+	
+	ldr r0, =REG_DISPCNT_SUB						@ Turn off bg3
+	ldr r1, [r0]
+	eor r1, #DISPLAY_BG3_ACTIVE
+	str r1, [r0]
+	
+	@ Clear the tile data
+	
+	bl clearStars
+	
+	@ set the screen up to use numbered tiles from 0-767, a hybrid bitmap!	
+	
+	mov r0, #0										@ tile number
+	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)				@ where to store it
+	ldr r2, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)		@ where to store it
+	
+@	ldr r3, =starDirection
+@	str r0,[r3]
+
+fxStarfieldOnMultiLoop:
+
+	strh r0, [r1], #2
+	strh r0, [r2], #2
+	add r0, #1
+	cmp r0, #(32 * 24)
+	
+	bne fxStarfieldOnMultiLoop
+	
+	bl randomStarsMulti								@ generate em!
+	bl drawStarsMulti									@ draw them
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_STARFIELD_MULTI
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}	
 	.pool
 	.data
 	.align
+
+@----------------------------------------
+
+randomStarsMulti:
+
+	stmfd sp!, {r0-r6, lr}
 	
+	mov r3, #STAR_COUNT
+	sub r3,#1
+	ldr r4, =starXCoord32
+	ldr r5, =starYCoord
+	ldr r6, =starSpeed
+	ldr r7, =0x1ff
+
+starloopMulti:
+	
+	bl getRandom
+	
+	and r8, #0xff
+	lsl r8,#12
+	str r8, [r4, r3, lsl #2]								@ Store X
+
+	bl getRandom
+	
+	and r8, r7										@ make 0-512
+	mov r9, #6										@ times 6
+	mul r8, r9	
+	lsr r8, #3										@ divide by 8
+
+	lsl r8,#12
+	str r8, [r5, r3, lsl #2] 						@ Store Y (0-383)
+
+	bl getRandom
+													@ we need a speed from +1 = +4
+	and r8, #0x7									@ 0-3
+	add r8, #1
+	strb r8, [r6, r3] 								@ Store Speed
+		
+	subs r3, #1	
+	bne starloopMulti
+
+	ldmfd sp!, {r0-r6, pc}
+
+@--------------------------------------
+
+drawStarsMulti:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	mov r2, #STAR_COUNT								@ Set numstars-1
+	sub r2,#1
+	mov r5, #STAR_COLOR_OFFSET						@ set palette number to use
+	ldr r3, =starXCoord32							@ r4=3= coords of X
+	ldr r4, =starYCoord								@ r4= coords of Y
+	ldr r7, =BG_TILE_RAM_SUB(STAR_TILE_BASE_SUB)
+	ldr r8, =BG_TILE_RAM(STAR_TILE_BASE)
+drawStarsMultiLoop:
+	
+	ldr r0, [r3, r2, lsl #2]						@ make r0 = x coord
+	ldr r1, [r4, r2, lsl #2]						@ make r1 = y corrd
+	
+	lsr r0,#12
+	lsr r1,#12
+	
+	bl plotStarDual									@ draw 3 pixel for a trail effect!
+	add r0,#1
+	bl plotStarDual
+	add r1,#1
+	bl plotStarDual
+	sub r0,#1
+	bl plotStarDual
+
+
+	subs r2, #1										@ go to next star (in reverse)
+	bne drawStarsMultiLoop							@ have we done star 0 yet? if not go back to loop1
+	
+	ldmfd sp!, {r0-r6, pc}
+
+@----------------------------------
+
+moveStarsMulti:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	mov r3, #STAR_COUNT								@ Set numstars
+	sub r3,#1
+	ldr r7, =starSpeed
+	ldr r4, =starYCoord
+	ldr r10, =starXCoord32
+
+	ldr r0,=starDirection
+	ldr r0,[r0]
+	lsl r0,#1
+	ldr r1,=COS_bin
+	ldrsh r1, [r1,r0]						@ r1= 16bit signed cos
+	ldr r2,=SIN_bin
+	ldrsh r2, [r2,r0]						@ r2= 16bit signed sin
+	
+moveStarsMultiLoop:
+	
+	ldrb r5, [r7, r3]								@ R5 now holds the speed of the star
+	ldr r9, [r10, r3, lsl #2]						@ r9 is now X coord value
+	movs r6,r1
+	muls r6,r5
+	adds r9,r6
+	
+	movmi r9,#0xff000								@ reset at boundries (shifted 12)
+	cmppl r9,#0xff000
+	movgt r9,#0
+	str r9, [r10,r3, lsl #2]
+	 
+	 
+	ldr r6, [r4, r3, lsl #2]						@ r6 now holds the Y coord of the star
+	movs r9,r2										@ r2 = 4.12 signed sine
+	muls r9,r5
+	adds r6,r9										@ add to Y coord (signed)
+
+	movmi r6,#0x180000								@ reset at boundries (shifted 12)
+	cmppl r6,#0x180000
+	movpl r6,#0
+	str r6, [r4, r3, lsl #2]						@ store y 20.12
+
+	subs r3, #1										@ count down the number of starSpeed
+	bne moveStarsMultiLoop
+	
+	ldr r6,=starDirection
+	ldr r7,[r6]
+	add r7,#1
+	cmp r7,#512
+	movpl r7,#0
+	str r7,[r6]
+	
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	.data
+	.pool
+	.align
+
+starDirection:
+	.word 0
+
 starXCoord:
 	.space STAR_COUNT
-
-	.align
+starSpeed:
+	.space STAR_COUNT	
 starYCoord:
 	.space STAR_COUNT*4
-
-	.align
-starSpeed:
-	.space STAR_COUNT
+starXCoord32:
+	.space STAR_COUNT*4
 
 	.end

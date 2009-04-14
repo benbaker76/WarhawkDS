@@ -104,13 +104,13 @@ main:
 	@mov r1, #32
 	@str r1, [r0]
 
-	@ldr r0, =energy
-	@mov r1, #71
-	@str r1, [r0]								@ set energy to full
+	ldr r0, =energy
+	mov r1, #71
+	str r1, [r0]								@ set energy to full
 
-@	bl showEndOfLevel
+	bl showEndOfLevel
 
-	bl showEndOfGame
+@	bl showEndOfGame
 
 @	bl showIntro1
 

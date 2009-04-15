@@ -432,7 +432,10 @@ saveHiScore:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl stopAudioStream
+	bl fxColorPulseOff							@ Turn off color pulse
+	bl fxCopperTextOff							@ Turn off copper text
+	bl fxStarfieldOff							@ Turn off starfield
+	bl stopAudioStream							@ Turn off music
 	
 	ldr r0, =colorHilight						@ Load colorHilight address
 	mov r1, #0									@ Zero
@@ -456,19 +459,18 @@ saveHiScore:
 	
 	ldr r0, =hiScoreDatText						@ Write to HiScore.dat
 	ldr r1, =hiScoreBuffer
-	ldr r2, =HISCORE_TOTAL_SIZE
+	@ldr r2, =HISCORE_TOTAL_SIZE
 	bl writeFileBuffer
 	
 	bl DC_FlushAll								@ Flush cache
 	
 	@ldr r0, =hiScoreBuffer
 	@bl drawDebugString
-	
-	bl fxColorPulseOff							@ Turn off color pulse
-	bl fxCopperTextOff							@ Turn off copper text
-	bl fxStarfieldOff							@ Turn off starfield
 
 	bl showTitleScreen							@ Go back to titlescreen
+	
+	@ldr r0, =1234567
+	@bl showHiScoreEntry
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

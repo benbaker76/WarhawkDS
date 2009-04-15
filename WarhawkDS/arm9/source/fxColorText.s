@@ -27,8 +27,12 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FONT_COLOR_OFFSET	255
-	#define COLOR_WHITE			0x7FFF
+	#define FONT_COLOR_OFFSET				255
+	#define COLOR_WHITE						0x7FFF
+	#define COLOR_BLUE						0x7C00
+	#define COLOR_RED						0x001F
+	#define COLOR_YELLOW					0x03FF
+	#define COLOR_CYAN						0x7FE0
 
 	.arm
 	.align
@@ -40,6 +44,7 @@
 	.global fxColorCycleTextOn
 	.global fxColorCycleTextOff
 	.global fxColorCycleTextHBlank
+	.global colorHilight
 
 fxCopperTextOn:
 
@@ -111,6 +116,28 @@ fxCopperTextHBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	ldr r0, =colorHilight
+	ldr r0, [r0]
+	cmp r0, #0
+	beq fxCopperTextVBlankContinue
+	
+	lsl r0, #3
+	sub r0, #1
+	ldr r1, =BG_PALETTE_SUB
+	ldr r2, =REG_VCOUNT
+	ldrh r2, [r2]
+	ldr r3, =(FONT_COLOR_OFFSET * 2)
+	ldr r4, =COLOR_WHITE
+	cmp r2, r0
+	blt fxCopperTextVBlankContinue
+	add r0, #8
+	cmp r2, r0
+	bge fxCopperTextVBlankContinue
+	strh r4, [r1, r3]
+	b fxCopperTextVBlankDone
+	
+fxCopperTextVBlankContinue:
+	
 	ldr r0, =BG_PALETTE
 	ldr r1, =BG_PALETTE_SUB
 	ldr r2, =REG_VCOUNT
@@ -120,10 +147,11 @@ fxCopperTextHBlank:
 	ldr r3, =colorPal
 	ldrh r2, [r3, r2]
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
-	ldr r4, =COLOR_WHITE
 		
 	strh r2, [r0, r3]
 	strh r2, [r1, r3]
+	
+fxCopperTextVBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}
 
@@ -133,8 +161,6 @@ fxCopperTextVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl DC_FlushAll
-	
 	ldr r0, =colorPal
 	ldrh r3, [r0]
 	
@@ -143,6 +169,8 @@ fxCopperTextVBlank:
 	add r0, #2
 	ldr r2, =(255 * 2)
 	bl dmaCopy
+	
+	bl DC_FlushAll
 	
 	ldr r0, =colorPal
 	ldr r1, =(255 * 2)
@@ -188,6 +216,9 @@ fxColorCycleTextHBlank:
 	
 	.data
 	.align
+	
+colorHilight:
+	.word 0
 	
 colorOffset:
 	.word 0

@@ -101,6 +101,8 @@ interruptHandlerVBlank:
 	blne fxCrossWipeVBlank
 	tst r0, #FX_COLOR_CYCLE
 	blne fxColorCycleVBlank
+	tst r0, #FX_COLOR_PULSE
+	blne fxColorPulseVBlank
 	tst r0, #FX_COPPER_TEXT
 	blne fxCopperTextVBlank
 	tst r0, #FX_TEXT_SCROLLER

@@ -87,10 +87,22 @@ main:
 	bl readOptions
 	bl readHiScore
 	
-	@bl showContinueGame
+	@ ----
 	
-	@ldr r0, =8192
+	@ldr r0, =levelNum
+	@ldr r1, =1
+	@str r1, [r0]
+	@ldr r0, =optionLevelNum
+	@ldr r1, =5
+	@str r1, [r0]
+	@bl showContinue
+	
+	@ ----
+	
+	@ldr r0, =36000
 	@bl showHiScoreEntry
+	
+	@ ----
 
 	@ldr r0, =levelNum
 	@mov r1, #1
@@ -104,13 +116,19 @@ main:
 	@mov r1, #32
 	@str r1, [r0]
 
-	ldr r0, =energy
-	mov r1, #71
-	str r1, [r0]								@ set energy to full
+	@ldr r0, =energy
+	@mov r1, #71
+	@str r1, [r0]								@ set energy to full
+	
+	@ ----
 
-@	bl showEndOfLevel
+	@bl showEndOfLevel
 
-@	bl showEndOfGame
+	@ ----
+
+	@bl showEndOfGame
+
+	@ ----
 
 	bl showIntro1
 
@@ -132,8 +150,8 @@ mainLoop:
 	bleq updateLoading
 	cmp r1, #GAMEMODE_TITLESCREEN
 	bleq updateTitleScreen
-	cmp r1, #GAMEMODE_CONTINUEGAME
-	bleq updateContinueGame
+	cmp r1, #GAMEMODE_CONTINUE
+	bleq updateContinue
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
 	cmp r1, #GAMEMODE_HISCORE_ENTRY

@@ -36,6 +36,7 @@
 	#define HISCORE_TOTAL_SIZE		HISCORE_ENTRY_COUNT * HISCORE_ENTRY_SIZE
 	
 	#define INPUT_DELAY				16
+	#define CURSOR_COLOR_OFFSET		11
 
 	.arm
 	.align
@@ -119,6 +120,11 @@ showHiScoreEntry:
 	bleq showTitleScreen						@ Yes then go back to the title screen
 	beq showHiScoreEntryDone					@ And were done
 	
+	ldr r1, =colorHilight						@ Load colorHilight address
+	mov r2, r0									@ Move hiscore index
+	add r2, #10									@ Add 10 line offset
+	str r2, [r1]								@ Write back to colorHilight
+	
 	ldr r0, =nameAAA							@ Load "AAA" address
 	ldr r1, =nameEntryBuffer					@ Load nameEntryBuffer
 	ldrb r3, [r0], #1							@ Copy "AAA" to nameEntryBuffer
@@ -173,6 +179,7 @@ showHiScoreEntry:
 	ldr r0, =hiScoreRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 	
+	bl fxColorPulseOn							@ Turn on color pulse fx
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldOn							@ Tune on starfield
 	
@@ -252,6 +259,13 @@ hiScoreEntrySkip:
 drawCursorSprite:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =SPRITE_PALETTE_SUB
+	ldr r1, =pulseValue
+	ldr r1, [r1]
+	ldr r2, =CURSOR_COLOR_OFFSET
+	lsl r2, #1
+	strh r1, [r0, r2]
 	
 	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)				@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
@@ -420,6 +434,10 @@ saveHiScore:
 	
 	bl stopAudioStream
 	
+	ldr r0, =colorHilight						@ Load colorHilight address
+	mov r1, #0									@ Zero
+	str r1, [r0]								@ Set it to zero to turn off
+	
 	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
 	ldr r1, =hiScoreBuffer						@ Load hiScoreBuffer
 	ldr r2, =hiScoreIndex						@ Load hiScoreIndex address
@@ -446,6 +464,7 @@ saveHiScore:
 	@ldr r0, =hiScoreBuffer
 	@bl drawDebugString
 	
+	bl fxColorPulseOff							@ Turn off color pulse
 	bl fxCopperTextOff							@ Turn off copper text
 	bl fxStarfieldOff							@ Turn off starfield
 

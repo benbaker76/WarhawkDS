@@ -28,9 +28,6 @@
 #include "sprite.h"
 #include "ipc.h"
 
-	#define PULSE_FORWARD		0
-	#define PULSE_BACKWARD		1
-	
 	.arm
 	.align
 	.text
@@ -154,6 +151,7 @@ showTitleScreen:
 	ldr r0, =ppotRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 	
+	bl fxColorPulseOn
 	bl fxCopperTextOn
 	bl fxSpotlightIn	
 	bl fxFadeBlackIn
@@ -406,30 +404,7 @@ updateStartSpritesLoop:
 	add r0, r1, lsl #1							@ Add offset * 2 (16 bit value)
 	ldr r2, =pulseValue							@ Load pulseValue address
 	ldr r3, [r2]								@ Load pulseValue value
-	
-	ldr r4, =pulseDirection						@ Load pulseDirection address
-	ldr r5, [r4]								@ Load pulseDirection value
-	cmp r5, #PULSE_FORWARD						@ Are we going forward or backward?
-	bne updateStartSpritesBackward				@ Were going backward
-		
-	add r3, #1									@ Add 1 to pulseValue
-	cmp r3, #0x1F								@ Are we at 0x1F? (Pure red)
-	moveq r5, #PULSE_BACKWARD					@ Yes then set pulse backward
-	str r3, [r2]								@ Write back to pulseValue
-	str r5, [r4]								@ Write back to pulseDirection
 	strh r3, [r0]								@ Write to palette
-	b updateStartSpritesDone					@ Branch to done
-	
-updateStartSpritesBackward:
-
-	sub r3, #1									@ Subtract 1 from pulseValue
-	cmp r3, #0									@ Are we at 0? (Pure black)
-	moveq r5, #PULSE_FORWARD					@ Change to pulse forward
-	str r3, [r2]								@ Write back to pulseValue
-	str r5, [r4]								@ Write back to pulseDirection
-	strh r3, [r0]								@ Write to palette
-	
-updateStartSpritesDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -593,6 +568,7 @@ updateTitleScreen:
 	ldr r1, =REG_KEYINPUT						@ Read Key Input
 	ldr r2, [r1]
 	tst r2, #BUTTON_START						@ Start button pressed?
+	bleq fxColorPulseOff						@ Turn of color pulse effect
 	bleq fxSpotlightOff							@ Turn off the spotlight effect
 	bleq fxTextScrollerOff						@ Turn off the scroller effect
 	bleq fxCopperTextOff						@ Turn off the copper text effect
@@ -607,12 +583,6 @@ updateTitleScreen:
 	.align
 	
 vblCounter:
-	.word 0
-
-pulseValue:
-	.word 0
-	
-pulseDirection:
 	.word 0
 	
 	.align

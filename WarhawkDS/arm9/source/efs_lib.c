@@ -829,7 +829,7 @@ asm (
 "   .word   0x00            @ Size of the rom                                           \n"
 "   .global efs_path                                                                    \n"
 "efs_path:                                                                              \n"
-"   .skip   768             @ Path of the rom                                           \n"
+"   .skip   256             @ Path of the rom                                           \n"
 "@--------------------------------------------------------------------------------------\n"
 );
 

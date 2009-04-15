@@ -108,11 +108,11 @@ main:
 	mov r1, #71
 	str r1, [r0]								@ set energy to full
 
-	bl showEndOfLevel
+@	bl showEndOfLevel
 
 @	bl showEndOfGame
 
-@	bl showIntro1
+	bl showIntro1
 
 	@ ------------------------------------
 	

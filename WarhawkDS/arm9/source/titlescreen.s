@@ -143,7 +143,7 @@ showTitleScreen:
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
 	
-	bl showCredits
+	bl drawCreditText
 	
 	bl initLogoSprites
 	@bl drawStartSprites

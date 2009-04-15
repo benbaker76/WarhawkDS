@@ -27,7 +27,7 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define STAR_COUNT					768
+	#define STAR_COUNT					1024
 	#define STAR_COLOR_OFFSET			11
 	#define STAR_COLOR_TRAIL_OFFSET_1	12
 	#define STAR_COLOR_TRAIL_OFFSET_2	13
@@ -591,7 +591,8 @@ randomStarsMulti:
 	ldr r5, =starYCoord
 	ldr r6, =starSpeed
 	ldr r7, =0x1ff
-
+	ldr r1, =0x3FFF
+@ldr r1,=0xfff
 starloopMulti:
 	
 	bl getRandom
@@ -612,9 +613,10 @@ starloopMulti:
 
 	bl getRandom
 													@ we need a speed from +1 = +4
-	and r8, #0x7									@ 0-3
-	add r8, #1
-	strb r8, [r6, r3] 								@ Store Speed
+	and r8, r1								@ 0-3
+@	add r8, #1
+@and r8,#0xfff
+	str r8, [r6, r3, lsl #2] 								@ Store Speed
 		
 	subs r3, #1	
 	bne starloopMulti
@@ -675,30 +677,36 @@ moveStarsMulti:
 	ldrsh r1, [r1,r0]						@ r1= 16bit signed cos
 	ldr r2,=SIN_bin
 	ldrsh r2, [r2,r0]						@ r2= 16bit signed sin
+	ldr r11,=0xfff
 	
 moveStarsMultiLoop:
-	
-	ldrb r5, [r7, r3]								@ R5 now holds the speed of the star
-	ldr r9, [r10, r3, lsl #2]						@ r9 is now X coord value
+	ldr r5, [r7, r3, lsl #2] 				@ R5 now holds the speed of the star
+	ldr r9, [r10, r3, lsl #2]				@ r9 is now X coord value
 	movs r6,r1
-	muls r6,r5
-	adds r9,r6
+
+
+	
+	muls r6,r5				@ mul cos by speed
+	asr r6,#12				@ drop base 12
+	adds r9,r6				@ add to x
 	
 	movmi r9,#0xff000								@ reset at boundries (shifted 12)
 	cmppl r9,#0xff000
 	movgt r9,#0
 	str r9, [r10,r3, lsl #2]
 	 
-	 
-	ldr r6, [r4, r3, lsl #2]						@ r6 now holds the Y coord of the star
-	movs r9,r2										@ r2 = 4.12 signed sine
-	muls r9,r5
-	adds r6,r9										@ add to Y coord (signed)
+	ldr r9, [r4, r3, lsl #2]						@ r6 now holds the Y coord of the star
+	movs r6,r2										@ r2 = 4.12 signed sine
+	
+	
+	muls r6,r5
+	asr r6,#12
+	adds r9,r6										@ add to Y coord (signed)
 
-	movmi r6,#0x180000								@ reset at boundries (shifted 12)
-	cmppl r6,#0x180000
-	movpl r6,#0
-	str r6, [r4, r3, lsl #2]						@ store y 20.12
+	movmi r9,#0x180000								@ reset at boundries (shifted 12)
+	cmppl r9,#0x180000
+	movpl r9,#0
+	str r9, [r4, r3, lsl #2]						@ store y 20.12
 
 	subs r3, #1										@ count down the number of starSpeed
 	bne moveStarsMultiLoop
@@ -723,7 +731,7 @@ starDirection:
 starXCoord:
 	.space STAR_COUNT
 starSpeed:
-	.space STAR_COUNT	
+	.space STAR_COUNT*4	
 starYCoord:
 	.space STAR_COUNT*4
 starXCoord32:

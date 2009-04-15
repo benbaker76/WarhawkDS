@@ -230,8 +230,8 @@ drawDigits:
 		bl divideNumber				@ call our code to divide r1 by r2 and return r0 with fraction
 		strb r1,[r5,r6]			@ lets store our fraction in our digit data
 		mov r1,r0					@ put the result back in r1 (original r1/10)
-		sub r6,#1					@ take one off our digit counter
-		cmp r1,#0					@ is our result 0 yet, if not, we have more to do
+		subs r6,#1					@ take one off our digit counter
+	@	cmp r1,#0					@ is our result 0 yet, if not, we have more to do
 	bne convertLoop	
 
 	ldr r0, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)	@ make r0 a pointer to screen memory bg bitmap sub address

@@ -514,6 +514,12 @@
 			mov r10,r12						@ Store the X/Y speeds
 			mov r11,r12						@ we will need r12 later
 			
+			@get x and y diff
+			@sum
+			@sqrt
+			@(xd * speed) / result = xspeed
+			@(yd * speed) / result = yspeed
+			
 			cmp r5,r7
 			rsble r11,r11,#0
 			suble r9,r7,r5
@@ -523,16 +529,34 @@
 				suble r8,r6,r4
 				subgt r8,r4,r6
 				cmp r8,r9
+				
+			@------------ lr
+	
 				bmi directOddQuad
 					push {r0-r2}
 					mov r0,r8					@ divide this number
 					add r9,r12					@ we also need to divide by the SPEED
 					mov r1,r9					@ by this number
 						bl divf32				@ r0=result 20.12	
-					mov r9,r0					@ move the whole to r9
+					mov r9,r0					@ move the whole to r9				
 					mov r8,#0	
+	push {r0-r11}				
+	mov r10,r9
+	mov r8, #22						@ y pos
+	mov r9, #8						@ Number of digits
+	mov r11, #0					@ x pos
+	bl drawDigits					@ Draw	
+	pop {r0-r11}
+					
+					
+					
+					
 					pop {r0-r2}
 				b directDone
+
+			@------------ ud
+	
+				
 				directOddQuad:
 					push {r0-r2}
 					mov r0,r9					@ divide this number

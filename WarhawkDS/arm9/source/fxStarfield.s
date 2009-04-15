@@ -176,7 +176,7 @@ fxStarfieldOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_STARFIELD)
+	and r1, #~(FX_STARFIELD | FX_STARFIELD_DOWN | FX_STARFIELD_MULTI)
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

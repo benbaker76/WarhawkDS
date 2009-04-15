@@ -526,9 +526,7 @@ starloopDual:
 	
 	@ ---------------------------------------
 
-	@ ---------------------------------------
-
-fxStarfieldMultiOn:
+	fxStarfieldMultiOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -574,10 +572,7 @@ fxStarfieldOnMultiLoop:
 	orr r1, #FX_STARFIELD_MULTI
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}	
-	.pool
-	.data
-	.align
+	ldmfd sp!, {r0-r6, pc}
 
 @----------------------------------------
 

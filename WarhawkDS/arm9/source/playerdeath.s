@@ -90,7 +90,7 @@ playerDeathMidExplode:									@ --- PHASE 2
 		cmp r3,#0
 		beq midDeathExplode
 		subs r7,#1
-		cmp r7,#48
+		cmp r7,#64
 	bpl midDeathHuntLoop
 	b midExplodeCountdown
 	
@@ -196,7 +196,7 @@ playerDeathMainExplode:									@ --- PHASE 3
 		cmp r3,#0
 		beq mainDeathExplode
 		subs r7,#1
-		cmp r7,#32
+		cmp r7,#17
 	bpl mainDeathHuntLoop
 	b mainExplodeCountdown
 	

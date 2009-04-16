@@ -112,7 +112,7 @@ interruptHandlerVBlank:
 	tst r0, #FX_PALETTE_FADE_TO_RED
 	blne fxPaletteFadeToRedVBlank
 	tst r0, #FX_STARFIELD_DOWN
-	blne fxStarfieldDownVBlank
+	blne fxStarfieldVBlank
 	tst r0, #FX_STARFIELD_MULTI
 	blne fxStarfieldMultiVBlank
 interruptHandlerVBlankDone:

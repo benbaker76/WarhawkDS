@@ -219,6 +219,8 @@ initReversed:					@	We scan from start to finish here to find spare slots
 		ldr r2,[r3,r0, lsl #2]
 		cmp r2,#11
 		beq spaceIsExplosion
+		cmp r2,#12
+		beq spaceIsExplosion
 		cmp r2,#4
 		beq spaceIsExplosion
 		b findSpaceExplodeLoopCount
@@ -930,7 +932,7 @@ initHunterMine:
 	str r1,[r0]
 	cmp r1,#0				@ is is active??
 	bne checkMineTimer		@ yes!!
-		b initHunter		@ no :( so let us check for a hunter
+		b initHunter		@ no :( so let us check for a meteor/mine/thing
 	checkMineTimer:
 	ldr r0,=mineDelay
 	ldr r1,[r0]

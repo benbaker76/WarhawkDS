@@ -122,7 +122,7 @@ main:
 	
 	@ ----
 
-	bl showEndOfLevel
+	@bl showEndOfLevel
 
 	@ ----
 
@@ -130,7 +130,7 @@ main:
 
 	@ ----
 
-	@bl showIntro1
+	bl showIntro1
 
 	@ ------------------------------------
 	

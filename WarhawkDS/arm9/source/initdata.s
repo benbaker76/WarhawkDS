@@ -57,7 +57,7 @@ initData:
 	@ NEED TO RESET SCORE HERE (see, was already noted HK :) )
 	
 	ldr r0,=score			@ reset (zero) score
-	mov r1,#2
+	mov r1,#9				@ just to make sure we always get a highscore
 	str r1,[r0],#4
 	str r1,[r0]
 

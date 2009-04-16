@@ -65,7 +65,11 @@ initLevel:
 	str r1,[r0]				@ turn off the energy bar flash
 	ldr r0,=powerUp
 	str r1,[r0]
-
+	ldr r0,=mineTimerCounter
+	str r1,[r0]
+	ldr r0,=hunterTimerCounter
+	str r1,[r0]
+	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub
 	str r1,[r0]

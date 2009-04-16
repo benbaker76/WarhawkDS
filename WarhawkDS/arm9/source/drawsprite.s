@@ -35,6 +35,10 @@
 #define BUF_ATTRIBUTE1_SUB	(0x07000402)
 #define BUF_ATTRIBUTE2_SUB	(0x07000404)
 
+
+@ started looking at DS mode - ULP!!!
+
+
 	.arm
 	.align
 	.text
@@ -139,7 +143,8 @@ drawSprite:
 	ldr r3,=SCREEN_SUB_WHITESPACE-32	@ if it offscreen?
 	cmp r1,r3							@ if it is less than - then it is in whitespace
 	bmi sprites_Done					@ so, no need to draw it!
-	ldr r3,=SCREEN_MAIN_TOP+32			@ now is it on the main screen
+	ldr r3,=SCREEN_MAIN_TOP @+32			@ now is it on the main screen
+	@ make above -32 for DS mode
 	cmp r1,r3							@ check
 	bpl spriteY_Main_Done				@ if so, we need only draw to main
 	ldr r3,=SCREEN_MAIN_TOP-32			@ is it totally on the sub
@@ -151,11 +156,12 @@ drawSprite:
 		ldr r0,=BUF_ATTRIBUTE0			@ get the sprite attribute0 base
 		add r0,r8, lsl #3				@ add spritenumber *8
 		ldr r2, =(ATTR0_COLOR_16 | ATTR0_SQUARE)
-		ldr r3,=SCREEN_MAIN_TOP-32		@ make r3 the value of top screen -sprite height
+		ldr r3,=SCREEN_MAIN_TOP@+32			@ make r3 the value of top screen -sprite height (was -32)
+		@ make above +32 for DS mode
 		sub r1,r3						@ subtract our sprites y coord
-		cmp r1,#32						@ check if it is less than sprites height (off top)
-		addmi r1,#256					@ if so, add #255 (make it offscreen)
-		sub r1,#32						@ take our height off
+	@	cmp r1,#32						@ check if it is less than sprites height (off top)
+	@	addmi r1,#256					@ if so, add #255 (make it offscreen)
+	@	sub r1,#32						@ take our height off
 		and r1,#0xff					@ Y is only 0-255
 		orr r2,r1						@ or with our attributes from earlier
 		strh r2,[r0]					@ store it in sprite attribute0

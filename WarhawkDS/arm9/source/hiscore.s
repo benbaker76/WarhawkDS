@@ -399,24 +399,32 @@ addHiScoreLoop:
 	
 	add r1, #HISCORE_VALUE_SIZE					@ Add the score size
 	
-	ldrb r3, [r1], #1							@ Copy current name to nameBuffer
+	ldrb r3, [r1], #1
 	strb r3, [r7], #1
 	ldrb r3, [r1], #1
 	strb r3, [r7], #1
 	ldrb r3, [r1], #1
 	strb r3, [r7], #1
 	
-	sub r1, #3									@ Go back 3 letters
+	sub r1, #3
 	sub r7, #3
 	
-	ldrb r3, [r6], #1							@ Copy last name to hiScoreBuffer
+	ldrb r3, [r6], #1
 	strb r3, [r1], #1
 	ldrb r3, [r6], #1
 	strb r3, [r1], #1
 	ldrb r3, [r6], #1
 	strb r3, [r1], #(1 + HISCORE_CRLF_SIZE)
-
-	mov r6, r7									@ Move current name pointer into r6
+	
+	ldrb r3, [r7], #1
+	strb r3, [r6], #1
+	ldrb r3, [r7], #1
+	strb r3, [r6], #1
+	ldrb r3, [r7], #1
+	strb r3, [r6], #1
+	
+	sub r6, #3
+	sub r7, #3
 	
 addHiScoreContinue:
 	

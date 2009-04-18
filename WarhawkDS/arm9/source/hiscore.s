@@ -128,6 +128,15 @@ showHiScoreEntry:
 	mov r0, r6									@ Move hiscore value to r0
 	bl addHiScore								@ Add the hiscore
 	
+	ldr r0, =nameAAA							@ Load "AAA" address
+	ldr r1, =nameBuffer							@ Load nameBuffer
+	ldrb r3, [r0], #1							@ Copy "AAA" to nameBuffer
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	
 	ldr r0, =CursorSpritePal					@ Load the cursor sprite palette
 	ldr r1, =SPRITE_PALETTE_SUB
 	ldr r2, =CursorSpritePalLen
@@ -183,7 +192,7 @@ updateHiScoreEntry:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =nameBuffer					@ Load nameBuffer
+	ldr r0, =nameBuffer							@ Load nameBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
 	ldr r2, [r1]								@ Load cursorPos value
 	ldrb r3, [r0, r2]							@ Load the ASCII character

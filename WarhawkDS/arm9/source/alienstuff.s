@@ -213,7 +213,7 @@ initReversed:					@	We scan from start to finish here to find spare slots
 	@ ok, we found nothing :( But is the Ship and IDENT that needs space?
 	cmp r6, #6
 	blt notAnIdent
-	
+
 	mov r0,#0
 	findSpaceExplodeLoop:
 		ldr r2,[r3,r0, lsl #2]
@@ -227,8 +227,10 @@ initReversed:					@	We scan from start to finish here to find spare slots
 			spaceIsExplosion:
 			ldr r2,=spriteObj+68
 			ldr r2,[r2,r0, lsl #2]
-			cmp r2,#11
-			bgt foundSpace	
+			cmp r2,#8
+			bgt foundSpace
+			cmp r2,#0
+			beq foundSpace
 		findSpaceExplodeLoopCount:
 		add r0,#1
 		cmp r0,#64

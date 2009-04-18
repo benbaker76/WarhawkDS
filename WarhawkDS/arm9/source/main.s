@@ -99,7 +99,7 @@ main:
 	
 	@ ----
 	
-	@ldr r0, =36000
+	@ldr r0, =12345
 	@bl showHiScoreEntry
 	
 	@ ----

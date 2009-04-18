@@ -125,17 +125,7 @@ showHiScoreEntry:
 	add r2, #10									@ Add 10 line offset
 	str r2, [r1]								@ Write back to colorHilight
 	
-	ldr r0, =nameAAA							@ Load "AAA" address
-	ldr r1, =nameEntryBuffer					@ Load nameEntryBuffer
-	ldrb r3, [r0], #1							@ Copy "AAA" to nameEntryBuffer
-	strb r3, [r1], #1
-	ldrb r3, [r0], #1
-	strb r3, [r1], #1
-	ldrb r3, [r0], #1
-	strb r3, [r1], #1
-	
 	mov r0, r6									@ Move hiscore value to r0
-	ldr r1, =nameEntryBuffer					@ Load nameEntryBuffer address
 	bl addHiScore								@ Add the hiscore
 	
 	ldr r0, =CursorSpritePal					@ Load the cursor sprite palette
@@ -193,7 +183,7 @@ updateHiScoreEntry:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
+	ldr r0, =nameBuffer					@ Load nameBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
 	ldr r2, [r1]								@ Load cursorPos value
 	ldrb r3, [r0, r2]							@ Load the ASCII character
@@ -215,7 +205,7 @@ updateHiScoreEntry:
 	cmp r3, #90									@ If > 90 set to 90
 	movgt r3, #90
 	
-	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
+	ldr r0, =nameBuffer					@ Load nameBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
 	ldr r2, [r1]								@ Load cursorPos value
 	strb r3, [r0, r2]							@ Write back ASCII character
@@ -234,7 +224,7 @@ updateHiScoreEntry:
 	
 	str r2, [r1]								@ Write back to cursorPos
 	
-	ldr r0, =nameEntryBuffer					@ buffer
+	ldr r0, =nameBuffer					@ buffer
 	ldr r1, =19									@ x
 	ldr r2, =hiScoreIndex						@ y
 	ldr r2, [r2]								@ read hiscoreIndex value
@@ -372,11 +362,20 @@ addHiScore:
 	stmfd sp!, {r0-r7, lr}
 	
 	@ r0 = score value
-	@ r1 = pointer to name text
 	
 	mov r5, r0									@ Move score
-	mov r6, r1									@ Move name pointer
-	ldr r7, =nameBuffer							@ Load nameBuffer
+	
+	ldr r1, =nameAAA							@ Load "AAA" address
+	ldr r6, =nameBufferTemp						@ Load nameBuffer
+	ldr r7, =nameBuffer							@ Load nameBuffer address
+	ldrb r3, [r1], #1							@ Copy "AAA" to nameBuffer
+	strb r3, [r6], #1
+	ldrb r3, [r1], #1
+	strb r3, [r6], #1
+	ldrb r3, [r1], #1
+	strb r3, [r6], #1
+	
+	sub r6, #3
 
 	ldr r1, =hiScoreBuffer						@ Load hiScoreBuffer
 	mov r4, #0									@ Reset iterator
@@ -416,6 +415,8 @@ addHiScoreLoop:
 	ldrb r3, [r6], #1
 	strb r3, [r1], #(1 + HISCORE_CRLF_SIZE)
 	
+	sub r6, #3
+	
 	ldrb r3, [r7], #1
 	strb r3, [r6], #1
 	ldrb r3, [r7], #1
@@ -425,6 +426,7 @@ addHiScoreLoop:
 	
 	sub r6, #3
 	sub r7, #3
+	@mov r6, r7
 	
 addHiScoreContinue:
 	
@@ -449,7 +451,7 @@ saveHiScore:
 	mov r1, #0									@ Zero
 	str r1, [r0]								@ Set it to zero to turn off
 	
-	ldr r0, =nameEntryBuffer					@ Load nameEntryBuffer
+	ldr r0, =nameBuffer					@ Load nameBuffer
 	ldr r1, =hiScoreBuffer						@ Load hiScoreBuffer
 	ldr r2, =hiScoreIndex						@ Load hiScoreIndex address
 	ldr r2, [r2]								@ Load hiScoreIndex value
@@ -600,11 +602,11 @@ hiScoreIndex:
 	.word 0
 	
 	.align
-nameBuffer:
+nameBufferTemp:
 	.asciz "   "
 
 	.align
-nameEntryBuffer:
+nameBuffer:
 	.asciz "   "
 
 	.align

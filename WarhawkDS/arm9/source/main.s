@@ -99,7 +99,7 @@ main:
 	
 	@ ----
 	
-	@ldr r0, =12345
+	@ldr r0, =9000000
 	@bl showHiScoreEntry
 	
 	@ ----
@@ -126,11 +126,11 @@ main:
 
 	@ ----
 
-	@bl showEndOfGame
+	bl showEndOfGame
 
 	@ ----
 
-	bl showIntro1
+	@bl showIntro1
 
 	@ ------------------------------------
 	

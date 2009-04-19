@@ -435,7 +435,6 @@ addHiScoreLoop:
 	
 	sub r6, #3
 	sub r7, #3
-	@mov r6, r7
 	
 addHiScoreContinue:
 	

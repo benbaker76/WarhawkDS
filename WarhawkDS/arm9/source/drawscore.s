@@ -33,6 +33,7 @@
 	.text
 	.global addScore
 	.global drawScore
+	.global drawScoreSub
 
 addScore:
 	stmfd sp!, {r0-r6, lr}
@@ -65,13 +66,21 @@ addScore:
 	
 	ldmfd sp!, {r0-r6, pc}
 	
+	@ ---------------------------------------
+	
 drawDigit:
 	@ r0 - digit
 	@ r1 - number
+	@ r2 - screen 0 = main 1 = sub
+	@ r3 - offset
 	stmfd sp!, {r2-r6, lr} 
 
-	ldr r2, =BG_MAP_RAM(BG0_MAP_BASE)
-	add r2, #1024+256+64+32+32
+	ldr r4, =BG_MAP_RAM(BG0_MAP_BASE)
+	ldr r5, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
+	cmp r2, #0
+	moveq r2, r4
+	movne r2, r5
+	add r2, r3
 	mov r3, #4
 	mov r4, #0
 	mla r2, r0, r3, r2
@@ -90,19 +99,42 @@ drawDigit:
 	strh r3, [r2]
 
 	ldmfd sp!, {r2-r6, pc}
+	
+	@ ---------------------------------------
 
 drawScore:
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
-	mov r0,#7
-	ldr r2,=score
-	digitLoop:
-		ldrb r1,[r2,r0]
+	mov r0, #7
+	mov r2, #0
+	mov r3, #22*32*2
+	ldr r4, =score
+	drawScoreLoop:
+		ldrb r1,[r4,r0]
 		bl drawDigit
 		subs r0,#1
-	bpl digitLoop
+	bpl drawScoreLoop
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
+	
+	@ ---------------------------------------
+	
+drawScoreSub:
+	stmfd sp!, {r0-r4, lr}
+	
+	mov r0, #7
+	mov r2, #1
+	mov r3, #13*32*2+16
+	ldr r4, =score
+	drawScoreSubLoop:
+		ldrb r1,[r4,r0]
+		bl drawDigit
+		subs r0,#1
+	bpl drawScoreSubLoop
+	
+	ldmfd sp!, {r0-r4, pc}
+	
+	@ ---------------------------------------
 
 	.pool
 	.end

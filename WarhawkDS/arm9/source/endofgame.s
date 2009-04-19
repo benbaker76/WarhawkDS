@@ -116,11 +116,42 @@ showEndOfGame:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
+	ldr r0, =finalScoreText						@ Load out text pointer
+	ldr r1, =10									@ x pos
+	ldr r2, =11									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
 	ldr r0, =endOfGameRawText					@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldDownOn						@ Turn on starfield
+	
+	ldr r0, =50									@ 50 milliseconds
+	ldr r1, =updateFireSpriteIndex				@ Callback function address
+	
+	bl startTimer
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+updateFireSpriteIndex:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fireSpriteIndex
+	ldr r1, [r0]
+	add r1, #1
+	cmp r1, #4
+	moveq r1, #0
+	str r1, [r0]
+	
+	ldr r0, =50									@ 50 milliseconds
+	ldr r1, =updateFireSpriteIndex				@ Callback function address
+	
+	bl startTimer
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -132,20 +163,83 @@ updateFireSprite:
 	
 	ldr r0, =OBJ_ATTRIBUTE0(0)					@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
-	orr r1, #160								@ Orr in the y pos
-	strh r1, [r0]								@ Write to Attrib 0
+	ldr r3, =vOfs								@ Load REG_BG1VOFS address
+	ldr r4, [r3]								@ Load VBLANK counter value
+	rsb r4, r4, #0								@ Make it negative
+	add r4, #160								@ Add the Y offset
+	and r4, #0xFF								@ And with 0xFF so no overflow
+	orr r1, r4									@ Orr in Y offset with settings
+	strh r1, [r0]								@ Write to attrib 0
 	
 	ldr r0, =OBJ_ATTRIBUTE1(0)					@ Attrib 1
 	ldr r1, =(ATTR1_SIZE_32)					@ Attrib 1 settings
-	orr r1, #112								@ Orr in the x pos
-	strh r1, [r0]								@ Write to Attrib 1
+	ldr r3, =hOfs								@ Load REG_BG1HOFS address
+	ldr r4, [r3]								@ Load VBLANK counter value
+	rsb r4, r4, #0								@ Make it negative
+	add r4, #112								@ Add the X offset
+	ldr r5, =0x1FF								@ Load 0x1FF
+	and r4, r5									@ And with 0x1FF so no overflow
+	orr r1, r4									@ Orr in X offset with settings
+	strh r1, [r0]								@ Write to attrib 1
 	
 	ldr r0, =OBJ_ATTRIBUTE2(0)					@ Attrib 2
 	mov r1, #ATTR2_PRIORITY(0)					@ Set sprite priority
+	ldr r2, =fireSpriteIndex
+	ldr r2, [r2]
+	lsl r2, #4
+	orr r1, r2
 	strh r1, [r0]								@ Write Attrib 2
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
+	@---------------------------------
+	
+updateShipMove:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =REG_BG1HOFS
+	ldr r1, [r0]
+	ldr r2, =COS_bin							@ Load COS address
+	ldr r3, =vblCounterH						@ Load VBLANK counter address
+	ldr r3, [r3]								@ Load VBLANK counter value
+	ldr r4, =0x1FF								@ Load 0x1FF (511)
+	and r3, r4									@ And VBLANK counter with 511
+	lsl r3, #1									@ Multiply * 2 (16 bit COS values)
+	add r2, r3									@ Add the offset to the COS table
+	ldrsh r3, [r2]								@ Read the COS table value (signed 16-bit value)
+	lsr r3, #8									@ Right shift COS value to make it smaller
+	strh r3, [r0]
+	ldr r4, =hOfs
+	str r3, [r4]
+
+	ldr r0, =REG_BG1VOFS
+	ldr r1, [r0]
+	ldr r2, =SIN_bin							@ Load SIN address
+	ldr r3, =vblCounterV						@ Load VBLANK counter address
+	ldr r3, [r3]								@ Load VBLANK counter value
+	ldr r4, =0x1FF								@ Load 0x1FF (511)
+	and r3, r4									@ And VBLANK counter with 511
+	lsl r3, #1									@ Multiply * 2 (16 bit SIN values)
+	add r2, r3									@ Add the offset to the SIN table
+	ldrsh r3, [r2]								@ Read the SIN table value (signed 16-bit value)
+	lsr r3, #10									@ Right shift SIN value to make it smaller
+	strh r3, [r0]								@ Write to attrib 0
+	ldr r4, =vOfs
+	str r3, [r4]
+	
+	ldr r0, =vblCounterH
+	ldr r1, [r0]
+	add r1, #4
+	str r1, [r0]
+	
+	ldr r0, =vblCounterV
+	ldr r1, [r0]
+	add r1, #2
+	str r1, [r0]
+
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
 	@---------------------------------
 	
 updateEndOfGame:
@@ -153,10 +247,13 @@ updateEndOfGame:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl updateFireSprite							@ Update fire sprites
+	bl updateShipMove
+	bl drawScoreSub
 	
 	ldr r1, =REG_KEYINPUT						@ Read Key Input
 	ldr r2, [r1]
 	tst r2, #BUTTON_A							@ Start button pressed?
+	bleq stopTimer
 	bleq fxStarfieldOff							@ Turn off the spotlight effect
 	bleq fxCopperTextOff						@ Turn off the copper text effect
 	bleq showTitleScreen						@ Got to start of game
@@ -169,8 +266,32 @@ updateEndOfGame:
 	.align
 	
 	.align
+fireSpriteIndex:
+	.word 0
+	
+	.align
+vOfs:
+	.word 0
+	
+	.align
+hOfs:
+	.word 0
+	
+	.align
+vblCounterH:
+	.word 0
+	
+	.align
+vblCounterV:
+	.word 1
+	
+	.align
 gameCompleteText:
 	.asciz "GAME COMPLETE!"
+	
+	.align
+finalScoreText:
+	.asciz "FINAL SCORE:"
 
 	.pool
 	.end

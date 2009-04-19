@@ -70,6 +70,10 @@ showEndOfGame:
 	
 	@ Write the tile data
 	
+	
+	
+	
+	
 	ldr r0 ,=CongratulationsTiles
 	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
 	ldr r2, =CongratulationsTilesLen
@@ -213,6 +217,26 @@ updateShipMove:
 	ldr r4, =hOfs
 	str r3, [r4]
 
+@ not sure this works :( (remove if you want)
+
+lsr r3,#4
+cmp r3,#0
+bne  starsTurnRight
+	ldr r0,=starDirection
+	ldr r1,[r0]
+	add r1,#2
+	str r1,[r0]
+	b starTurnDone
+
+starsTurnRight:
+	ldr r0,=starDirection
+	ldr r1,[r0]
+	sub r1,#2
+	str r1,[r0]
+	b starTurnDone
+
+starTurnDone:
+
 	ldr r0, =REG_BG1VOFS
 	ldr r1, [r0]
 	ldr r2, =SIN_bin							@ Load SIN address
@@ -246,8 +270,8 @@ updateEndOfGame:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl updateFireSprite							@ Update fire sprites
 	bl updateShipMove
+	bl updateFireSprite							@ Update fire sprites
 	bl drawScoreSub
 	
 	ldr r1, =REG_KEYINPUT						@ Read Key Input

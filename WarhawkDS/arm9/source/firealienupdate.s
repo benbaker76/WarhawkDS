@@ -39,6 +39,7 @@
 	.global moveRippleShotSingle
 	.global moveDirectShot
 	.global moveAngleShot
+	.global moveBananaShot
 
 @
 @	Every move in this code should also have a "init" function in firealieninit.s
@@ -502,5 +503,117 @@
 			str r1,[r2,r6]
 	ldmfd sp!, {r0-r10, pc}	
 
+@
+@ "MOVE" - "Banana shot 20"		@ strange tracking shot
+	moveBananaShot:
+	stmfd sp!, {r0-r10, lr}
+	@ now we need to check out flag, if 1 = curving shot, 0 = still faling
+
+		mov r7,#SPRITE_ANGLE_OFFS
+		ldr r6,[r2,r7]
+		cmp r6,#0
+		bne moveBananaCurve
+			@ still a standard movement
+			mov r7,#SPRITE_FIRE_SPEED_OFFS
+			ldr r7,[r2,r7]					@ get speed of bullet
+		
+			mov r6,#SPRITE_Y_OFFS			@ get y coord
+			ldr r5,[r2,r6]
+		
+			ldr r0,=spriteY	
+			ldr r0,[r0]						@ r0=players Y coord
+			sub r0,r7,lsl#3						@ take it off player y coord
+			sub r0,r7
+			cmp r5,r0						@ is bullet lower than calculated player y?						
+			ble moveBananaNoUpdate
+				@ ok, we are now ready to curve the shot towards the player
+				ldr r0,=spriteX
+				ldr r0,[r0]
+				ldr r1,=horizDrift
+				ldr r1,[r1]
+				add r0,r1					@ r0=player X (drift corrected)
+				mov r6,#SPRITE_X_OFFS
+				ldr r5,[r2,r6]				@ r5=Alien bullet
+				cmp r5,r0
+				movle r3,#1
+				movgt r3,#-1
+				
+				mov r6,#SPRITE_SPEED_X_OFFS
+				str r3,[r2,r6]				@ set the "signed" X speed
+				mov r6,#SPRITE_ANGLE_OFFS
+				mov r3,#1
+				str r3,[r2,r6]				@ set to curved shot
+		
+			moveBananaDone:
+		ldmfd sp!, {r0-r10, pc}
+		moveBananaCurve:
+			@ now, we need to check the delay in SPRITE_SPEED_DELAY_X_OFFS
+			@ and when 8 (for eg) do the curve adjust
+			mov r4,#SPRITE_SPEED_Y_OFFS
+			ldr r4,[r2,r4]
+			mov r6,#SPRITE_SPEED_DELAY_X_OFFS
+			ldr r5,[r2,r6]
+			add r5,#1
+			str r5,[r2,r6]
+			mov r0,#8
+			subs r0,r4
+			
+			cmp r5,r0
+			bne moveBananaNoUpdate
+				@ ok, time to update curve..
+				mov r5,#0
+				str r5,[r2,r6]				@ reset delay
+				
+				mov r6,#SPRITE_SPEED_X_OFFS
+				ldr r0,[r2,r6]
+				cmp r0,#0
+				bpl mbanana1
+				subs r0,#1
+				cmp r0,#-8
+				movlt r0,#-8
+				b mbanana2
+				mbanana1:
+				add r0,#1
+				cmp r0,#8
+				movgt r0,#8
+				mbanana2:
+				str r0,[r2,r6]
+				
+				mov r6,#SPRITE_FIRE_SPEED_OFFS
+				ldr r0,[r2,r6]
+				cmp r0,#0
+				beq moveBananaNoUpdate
+				
+				sub r0,#1
+				str r0,[r2,r6]
+			moveBananaNoUpdate:
+			
+			mov r6,#SPRITE_SPEED_X_OFFS
+			ldr r0,[r2,r6]
+			mov r5,#SPRITE_X_OFFS
+			ldr r1,[r2,r5]
+			adds r1,r0
+			str r1,[r2,r5]
+			
+			cmp r1,#0
+			bmi killBanana
+			cmp r1,#384
+			bpl killBanana
+			
+			
+			mov r6,#SPRITE_Y_OFFS
+			ldr r0,[r2,r6]
+			mov r5,#SPRITE_FIRE_SPEED_OFFS
+			ldr r1,[r2,r5]
+			add r0,r1
+			str r0,[r2,r6]
+	
+		ldmfd sp!, {r0-r10, pc}
+
+		killBanana:
+			mov r1,#SPRITE_KILL
+			mov r6,#SPRITE_Y_OFFS
+			str r1,[r2,r6]
+	ldmfd sp!, {r0-r10, pc}			
 	.pool
 	.end

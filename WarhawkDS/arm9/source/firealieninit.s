@@ -43,6 +43,7 @@
 	.global initDirectShot
 	.global initSpreadShot
 	.global initBossSpreadShot
+	.global initBananaShot
 
 @
 @	Every init in this code should also have a "move" function in firealienupdate.s
@@ -797,7 +798,54 @@
 		iBossSpreadNo:	
 		
 	ldmfd sp!, {r3, pc}
+@
+@ "INIT" - "Banana shot 20" (Strange tracking shot)
+	initBananaShot:
+	stmfd sp!, {r3, lr}
+	
+		@ This is a downward shot that tracks to your X coord
 
+		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+		cmp r2,#255					@ 255=not found
+		beq iBananaNo				@ so, we cannot init a bullet :(
+			@ r1= offset for alien
+			@ r2= offset for bullet
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r6,[r1,r0]			@ copy the aliens Y
+			add r6,#14
+			str r6,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			mov r4,#20
+			str r4,[r2,r0]			@ store r4 as our bullets type (r3 +1)
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
+			mov r0,#SPRITE_SPEED_Y_OFFS
+			str r6,[r2,r0]			@ use as max speed!
+			
+			mov r0,#SPRITE_SPEED_X_OFFS	
+			mov r6,#0
+			str r6,[r2,r0]			@ set X speed to 0 initially
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r6,[r2,r0]			@ and reset x delay to 0 also
+			
+			mov r0,#SPRITE_ANGLE_OFFS
+			str r6,[r2,r0]			@ we will use this as a FLAG (set to 1 to curve)
+	
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r6,#63				@ pick object 27
+			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
+			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)			@ set ACTIVE (this will always be r2 with no offset)
+
+			mov r0,#SPRITE_SPEED_X_OFFS	
+			mov r6,#0				@ we will use this for a marker of where we are in the sine
+			str r6,[r2,r0]	
+		iBananaNo:	
+	ldmfd sp!, {r3, pc}
 
 
 	.pool

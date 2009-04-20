@@ -112,10 +112,12 @@ alienFireInit:
 		cmp r2,#255
 		blne playLaserShotSound
 		mov r2,#255
+	cmp r3,#20
+		bleq initBananaShot
+		cmp r2,#255
+		blne playElecShotSound
+		mov r2,#255
 	@ etc!
-
-
-
 
 
 	alienFireInitDone:
@@ -165,6 +167,8 @@ alienFireMove:
 					bleq moveRippleShotSingle
 				cmp r3,#17
 					bleq moveDirectShot
+				cmp r3,#20
+					bleq moveBananaShot
 
 				@ ETC
 	

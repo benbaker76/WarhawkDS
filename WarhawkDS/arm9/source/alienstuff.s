@@ -35,7 +35,7 @@
 	.global explodeIdentAlien
 
 checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
-	stmfd sp!, {r0-r4, lr}
+	stmfd sp!, {r0-r10, lr}
 	@ Check our ypossub against the current alienLevel data
 	@ if there is a match, init the alien wave
 	@ waveNumber is the digit we need to use to pull the data
@@ -45,7 +45,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	cmp r3,#127
 	ble waveInitPossible
 
-	ldmfd sp!, {r0-r4, pc}
+	ldmfd sp!, {r0-r10, pc}
 
 	waveInitPossible:
 
@@ -71,15 +71,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	cmp r5,#0						@ if the scroll is 0, then All done!
 	bne readyToInit
 
-@	ldr r0, =getReadyText			@ Load out text pointer
-@	ldr r1, =11						@ x pos
-@	ldr r2, =10						@ y pos
-@	ldr r3, =0						@ Draw on sub screen
-@	bl drawText
-	add r3,#1
-	str r3,[r1]
-
-	ldmfd sp!, {r0-r4, pc}
+	ldmfd sp!, {r0-r10, pc}
 
 	readyToInit:
 
@@ -96,17 +88,17 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	ldr r4,[r4]						@ r4= our scroll position
 	cmp r5,r4						@ is this the same as r5?
 	beq initWave					@ if so, we are ready to go :)
-	ldmfd sp!, {r0-r4, pc}			@ if not, lets just go to main loop
+	ldmfd sp!, {r0-r10, pc}			@ if not, lets just go to main loop
 	
 	initWave:
 		add r2,#4					@ ok, add 4 (1 word) to r2
 		ldr r4,[r2, r3, lsl #3] 	@ r4 is now the attack wave number to init	
-		cmp r4,#0					@ if the wave is 0, then there is no need to init one!
-		beq initWaveAliensDone
-
 		add r3,#1					@ add 1 to wave number
 		str r3,[r1]					@ and store it back
-		
+
+		cmp r4,#0					@ if the wave is 0, then there is no need to init one!
+		beq initWaveAliensDone
+	
 		@ we need to strip the ident from r4
 		
 		ldr r5,=0xffff
@@ -167,7 +159,7 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				cmp r3,#32
 			bne initWaveAliens
 	initWaveAliensDone:
-	ldmfd sp!, {r0-r4, pc}	
+	ldmfd sp!, {r0-r10, pc}	
 	
 initAlien:	@ ----------------This code will find a blank alien sprite and assign it
 	stmfd sp!, {r0-r10, lr}
@@ -551,6 +543,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	
 @-------------- THIS CODE IS ONLY FOR LINEAR ALIENS
 aliensLinear:
+	stmfd sp!, {r0-r10, lr}
 	@ do not touch r7 or r1
 	mov r0,#SPRITE_TRACK_X_OFFS
 	ldr r10,[r1,r0]		@ r10 is now our direction (0-7)
@@ -646,7 +639,7 @@ aliensLinear:
 	cmp r11,#0
 	bmi linearNew		@ if moves done, get another pair of instruction
  
-	mov r15,r14	
+	ldmfd sp!, {r0-r10, pc}	
 
 	linearNew:
 	
@@ -688,10 +681,11 @@ aliensLinear:
 	mov r0,#SPRITE_TRACK_Y_OFFS
 	str r4,[r1,r0]			@ store (r4) the new distance
 	noMatchLin:
-	mov r15,r14
+	ldmfd sp!, {r0-r10, pc}
 
 @-------------- THIS CODE IS ONLY FOR TRACKING ALIENS
 aliensTracker:
+	stmfd sp!, {r0-r10, lr}
 	mov r0,#SPRITE_X_OFFS
 	ldr r10,[r1,r0]				@ x coord
 	mov r0,#SPRITE_SPEED_DELAY_OFFS	@ the "friction" reset
@@ -911,7 +905,7 @@ aliensTracker:
 	str r4,[r1,r0]			@ store (r4) the new trackY
 	
 	noMatch:
-	mov r15,r14
+	ldmfd sp!, {r0-r10, pc}
 	
 	killTracker:
 	
@@ -919,7 +913,7 @@ aliensTracker:
 		mov r10,#SPRITE_KILL
 		str r10,[r1,r0]
 
-	mov r15,r14
+	ldmfd sp!, {r0-r10, pc}
 	
 initHunterMine:
 @-------------- THIS CODE IS ONLY FOR INITIALISING HUNTERS AND MINES
@@ -1099,16 +1093,16 @@ moveMine:
 	@ all our other code will take care of the rest!
 	@ r1 is an offset pointer to our mine sprites
 	@ do not use r0,r1 or r7 here to write to!
+	stmfd sp!, {r0-r10, lr}
 	mov r2,#SPRITE_SPEED_Y_OFFS
 	ldr r5,[r1,r2]							@ r5 = the mines speed
 	mov r2,#SPRITE_Y_OFFS
 	ldr r6,[r1,r2]							@ r6 = the mines Y coord
 	add r6,r5
 	str r6,[r1,r2]	
-	mov r15,r14
-	
+	ldmfd sp!, {r0-r10, pc}	
 moveHunter:
-	stmfd sp!, {lr}
+	stmfd sp!, {r0-r10, lr}
 	@ do not use r0,r1 or r7 here to write to!
 	@ in a hunter, we use sptObjOffs to tell use which way it is moving
 	@ 30=down 31=up 32=left 33=rght
@@ -1211,14 +1205,14 @@ moveHunter:
 			
 		hunterDone:
 		
-	ldmfd sp!, {pc}
+	ldmfd sp!, {r0-r10, pc}
 	hunterKill:
 		mov r2,#0
 		str r2,[r1]									@ kill that nasty hunter!! :)
-	ldmfd sp!, {pc}
-	
+	ldmfd sp!, {r0-r10, pc}	
+
 animateAliens:
-stmfd sp!, {r0, lr}
+stmfd sp!, {r0-r10, lr}
 	ldr r0,=animDelay
 	ldr r1,[r0]
 	add r1,#1
@@ -1267,10 +1261,10 @@ stmfd sp!, {r0, lr}
 		bl dmaCopy		
 			
 	animateAliensDelay:
-ldmfd sp!, {r0, pc}
+ldmfd sp!, {r0-r10, pc}
 
 explodeIdentAlien:
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r10, lr}
 	@ r8=IDENT
 	mov r7,#111
 	ldr r6,=spriteIdent+68
@@ -1361,7 +1355,7 @@ explodeIdentAlien:
 		subs r7,#1
 	bpl fireIdentExplodeLoop	
 
-	ldmfd sp!, {r0-r8, pc}
+	ldmfd sp!, {r0-r10, pc}
 	
 	.pool
 	.end

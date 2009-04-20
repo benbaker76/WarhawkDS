@@ -126,11 +126,13 @@ main:
 
 	@ ----
 
-	bl showEndOfGame
+	@bl showEndOfGame
 
 	@ ----
 
-	@bl showIntro1
+	bl showIntro1
+
+	@bl stackTest 								@ does miss pushed stack data crash?
 
 	@ ------------------------------------
 	
@@ -199,6 +201,11 @@ gameLoop:
 mainLoopDone:
 
 	b mainLoop									@ our main loop
-		
+
+
+stackTest:
+	stmfd sp!, {r0-r6, lr}
+	
+	b stackTest	
 	.pool
 	.end

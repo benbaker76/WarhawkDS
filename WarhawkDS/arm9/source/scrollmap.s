@@ -353,13 +353,14 @@ noScrollSB:
 	ldmfd sp!, {r0-r6, pc}
 
 levelDrift:
+	stmfd sp!, {r0-r6, lr}
 	ldr r0, =horizDrift
 	ldr r0, [r0]
 	ldr r1, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
 	ldr r2, =REG_BG1HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
 	strh r0,[r1]
 	strh r0,[r2]
-	mov r15,r14
+	ldmfd sp!, {r0-r6, pc}
 	
 checkEndOfLevel:
 	stmfd sp!, {r0-r6, lr}

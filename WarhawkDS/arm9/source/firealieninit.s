@@ -825,16 +825,13 @@
 			str r6,[r2,r0]			@ paste it in our bullet speed
 			mov r0,#SPRITE_SPEED_Y_OFFS
 			str r6,[r2,r0]			@ use as max speed!
-			
 			mov r0,#SPRITE_SPEED_X_OFFS	
 			mov r6,#0
 			str r6,[r2,r0]			@ set X speed to 0 initially
 			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
 			str r6,[r2,r0]			@ and reset x delay to 0 also
-			
 			mov r0,#SPRITE_ANGLE_OFFS
 			str r6,[r2,r0]			@ we will use this as a FLAG (set to 1 to curve)
-	
 			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#63				@ pick object 27
 			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)

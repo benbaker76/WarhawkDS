@@ -569,13 +569,18 @@
 				cmp r0,#0
 				bpl mbanana1
 				subs r0,#1
-				cmp r0,#-8
-				movlt r0,#-8
+				mov r1,#SPRITE_SPEED_Y_OFFS
+				ldr r1,[r2,r1]				
+				rsb r1,r1,#0
+				cmp r0,r1
+				movlt r0,r1
 				b mbanana2
 				mbanana1:
 				add r0,#1
-				cmp r0,#8
-				movgt r0,#8
+				mov r1,#SPRITE_SPEED_Y_OFFS
+				ldr r1,[r2,r1]	
+				cmp r0,r1
+				movgt r0,r1
 				mbanana2:
 				str r0,[r2,r6]
 				

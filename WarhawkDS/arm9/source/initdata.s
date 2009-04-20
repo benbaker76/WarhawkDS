@@ -35,7 +35,7 @@
 	
 initData:
 	@ use this to init data for the start of the game
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r10, lr}
 
 	ldr r0,=levelNum
 	mov r1,#1
@@ -61,7 +61,7 @@ initData:
 	str r1,[r0],#4
 	str r1,[r0]
 
-	ldmfd sp!, {r0-r1, pc}
+	ldmfd sp!, {r0-r10, pc}
 	
 	.pool
 	.end

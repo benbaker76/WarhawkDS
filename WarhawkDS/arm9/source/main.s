@@ -167,6 +167,8 @@ mainLoop:
 
 gameLoop:
 
+	ldmed r0,{r0-r12}							@ just trying something - this is the only way i can find to empty the stack?
+
 	bl moveShip									@ check and move your ship
 	bl alienFireMove							@ check and move alien bullets
 	bl fireCheck								@ check for your wish to shoot!

@@ -198,28 +198,27 @@ initReversed:					@	We scan from start to finish here to find spare slots
 		ldr r2,[r3,r0, lsl #2]
 		cmp r2,#0
 		beq foundSpace
-
 		add r0,#1
 		cmp r0,#64
 	bne findSpaceLoopRev
-	@ ok, we found nothing :( But is the Ship and IDENT that needs space?
+	@ ok, we found nothing :( But is the Ship an IDENT that needs space?
 	cmp r6, #6
 	blt notAnIdent
 
 	mov r0,#0
 	findSpaceExplodeLoop:
 		ldr r2,[r3,r0, lsl #2]
-		cmp r2,#11
+		cmp r2,#11					@ player explosion
 		beq spaceIsExplosion
-		cmp r2,#12
+		cmp r2,#12					@ player explosion (slow)
 		beq spaceIsExplosion
-		cmp r2,#4
+		cmp r2,#4					@ alien Explosion
 		beq spaceIsExplosion
 		b findSpaceExplodeLoopCount
 			spaceIsExplosion:
 			ldr r2,=spriteObj+68
 			ldr r2,[r2,r0, lsl #2]
-			cmp r2,#8
+			cmp r2,#8				@ r2 = explosion frame (7-14)
 			bgt foundSpace
 			cmp r2,#0
 			beq foundSpace
@@ -393,8 +392,6 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	@	2=mines, 3=hunter, 
 	@	this will be stored in r0
 	@
-	cmp r0,#0
-	beq noAlienMove
 	@ if alien type is a 1, Carry on from here
 	@ as it must be a linear or tracking alien
 	@ r1 is now offset to start of alien data
@@ -403,27 +400,22 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	cmp r0,#2					@ check if this is a mine?
 		bne mineNot				@ if not, carry on
 		bl moveMine				@ move the mine based on y speed
-		b haveWeCrashed			@ and we are done
+		b doDetect			@ and we are done
 		
 	mineNot:
 	cmp r0,#3					@ check if this is a tracker?
 		bne hunterNot
-		bl moveHunter
-		b haveWeCrashed
-	
-	
+		bl moveHunter			@ move the tracker
+		b doDetect
 	
 	hunterNot:
 	cmp r0,#10					@ is it a powerup!!?
-	bne powerupNot
-		b haveWeCrashed
-	powerupNot:
+	beq doDetect				@ if so, we dont need to do anything here (except detection)
 	
 	cmp r0,#9					@ is it a dropship?
-	beq alienPassed
+	beq alienPassed				@ if so, do nothing (we will detect this seperate to allow crash-collecting)
 	
-	
-	cmp r0,#1
+	cmp r0,#1					@ if it is not a 1, it is not an alien
 	bne noAlienMove
 
 		mov r0,#SPRITE_SPEED_Y_OFFS		@ we use Initial Y speed as a variable to tell use what
@@ -440,12 +432,8 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		
 		mov r0,#SPRITE_Y_OFFS
 		ldr r10,[r1,r0]		
-		cmp r10,#SPRITE_KILL					@ check if alien off screen - and kill it
-		bmi alienOK
-			mov r0,#0			@ uh oh - kill time!
-			str r0,[r1]			@ store 0 in sprite active
-			b doDetect
-		alienOK:
+		cmp r10,#SPRITE_KILL				@ check if alien off screen - and avoid any more code
+		bpl noAlienMove
 		@
 		@	This is where we need to check for alien fire and init if needed
 		@	sptFireTypeOffs = fire type (0=none) this is our first check
@@ -524,13 +512,13 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 				ldr r9,[r1,r2]			@ load the delay max
 				str r9,[r1,r0]			@ and reset the counter
 				fireAlienShotNow:
+										@ r10= y coord of alien (we grabbed this earlier)
 				cmp r10,#384-48			@ Make sure alien is at least NEARLY on screen before firing
 				bmi doDetect			@ if no, just forget it
 				bl alienFireInit		@ time to fire, r3=fire type, r1=offset to alien
 			
-			haveWeCrashed:
 			doDetect:
-				@ ok, now we need to check if an alien has hit YOU!!
+				@ ok, now we need to check if this alien has hit YOU!!
 				@ r1 is alien base offset!
 			
 				bl alienCollideCheck		
@@ -629,7 +617,9 @@ aliensLinear:
 			mov r0,#SPRITE_Y_OFFS
 			ldr r4,[r1,r0]
 			sub r4,r12
-			str r4,[r1,r0]		
+			str r4,[r1,r0]
+	cmp r10,#2048
+		beq killTracker
 	linPass8:
 	mov r0,#SPRITE_TRACK_Y_OFFS
 	cmp r12,#0
@@ -652,14 +642,21 @@ aliensLinear:
 	add r3,#1				@ add one to the phase position
 	cmp r3,#24				@ if end of sequence, loop it?
 	moveq r3,#0				@		by setting to 0
+
 	linInstruct:
 	str r3,[r1,r0]			@ store it back
 	lsl r3,#3				@ multiply by 8 to find offset
 	
 	ldr r4,[r2,r3]			@ r4=next piece of tracking data (the direction)
 	cmp r4,#0
-		moveq r3,#0			@ if direction if 0 = loop pattern
-		beq linInstruct
+	bne linearNoLoop
+		mov r3,#0
+		str r3,[r1,r0]
+		lsl r3,#3
+		ldr r4,[r2,r3]
+	linearNoLoop:
+@		moveq r3,#0			@ if direction if 0 = loop pattern
+@		beq linInstruct
 		cmp r4,#2048
 		beq killTracker
 		
@@ -668,19 +665,19 @@ aliensLinear:
 	and r4,r0				@ trackX is lower 16 bits	
 	mov r0,#SPRITE_TRACK_X_OFFS
 	str r4,[r1,r0]			@ store (r4) the new trackX
-	ldr r4,[r2,r3]
-	lsr r4,#16
-	cmp r4,#0
+	ldr r4,[r2,r3]			@ load speed (highest 16 bits)
+	lsr r4,#16				@ shift it down
+	cmp r4,#0				@ if 0, no change
 	beq noLinearSpeedChange
-		sub r4,#1						@ get new speed
+		sub r4,#1						@ get new speed (was 1+, but we need 0 for stopping)
 		mov r0,#SPRITE_SPEED_X_OFFS		
 		str r4,[r1,r0]					@ write new speed
 	noLinearSpeedChange:
-	add r3,#4				@ add 4 to the spriteInstruct position
+	add r3,#4				@ add 4 to the spriteInstruct position (for the distance/time)
 	ldr r4,[r2,r3]			@ r4=next piece of tracking data (distance)
 	mov r0,#SPRITE_TRACK_Y_OFFS
 	str r4,[r1,r0]			@ store (r4) the new distance
-	noMatchLin:
+
 	ldmfd sp!, {r0-r10, pc}
 
 @-------------- THIS CODE IS ONLY FOR TRACKING ALIENS
@@ -700,6 +697,8 @@ aliensTracker:
 			ldr r5,[r5]				@ account for horizontal scroll
 			add r8,r5				@ at this to the tracking point
 		notYouX:
+		cmp r8,#2048
+		beq killTracker
 	mov r5,#SPRITE_SPEED_X_OFFS		@ r5= index to speed x (USED LATER)
 	ldr r3,[r1,r5]					@ r3= speed x (USED LATER)
 	

@@ -41,12 +41,13 @@
 	
 	.balign 4
 colMapStore:
-	.space 1984*4
+	.space colMapEnd-colMapStart
 	@ This is space we need for a working area for modyfiable(?) colmaps
 
 	.section .rodata
 	.balign 4
-	
+
+colMapStart:
 colMap1:
 	@ a 1 = normal base
 	@ a 2 = base on soil?
@@ -175,6 +176,8 @@ colMap1:
 	.byte 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0
 	.byte 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0
 	.byte 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0
+
+colMapEnd:
 
 	.section .rodata
 	.balign 4

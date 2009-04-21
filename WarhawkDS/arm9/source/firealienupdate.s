@@ -40,6 +40,8 @@
 	.global moveDirectShot
 	.global moveAngleShot
 	.global moveBananaShot
+	.global moveGableShot
+	.global moveTrackExplodeShot
 
 @
 @	Every move in this code should also have a "init" function in firealieninit.s
@@ -620,5 +622,160 @@
 			mov r6,#SPRITE_Y_OFFS
 			str r1,[r2,r6]
 	ldmfd sp!, {r0-r10, pc}			
+
+@
+@ "MOVE" - "Gable shot 21"		@ twin spread shot
+	moveGableShot:
+	stmfd sp!, {r0-r10, lr}
+	@ first we need to update x/y, then check the delay and if 0, make the bullet a standard down shot
+	
+	mov r7,#SPRITE_X_OFFS
+	ldr r6,[r2,r7]							@ r6= X coord
+	mov r0,#SPRITE_SPEED_X_OFFS
+	ldr r1,[r2,r0]							@ r1= speed of X (signed)
+	adds r6,r1
+	str r6,[r2,r7]							@ store new X coord
+
+	mov r7,#SPRITE_Y_OFFS
+	ldr r6,[r2,r7]							@ r6= y coord
+	add r6,#1
+	str r6,[r2,r7]							@ store new Y back
+
+	mov r7,#SPRITE_SPEED_DELAY_X_OFFS
+	ldr r6,[r2,r7]
+	add r6,#1
+	str r6,[r2,r7]
+	cmp r6,#14
+	beq gableShotDone
+
+		ldmfd sp!, {r0-r10, pc}	
+
+	gableShotDone:
+	@ now we need to convert the shot to a downward shot
+	
+	mov r7,#SPRITE_FIRE_TYPE_OFFS
+	mov r6,#3
+	str r6,[r2,r7]	
+
+	ldmfd sp!, {r0-r10, pc}	
+
+@
+@ "MOVE" - "Track Explode shot 23"		@ tracks for a bit and then explodes
+	moveTrackExplodeShot:
+	stmfd sp!, {r0-r10, lr}
+	@ First, do X, check the delay and update speeds if delay at fixed value.
+	ldr r0,=spriteX
+	ldr r0,[r0]
+	ldr r1,=horizDrift
+	ldr r1,[r1]
+	add r0,r1							@ r0 = Players X
+	
+	mov r1,#SPRITE_SPEED_DELAY_X_OFFS
+	ldr r3,[r2,r1]
+	add r3,#1
+	str r3,[r2,r1]
+
+	mov r8,#SPRITE_X_OFFS
+	ldr r7,[r2,r8]					@ r7=alien x coord
+	mov r4,#SPRITE_SPEED_X_OFFS
+	ldr r5,[r2,r4]					@ r5=X speed (signed)
+	mov r6,#SPRITE_FIRE_SPEED_OFFS
+	ldr r6,[r2,r6]					@ r6=max speed of fire	
+
+	mov r9,r5
+	teq r9,#0						@ check the sign of r9
+	rsbmi r9,r9,#0					@ make it positive
+
+	cmp r3,#8
+	bne TExpXno
+		@ now we need to update X speed based on X coord to Player X
+		cmp r7,r0						@ is alien X > player X
+		bgt TExpXLeft
+			@ ok, we need to head right
+			adds r5,#1
+			cmp r5,r6
+			movpl r5,r6
+			b TExpXno
+		TExpXLeft:
+			subs r5,#1
+			rsb r6,r6,#0
+			cmp r5,r6
+			movlt r5,r6	
+	TExpXno:
+		str r5,[r2,r4]
+		adds r7,r5
+		cmp r7,#16
+		movmi r7,#16		
+		str r7,[r2,r8]
+	
+	mov r8,#SPRITE_Y_OFFS
+	ldr r7,[r2,r8]					@ r7=alien y coord
+	mov r4,#SPRITE_SPEED_Y_OFFS
+	ldr r5,[r2,r4]					@ r5=y speed (signed)
+	mov r6,#SPRITE_FIRE_SPEED_OFFS
+	ldr r6,[r2,r6]					@ r6=max speed of fire	
+	ldr r0,=spriteY
+	ldr r0,[r0]
+
+	mov r10,r5
+	teq r10,#0						@ check the sign of r10
+	rsbmi r10,r10,#0				@ make it positive
+	add r9,r10
+	
+	cmp r3,#8
+	bne TExpYno
+		mov r3,#0
+		str r3,[r2,r1]					@ reset the delay
+		@ now we need to update y speed based on y coord to Player y
+		cmp r7,r0						@ is alien y > player y
+		bgt TExpYUp
+			@ ok, we need to head down
+			adds r5,#1
+			cmp r5,r6
+			movpl r5,r6
+			b TExpYno
+		TExpYUp:
+			subs r5,#1
+			rsb r6,r6,#0
+			cmp r5,r6
+			movlt r5,r6	
+	TExpYno:
+		str r5,[r2,r4]
+		adds r7,r5
+		cmp r7,#16
+		movmi r7,#16		
+		str r7,[r2,r8]
+
+	@ now that is all done, we need to check our timer for "explode time"
+	mov r0,#SPRITE_ANGLE_OFFS
+	ldr r1,[r2,r0]
+	add r1,r9						@ r9 is out calculate "distance travelled"
+	str r1,[r2,r0]
+	
+	cmp r1,#440						@ duration of "life"
+	blt TExplodeDone
+	
+		@ ok, time to make it an explosion
+		mov r6,#SPRITE_BLOOM_OFFS
+		mov r5,#16					@ set a little bloom to whiten initial explosion
+		str r5,[r2,r6]
+		mov r6,#5					@ set tracker to an explosion
+		str r6,[r2]
+		mov r6,#14					@ set the initial explosion frame
+		mov r8,#SPRITE_OBJ_OFFS			
+		str r6,[r2,r8]
+		mov r6,#4					@ reset the explode delay
+		mov r8,#SPRITE_EXP_DELAY_OFFS
+		str r6,[r2,r8]	
+		mov r8,#SPRITE_FIRE_TYPE_OFFS
+		mov r6,#0
+		str r6,[r2,r8]
+		
+		bl playAlienExplodeScreamSound
+	
+	TExplodeDone:
+
+	ldmfd sp!, {r0-r10, pc}	
+
 	.pool
 	.end

@@ -44,6 +44,8 @@
 	.global initSpreadShot
 	.global initBossSpreadShot
 	.global initBananaShot
+	.global initTwinGableShot
+	.global initTrackExplodeShot
 
 @
 @	Every init in this code should also have a "move" function in firealienupdate.s
@@ -541,17 +543,14 @@
 						bl divf32				@ r0=result 20.12	
 					mov r9,r0					@ move the whole to r9				
 					mov r8,#0	
-	push {r0-r11}				
-	mov r10,r9
-	mov r8, #22						@ y pos
-	mov r9, #8						@ Number of digits
-	mov r11, #0					@ x pos
-	bl drawDigits					@ Draw	
-	pop {r0-r11}
-					
-					
-					
-					
+	@push {r0-r11}				
+	@mov r10,r9
+	@mov r8, #22						@ y pos
+	@mov r9, #8						@ Number of digits
+	@mov r11, #0					@ x pos
+	@bl drawDigits					@ Draw	
+	@pop {r0-r11}
+
 					pop {r0-r2}
 				b directDone
 
@@ -747,8 +746,6 @@
 			ldr r11,=bossSpreadAngle
 			str r10,[r11]
 
-
-
 			mov r10,r12						@ Store the X/Y speeds
 			mov r11,r12						@ we will need r12 later
 			
@@ -839,11 +836,142 @@
 			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)			@ set ACTIVE (this will always be r2 with no offset)
 
 			mov r0,#SPRITE_SPEED_X_OFFS	
-			mov r6,#0				@ we will use this for a marker of where we are in the sine
+			mov r6,#0				@ set to 0 for now
 			str r6,[r2,r0]	
 		iBananaNo:	
 	ldmfd sp!, {r3, pc}
 
+@
+@ "INIT" - "Twin Gable shot 21+22" (2 or 3 bullets that spread out)
+	initTwinGableShot:
+	stmfd sp!, {r3, lr}
+	
+		@ This is a downward shot that tracks to your X coord
 
+		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+		cmp r2,#255					@ 255=not found
+		beq iTGableNo1				@ so, we cannot init a bullet :(
+			@ r1= offset for alien
+			@ r2= offset for bullet
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r6,[r1,r0]			@ copy the aliens Y
+			add r6,#14
+			str r6,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			mov r4,#21
+			str r4,[r2,r0]			@ store r4 as our bullets type (r3 +1)
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
+			
+			mov r0,#SPRITE_SPEED_X_OFFS	
+			mov r6,#-3
+			str r6,[r2,r0]			@ set X speed to direction and speed
+			mov r6,#0
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r6,[r2,r0]			@ we use this as a delay to tell us when the spread is over
+
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r6,#27				@ pick object 27
+			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
+			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)			@ set ACTIVE (this will always be r2 with no offset)
+		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+		cmp r2,#255					@ 255=not found
+		beq iTGableNo1				@ so, we cannot init a bullet :(
+			@ r1= offset for alien
+			@ r2= offset for bullet
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r6,[r1,r0]			@ copy the aliens Y
+			add r6,#14
+			str r6,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			mov r4,#21
+			str r4,[r2,r0]			@ store r4 as our bullets type (r3 +1)
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed
+			
+			mov r0,#SPRITE_SPEED_X_OFFS	
+			mov r6,#3
+			str r6,[r2,r0]			@ set X speed to direction and speed
+			mov r6,#0
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r6,[r2,r0]			@ we use this as a delay to tell us when the spread is over
+
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r6,#27				@ pick object 27
+			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
+			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)	
+		iTGableNo1:
+			cmp r3,#22
+			bne iTGableCentreNo
+				mov r3,#3
+				bl initStandardShot
+				cmp r2,#255
+				beq iTGableCentreNo
+			
+					mov r0,#SPRITE_Y_OFFS
+					ldr r6,[r2,r0]			@ copy the aliens Y
+					sub r6,#8
+					str r6,[r2,r0]			@ paste it in our bullet y	
+			
+			iTGableCentreNo:
+	
+	ldmfd sp!, {r3, pc}
+
+
+@
+@ "INIT" - "Track Explode shot 23" (a bullet that tracks you and explodes on a time)
+	initTrackExplodeShot:
+	stmfd sp!, {r3, lr}
+	
+		@ This is a downward shot that tracks to your X coord
+
+		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
+		cmp r2,#255					@ 255=not found
+		beq iTrackExpNo				@ so, we cannot init a bullet :(
+			@ r1= offset for alien
+			@ r2= offset for bullet
+			mov r0,#SPRITE_X_OFFS	@ use our x offset
+			ldr r6,[r1,r0]			@ copy the aliens X
+			str r6,[r2,r0]			@ paste it in our bullet X
+			mov r0,#SPRITE_Y_OFFS
+			ldr r6,[r1,r0]			@ copy the aliens Y
+			add r6,#8
+			str r6,[r2,r0]			@ paste it in our bullet y
+			mov r0,#SPRITE_FIRE_TYPE_OFFS
+			str r3,[r2,r0]			@ store r3 as our bullets type
+
+			mov r0,#SPRITE_FIRE_SPEED_OFFS
+			ldr r6,[r1,r0]			@ copy the bullet speed
+			str r6,[r2,r0]			@ paste it in our bullet speed (this is for X and Y max speed)			
+			mov r6,#0
+			mov r0,#SPRITE_SPEED_X_OFFS	
+			str r6,[r2,r0]			@ set X speed to 0 initially
+			mov r0,#SPRITE_SPEED_Y_OFFS	
+			str r6,[r2,r0]			@ set Y speed to 0 initially
+			mov r0,#SPRITE_SPEED_DELAY_X_OFFS
+			str r6,[r2,r0]			@ set X delay to 0
+			mov r0,#SPRITE_SPEED_DELAY_Y_OFFS
+			str r6,[r2,r0]			@ set Y delay to 0
+			mov r0,#SPRITE_ANGLE_OFFS
+			str r6,[r2,r0]			@ we will use this to count when to explode it
+		
+			mov r0,#SPRITE_OBJ_OFFS		
+			mov r6,#27				@ pick object 27
+			str r6,[r2,r0]			@ set object to a bullet (Either 26,27,28)
+			mov r6,#8				@ an 8 sets the sprite active (visible)
+			str r6,[r2]				@ set ACTIVE (this will always be r2 with no offset)
+
+		iTrackExpNo:
+	ldmfd sp!, {r3, pc}
 	.pool
 	.end

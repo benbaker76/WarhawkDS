@@ -117,6 +117,21 @@ alienFireInit:
 		cmp r2,#255
 		blne playElecShotSound
 		mov r2,#255
+	cmp r3,#21
+		bleq initTwinGableShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
+	cmp r3,#22
+		bleq initTwinGableShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255
+	cmp r3,#23
+		bleq initTrackExplodeShot
+		cmp r2,#255
+		blne playLaserShotSound
+		mov r2,#255	
 	@ etc!
 
 
@@ -169,6 +184,10 @@ alienFireMove:
 					bleq moveDirectShot
 				cmp r3,#20
 					bleq moveBananaShot
+				cmp r3,#21					@ 22 is triple gable shot
+					bleq moveGableShot
+				cmp r3,#23
+					bleq moveTrackExplodeShot
 
 				@ ETC
 	

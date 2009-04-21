@@ -231,7 +231,7 @@ dmaCircle:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r0, #1								@ Dma channel
+	mov r0, #0								@ Dma channel
 	ldr r1, =winh							@ Table with our window values (source)
 	add r1, #2								@ &winh[1]
 	ldr r2, =REG_WIN0H						@ Horizontal window register (dest)
@@ -240,7 +240,7 @@ dmaCircle:
 	
 	bl dmaTransfer
 	
-	mov r0, #2								@ Dma channel
+	mov r0, #1								@ Dma channel
 	ldr r1, =winh							@ Table with our window values (source)
 	add r1, #2								@ &winh[1]
 	ldr r2, =REG_WIN0H_SUB					@ Horizontal window register (dest)

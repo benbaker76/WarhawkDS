@@ -292,35 +292,22 @@ dmaFillHalfWords:
 
 dmaWait:
 
-	mov r5, #12
-	mul r5, r0
-	ldr r4, =DMA_CR(0)
+	stmfd sp!, {r0-r3, lr}				@ save
+
+	mov r1, #12
+	mul r1, r0
+	ldr r2, =DMA_CR(0)
 
 dmaWaitLoop:
 
-	ldr r5, [r4, r5]					@ read the value
-	tst r5, #DMA_BUSY					@ test busy bit
+	ldr r3, [r2, r1]					@ read the value
+	tst r3, #DMA_BUSY					@ test busy bit
 	bne dmaWaitLoop						@ set so loop
 	
-	bx lr								@ return
+	ldmfd sp!, {r0-r3, pc}				@ restore and return
 	
 	@ ---------------------------------------------
-
-	@  dmaBusy
-	@ r0 - channel the dma channel to use (0 - 3).
-	@ r1 - return value
-
-dmaBusy:
-
-	mov r5, #12
-	mul r5, r0
-	ldr	r4, =DMA_CR(0)
-	add r4, r5
-	ldr r5, [r4]
-	and r1, r5, #DMA_BUSY
 	
-	bx lr								@ return
-
 	.pool
 	.end
-
+	

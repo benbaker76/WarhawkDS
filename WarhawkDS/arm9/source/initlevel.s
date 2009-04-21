@@ -766,6 +766,8 @@ initMainTiles:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl DC_FlushAll
+	
 	@ Write the tile data to VRAM FrontStar BG2
 
 	ldr r0, =StarFrontTiles
@@ -877,29 +879,14 @@ clearSpriteData:
 
 	stmfd sp!, {r0-r6, lr}
 	
-@	mov r0, #0
-@	ldr r1, =spriteActive
-@	ldr r2, =spriteDataEnd								@ Get the sprite data end
-@	ldr r3, =spriteDataStart							@ Get the sprite data start
-@	sub r2, r3											@ sprite end - start = size
-@	bl dmaFillWords
-
-	mov r0,#0
-	ldr r1, =spriteDataEnd
-	ldr r2, =spriteDataStart
-	sub r1,r2											@ r1 = amount to write in bytes
+	bl DC_FlushAll
 	
-	mov r3,#0
-	ldr r4,=spriteActive
-	clearSPLoop:
-	strb r3,[r4,r1]
-	subs r1,#1
-	bpl clearSPLoop
-	
-	
-	
-
-
+	mov r0, #0
+	ldr r1, =spriteDataStart
+	ldr r2, =spriteDataEnd								@ Get the sprite data end
+	ldr r3, =spriteDataStart							@ Get the sprite data start
+	sub r2, r3											@ sprite end - start = size
+	bl dmaFillWords	
 
 	ldmfd sp!, {r0-r6, pc}
 	

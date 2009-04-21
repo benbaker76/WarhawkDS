@@ -434,8 +434,7 @@ endOfGameRawText:
 ppotRawText:
 	.asciz "/PPOT.raw"
 
-	.align
-	.section .bss
+	.align 4
 
 spriteDataStart:								@ Start of sprite data
 

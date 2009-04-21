@@ -97,17 +97,20 @@ drawSprite:
 		@ this is a TOTALL kill of the sprite and ALL data!
 		
 			ldr r0,=spriteActive
-			add r0, r8, lsl#2
 			mov r1,#0
-			str r1,[r0]
-			add r0,#512+512+512			@ skip x/y as this effects player explosion
-			mov r2,#0
-			spriteClearLoop:	
-				str r1,[r0]
-				add r0,#512
-				add r2,#1
-				cmp r2,#22
-			bne spriteClearLoop
+			str r1,[r0, r8,lsl #2]
+			@ldr r0,=spriteActive
+			@add r0, r8, lsl#2
+			@mov r1,#0
+			@str r1,[r0]
+			@add r0,#512+512+512			@ skip x/y as this effects player explosion
+			@mov r2,#0
+			@spriteClearLoop:	
+			@	str r1,[r0]
+			@	add r0,#512
+			@	add r2,#1
+			@	cmp r2,#22
+			@bne spriteClearLoop
 
 		
 			mov r1, #ATTR0_DISABLED			@ this should destroy the sprite

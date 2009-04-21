@@ -48,13 +48,19 @@ checkLevelControl:
 	ldr r2,[r1]
 	tst r2,#BUTTON_L
 	bleq levelBack
+	bleq skipit
 	tst r2,#BUTTON_R
 	bleq levelNext
+	bleq skipit
 	tst r2,#BUTTON_START
 	bleq initLevel
+	bleq skipit
 	tst r2,#BUTTON_SELECT
 	bleq bossJump
 	
+	skipit:
+	@ by adding this skip here stops it jumping to boss battle when i skip levels
+	@ sorry!! It does it on hardware and in no$ for me? strange... but this fixes it
 	ldmfd sp!, {r0-r2, pc}
 	
 	@ ------------------------------------

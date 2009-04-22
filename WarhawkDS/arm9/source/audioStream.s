@@ -29,8 +29,12 @@
 #include "ipc.h"
 #include "timers.h"
 
-	#define BUFFER_SIZE		2048
+	@#define BUFFER_SIZE	2048
+	#define BUFFER_SIZE		4096
 	#define AUDIO_FREQ		22050
+	
+	@#define BUFFER_SIZE	4096
+	@#define AUDIO_FREQ		32000
 
 	.arm
 	.align

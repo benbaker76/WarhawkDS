@@ -126,11 +126,11 @@ main:
 
 	@ ----
 
-	@bl showEndOfGame
+	bl showEndOfGame
 
 	@ ----
 
-	bl showIntro1
+	@bl showIntro1
 
 	@bl stackTest 								@ does miss pushed stack data crash?
 

@@ -84,6 +84,11 @@ showEndOfGame:
 	ldr r2, =LargeShipTilesLen
 	bl dmaCopy
 	
+		@ldr r0, =LargeShipTiles
+		@ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+		@ldr r2, =LargeShipTilesLen
+		@bl dmaCopy
+	
 	@ Write map
 	
 	ldr r0, =CongratulationsMap
@@ -92,9 +97,14 @@ showEndOfGame:
 	bl dmaCopy
 
 	ldr r0, =LargeShipMap
-	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE_SUB)			@ destination
 	ldr r2, =LargeShipMapLen
 	bl dmaCopy
+	
+		@ldr r0, =LargeShipMap
+		@ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)			@ destination
+		@ldr r2, =LargeShipMapLen
+		@bl dmaCopy
 	
 	@ Clear Sprites
 	

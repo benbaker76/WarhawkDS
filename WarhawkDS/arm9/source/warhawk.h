@@ -14,6 +14,7 @@
 #include "../build/TitleBottom.h"
 #include "../build/Congratulations.h"
 #include "../build/LargeShip.h"
+#include "../build/WarShip.h"
 #include "../build/LogoSprites.h"
 #include "../build/CheatSprites.h"
 #include "../build/StartSprites.h"

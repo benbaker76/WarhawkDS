@@ -43,8 +43,6 @@ showEndOfLevel:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r6, r0									@ Move the hiscore value into r6
-	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_ENDOFLEVEL				@ Set the gameMode to end of level
 	str r1, [r0]								@ Store back gameMode
@@ -75,6 +73,8 @@ showEndOfLevel:
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
+	
+	bl initStarData
 	
 	bl clearOAM									@ Reset all sprites
 	

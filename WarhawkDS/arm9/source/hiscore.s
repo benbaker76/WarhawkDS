@@ -110,6 +110,8 @@ showHiScoreEntry:
 	bl clearBG2
 	bl clearBG3
 	
+	bl initStarData
+	
 	mov r0, r6									@ Move hiScore value to r0
 	bl getHiScoreIndex							@ Get the hiscore index
 	
@@ -154,13 +156,13 @@ showHiScoreEntry:
 	bl dmaCopy
 	strh r3, [r1]
 
-	@ Write the tile data to VRAM
+	@ sprite data
 
 	ldr r0, =CursorSpriteTiles					@ Load cursor sprite tiles
 	ldr r1, =SPRITE_GFX_SUB
 	ldr r2, =CursorSpriteTilesLen
 	bl dmaCopy
-	
+
 	ldr r0, =wellDoneText						@ Load out text pointer
 	ldr r1, =11									@ x pos
 	ldr r2, =5									@ y pos

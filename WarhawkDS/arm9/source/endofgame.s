@@ -53,35 +53,7 @@ showEndOfGame:
 	bl clearBG2
 	bl clearBG3
 	
-	mov r0,#0
-	ldr r1,=pixelOffsetSFSub
-	str r0,[r1]
-	ldr r1,=pixelOffsetSFMain
-	str r0,[r1]
-	ldr r1,=pixelOffsetSBSub
-	str r0,[r1]
-	ldr r1,=pixelOffsetSBMain
-	str r0,[r1]
-
-	mov r0,#256
-	ldr r1,=vofsSFMain
-	str r0,[r1]
-	ldr r1,=vofsSBMain
-	str r0,[r1]
-	ldr r1,=vofsSFSub
-	str r0,[r1]
-	ldr r1,=vofsSBSub
-	str r0,[r1]
-
-	mov r0,#736
-	ldr r1,=yposSFMain
-	str r0,[r1]
-	ldr r1,=yposSBMain
-	str r0,[r1]
-	ldr r1,=yposSFSub
-	str r0,[r1]
-	ldr r1,=yposSBSub
-	str r0,[r1]
+	bl initStarData
 	
 	ldr r0,=vblCounterH						@ if you are gonna reuse vars, they need to be init every time
 	mov r1,#0
@@ -101,24 +73,6 @@ showEndOfGame:
 	strh r3, [r1]
 	
 	@ Write the tile data
-	
-	ldr r0, =StarFrontTiles
-	ldr r1, =BG_TILE_RAM(STAR_BG2_TILE_BASE)
-	ldr r2, =StarFrontTilesLen
-	bl dmaCopy
-	ldr r1, =BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
-	bl dmaCopy
-
-	@ Write the tile data to VRAM BackStar BG3
-
-	ldr r0, =StarBackTiles
-	ldr r1, =BG_TILE_RAM(STAR_BG3_TILE_BASE)
-	add r1, #StarFrontTilesLen
-	ldr r2, =StarBackTilesLen
-	bl dmaCopy
-	ldr r1, =BG_TILE_RAM_SUB(STAR_BG3_TILE_BASE_SUB)
-	add r1, #StarFrontTilesLen
-	bl dmaCopy
 	
 	ldr r0 ,=CongratulationsTiles
 	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
@@ -151,9 +105,6 @@ showEndOfGame:
 		@ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)			@ destination
 		@ldr r2, =LargeShipMapLen
 		@bl dmaCopy
-	
-	bl drawSBMapScreenMain
-	bl drawSBMapScreenSub
 	
 	@ Clear Sprites
 	

@@ -247,6 +247,7 @@ updateHiScoreEntry:
 hiScoreEntrySkip:
 	
 	bl drawCursorSprite							@ Draw the cursor sprite
+	bl scrollStarsHoriz
 
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value

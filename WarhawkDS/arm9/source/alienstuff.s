@@ -312,7 +312,7 @@ initReversed:					@	We scan from start to finish here to find spare slots
 	str r2,[r3,r0]				@ store sprites Object (Image)
 	
 	add r1,#4
-	ldr r2,[r4,r1]				@ this value if split as 2 16bit words
+	ldr r2,[r4,r1]				@ this value is split as 2 16bit words
 	and r2,r6
 	mov r0,#SPRITE_HIT_OFFS
 	str r2,[r3,r0]				@ store sprites hits to kill (lower 16)
@@ -330,12 +330,12 @@ initReversed:					@	We scan from start to finish here to find spare slots
 	lsr r2,#16					@ r2= shot delay (upper 16)
 	mov r0,#SPRITE_FIRE_MAX_OFFS
 	str r2,[r3,r0]				@ store the fire delay maximum value for use later
+	mov r2,#0
 	mov r0,#SPRITE_FIRE_DELAY_OFFS
 	str r2,[r3,r0]				@ set our counter to 0, this is our countdown
-	
-	mov r2,#0
+
 	mov r0,#SPRITE_ANGLE_OFFS
-	str r2,[r3,r0]				@ store sprite angle (0 init) (WILL WE USE THIS?)
+	str r2,[r3,r0]				@ store sprite angle (0 init) (WILL WE USE THIS? er - i have, for flags)
 	mov r0,#SPRITE_BLOOM_OFFS
 	str r2,[r3,r0]				@ make sure the "bloom" is set to 0 (palette number)
 	ldr r0,=SPRITE_PHASE_OFFS

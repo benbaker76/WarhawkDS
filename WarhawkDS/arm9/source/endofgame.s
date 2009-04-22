@@ -83,6 +83,10 @@ showEndOfGame:
 	ldr r1,=yposSBSub
 	str r0,[r1]
 	
+	ldr r0,=vblCounterH						@ if you are gonna reuse vars, they need to be init every time
+	mov r1,#0
+	str r1,[r0]
+	
 	@ Write the palette
 
 	ldr r0, =LargeShipPal
@@ -147,7 +151,7 @@ showEndOfGame:
 		@ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)			@ destination
 		@ldr r2, =LargeShipMapLen
 		@bl dmaCopy
-
+	
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
 	
@@ -328,6 +332,8 @@ updateEndOfGame:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl scrollStarBack							@ Scroll stars
+	bl scrollStarBack
+	bl scrollStarBack							@ this is the ideal speed.. though perhaps back should take a speed var
 	bl updateShipMove
 	bl updateFireSprite							@ Update fire sprites
 	

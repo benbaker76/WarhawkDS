@@ -455,6 +455,8 @@ drawSBMapScreenMain:
 	bl drawSBMapMain
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	
+	@ -----------------------------------
 
 drawSBMapScreenSub:
 
@@ -480,7 +482,7 @@ drawSBMapScreenSub:
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
-
+	
 drawSFMapMain:
 
 	stmfd sp!, {r0-r6, lr}

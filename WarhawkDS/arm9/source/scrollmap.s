@@ -38,13 +38,13 @@
 	.global scrollSBMain
 	.global scrollSBSub
 	.global scrollStars
+	.global scrollStarBack
 	.global scrollStarsHoriz
 	.global levelDrift
 	.global checkEndOfLevel
-
-@------------------------------------
 	
 scrollMain:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
@@ -81,9 +81,10 @@ scrollMain:
 		
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
-@---------------------------------
+	@---------------------------------
 
 scrollSub:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
@@ -120,11 +121,7 @@ scrollSub:
 		
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
-@---------------------------------
-
-
-
-
+	@---------------------------------
 
 scrollSFMain:
 
@@ -153,6 +150,8 @@ scrollSFMain:
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+	@---------------------------------
 
 scrollSFSub:
 
@@ -182,6 +181,8 @@ scrollSFSub:
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
+	@---------------------------------
+	
 scrollSBMain:
 
 	stmfd sp!, {r0-r6, lr}
@@ -209,6 +210,8 @@ scrollSBMain:
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+	@---------------------------------
 	
 scrollSBSub:
 
@@ -238,19 +241,10 @@ scrollSBSub:
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 
-
-
-
-
-
-
-
-
-
-
-
+	@---------------------------------
 
 scrollSFMapMain:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =yposSFMain				@ grab ypos memory adress
@@ -265,8 +259,11 @@ scrollSFMapMain:
 	bl drawSFMapMain
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	
+	@---------------------------------
 
 scrollSFMapSub:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =yposSFSub				@ grab ypos memory adress
@@ -282,7 +279,10 @@ scrollSFMapSub:
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
+	@---------------------------------
+	
 scrollSBMapMain:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =yposSBMain				@ grab ypos memory adress
@@ -298,7 +298,10 @@ scrollSBMapMain:
 	
 	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
 	
+	@---------------------------------
+	
 scrollSBMapSub:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =yposSBSub				@ grab ypos memory adress
@@ -312,27 +315,20 @@ scrollSBMapSub:
 	
 	bl drawSBMapSub
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
-	
 scrollDone:
+
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 
-
-
-
-
-
-
-
-
+	@---------------------------------
 
 scrollStars:
+
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0,=delaySF
 	ldr r1,[r0]						@ Delay Starfront for every other update
 	subs r1, #1
-	bne noScrollSF
+	bpl noScrollSF
 	bl scrollSFMain
 	bl scrollSFSub
 	mov r1,#2
@@ -342,7 +338,7 @@ noScrollSF:
 	ldr r0,=delaySB					@ Delay Starback for every 4 updates
 	ldr r1,[r0]
 	subs r1,#1
-	bne noScrollSB
+	bpl noScrollSB
 	bl scrollSBMain
 	bl scrollSBSub
 	mov r1,#4
@@ -381,9 +377,29 @@ checkEndOfLevel:
 	levelPlay:
 	
 	ldmfd sp!, {r0-r6, pc}
+
+	@---------------------------------
+
+scrollStarBack:
+
+	stmfd sp!, {r0-r6, lr}
 	
+	ldr r0, =delaySB						@ Delay Starback for every 4 updates
+	ldr r1, [r0]
+	subs r1, #1
+	bpl noScrollStarBack
+	bl scrollSBMain
+	bl scrollSBSub
+	mov r1, #4
 
+noScrollStarBack:
 
+	ldr r0, =delaySB
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	@---------------------------------
 
 scrollStarsHoriz:
 
@@ -392,7 +408,7 @@ scrollStarsHoriz:
 	ldr r0, =delaySF
 	ldr r1, [r0]							@ Delay Starfront for every other update
 	subs r1, #1
-	bne noScrollSFHoriz
+	bpl noScrollSFHoriz
 	
 	ldr r2, =hofsSF
 	ldr r3, [r2]
@@ -412,7 +428,7 @@ noScrollSFHoriz:
 	ldr r0, =delaySB						@ Delay Starback for every 4 updates
 	ldr r1, [r0]
 	subs r1, #1
-	bne noScrollSBHoriz
+	bpl noScrollSBHoriz
 	
 	ldr r2, =hofsSB
 	ldr r3, [r2]
@@ -430,6 +446,8 @@ noScrollSBHoriz:
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
+	
+	@---------------------------------
 
 	.pool
 	.end

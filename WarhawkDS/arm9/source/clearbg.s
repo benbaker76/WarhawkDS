@@ -38,62 +38,77 @@
 	.global clearBG3
 
 clearBG0:
+
 	stmfd sp!, {r0-r6, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG0_MAP_BASE)
-	ldr r2, =2048
+	ldr r2, =32*32*2
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}
 	
+	@---------------------------------
+	
 clearBG0Sub:
+
 	stmfd sp!, {r0-r6, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
-	ldr r2, =2048
+	ldr r2, =32*32*2
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}
 	
+	@---------------------------------
+	
 clearBG1:
+
 	stmfd sp!, {r0-r6, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)
-	ldr r2, =2048
+	ldr r2, =64*32*2
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}
 	
+	@---------------------------------
+	
 clearBG2:
+
 	stmfd sp!, {r0-r6, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)
-	ldr r2, =1024
+	ldr r2, =32*32*2
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}
 	
+	@---------------------------------
+	
 clearBG3:
-	stmfd sp!, {r0-r6, lr} 
+
+	stmfd sp!, {r0-r6, lr}
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG3_MAP_BASE)
-	ldr r2, =1024
+	ldr r2, =32*32*2
 	bl dmaFillWords
 	ldr r1, =BG_MAP_RAM_SUB(BG3_MAP_BASE_SUB)
 	bl dmaFillWords
 
 	ldmfd sp!, {r0-r6, pc}
+	
+	@---------------------------------
 
 	.pool
 	.end

@@ -32,6 +32,8 @@
 	.align
 	.text
 	.global initVideo
+	.global initVideoMain
+	.global initVideoStar
 	.global resetScrollRegisters
 	
 initVideo:
@@ -92,6 +94,50 @@ initVideo:
 	strh r1, [r0]
 	ldr r0, =REG_BG3CNT_SUB			@ Set sub screen BG3 format to be 64x64 tiles at base address
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+initVideoMain:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =REG_BG2CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE) | BG_TILE_BASE(BG2_TILE_BASE) | BG_PRIORITY(BG2_PRIORITY))
+	strh r1, [r0]
+	ldr r0, =REG_BG2CNT_SUB			@ Set sub screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE_SUB) | BG_TILE_BASE(BG2_TILE_BASE_SUB) | BG_PRIORITY(BG2_PRIORITY))
+	strh r1, [r0]
+
+	ldr r0, =REG_BG3CNT				@ Set main screen BG3 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE) | BG_TILE_BASE(BG3_TILE_BASE) | BG_PRIORITY(BG3_PRIORITY))
+	strh r1, [r0]
+	ldr r0, =REG_BG3CNT_SUB			@ Set sub screen BG3 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+initVideoStar:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =REG_BG2CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE) | BG_TILE_BASE(STAR_BG2_TILE_BASE) | BG_PRIORITY(BG2_PRIORITY))
+	strh r1, [r0]
+	ldr r0, =REG_BG2CNT_SUB			@ Set sub screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE_SUB) | BG_TILE_BASE(STAR_BG2_TILE_BASE_SUB) | BG_PRIORITY(BG2_PRIORITY))
+	strh r1, [r0]
+
+	ldr r0, =REG_BG3CNT				@ Set main screen BG3 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE) | BG_TILE_BASE(STAR_BG3_TILE_BASE) | BG_PRIORITY(BG3_PRIORITY))
+	strh r1, [r0]
+	ldr r0, =REG_BG3CNT_SUB			@ Set sub screen BG3 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(STAR_BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
 	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

@@ -38,8 +38,6 @@ showEndOfGame:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r6, r0									@ Move the hiscore value into r6
-	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_ENDOFGAME					@ Set the gameMode to end of level
 	str r1, [r0]								@ Store back gameMode
@@ -54,6 +52,36 @@ showEndOfGame:
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
+	
+	mov r0,#0
+	ldr r1,=pixelOffsetSFSub
+	str r0,[r1]
+	ldr r1,=pixelOffsetSFMain
+	str r0,[r1]
+	ldr r1,=pixelOffsetSBSub
+	str r0,[r1]
+	ldr r1,=pixelOffsetSBMain
+	str r0,[r1]
+
+	mov r0,#256
+	ldr r1,=vofsSFMain
+	str r0,[r1]
+	ldr r1,=vofsSBMain
+	str r0,[r1]
+	ldr r1,=vofsSFSub
+	str r0,[r1]
+	ldr r1,=vofsSBSub
+	str r0,[r1]
+
+	mov r0,#736
+	ldr r1,=yposSFMain
+	str r0,[r1]
+	ldr r1,=yposSBMain
+	str r0,[r1]
+	ldr r1,=yposSFSub
+	str r0,[r1]
+	ldr r1,=yposSBSub
+	str r0,[r1]
 	
 	@ Write the palette
 
@@ -70,9 +98,23 @@ showEndOfGame:
 	
 	@ Write the tile data
 	
-	
-	
-	
+	ldr r0, =StarFrontTiles
+	ldr r1, =BG_TILE_RAM(STAR_BG2_TILE_BASE)
+	ldr r2, =StarFrontTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
+	bl dmaCopy
+
+	@ Write the tile data to VRAM BackStar BG3
+
+	ldr r0, =StarBackTiles
+	ldr r1, =BG_TILE_RAM(STAR_BG3_TILE_BASE)
+	add r1, #StarFrontTilesLen
+	ldr r2, =StarBackTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(STAR_BG3_TILE_BASE_SUB)
+	add r1, #StarFrontTilesLen
+	bl dmaCopy
 	
 	ldr r0 ,=CongratulationsTiles
 	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
@@ -105,6 +147,9 @@ showEndOfGame:
 		@ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)			@ destination
 		@ldr r2, =LargeShipMapLen
 		@bl dmaCopy
+
+	bl drawSBMapScreenMain
+	bl drawSBMapScreenSub
 	
 	@ Clear Sprites
 	
@@ -136,6 +181,8 @@ showEndOfGame:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
+	bl drawScoreSub
+	
 	ldr r0, =endOfGameRawText					@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 
@@ -146,7 +193,7 @@ showEndOfGame:
 	ldr r1, =updateFireSpriteIndex				@ Callback function address
 	
 	bl startTimer
-	
+		
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
@@ -280,9 +327,9 @@ updateEndOfGame:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl scrollStarBack							@ Scroll stars
 	bl updateShipMove
 	bl updateFireSprite							@ Update fire sprites
-	bl drawScoreSub
 	
 	ldr r1, =REG_KEYINPUT						@ Read Key Input
 	ldr r2, [r1]
@@ -290,7 +337,7 @@ updateEndOfGame:
 	bleq stopTimer
 	bleq fxStarfieldOff							@ Turn off the spotlight effect
 	bleq fxCopperTextOff						@ Turn off the copper text effect
-	bleq showTitleScreen						@ Got to start of game
+	bleq showHiScoreEntry						@ Got to the hiscore entry
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 

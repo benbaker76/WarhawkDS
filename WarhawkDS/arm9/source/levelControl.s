@@ -112,6 +112,7 @@ levelStart:
 	ldr r1, =FX_NONE
 	str r1, [r0]
 	
+	bl initVideoMain
 	bl initMainTiles
 	bl initLevelScrollRegisters				@ Reset the scroll registers
 	bl clearOAM
@@ -173,14 +174,20 @@ levelNext:
 
 	stmfd sp!, {r0-r2, lr}
 
-	ldr r0,=levelNum
-	ldr r1,[r0]
-	add r1,#1
-	cmp r1,#LEVEL_COUNT + 1
-	moveq r1,#1
+	ldr r0, =levelNum
+	ldr r1, [r0]
+	add r1, #1
+	cmp r1, #LEVEL_COUNT + 1
+	moveq r1, #1
+	beq levelEnd
 	str r1,[r0]
-
 	bl initLevel
+
+	ldmfd sp!, {r0-r2, pc}
+	
+levelEnd:
+
+	bl showEndOfGame
 	
 	ldmfd sp!, {r0-r2, pc}
 

@@ -57,25 +57,35 @@ showTitleScreen:
 	bl clearBG2
 	bl clearBG3
 	
-	mov r0, #256								@ Set scroll registers
-	ldr r1, =vofsSFMain
-	str r0, [r1]
-	ldr r1, =vofsSBMain
-	str r0, [r1]
-	ldr r1, =vofsSFSub
-	str r0, [r1]
-	ldr r1, =vofsSBSub
-	str r0, [r1]
+	mov r0,#0
+	ldr r1,=pixelOffsetSFSub
+	str r0,[r1]
+	ldr r1,=pixelOffsetSFMain
+	str r0,[r1]
+	ldr r1,=pixelOffsetSBSub
+	str r0,[r1]
+	ldr r1,=pixelOffsetSBMain
+	str r0,[r1]
 
-	mov r0, #736								@ Set scroll registers
-	ldr r1, =yposSFMain
-	str r0, [r1]
-	ldr r1, =yposSBMain
-	str r0, [r1]
-	ldr r1, =yposSFSub
-	str r0, [r1]
-	ldr r1, =yposSBSub
-	str r0, [r1]
+	mov r0,#256
+	ldr r1,=vofsSFMain
+	str r0,[r1]
+	ldr r1,=vofsSBMain
+	str r0,[r1]
+	ldr r1,=vofsSFSub
+	str r0,[r1]
+	ldr r1,=vofsSBSub
+	str r0,[r1]
+
+	mov r0,#736
+	ldr r1,=yposSFMain
+	str r0,[r1]
+	ldr r1,=yposSBMain
+	str r0,[r1]
+	ldr r1,=yposSFSub
+	str r0,[r1]
+	ldr r1,=yposSBSub
+	str r0,[r1]
 	
 	@ Write the palette
 

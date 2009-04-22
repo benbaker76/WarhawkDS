@@ -27,13 +27,11 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define STAR_COUNT					1536
+	#define STAR_COUNT					1024
 	#define STAR_COLOR_OFFSET			11
 	#define STAR_COLOR_TRAIL_OFFSET_1	12
 	#define STAR_COLOR_TRAIL_OFFSET_2	13
 	#define STAR_COLOR_TRAIL_OFFSET_3	14
-	#define STAR_TILE_BASE				5
-	#define STAR_TILE_BASE_SUB			5
 
 	.arm
 	.align
@@ -51,17 +49,7 @@ fxStarfieldOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	@ Turn off BG3
-	
-	ldr r0, =REG_DISPCNT							@ Turn off bg3
-	ldr r1, [r0]
-	eor r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
-	
-	ldr r0, =REG_DISPCNT_SUB						@ Turn off bg3
-	ldr r1, [r0]
-	eor r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
+	bl initVideoStar
 	
 	@ Clear the tile data
 	
@@ -102,17 +90,7 @@ fxStarfieldDownOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	@ Turn off BG3
-	
-	ldr r0, =REG_DISPCNT							@ Turn off bg3
-	ldr r1, [r0]
-	eor r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
-	
-	ldr r0, =REG_DISPCNT_SUB						@ Turn off bg3
-	ldr r1, [r0]
-	eor r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
+	bl initVideoStar
 	
 	@ Clear the tile data
 	
@@ -124,14 +102,14 @@ fxStarfieldDownOn:
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)				@ where to store it
 	ldr r2, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)		@ where to store it
 
-fxStarfieldOnDownLoop:
+fxStarfieldDownOnLoop:
 
 	strh r0, [r1], #2
 	strh r0, [r2], #2
 	add r0, #1
 	cmp r0, #(32 * 24)
 	
-	bne fxStarfieldOnDownLoop
+	bne fxStarfieldDownOnLoop
 	
 	ldr r1,=0x7fff
 	bl randomStarsMulti								@ generate em!
@@ -151,21 +129,11 @@ fxStarfieldOnDownLoop:
 	
 	@ ---------------------------------------
 
-	fxStarfieldMultiOn:
+fxStarfieldMultiOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	@ Turn off BG3
-	
-	ldr r0, =REG_DISPCNT							@ Turn off bg3
-	ldr r1, [r0]
-	eor r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
-	
-	ldr r0, =REG_DISPCNT_SUB						@ Turn off bg3
-	ldr r1, [r0]
-	eor r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
+	bl initVideoStar
 	
 	@ Clear the tile data
 	
@@ -177,14 +145,14 @@ fxStarfieldOnDownLoop:
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)				@ where to store it
 	ldr r2, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)		@ where to store it
 
-fxStarfieldOnMultiLoop:
+fxStarfieldMultiOnLoop:
 
 	strh r0, [r1], #2
 	strh r0, [r2], #2
 	add r0, #1
 	cmp r0, #(32 * 24)
 	
-	bne fxStarfieldOnMultiLoop
+	bne fxStarfieldMultiOnLoop
 
 	ldr r1,=0x3fff										@ r1=max speed
 	bl randomStarsMulti									@ generate em!
@@ -203,37 +171,7 @@ fxStarfieldOff:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	@ Turn on BG3
-	
-	ldr r0, =REG_DISPCNT							@ Turn off bg3
-	ldr r1, [r0]
-	orr r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
-	
-	ldr r0, =REG_DISPCNT_SUB						@ Turn off bg3
-	ldr r1, [r0]
-	orr r1, #DISPLAY_BG3_ACTIVE
-	str r1, [r0]
-	
-	@ Write the tile data to VRAM FrontStar BG2
-
-	ldr r0, =StarFrontTiles
-	ldr r1, =BG_TILE_RAM(BG2_TILE_BASE)
-	ldr r2, =StarFrontTilesLen
-	bl dmaCopy
-	ldr r1, =BG_TILE_RAM_SUB(BG2_TILE_BASE_SUB)
-	bl dmaCopy
-
-	@ Write the tile data to VRAM BackStar BG3
-
-	ldr r0, =StarBackTiles
-	ldr r1, =BG_TILE_RAM(BG3_TILE_BASE)
-	add r1, #StarFrontTilesLen
-	ldr r2, =StarBackTilesLen
-	bl dmaCopy
-	ldr r1, =BG_TILE_RAM_SUB(BG3_TILE_BASE_SUB)
-	add r1, #StarFrontTilesLen
-	bl dmaCopy
+	bl initVideoMain
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -323,10 +261,10 @@ clearStars:
 	stmfd sp!, {r0-r6, lr}
 	
 	mov r0, #0
-	ldr r1, =BG_TILE_RAM_SUB(STAR_TILE_BASE_SUB)
+	ldr r1, =BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
 	ldr r2, =(32 * 24 * 32)
 	bl dmaFillWords
-	ldr r1, =BG_TILE_RAM(STAR_TILE_BASE)
+	ldr r1, =BG_TILE_RAM(STAR_BG2_TILE_BASE)
 	bl dmaFillWords
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -380,9 +318,9 @@ moveStarsMulti:
 
 	stmfd sp!, {r0-r12, lr}
 	
-	ldr r6,=BG_TILE_RAM(STAR_TILE_BASE)
+	ldr r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)
 	str r6,starMain										@ store like this a quicker to retrieve directly
-	ldr r6,=BG_TILE_RAM_SUB(STAR_TILE_BASE_SUB)
+	ldr r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
 	str r6,starSub										@ these 2 vars MUST remain local for speed
 	
 	mov r10, #STAR_COUNT								@ Set numstars

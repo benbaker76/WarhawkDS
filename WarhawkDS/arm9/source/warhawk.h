@@ -90,6 +90,16 @@
 #define BG3_TILE_BASE				5
 #define BG3_TILE_BASE_SUB			5
 
+@ star screens
+@ BG2 - Starfield
+@ BG3 - StarBack
+
+#define STAR_BG2_TILE_BASE			4
+#define STAR_BG2_TILE_BASE_SUB		4
+
+#define STAR_BG3_TILE_BASE			1
+#define STAR_BG3_TILE_BASE_SUB		1
+
 @ Our background priorities
 
 #define BG0_PRIORITY				0

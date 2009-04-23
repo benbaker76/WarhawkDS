@@ -586,9 +586,9 @@ bossExploder:
 	@ sprites 17-127 can be used
 	@ if active is not 0 or 128, take the x,y from it and explode it anyway!!
 
-	ldr r0,=levelEnd
-	ldr r0,[r0]
-	cmp r0,#3
+	ldr r2,=levelEnd
+	ldr r2,[r2]
+	cmp r2,#3
 	beq stillExplodingBoss
 
 	beloop:
@@ -704,6 +704,33 @@ bossExploder:
 		mov r8,#3
 		str r8,[r6]
 	stillExplodingBoss:
+
+push {r0-r11}
+	ldr r10,=explodeSpriteBoss		@ Pointer to data
+	ldr r10,[r10]					@ Read value
+	mov r8,#18						@ y pos
+	mov r9,#8						@ Number of digits
+	mov r11, #0						@ x pos
+	bl drawDigits					@ Draw	
+	
+	ldr r10,=explodeSpriteBossCount				@ Pointer to data
+	ldr r10,[r10]					@ Read value
+	mov r8,#20						@ y pos
+	mov r9,#8						@ Number of digits
+	mov r11, #0						@ x pos
+	bl drawDigits					@ Draw
+	
+	ldr r10,=levelEnd				@ Pointer to data
+	ldr r10,[r10]					@ Read value
+	mov r8,#22						@ y pos
+	mov r9,#8						@ Number of digits
+	mov r11, #0						@ x pos
+	bl drawDigits					@ Draw
+pop {r0-r11}
+
+
+
+
 
 	ldmfd sp!, {pc}
 	.pool

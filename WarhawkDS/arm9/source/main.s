@@ -195,22 +195,7 @@ gameLoop:
 	
 @	bl drawDebugText							@ draw some numbers :)
 
-	ldr r10,=levelEnd				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#22						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw
 
-	ldr r10,=explodeSpriteBossCount				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#20						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw
-	
-	
-	
 	ldr r0,=levelEnd
 	ldr r0,[r0]
 	cmp r0,#2

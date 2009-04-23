@@ -267,14 +267,6 @@ levelComplete:
 	ldr r0,=explodeSpriteBossCount
 	mov r1,#0
 	str r1,[r0]
-	
-	@ dummy values for now!
-	@ldr r0,=bossX
-	@mov r1,#250
-	@str r1,[r0]
-	@ldr r0,=bossY
-	@mov r1,#400
-	@str r1,[r0]
 
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
 	bl playBossExplodeSound
@@ -295,18 +287,58 @@ bossDeathLoop:
 	bl checkBossInit							@ so we can still move him as he DIES	
 	bl bossExploder
 
+
+	push {r0-r11}
+	ldr r10,=explodeSpriteBoss		@ Pointer to data
+	ldr r10,[r10]					@ Read value
+	mov r8,#18						@ y pos
+	mov r9,#8						@ Number of digits
+	mov r11, #0						@ x pos
+	bl drawDigits					@ Draw	
+	
+	@
+	@ this should increment?????????????????
+	@
+	
+	ldr r10,=explodeSpriteBossCount	@ Pointer to data
+	ldr r10,[r10]					@ Read value
+	mov r8,#20						@ y pos
+	mov r9,#8						@ Number of digits
+	mov r11, #0						@ x pos
+	bl drawDigits					@ Draw
+	
+	@ also, why does this crash.... somehow level end is getting a HUGE number in it? ALIGNMENT issue?????????
+	
+@	ldr r10,=levelEnd				@ Pointer to data
+@	ldr r10,[r10]					@ Read value
+@	mov r8,#22						@ y pos
+@	mov r9,#8						@ Number of digits
+@	mov r11, #0						@ x pos
+@	bl drawDigits					@ Draw
+	pop {r0-r11}	
+
+
+
+	@ this "IS" 3, so why does it miss the next bit?????
+
 	ldr r0,=levelEnd
 	ldr r0,[r0]
-	cmp r0,#3									@ if levelEnd=3, just wait for explosions to finish
-	
+	cmp r0,#3									@ if levelEnd=3, just wait for explosions to finish	
 	bne notTimeToEndDeath
+	@-------------------------------
+	@ it is not getting to here????? yet, all the data says it should???
+	@-------------------------------
+
 	
+	
+		
 		ldr r0,=explodeSpriteBossCount			@ use this as a little delay to let explosions settle
 		ldr r1,[r0]
-		cmp r1,#128								@ delay for explosions
+		cmp r1,#127								@ delay for explosions
 		beq levelFinishDone
 		add r1,#1
 		str r1,[r0]
+		
 
 notTimeToEndDeath:
 	

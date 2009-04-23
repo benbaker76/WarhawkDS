@@ -60,16 +60,18 @@ showContinue:
 	bl clearBG2
 	bl clearBG3
 	
+	bl initStarData
+	
 	ldr r0, =optionLevelNum						@ Read optionLevelNum address
 	ldr r1, [r0]								@ Write optionLevelNum index
 	
 	cmp r1, #0									@ Is optionLevelNum 0?
 	bleq gameStart								@ Yes then go to game start
 	beq showContinueDone						@ And were done
-
-	ldr r0, =ArrowSpritePal						@ Load the cursor sprite palette
-	ldr r1, =SPRITE_PALETTE_SUB
-	ldr r2, =ArrowSpritePalLen
+	
+	ldr r0, =SpritePal
+	ldr r1, =SPRITE_PALETTE
+	ldr r2, =512
 	bl dmaCopy
 	
 	bl clearOAM									@ Reset all sprites
@@ -85,6 +87,8 @@ showContinue:
 	strh r3, [r1]
 
 	@ Write the tile data to VRAM
+	
+	bl initLogoSprites
 
 	ldr r0, =ArrowSpriteTiles					@ Load cursor sprite tiles
 	ldr r1, =SPRITE_GFX_SUB
@@ -162,6 +166,8 @@ updateContinueSkip:
 	
 	bl drawArrowSprite							@ Draw the arrow sprite
 	bl drawContinueText							@ Draw the continue text
+	bl scrollStarsHoriz
+	bl updateLogoSprites
 
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value

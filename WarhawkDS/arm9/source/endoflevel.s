@@ -76,7 +76,14 @@ showEndOfLevel:
 	
 	bl initStarData
 	
+	ldr r0, =SpritePal
+	ldr r1, =SPRITE_PALETTE
+	ldr r2, =512
+	bl dmaCopy
+	
 	bl clearOAM									@ Reset all sprites
+	
+	bl initLogoSprites
 	
 	ldr r0, =FontPal
 	ldr r1, =BG_PALETTE
@@ -421,6 +428,7 @@ updateEndOfLevel:
 	
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
+	bl updateLogoSprites
 	
 	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
 	

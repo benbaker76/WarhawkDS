@@ -139,12 +139,14 @@ showHiScoreEntry:
 	ldrb r3, [r0], #1
 	strb r3, [r1], #1
 	
-	ldr r0, =CursorSpritePal					@ Load the cursor sprite palette
-	ldr r1, =SPRITE_PALETTE_SUB
-	ldr r2, =CursorSpritePalLen
+	ldr r0, =SpritePal
+	ldr r1, =SPRITE_PALETTE
+	ldr r2, =512
 	bl dmaCopy
 	
 	bl clearOAM									@ Reset all sprites
+	
+	bl initLogoSprites
 	
 	ldr r0, =FontPal
 	ldr r1, =BG_PALETTE
@@ -247,6 +249,7 @@ updateHiScoreEntry:
 hiScoreEntrySkip:
 	
 	bl drawCursorSprite							@ Draw the cursor sprite
+	bl updateLogoSprites
 	bl scrollStarsHoriz
 
 	ldr r0, =REG_KEYINPUT						@ Read key input register

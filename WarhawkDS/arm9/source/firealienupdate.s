@@ -774,6 +774,17 @@
 		bl playAlienExplodeScreamSound
 	
 	TExplodeDone:
+		mov r0,#SPRITE_Y_OFFS
+		ldr r1,[r2,r0]
+		cmp r1,#768
+		blt TExplodeNotYet
+			mov r1,#SPRITE_KILL
+			str r1,[r2,r0]
+		
+		
+		
+		
+	TExplodeNotYet:
 
 	ldmfd sp!, {r0-r10, pc}	
 

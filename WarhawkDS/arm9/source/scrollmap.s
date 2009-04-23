@@ -48,7 +48,7 @@ scrollMain:
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
-	ldrb r1, [r0]
+	ldr r1, [r0]
 	cmp r1, #0
 	bne scrollDone					@ Yes then lets quit
 	
@@ -88,7 +88,7 @@ scrollSub:
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
-	ldrb r1, [r0]
+	ldr r1, [r0]
 	cmp r1, #0
 	bne scrollDone					@ Yes then lets quit
 	
@@ -362,7 +362,7 @@ checkEndOfLevel:
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0,=levelEnd
-	ldrb r1,[r0]
+	ldr r1,[r0]
 	cmp r1,#0
 	bne levelPlay
 		ldr r0,=yposSub						@ Ypos is the Y position in the map data
@@ -371,7 +371,7 @@ checkEndOfLevel:
 		bne levelPlay						@ If so, and scroll is 0 also - Stop Main Scroll!
 			ldr r0, =levelEnd
 			mov r1, #1
-			strb r1, [r0]
+			str r1, [r0]
 			
 			bl fxSineWobbleOn				@ Start our wobble effect
 	levelPlay:

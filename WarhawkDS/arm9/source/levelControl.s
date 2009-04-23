@@ -179,13 +179,13 @@ levelNext:
 	add r1, #1
 	cmp r1, #LEVEL_COUNT + 1
 	moveq r1, #1
-	beq levelEnd
+	beq levelNextEndOfGame
 	str r1,[r0]
 	bl initLevel
 
 	ldmfd sp!, {r0-r2, pc}
 	
-levelEnd:
+levelNextEndOfGame:
 
 	bl showEndOfGame
 	
@@ -247,6 +247,10 @@ timerDoneGetReady:
 levelComplete:
 
 	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_BOSSDIE
+	str r1, [r0]
 
 	@ Anything to set up???
 	
@@ -287,51 +291,10 @@ bossDeathLoop:
 	bl checkBossInit							@ so we can still move him as he DIES	
 	bl bossExploder
 
-
-	push {r0-r11}
-	ldr r10,=explodeSpriteBoss		@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#18						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw	
-	
-	@
-	@ this should increment?????????????????
-	@
-	
-	ldr r10,=explodeSpriteBossCount	@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#20						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw
-	
-	@ also, why does this crash.... somehow level end is getting a HUGE number in it? ALIGNMENT issue?????????
-	
-@	ldr r10,=levelEnd				@ Pointer to data
-@	ldr r10,[r10]					@ Read value
-@	mov r8,#22						@ y pos
-@	mov r9,#8						@ Number of digits
-@	mov r11, #0						@ x pos
-@	bl drawDigits					@ Draw
-	pop {r0-r11}	
-
-
-
-	@ this "IS" 3, so why does it miss the next bit?????
-
 	ldr r0,=levelEnd
-	ldr r0,[r0]
-	cmp r0,#3									@ if levelEnd=3, just wait for explosions to finish	
-	bne notTimeToEndDeath
-	@-------------------------------
-	@ it is not getting to here????? yet, all the data says it should???
-	@-------------------------------
-
-	
-	
-		
+	ldr r1,[r0]
+	cmp r1,#3									@ if levelEnd=3, just wait for explosions to finish	
+	bne notTimeToEndDeath	
 		ldr r0,=explodeSpriteBossCount			@ use this as a little delay to let explosions settle
 		ldr r1,[r0]
 		cmp r1,#127								@ delay for explosions

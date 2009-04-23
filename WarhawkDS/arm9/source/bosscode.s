@@ -705,33 +705,6 @@ bossExploder:
 		str r8,[r6]
 	stillExplodingBoss:
 
-push {r0-r11}
-	ldr r10,=explodeSpriteBoss		@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#18						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw	
-	
-	ldr r10,=explodeSpriteBossCount				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#20						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw
-	
-	ldr r10,=levelEnd				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#22						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw
-pop {r0-r11}
-
-
-
-
-
 	ldmfd sp!, {pc}
 	.pool
 	.end

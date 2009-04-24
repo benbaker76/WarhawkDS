@@ -32,7 +32,6 @@
 	.text
 	.global fxTextScrollerOn
 	.global fxTextScrollerOff
-	.global fxTextScrollerHBlank
 	.global fxTextScrollerVBlank
 
 fxTextScrollerOn:
@@ -67,11 +66,11 @@ fxTextScrollerOn:
 	strb r3, [r2]
 	
 	ldr r2, =WIN0_X0						@ Top pos
-	ldr r3, =0
+	ldr r3, =8
 	strb r3, [r2]
 	
 	ldr r2, =WIN0_X1						@ Bottom pos
-	ldr r3, =255
+	ldr r3, =248
 	strb r3, [r2]
 	
 	ldr r0, =textPos
@@ -115,38 +114,6 @@ fxTextScrollerOff:
 	ldr r1, [r0]
 	and r1, #~(FX_TEXT_SCROLLER)
 	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc}
-
-	@ ---------------------------------------
-	
-fxTextScrollerHBlank:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r2, =WIN0_X0						@ Top pos
-	ldr r3, =0
-	strb r3, [r2]
-	
-	ldr r2, =WIN0_X1						@ Bottom pos
-	ldr r3, =255
-	strb r3, [r2]
-	
-	ldr r0, =REG_VCOUNT
-	ldrb r0, [r0]
-	
-	cmp r0, #182
-	blt fxTextScrollerHBlankDone
-	
-	ldr r2, =WIN0_X0						@ Top pos
-	ldr r3, =8
-	strb r3, [r2]
-	
-	ldr r2, =WIN0_X1						@ Bottom pos
-	ldr r3, =248
-	strb r3, [r2]
-	
-fxTextScrollerHBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}
 

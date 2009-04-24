@@ -115,6 +115,7 @@ interruptHandlerVBlank:
 	blne fxStarfieldVBlank
 	tst r0, #FX_STARFIELD_MULTI
 	blne fxStarfieldMultiVBlank
+
 interruptHandlerVBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -140,8 +141,6 @@ interruptHandlerHBlank:
 	blne fxCopperTextHBlank
 	tst r0, #FX_COLOR_CYCLE_TEXT
 	blne fxColorCycleTextHBlank
-	tst r0, #FX_TEXT_SCROLLER
-	blne fxTextScrollerHBlank
 	
 interruptHandlerHBlankDone:
 	

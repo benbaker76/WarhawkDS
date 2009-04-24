@@ -373,7 +373,7 @@ checkEndOfLevel:
 			mov r1, #1
 			str r1, [r0]
 			
-			bl fxSineWobbleOn				@ Start our wobble effect
+			@bl fxSineWobbleOn				@ Start our wobble effect
 	levelPlay:
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -384,13 +384,13 @@ scrollStarBack:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =delaySB						@ Delay Starback for every 4 updates
+	ldr r0, =delaySB						@ Delay Starback for every 2 updates
 	ldr r1, [r0]
 	subs r1, #1
 	bpl noScrollStarBack
 	bl scrollSBMain
 	bl scrollSBSub
-	mov r1, #4
+	mov r1, #2
 
 noScrollStarBack:
 

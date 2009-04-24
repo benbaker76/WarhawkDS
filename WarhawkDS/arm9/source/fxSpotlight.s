@@ -206,6 +206,22 @@ fxSpotlightOff:
 	ldr r0, =SUB_WIN_IN
 	mov r1, #0
 	strh r1, [r0]
+	
+	mov r0, #0
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
+	mov r0, #1
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
 
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -214,9 +230,9 @@ fxSpotlightOff:
 clearTable:
 
 	stmfd sp!, {r0-r6, lr}
-
-	bl DC_FlushAll							@ Flush the cache for the dma copy
 	
+	bl DC_FlushAll							@ Flush the cache for the dma copy
+
 	mov r0, #0								@ Clear
 	ldr r1, =winh							@ Table address
 	ldr r2, =((192 + 1) * 2)				@ Size of table
@@ -230,6 +246,8 @@ clearTable:
 dmaCircle:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl DC_FlushAll							@ Flush the cache for the dma copy
 	
 	mov r0, #0								@ Dma channel
 	ldr r1, =winh							@ Table with our window values (source)

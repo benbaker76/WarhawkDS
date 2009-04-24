@@ -161,6 +161,8 @@ fxCopperTextVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl DC_FlushAll
+	
 	ldr r0, =colorPal
 	ldrh r3, [r0]
 	
@@ -169,8 +171,6 @@ fxCopperTextVBlank:
 	add r0, #2
 	ldr r2, =(255 * 2)
 	bl dmaCopy
-	
-	bl DC_FlushAll
 	
 	ldr r0, =colorPal
 	ldr r1, =(255 * 2)

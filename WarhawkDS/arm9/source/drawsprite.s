@@ -111,7 +111,6 @@ drawSprite:
 				add r2,#1
 				cmp r2,#22
 			bne spriteClearLoop
-
 		
 			mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
 			ldr r0,=BUF_ATTRIBUTE0			@ if does not for some reason???

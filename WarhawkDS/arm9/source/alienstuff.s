@@ -400,7 +400,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	cmp r0,#2					@ check if this is a mine?
 		bne mineNot				@ if not, carry on
 		bl moveMine				@ move the mine based on y speed
-		b doDetect			@ and we are done
+		b doDetect				@ and we are done
 		
 	mineNot:
 	cmp r0,#3					@ check if this is a tracker?
@@ -945,7 +945,6 @@ initHunterMine:
 		movge r1,#8
 		cmp r7,#10
 		movge r1,#6
-
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#0					@ R0 points to the sprite that will be used for the mine

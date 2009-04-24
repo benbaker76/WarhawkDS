@@ -132,8 +132,6 @@ main:
 
 	bl showIntro1
 
-	@bl stackTest 								@ does miss pushed stack data crash?
-
 	@ ------------------------------------
 	
 mainLoop:
@@ -205,10 +203,5 @@ mainLoopDone:
 
 	b mainLoop									@ our main loop
 
-
-stackTest:
-	stmfd sp!, {r0-r6, lr}
-	
-	b stackTest	
 	.pool
 	.end

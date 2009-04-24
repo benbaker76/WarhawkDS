@@ -37,12 +37,18 @@
 	.text
 	.global initAudioStream
 	.global playAudioStream
-	.global stopAudioStream			@ this leaves the sound playing (last bit) HK (continuous tone)
+	.global stopAudioStream	
 	.global audioStreamTimer1
 	
 initAudioStream:
 
 	stmfd sp!, {r0-r1, lr}
+	
+	bl DC_FlushAll
+	
+	@ putting this flush in here stops the crackle that is on the title when endgame finishes?
+	@ why? Also, no crackles in the game anywhere?
+	@ perhaps the slight delay this causes helps?
 	
 	ldr r0, =TIMER0_DATA
 	ldr r1, =SOUND_FREQ(AUDIO_FREQ) * 2

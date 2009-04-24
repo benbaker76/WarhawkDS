@@ -554,7 +554,7 @@ updateSpriteSub:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)					@ Attrib 0
+	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)				@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
 	ldr r2, =vOfs								@ Load REG_BG1VOFS address
 	ldr r3, [r2]								@ Load VBLANK counter value
@@ -686,16 +686,6 @@ starTurnDone:
 
 	ldr r3, =vOfs
 	str r2, [r3]
-	
-	ldr r0, =vblCounterH
-	ldr r1, [r0]
-	add r1, #4
-	str r1, [r0]
-	
-	ldr r0, =vblCounterV
-	ldr r1, [r0]
-	add r1, #2
-	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -859,6 +849,16 @@ updateEndOfGame:
 	bleq updateSmallShipLanded
 	cmp r1, #MODE_MOTHERSHIP_FLY
 	bleq updateMotherShipFly
+	
+	ldr r0, =vblCounterH
+	ldr r1, [r0]
+	add r1, #4
+	str r1, [r0]
+	
+	ldr r0, =vblCounterV
+	ldr r1, [r0]
+	add r1, #2
+	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 

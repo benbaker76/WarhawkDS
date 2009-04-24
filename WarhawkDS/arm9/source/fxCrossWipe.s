@@ -30,11 +30,12 @@
 	.arm
 	.align
 	.text
-	.global fxCrossWipe
+	.global fxCrossWipeOn
+	.global fxCrossWipeOff
 	.global fxCrossWipeVBlank
 	.global fxCrossWipeHBlank
 
-fxCrossWipe:
+fxCrossWipeOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -85,9 +86,14 @@ fxCrossWipe:
 	
 	@ ---------------------------------------
 	
-clearWindow:
+fxCrossWipeOff:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	and r1, #~(FX_CROSSWIPE)
+	str r1, [r0]
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -98,14 +104,6 @@ clearWindow:
 	ldr r1, [r0]
 	and r1, #~(DISPLAY_WIN0_ON)
 	str r1, [r0]
-	
-	ldr r2, =WIN_IN							@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
-	
-	ldr r2, =SUB_WIN_IN						@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
 
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -123,8 +121,7 @@ fxCrossWipeVBlank:
 	ldr r2, =fxMode
 	ldr r3, [r2]
 	cmp r1, #248
-	andgt r3, #~(FX_CROSSWIPE)
-	blgt clearWindow
+	blgt fxCrossWipeOff
 	str r3, [r2]
 	
 	ldmfd sp!, {r0-r6, pc}

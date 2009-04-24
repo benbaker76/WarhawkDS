@@ -30,12 +30,27 @@
 	.align
 	.text
 	
+	.global fxPaletteFadeToRedOff
 	.global fxPaletteFadeToRed
 	.global fxPaletteFadeToRedVBlank
 	.global fxPaletteInvert
 	.global fxPaletteBleach
 	.global fxPaletteRestore
 	
+fxPaletteFadeToRedOff:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	and r1, #~(FX_PALETTE_FADE_TO_RED)
+	str r1, [r0]
+	
+	bl fxPaletteRestore
+		
+	ldmfd sp!, {r0-r6, pc}
+
+	@ ---------------------------------------
 	
 	@ was gonna add a function to take all 3 RGB values and find the average and store that in each to make it grey
 	@ but i think this looked great anyway?
@@ -44,9 +59,12 @@ fxPaletteFadeToRed:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =fadeToRedValue
-	mov r1, #0
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_PALETTE_FADE_TO_RED
 	str r1, [r0]
+	
+	bl DC_FlushAll
 	
 	ldr r0, =BG_PALETTE
 	ldr r1, =bgPalette
@@ -56,9 +74,8 @@ fxPaletteFadeToRed:
 	ldr r1, =bgPaletteSub
 	bl dmaCopy
 	
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	orr r1, #FX_PALETTE_FADE_TO_RED
+	ldr r0, =fadeToRedValue
+	mov r1, #0
 	str r1, [r0]
 
 	ldmfd sp!, {r0-r6, pc}
@@ -113,7 +130,7 @@ fxPaletteFadeToRedLoop:
 	ldr r2, =fxMode
 	ldr r3, [r2]
 	cmp r6,#512
-	andpl r3, #~(FX_PALETTE_FADE_TO_RED)
+	blpl fxPaletteFadeToRedOff
 	str r3, [r2]
 	str r6,[r7]
 	
@@ -193,10 +210,12 @@ fxPaletteInvertLoop:
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
-
+	
 fxPaletteRestore:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl DC_FlushAll
 
 	ldr r0, =bgPalette
 	ldr r1, =BG_PALETTE
@@ -206,10 +225,8 @@ fxPaletteRestore:
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
 	
-	bl DC_FlushAll
-		
 	ldmfd sp!, {r0-r6, pc}
-
+	
 	@ ---------------------------------------
 	
 	.align

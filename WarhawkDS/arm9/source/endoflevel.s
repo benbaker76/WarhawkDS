@@ -47,9 +47,7 @@ showEndOfLevel:
 	ldr r1, =GAMEMODE_ENDOFLEVEL				@ Set the gameMode to end of level
 	str r1, [r0]								@ Store back gameMode
 	
-	ldr r0, =fxMode								@ Get fxMode address
-	ldr r1, =FX_NONE							@ Get fxMode value
-	str r1, [r0]								@ Turn off all fx
+	bl fxOff
 	
 	ldr r0, =levelCount
 	ldr r1, =levelNum

@@ -30,17 +30,15 @@
 	.arm
 	.align
 	.text
+	.global fxSpotlightOff
 	.global fxSpotlightIn
 	.global fxSpotlightOut
-	.global fxSpotlightOff
 	.global fxSpotlightInVBlank
 	.global fxSpotlightOutVBlank
 
 fxSpotlightInit:
 
 	stmfd sp!, {r0-r6, lr}
-	
-	bl fxTextScrollerOff
 	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -93,6 +91,45 @@ fxSpotlightInit:
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
+	
+fxSpotlightOff:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	and r1, #~(FX_SPOTLIGHT_IN | FX_SPOTLIGHT_OUT)
+	str r1, [r0]
+
+	ldr r0, =REG_DISPCNT
+	ldr r1, [r0]
+	and r1, #~(DISPLAY_WIN0_ON)
+	str r1, [r0]
+	
+	ldr r0, =REG_DISPCNT_SUB
+	ldr r1, [r0]
+	and r1, #~(DISPLAY_WIN0_ON)
+	str r1, [r0]
+	
+	mov r0, #0
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
+	mov r0, #1
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
 
 fxSpotlightIn:
 
@@ -108,7 +145,6 @@ fxSpotlightIn:
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
-
 	
 fxSpotlightOut:
 
@@ -178,53 +214,6 @@ fxSpotlightOutVBlank:
 	
 	ldmfd sp!, {r0-r6, pc}
 
-	@ ---------------------------------------
-	
-fxSpotlightOff:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	and r1, #~(FX_SPOTLIGHT_IN | FX_SPOTLIGHT_OUT)
-	str r1, [r0]
-
-	ldr r0, =REG_DISPCNT
-	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
-	str r1, [r0]
-	
-	ldr r0, =REG_DISPCNT_SUB
-	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
-	str r1, [r0]
-	
-	ldr r0, =WIN_IN
-	mov r1, #0
-	strh r1, [r0]
-	
-	ldr r0, =SUB_WIN_IN
-	mov r1, #0
-	strh r1, [r0]
-	
-	mov r0, #0
-	mov r1, #0
-	mov r2, #0
-	mov r3, #0
-	mov r4, #0
-	
-	bl dmaTransfer
-	
-	mov r0, #1
-	mov r1, #0
-	mov r2, #0
-	mov r3, #0
-	mov r4, #0
-	
-	bl dmaTransfer
-
-	ldmfd sp!, {r0-r6, pc}
-	
 	@ ---------------------------------------
 	
 clearTable:

@@ -66,57 +66,7 @@ interruptHandlerVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =fxMode
-	ldr r0, [r0]
-	
-	cmp r0, #0
-	beq interruptHandlerVBlankDone
-	tst r0, #FX_FADE_BLACK_IN
-	blne fxFadeBlackInVBlank
-	tst r0, #FX_FADE_BLACK_OUT
-	blne fxFadeBlackOutVBlank
-	tst r0, #FX_FADE_WHITE_IN
-	blne fxFadeWhiteInVBlank
-	tst r0, #FX_FADE_WHITE_OUT
-	blne fxFadeWhiteOutVBlank
-	tst r0, #FX_MOSAIC_IN
-	blne fxMosaicInVBlank
-	tst r0, #FX_MOSAIC_OUT
-	blne fxMosaicOutVBlank
-	tst r0, #FX_SPOTLIGHT_IN
-	blne fxSpotlightInVBlank
-	tst r0, #FX_SPOTLIGHT_OUT
-	blne fxSpotlightOutVBlank
-	tst r0, #FX_SCANLINE
-	blne fxScanlineVBlank
-	tst r0, #FX_WIPE_IN_LEFT
-	blne fxWipeInLeftVBlank
-	tst r0, #FX_WIPE_IN_RIGHT
-	blne fxWipeInRightVBlank
-	tst r0, #FX_WIPE_OUT_UP
-	blne fxWipeOutUpVBlank
-	tst r0, #FX_WIPE_OUT_DOWN
-	blne fxWipeOutDownVBlank
-	tst r0, #FX_CROSSWIPE
-	blne fxCrossWipeVBlank
-	tst r0, #FX_COLOR_CYCLE
-	blne fxColorCycleVBlank
-	tst r0, #FX_COLOR_PULSE
-	blne fxColorPulseVBlank
-	tst r0, #FX_COPPER_TEXT
-	blne fxCopperTextVBlank
-	tst r0, #FX_TEXT_SCROLLER
-	blne fxTextScrollerVBlank
-	tst r0, #FX_STARFIELD
-	blne fxStarfieldVBlank
-	tst r0, #FX_PALETTE_FADE_TO_RED
-	blne fxPaletteFadeToRedVBlank
-	tst r0, #FX_STARFIELD_DOWN
-	blne fxStarfieldVBlank
-	tst r0, #FX_STARFIELD_MULTI
-	blne fxStarfieldMultiVBlank
-
-interruptHandlerVBlankDone:
+	bl fxVBlank
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -126,23 +76,7 @@ interruptHandlerHBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =fxMode
-	ldr r0, [r0]
-	
-	cmp r0, #0
-	beq interruptHandlerHBlankDone
-	tst r0, #FX_SINE_WOBBLE
-	blne fxSineWobbleHBlank
-	tst r0, #FX_SCANLINE
-	blne fxScanlineHBlank
-	tst r0, #FX_CROSSWIPE
-	blne fxCrossWipeHBlank
-	tst r0, #FX_COPPER_TEXT
-	blne fxCopperTextHBlank
-	tst r0, #FX_COLOR_CYCLE_TEXT
-	blne fxColorCycleTextHBlank
-	
-interruptHandlerHBlankDone:
+	bl fxHBlank
 	
 	ldmfd sp!, {r0-r6, pc}
 	

@@ -29,6 +29,7 @@
 	.arm
 	.align
 	.text
+	.global fxFadeOff
 	.global fxFadeBlackIn
 	.global fxFadeBlackOut
 	.global fxFadeWhiteIn
@@ -64,6 +65,8 @@ fxFadeBlackInit:
 	
 	ldmfd sp!, {r0-r6, pc}
 	
+	@ ---------------------------------------
+	
 fxFadeWhiteInit:
 
 	stmfd sp!, {r0-r6, lr}
@@ -89,6 +92,29 @@ fxFadeWhiteInit:
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeOff:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	and r1, #~(FX_FADE_BLACK_IN | FX_FADE_BLACK_OUT | FX_FADE_WHITE_IN | FX_FADE_WHITE_OUT)
+	str r1, [r0]
+	
+	ldr r0, =BLEND_CR
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =SUB_BLEND_CR
+	mov r1, #0
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
 	
 fxFadeBlackIn:
 
@@ -171,7 +197,7 @@ fxFadeBlackInVBlank:
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #65							@ Is our fadeValue at 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_FADE_BLACK_IN)		@ Yes turn off effect
+	bleq fxFadeOff						@ Yes turn off effect
 	str r1, [r0]						@ Write fadeValue back
 	str r3, [r2]						@ Write fxMode back
 	
@@ -199,7 +225,7 @@ fxFadeBlackOutVBlank:
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #65							@ Is our fadeValue at 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_FADE_BLACK_OUT)		@ Yes turn off effect
+	bleq fxFadeOff						@ Yes turn off effect
 	str r1, [r0]						@ Write fadeValue back
 	str r3, [r2]						@ Write fxMode back
 	
@@ -228,7 +254,7 @@ fxFadeWhiteInVBlank:
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #65							@ Is our fadeValue at 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_FADE_WHITE_IN)		@ Yes turn off effect
+	bleq fxFadeOff						@ Yes turn off effect
 	str r1, [r0]						@ Write fadeValue back
 	str r3, [r2]						@ Write fxMode back
 	
@@ -256,7 +282,7 @@ fxFadeWhiteOutVBlank:
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #65							@ Is our fadeValue at 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_FADE_WHITE_OUT)		@ Yes turn off effect
+	bleq fxFadeOff						@ Yes turn off effect
 	str r1, [r0]						@ Write fadeValue back
 	str r3, [r2]						@ Write fxMode back
 	

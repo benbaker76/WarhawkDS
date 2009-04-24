@@ -30,11 +30,12 @@
 	.arm
 	.align
 	.text
-	.global fxScanline
+	.global fxScanlineOn
+	.global fxScanlineOff
 	.global fxScanlineVBlank
 	.global fxScanlineHBlank
 
-fxScanline:
+fxScanlineOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -85,7 +86,7 @@ fxScanline:
 	
 	@ ---------------------------------------
 	
-clearWindow:
+fxScanlineOff:
 
 	stmfd sp!, {r0-r6, lr}
 
@@ -98,14 +99,6 @@ clearWindow:
 	ldr r1, [r0]
 	and r1, #~(DISPLAY_WIN0_ON)
 	str r1, [r0]
-	
-	ldr r2, =WIN_IN							@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
-	
-	ldr r2, =SUB_WIN_IN						@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
 
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -122,10 +115,8 @@ fxScanlineVBlank:
 	
 	ldr r0, =fxMode
 	ldr r2, [r0]
-	mov r3, #~(FX_SCANLINE)
 	cmp r1, #255
-	andgt r2, r3
-	blgt clearWindow
+	blgt fxScanlineOff
 	str r2, [r0]
 
 	ldmfd sp!, {r0-r6, pc}

@@ -29,6 +29,7 @@
 	.arm
 	.align
 	.text
+	.global fxMosaicOff
 	.global fxMosaicIn
 	.global fxMosaicOut
 	.global fxMosaicInVBlank
@@ -86,6 +87,59 @@ fxMosaicInit:
 	
 	@ ---------------------------------------
 	
+fxMosaicOff:
+	
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	and r1, #~(FX_MOSAIC_IN | FX_MOSAIC_OUT)
+	str r1, [r0]
+	
+	ldr r0, =REG_BG0CNT					@ BG 0 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG1CNT					@ BG 1 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG2CNT					@ BG 2 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG3CNT					@ BG 3 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG0CNT_SUB				@ SUB BG 0 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG1CNT_SUB				@ SUB BG 1 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG2CNT_SUB				@ SUB BG 2 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldr r0, =REG_BG3CNT_SUB				@ SUB BG 3 Register
+	ldr r1, [r0]
+	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
 fxMosaicIn:
 
 	stmfd sp!, {r0-r6, lr}
@@ -119,7 +173,7 @@ fxMosaicOut:
 fxMosaicInVBlank:
 
 	ldr r0, =mosaicValue				@ Get our mosaicValue
-	ldrb r1, [r0]
+	ldr r1, [r0]
 	
 	ldr r3, =15							@ Subtract from 15 to reverse value
 	sub r4, r3, r1, lsr #2				@ Divide by 4 to make value 0-15
@@ -134,14 +188,11 @@ fxMosaicInVBlank:
 	add r3, r4, lsl #4					@ MOSAIC_BG_V
 	strh r3, [r2]						@ Write to SUB_MOSAIC_CR
 	
-	ldr r2, =fxMode						@ Get fxMode address
-	ldr r3, [r2]						@ Get fxMode value
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #64							@ Is our pos 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_MOSAIC_IN)			@ Yes turn off effect
-	strb r1, [r0]						@ Write pos back
-	str r3, [r2]						@ Write fxMode back
+	bleq fxMosaicOff					@ Yes turn off effect
+	str r1, [r0]						@ Write pos back
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -150,7 +201,7 @@ fxMosaicInVBlank:
 fxMosaicOutVBlank:
 
 	ldr r0, =mosaicValue				@ Get our mosaicValue
-	ldrb r1, [r0]
+	ldr r1, [r0]
 
 	mov r4, r1, lsr #2					@ Divide by 4 to make value 0-15
 	
@@ -164,14 +215,11 @@ fxMosaicOutVBlank:
 	add r3, r4, lsl #4					@ MOSAIC_BG_V
 	strh r3, [r2]						@ Write to SUB_MOSAIC_CR
 	
-	ldr r2, =fxMode						@ Get fxMode address
-	ldr r3, [r2]						@ Get fxMode value
 	add r1, #1							@ Add 1 to pos
 	cmp r1, #64							@ Is our pos 64?
 	moveq r1, #0						@ Yes so reset pos
-	andeq r3, #~(FX_MOSAIC_OUT)			@ Yes turn off effect
-	strb r1, [r0]						@ Write pos back
-	str r3, [r2]						@ Write fxMode back
+	bleq fxMosaicOff					@ Yes turn off effect
+	str r1, [r0]						@ Write pos back
 
 	ldmfd sp!, {r0-r6, pc}
 	

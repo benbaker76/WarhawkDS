@@ -44,10 +44,7 @@ showTitleScreen:
 	ldr r1, =GAMEMODE_TITLESCREEN
 	str r1, [r0]
 	
-	ldr r0, =fxMode								@ Get fxMode address
-	ldr r1, =FX_NONE							@ Get fxMode value
-	str r1, [r0]
-	
+	bl fxOff
 	bl initCheat
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset the scroll registers

@@ -99,10 +99,7 @@ showHiScoreEntry:
 	ldr r1, =GAMEMODE_HISCORE_ENTRY				@ Set the gameMode to hiscore entry
 	str r1, [r0]								@ Store back gameMode
 	
-	ldr r0, =fxMode								@ Get fxMode address
-	ldr r1, =FX_NONE							@ Get fxMode value
-	str r1, [r0]								@ Turn off all fx
-	
+	bl fxOff
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's

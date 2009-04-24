@@ -30,6 +30,7 @@
 	.arm
 	.align
 	.text
+	.global fxWipeOff
 	.global fxWipeInLeft
 	.global fxWipeInRight
 	.global fxWipeOutUp
@@ -69,9 +70,14 @@ fxWipeInit:
 	
 	@ ---------------------------------------
 	
-clearWindow:
+fxWipeOff:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	and r1, #~(FX_WIPE_IN_LEFT | FX_WIPE_IN_RIGHT | FX_WIPE_OUT_UP | FX_WIPE_OUT_DOWN)
+	str r1, [r0]
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -82,14 +88,6 @@ clearWindow:
 	ldr r1, [r0]
 	and r1, #~(DISPLAY_WIN0_ON)
 	str r1, [r0]
-	
-	ldr r2, =WIN_IN							@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
-	
-	ldr r2, =SUB_WIN_IN						@ Make bg's appear inside the window
-	ldr r3, =0
-	strh r3, [r2]
 
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -216,8 +214,7 @@ fxWipeInLeftVBlank:
 	ldr r3, [r2]
 	add r1, #4								@ Speed of the wipe
 	cmp r1, #255							@ Switch mode when the wipe is done
-	andgt r3, #~(FX_WIPE_IN_LEFT)
-	blgt clearWindow
+	blgt fxWipeOff
 	str r1, [r0]
 	str r3, [r2]
 	
@@ -283,8 +280,7 @@ fxWipeInRightVBlank:						@ Right side wipe
 	ldr r3, [r2]
 	add r1, #4								@ Speed of the wipe
 	cmp r1, #255							@ Switch mode when the wipe is done
-	andgt r3, #~(FX_WIPE_IN_RIGHT)
-	blgt clearWindow
+	blgt fxWipeOff
 	str r1, [r0]
 	str r3, [r2]
 
@@ -353,8 +349,7 @@ fxWipeOutUpVBlank:
 	ldr r3, [r2]
 	add r1, #4								@ Speed of the wipe
 	cmp r1, #255							@ Switch mode when the wipe is done
-	andgt r3, #~(FX_WIPE_OUT_UP)
-	blgt clearWindow
+	blgt fxWipeOff
 	str r1, [r0]
 	str r3, [r2]
 	
@@ -419,8 +414,7 @@ fxWipeOutDownVBlank:
 	ldr r3, [r2]
 	add r1, #4								@ Speed of the wipe
 	cmp r1, #255							@ Switch mode when the wipe is done
-	andgt r3, #~(FX_WIPE_OUT_DOWN)
-	blgt clearWindow
+	blgt fxWipeOff
 	str r1, [r0]
 	str r3, [r2]
 	

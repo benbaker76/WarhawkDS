@@ -558,9 +558,7 @@ updateSpriteSub:
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
 	ldr r2, =vOfs								@ Load REG_BG1VOFS address
 	ldr r3, [r2]								@ Load VBLANK counter value
-	
 	add r3, #64
-	
 	rsb r3, r3, #0								@ Make it negative
 	add r3, #160								@ Add the Y offset
 	and r3, #0xFF								@ And with 0xFF so no overflow
@@ -616,7 +614,7 @@ updateWindow:
 	ldr r0, =yOffset
 	ldr r1, [r0]
 	cmp r1, #256
-	blt uupdateWindowDone
+	blt updateWindowDone
 	
 	ldr r2, =SUB_WIN0_Y1						@ Bottom pos
 	ldr r3, =256+192
@@ -625,7 +623,7 @@ updateWindow:
 	movle r3, #0
 	strb r3, [r2]
 	
-uupdateWindowDone:
+updateWindowDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -651,20 +649,20 @@ updateShipMoveMain:
 
 	@ not sure this works :( (remove if you want)
 
-	lsr r2,#4
-	cmp r2,#0
+	lsr r2, #4
+	cmp r2, #0
 	bne starsTurnRight
-	ldr r0,=starDirection
-	ldr r1,[r0]
-	add r1,#2
-	str r1,[r0]
+	ldr r0, =starDirection
+	ldr r1, [r0]
+	add r1, #2
+	str r1, [r0]
 	b starTurnDone
 
 starsTurnRight:
-	ldr r0,=starDirection
-	ldr r1,[r0]
-	sub r1,#2
-	str r1,[r0]
+	ldr r0, =starDirection
+	ldr r1, [r0]
+	sub r1, #2
+	str r1, [r0]
 	b starTurnDone
 
 starTurnDone:
@@ -723,7 +721,6 @@ updateShipMoveSub:
 	ldr r1, =SIN_bin							@ Load SIN address
 	ldr r2, =vblCounterV						@ Load VBLANK counter address
 	ldr r2, [r2]								@ Load VBLANK counter value	
-	
 	ldr r3, =0x1FF								@ Load 0x1FF (511)
 	and r2, r3									@ And VBLANK counter with 511
 	lsl r2, #1									@ Multiply * 2 (16 bit SIN values)
@@ -761,7 +758,6 @@ updateLargeShip:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl scrollStarBack
 	bl scrollSBMain
 	bl scrollSBSub
 	bl updateShipMoveMain
@@ -793,7 +789,6 @@ updateSmallShipFly:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl scrollStarBack
 	bl scrollSBMain
 	bl scrollSBSub
 	bl updateShipMoveMain
@@ -811,7 +806,6 @@ updateSmallShipLanded:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl scrollStarBack
 	bl scrollSBMain
 	bl scrollSBSub
 	bl updateShipMoveMain
@@ -835,7 +829,6 @@ updateMotherShipFly:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl scrollStarBack
 	bl scrollSBMain
 	bl scrollSBSub
 	bl updateShipMoveMain
@@ -843,12 +836,6 @@ updateMotherShipFly:
 	bl updateSpriteIndex
 	bl updateSpriteMain
 	bl updateSpriteSub
-	
-	ldr r0, =yOffset
-	ldr r1, [r0]
-	add r1, #1
-	str r1, [r0]
-	
 	bl updateWindow
 
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
@@ -860,17 +847,17 @@ updateEndOfGame:
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =endOfGameMode
-	ldr r0, [r0]
+	ldr r1, [r0]
 	
-	cmp r0, #MODE_LARGESHIP
+	cmp r1, #MODE_LARGESHIP
 	bleq updateLargeShip
-	cmp r0, #MODE_LARGESHIP_FLY
+	cmp r1, #MODE_LARGESHIP_FLY
 	bleq updateLargeShipFly
-	cmp r0, #MODE_SMALLSHIP_FLY
+	cmp r1, #MODE_SMALLSHIP_FLY
 	bleq updateSmallShipFly
-	cmp r0, #MODE_SMALLSHIP_LANDED
+	cmp r1, #MODE_SMALLSHIP_LANDED
 	bleq updateSmallShipLanded
-	cmp r0, #MODE_MOTHERSHIP_FLY
+	cmp r1, #MODE_MOTHERSHIP_FLY
 	bleq updateMotherShipFly
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return

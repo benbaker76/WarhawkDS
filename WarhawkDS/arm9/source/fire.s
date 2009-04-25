@@ -76,10 +76,8 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			ldr r0,=firePress		@ if not, we need to incrememnt "firepress"
 			ldr r1,[r0]
 			add r1,#1
-			cmp r1,#64
-			moveq r1,#0			@ but not to go too high
-			streq r1,[r0]
-			bpl initFire
+			cmp r1,#255
+			moveq r1,#255			@ but not to go too high
 			str r1,[r0]
 					
 		@ and exit!

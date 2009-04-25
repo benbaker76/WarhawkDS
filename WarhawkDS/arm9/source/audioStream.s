@@ -35,7 +35,6 @@
 	.arm
 	.align
 	.text
-	.global initAudioStream
 	.global playAudioStream
 	.global stopAudioStream	
 	.global audioStreamTimer1
@@ -171,8 +170,6 @@ playBuffer:
 	@and r1, r2
 	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_MUSIC)
 	@strh r1, [r0]
-	
-	
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 	

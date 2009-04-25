@@ -40,6 +40,7 @@ initLevel:
 
 	stmfd sp!, {r0-r6, lr}
 
+	bl fxFadeBlackInit
 	bl clearSpriteData
 
 	mov r1,#0

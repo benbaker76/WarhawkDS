@@ -29,6 +29,8 @@
 	.arm
 	.align
 	.text
+	.global fxFadeBlackInit
+	.global fxFadeWhiteInit
 	.global fxFadeOff
 	.global fxFadeBlackIn
 	.global fxFadeBlackOut

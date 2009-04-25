@@ -45,6 +45,7 @@ showTitleScreen:
 	str r1, [r0]
 	
 	bl fxOff
+	bl fxFadeBlackInit
 	bl initCheat
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset the scroll registers

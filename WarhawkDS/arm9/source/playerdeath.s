@@ -264,8 +264,10 @@ playerDeathMainExplode:									@ --- PHASE 3
 		str r3,[r0]
 	mainExplodeCountdownNo:
 
-	cmp r1,#170							@ overlap the explosion sounds slightly
-		bleq playBossExplodeSound		@ we will use this for now!!
+											@ This is still causing the occational sound corruption!
+											@ Commenting out for now
+	@cmp r1,#170							@ overlap the explosion sounds slightly
+		@bleq playBossExplodeSound		@ we will use this for now!!
 	ldmfd sp!, {r0-r6, pc}
 	
 playerDeathMainExplodeWait:								@ --- PHASE 4

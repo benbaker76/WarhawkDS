@@ -107,6 +107,7 @@ levelStart:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl fxOff
+	bl fxFadeBlackInit
 	bl initVideoMain
 	bl initMainTiles
 	bl initLevelScrollRegisters				@ Reset the scroll registers

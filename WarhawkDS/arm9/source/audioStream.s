@@ -46,10 +46,6 @@ initAudioStream:
 	
 	bl DC_FlushAll
 	
-	@ putting this flush in here stops the crackle that is on the title when endgame finishes?
-	@ why? Also, no crackles in the game anywhere?
-	@ perhaps the slight delay this causes helps?
-	
 	ldr r0, =TIMER0_DATA
 	ldr r1, =SOUND_FREQ(AUDIO_FREQ) * 2
 	strh r1, [r0]
@@ -66,14 +62,6 @@ initAudioStream:
 	ldr r1, =(TIMER_IRQ_REQ | TIMER_CASCADE)
 	strh r1, [r0]
 	
-	ldr r1, =backBuffer
-	mov r2, #0
-	str r2, [r1]
-	
-	ldr r1, =bufferPos
-	mov r2, #0
-	str r2, [r1]	
-	
 	ldmfd sp!, {r0-r1, pc}								@ Return
 	
 	@ ---------------------------------------------
@@ -85,6 +73,7 @@ playAudioStream:
 	@ r0 = string pointer to music
 	
 	bl stopAudioStream
+	bl initAudioStream
 	
 	ldr r1, =backBuffer
 	mov r2, #0

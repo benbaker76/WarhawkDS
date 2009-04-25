@@ -48,6 +48,7 @@ showEndOfLevel:
 	str r1, [r0]								@ Store back gameMode
 	
 	bl fxOff
+	bl fxFadeBlackInit
 	
 	ldr r0, =levelCount
 	ldr r1, =levelNum
@@ -150,6 +151,7 @@ showEndOfLevel:
 @	bl fxStarfieldOn							@ Turn on starfield
 @	bl fxStarfieldDownOn
 	bl fxStarfieldMultiOn
+	bl fxFadeBlackIn
 	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =calcBasesDestroyed					@ Callback function address

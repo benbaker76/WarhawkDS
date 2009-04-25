@@ -50,6 +50,7 @@ showContinue:
 	str r1, [r0]								@ Store back gameMode
 	
 	bl fxOff
+	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
@@ -104,6 +105,7 @@ showContinue:
 	bl fxColorPulseOn							@ Turn on color pulse
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldOn							@ Tune on starfield
+	bl fxFadeBlackIn
 	
 showContinueDone:
 	

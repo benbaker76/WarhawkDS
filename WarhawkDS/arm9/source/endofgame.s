@@ -52,6 +52,7 @@ showEndOfGame:
 	str r1, [r0]								@ Store back gameMode
 
 	bl fxOff
+	bl fxFadeBlackInit
 	
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_LARGESHIP
@@ -173,6 +174,7 @@ showEndOfGame:
 
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldDownOn						@ Turn on starfield
+	bl updateLargeShip
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initLargeShipFly					@ Callback function address
@@ -281,8 +283,6 @@ initLargeShipFly:
 
 	stmfd sp!, {r0-r6, lr}
 
-	bl swiWaitForVBlank
-	
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_LARGESHIP_FLY
 	str r1, [r0]
@@ -298,6 +298,8 @@ initLargeShipFly:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =LargeShipMapLen
 	bl dmaCopy
+	
+	bl updateLargeShipFly
 	
 	ldr r0, =6000								@ 5 seconds
 	ldr r1, =initSmallShipFly					@ Callback function address
@@ -333,6 +335,7 @@ initSmallShipFly:
 	str r1, [r0]
 	
 	bl initWindow
+	bl fxFadeBlackInit
 	
 	ldr r0, =WIN_OUT						@ Make bg's appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
@@ -389,6 +392,8 @@ initSmallShipFly:
 	ldr r1, =SPRITE_GFX_SUB
 	bl dmaCopy
 	
+	bl updateSmallShipFly
+	
 	ldr r0, =4000								@ 2 seconds
 	ldr r1, =initSmallShipLanded				@ Callback function address
 	
@@ -407,6 +412,8 @@ initSmallShipLanded:
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_SMALLSHIP_LANDED
 	str r1, [r0]
+	
+	bl updateSmallShipLanded
 	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =initMotherShipFly					@ Callback function address
@@ -434,6 +441,8 @@ initMotherShipFly:
 	ldr r0, =SUB_WIN_OUT					@ Make bg's appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
 	strh r1, [r0]
+	
+	bl updateMotherShipFly
 	
 	ldr r0, =3000								@ 1 seconds
 	ldr r1, =initEndOfGame						@ Callback function address

@@ -170,6 +170,10 @@
 	.global animEnergyActive
 	.global animEnergyDelay
 	.global cheatMode
+	.global shipAnimDelay
+	
+shipAnimDelay:
+	.word 0
 	
 cheatMode:
 	.word 0

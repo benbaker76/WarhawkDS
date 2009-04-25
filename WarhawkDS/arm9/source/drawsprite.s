@@ -161,9 +161,6 @@ drawSprite:
 		ldr r3,=SCREEN_MAIN_TOP@+32			@ make r3 the value of top screen -sprite height (was -32)
 		@ make above +32 for DS mode
 		sub r1,r3						@ subtract our sprites y coord
-	@	cmp r1,#32						@ check if it is less than sprites height (off top)
-	@	addmi r1,#256					@ if so, add #255 (make it offscreen)
-	@	sub r1,#32						@ take our height off
 		and r1,#0xff					@ Y is only 0-255
 		orr r2,r1						@ or with our attributes from earlier
 		strh r2,[r0]					@ store it in sprite attribute0
@@ -468,7 +465,7 @@ drawSprite:
 
 		slowPlayerExplosion:
 		cmp r1,#12								@ -------------- Player explosion
-		bne whatNext
+		bne noMoreStuff
 
 			ldr r0,=spriteExplodeDelay			@ check our animation delay
 			ldr r1,[r0,r8,lsl #2]
@@ -486,10 +483,6 @@ drawSprite:
 				ldr r0,=spriteY
 				mov r1,#SPRITE_KILL
 				str r1,[r0,r8,lsl #2]
-
-			b noMoreStuff
-
-		whatNext:
 
 		noMoreStuff:
 	subs r8,#1

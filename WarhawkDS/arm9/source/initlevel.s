@@ -70,6 +70,8 @@ initLevel:
 	str r1,[r0]
 	ldr r0,=hunterTimerCounter
 	str r1,[r0]
+	ldr r0,=shipAnimDelay
+	str r1,[r0]
 	
 	@ set scroller data
 	ldr r0,=pixelOffsetSub

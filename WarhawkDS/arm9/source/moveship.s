@@ -41,11 +41,21 @@ moveShip:
 	bpl dircheck4
 	
 	ldr r5,=spriteObj			@ simple bit of animation code for the ship
-	ldr r6,[r5]
-	add r6,#1
-	cmp r6,#3
-	moveq r6,#0
-	str r6,[r5]
+	ldr r6,[r5]					@ r6 is the frame
+
+	ldr r7,=shipAnimDelay
+	ldr r8,[r7]
+	add r8,#1
+	str r8,[r7]
+	cmp r8,#4					@ change this for the delay!(4 works ok on hardware for me?)
+	bne noShipAnim
+		mov r8,#0
+		str r8,[r7]
+		add r6,#1
+		cmp r6,#3
+		moveq r6,#0
+		str r6,[r5]	
+	noShipAnim:
 	
 	ldr r5,=spriteY
 	ldr r6,=spriteX

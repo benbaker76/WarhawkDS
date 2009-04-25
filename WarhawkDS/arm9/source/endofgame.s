@@ -456,6 +456,10 @@ initMotherShipFly:
 initEndOfGame:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl clearBG0
+	bl clearBG1
+	bl clearOAM
 
 	ldr r0, =gameOverText						@ Load out text pointer
 	ldr r1, =11									@ x pos
@@ -482,6 +486,7 @@ initGameOverEnd:
 
 	stmfd sp!, {r0-r6, lr}
 
+	bl stopAudioStream
 	bl clearWindow
 	bl stopTimer
 	bl fxStarfieldOff							@ Turn off the spotlight effect

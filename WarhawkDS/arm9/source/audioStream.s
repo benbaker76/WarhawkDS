@@ -50,7 +50,7 @@ initAudioStream:
 	strh r1, [r0]
 	
 	ldr r0, =TIMER0_CR
-	ldr r1, =TIMER_DIV_1
+	ldr r1, =(TIMER_ENABLE | TIMER_DIV_1)
 	strh r1, [r0]
 	
 	ldr r0, =TIMER1_DATA
@@ -58,8 +58,10 @@ initAudioStream:
 	strh r1, [r0]
 
 	ldr r0, =TIMER1_CR
-	ldr r1, =(TIMER_IRQ_REQ | TIMER_CASCADE)
+	ldr r1, =(TIMER_ENABLE | TIMER_IRQ_REQ | TIMER_CASCADE)
 	strh r1, [r0]
+	
+	bl swiWaitForVBlank
 	
 	ldmfd sp!, {r0-r1, pc}								@ Return
 	
@@ -72,7 +74,6 @@ playAudioStream:
 	@ r0 = string pointer to music
 	
 	bl stopAudioStream
-	bl initAudioStream
 	
 	ldr r1, =backBuffer
 	mov r2, #0
@@ -98,22 +99,8 @@ playAudioStream:
 	ldr r1, =(BUFFER_SIZE / 2)							@ Read the bufferSize address
 	
 	bl readFileStream									@ Read the next buffer of audio file
-	
-	bl DC_FlushAll										@ Flush cache
-	
 	bl playBuffer
-	
-	ldr r0, =TIMER0_CR
-	ldrh r1, [r0]
-	orr r1, #TIMER_ENABLE
-	strh r1, [r0]
-
-	ldr r0, =TIMER1_CR
-	ldrh r1, [r0]
-	orr r1, #TIMER_ENABLE
-	strh r1, [r0]
-	
-	bl swiWaitForVBlank
+	bl initAudioStream
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 
@@ -121,7 +108,9 @@ playAudioStream:
 	
 stopAudioStream:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r1, lr}
+	
+	bl DC_FlushAll
 	
 	ldr r0, =TIMER0_CR
 	ldrh r1, [r0]
@@ -135,9 +124,7 @@ stopAudioStream:
 	
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
 	mov r1, #-1											@ Get the sample address
-	str r1, [r0]		
-
-	bl DC_FlushAll
+	str r1, [r0]
 	
 	@ldr r0, =REG_IPC_SYNC
 	@ldrh r1, [r0]
@@ -148,7 +135,7 @@ stopAudioStream:
 
 	bl swiWaitForVBlank
 	
-	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
+	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
 
 	@ ---------------------------------------------
 

@@ -97,6 +97,8 @@ fxOff:
 	blne fxCopperTextOff
 	tst r0, #FX_COLOR_CYCLE_TEXT
 	blne fxColorCycleTextOff
+	tst r0, #FX_FIREWORKS
+	blne fxFireworksOff
 	
 	ldr r1, =FX_NONE
 	str r1, [r0]
@@ -160,7 +162,8 @@ fxVBlank:
 	blne fxStarfieldVBlank
 	tst r0, #FX_STARFIELD_MULTI
 	blne fxStarfieldMultiVBlank
-
+	tst r0, #FX_FIREWORKS
+	blne fxFireworksVBlank
 fxVBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}

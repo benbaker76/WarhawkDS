@@ -39,7 +39,7 @@
 showTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
-	
+
 	ldr r0, =gameMode							@ Set game mode
 	ldr r1, =GAMEMODE_TITLESCREEN
 	str r1, [r0]

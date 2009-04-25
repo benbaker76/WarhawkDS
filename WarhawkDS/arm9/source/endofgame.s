@@ -50,7 +50,7 @@ showEndOfGame:
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_ENDOFGAME					@ Set the gameMode to end of level
 	str r1, [r0]								@ Store back gameMode
-	
+
 	bl fxOff
 	
 	ldr r0, =endOfGameMode
@@ -176,9 +176,9 @@ showEndOfGame:
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initLargeShipFly					@ Callback function address
-	
+
 	bl startTimer
-	
+
 	bl fxFadeBlackIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
@@ -280,6 +280,8 @@ clearWindow:
 initLargeShipFly:
 
 	stmfd sp!, {r0-r6, lr}
+
+	bl swiWaitForVBlank
 	
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_LARGESHIP_FLY

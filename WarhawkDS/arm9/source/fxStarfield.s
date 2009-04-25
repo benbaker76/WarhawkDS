@@ -44,6 +44,7 @@
 	.global fxStarfieldDownVBlank
 	.global fxStarfieldMultiVBlank
 	.global starDirection
+	.global clearStars
 
 fxStarfieldOn:
 

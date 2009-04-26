@@ -125,8 +125,7 @@ showHiScoreEntry:
 	str r0, [r1]								@ Write hiscore index
 	
 	cmp r0, #-1									@ Is the hiscore index -1? (No hiscore entry)
-	bleq showTitleScreen						@ Yes then go back to the title screen
-	beq showHiScoreEntryDone					@ And were done
+	bleq showHiScoreEntryTitleScreen			@ Yes then go back to the title screen
 	
 	ldr r1, =colorHilight						@ Load colorHilight address
 	mov r2, r0									@ Move hiscore index
@@ -192,6 +191,12 @@ showHiScoreEntry:
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldOn							@ Tune on starfield
 	bl fxFadeBlackIn
+	
+	b showHiScoreEntryDone
+	
+showHiScoreEntryTitleScreen:
+
+	bl showTitleScreen							@ Show titlescreen
 	
 showHiScoreEntryDone:
 	

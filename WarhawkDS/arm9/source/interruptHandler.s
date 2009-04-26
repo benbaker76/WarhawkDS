@@ -51,11 +51,11 @@ initInterruptHandler:
 	ldr r1, =interruptHandlerTimer1			@ Function Address
 	bl irqSet
 	
-	ldr r0, =IRQ_TIMER3						@ TIMER3 interrupt
-	ldr r1, =interruptHandlerTimer3			@ Function Address
+	ldr r0, =IRQ_TIMER2						@ TIMER3 interrupt
+	ldr r1, =interruptHandlerTimer2			@ Function Address
 	bl irqSet
 	
-	ldr r0, =(IRQ_VBLANK | IRQ_HBLANK | IRQ_TIMER1 | IRQ_TIMER3)		@ Interrupts
+	ldr r0, =(IRQ_VBLANK | IRQ_HBLANK | IRQ_TIMER1 | IRQ_TIMER2)		@ Interrupts
 	bl irqEnable							@ Enable
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -92,11 +92,11 @@ interruptHandlerTimer1:
 	
 	@ ------------------------------------
 	
-interruptHandlerTimer3:
+interruptHandlerTimer2:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl timerTimer3
+	bl timerTimer2
 	
 	ldmfd sp!, {r0-r6, pc}
 	

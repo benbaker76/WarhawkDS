@@ -33,7 +33,7 @@
 	.align
 	.global startTimer
 	.global stopTimer
-	.global timerTimer3
+	.global timerTimer2
 	
 startTimer:
 
@@ -59,15 +59,7 @@ startTimer:
 	strh r1, [r0]
 	
 	ldr r0, =TIMER2_CR
-	ldr r1, =TIMER_ENABLE | TIMER_DIV_1
-	strh r1, [r0]
-	
-	ldr r0, =TIMER3_DATA
-	ldr r1, =(0x10000 - 1)								@ Change to (0x10000 - 1000) for seconds
-	strh r1, [r0]
-
-	ldr r0, =TIMER3_CR
-	ldr r1, =(TIMER_ENABLE | TIMER_IRQ_REQ | TIMER_CASCADE)
+	ldr r1, =(TIMER_ENABLE | TIMER_IRQ_REQ | TIMER_DIV_1)
 	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}								@ Return
@@ -82,17 +74,12 @@ stopTimer:
 	ldrh r1, [r0]
 	and r1, #~(TIMER_ENABLE)
 	strh r1, [r0]
-
-	ldr r0, =TIMER3_CR
-	ldrh r1, [r0]
-	and r1, #~(TIMER_ENABLE)
-	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}								@ Return
 	
 	@ ---------------------------------------------
 
-timerTimer3:
+timerTimer2:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -106,7 +93,7 @@ timerTimer3:
 	
 	push {lr}
 
-	adr	lr, timerReturn
+	ldr lr, =timerReturn
 	ldr r0, =callbackAddress
 	ldr r0, [r0]
 	bxeq r0
@@ -119,10 +106,6 @@ timerReturn:
 	ldr r1, [r0]
 	add r1, #1
 	str r1, [r0]
-	
-	@mov r8, r1
-	@ldr r0, =debugString
-	@bl drawDebugString
 
 	ldmfd sp!, {r0-r6, pc}								@ Return
 	

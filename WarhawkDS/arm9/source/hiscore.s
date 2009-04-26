@@ -116,7 +116,7 @@ showHiScoreEntry:
 	bl clearBG2
 	bl clearBG3
 	
-	bl initStarData
+@	bl initStarData
 	
 	mov r0, r6									@ Move hiScore value to r0
 	bl getHiScoreIndex							@ Get the hiscore index
@@ -151,7 +151,7 @@ showHiScoreEntry:
 	
 	bl clearOAM									@ Reset all sprites
 	
-	bl initLogoSprites
+@	bl initLogoSprites
 	
 	ldr r0, =FontPal
 	ldr r1, =BG_PALETTE
@@ -189,8 +189,9 @@ showHiScoreEntry:
 	
 	bl fxColorPulseOn							@ Turn on color pulse fx
 	bl fxCopperTextOn							@ Turn on copper text fx
-	bl fxStarfieldOn							@ Tune on starfield
+@	bl fxStarfieldOn							@ Tune on starfield
 	bl fxFadeBlackIn
+	bl fxFireworksOn
 	
 	b showHiScoreEntryDone
 	
@@ -262,7 +263,7 @@ hiScoreEntrySkip:
 	
 	bl drawCursorSprite							@ Draw the cursor sprite
 	bl updateLogoSprites
-	bl scrollStarsHoriz
+@	bl scrollStarsHoriz							@ this also scrolls the fireworks????
 
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value

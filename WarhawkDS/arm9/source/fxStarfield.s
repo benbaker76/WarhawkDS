@@ -45,6 +45,8 @@
 	.global fxStarfieldMultiVBlank
 	.global starDirection
 	.global clearStars
+	.global randomStarsMulti
+	.global moveStarsMulti
 
 fxStarfieldOn:
 
@@ -370,10 +372,15 @@ moveStarsMultiLoop:
 	add r3,r6, r9, lsl #5							@ r3 now = tile base offset from tilemem
 	and r9,r1, #0x7000								@ take the low 3 bits (0-7) of y (each y is one word)
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
+
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
 	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+
 	str r4, [r3, r9, lsr #10]						@ store it back
+
+
+
 	add r0,#0x1000									@ add 1 to x
 	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
 	lsl r9, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)

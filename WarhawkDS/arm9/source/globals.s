@@ -171,6 +171,7 @@
 	.global animEnergyDelay
 	.global cheatMode
 	.global shipAnimDelay
+	.global firePower
 	
 shipAnimDelay:
 	.word 0
@@ -297,6 +298,8 @@ pressMe:
 firePress:
 	.word 0
 fireTrap:
+	.word 0
+firePower:
 	.word 0
 horizDrift:
 	.word 0

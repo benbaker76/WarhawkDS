@@ -267,6 +267,8 @@ levelComplete:
 	ldr r0,=explodeSpriteBossCount
 	mov r1,#0
 	str r1,[r0]
+	
+	bl stopAudioStream
 
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
 	bl playBossExplodeSound

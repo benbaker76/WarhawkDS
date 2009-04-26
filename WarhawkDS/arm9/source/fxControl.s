@@ -100,7 +100,8 @@ fxOff:
 	tst r0, #FX_FIREWORKS
 	blne fxFireworksOff
 	
-	ldr r1, =FX_NONE
+	ldr r0, =FX_NONE
+	mov r1, #0
 	str r1, [r0]
 	
 fxOffDone:

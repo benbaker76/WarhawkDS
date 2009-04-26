@@ -33,6 +33,8 @@
 	#define COLOR_RED						0x001F
 	#define COLOR_YELLOW					0x03FF
 	#define COLOR_CYAN						0x7FE0
+	
+	#define COLOR_HILIGHT					COLOR_YELLOW
 
 	.arm
 	.align
@@ -127,7 +129,7 @@ fxCopperTextHBlank:
 	ldr r2, =REG_VCOUNT
 	ldrh r2, [r2]
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
-	ldr r4, =COLOR_WHITE
+	ldr r4, =COLOR_HILIGHT
 	cmp r2, r0
 	blt fxCopperTextVBlankContinue
 	add r0, #8
@@ -260,5 +262,6 @@ colorPal:
 	.hword 0x3def,0x4631,0x4e73,0x5294,0x5ad6,0x6318,0x6739,0x6f7b
 	.hword 0x6f7b,0x6739,0x6318,0x5ad6,0x5294,0x4e73,0x4631,0x3def
 	.hword 0x39ce,0x318c,0x294a,0x2529,0x1ce7,0x14a5,0x0c63,0x0842
+	
 	.pool
 	.end

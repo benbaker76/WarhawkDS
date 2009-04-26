@@ -85,6 +85,14 @@ showEndOfGame:
 	ldr r0, =vblCounterH
 	mov r1, #0
 	str r1, [r0]
+	
+	ldr r0, =hofsSF
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =hofsSB
+	mov r1, #0
+	str r1, [r0]
 
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers

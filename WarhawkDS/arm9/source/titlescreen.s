@@ -84,6 +84,14 @@ showTitleScreen:
 	ldr r1,=yposSBSub
 	str r0,[r1]
 	
+	ldr r0, =hofsSF
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =hofsSB
+	mov r1, #0
+	str r1, [r0]
+	
 	@ Write the palette
 
 	ldr r0, =TitleTopPal
@@ -266,55 +274,7 @@ drawCreditText:
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
-	
-drawStartSprites:
 
-	stmfd sp!, {r0-r6, lr}
-	
-	mov r4, #0									@ Reset iterator
-	
-drawStartSpritesLoop:
-	
-	ldr r0, =OBJ_ATTRIBUTE0(0)					@ Attrib 0
-	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
-	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE0(n))
-	mov r2, #7									@ Skip 7 sprites (Logo Sprites)
-	add r0, r2, lsl #3							@ Add offset
-	mov r5, #160								@ Y Position 160
-	and r5, #0xFF								@ And 0xFF
-	orr r1, r5									@ Or in the Y Position
-	strh r1, [r0]								@ Write back attrib 0
-	
-	ldr r0, =OBJ_ATTRIBUTE1(0)					@ Attrib 1
-	ldr r1, =(ATTR1_SIZE_16)					@ Attrib 1 settings
-	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE1(n))
-	mov r2, #7									@ Skip 7 sprites (Logo Spites)
-	add r0, r2, lsl #3							@ Add offset
-	mov r5, #38									@ X Position
-	add r5, r4, lsl #4							@ Each sprite * 16
-	ldr r6, =0x1FF								@ Load 0x1FF
-	and r5, r6									@ X Position And 0x1FF
-	orr r1, r5									@ Or in X Position
-	strh r1, [r0]								@ Write back to attrib 1
-	
-	ldr r0, =OBJ_ATTRIBUTE2(0)					@ Attrib 2
-	add r0, r4, lsl #3							@ Iterator * 8 (OBJ_ATTRIBUTE2(n))
-	mov r3, #ATTR2_PRIORITY(0)					@ Set sprite priority
-	mov r2, #7									@ Skip 7 sprites (Logo Spites)
-	add r0, r2, lsl #3							@ Calculate tile position (* 8)
-	mov r1, r4, lsl #2							@ Iterator * 4
-	add r1, r2, lsl #4							@ Add Tile position
-	orr r1, r3									@ Orr in tile position
-	strh r1, [r0]								@ Write back to attrib 2
-	
-	add r4, #1									@ Add 1 to Iterator
-	cmp r4, #11									@ All sprites drawn?
-	bne drawStartSpritesLoop					@ No so go back and loop
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
 updateStartSprites:
 
 	stmfd sp!, {r0-r6, lr}
@@ -358,8 +318,10 @@ updateStartSpritesLoop:
 	add r3, r5									@ Add the offset to the COS table
 	ldrsh r5, [r3]								@ Read the COS table value (signed 16-bit value)
 	lsr r5, #10									@ Right shift COS value to make it smaller
-	add r5, #40									@ Add the X offset
-	add r5, r4, lsl #4							@ Add Iterator * 16 to X Offset
+	add r5, #60									@ Add the X offset
+	ldr r6, =12									@ 12
+	mul r6, r4, r6								@ Multiply X * 12
+	add r5, r6									@ Add it
 	ldr r6, =0x1FF								@ Load 0x1FF
 	and r5, r6									@ And with 0x1FF so no overflow
 	orr r1, r5									@ Orr in X offset with settings

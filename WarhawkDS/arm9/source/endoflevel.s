@@ -55,6 +55,14 @@ showEndOfLevel:
 	ldr r1, [r1]
 	str r1, [r0]
 	
+	ldr r0, =hofsSF
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =hofsSB
+	mov r1, #0
+	str r1, [r0]
+	
 	ldr r0, =basesLeft
 	ldr r1, [r0]
 	ldr r2, =baseCount

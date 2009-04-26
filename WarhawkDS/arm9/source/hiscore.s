@@ -95,6 +95,14 @@ showHiScoreEntry:
 	mov r1, #0
 	str r1, [r0]
 	
+	ldr r0, =hofsSF
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =hofsSB
+	mov r1, #0
+	str r1, [r0]
+	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_HISCORE_ENTRY				@ Set the gameMode to hiscore entry
 	str r1, [r0]								@ Store back gameMode
@@ -273,15 +281,15 @@ drawCursorSprite:
 	
 	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)				@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
-	orr r1, #(10 * 8 + 2)						@ Orr in the y pos (10 * 8 pixels + 2 pixels so cursor is below text)
+	orr r1, #(10 * 8 - 2)						@ Orr in the y pos (10 * 8 pixels + 2 pixels so cursor is below text)
 	ldr r2, =hiScoreIndex						@ Load the hiScoreIndex address
 	ldr r2, [r2]								@ Load the hiScoreIndex value
 	add r1, r2, lsl #3							@ Add the hiScoreIndex * 8
 	strh r1, [r0]								@ Write to Attrib 0
 	
 	ldr r0, =OBJ_ATTRIBUTE1_SUB(0)				@ Attrib 1
-	ldr r1, =(ATTR1_SIZE_8)						@ Attrib 1 settings
-	orr r1, #(19 * 8)							@ Orr in the x pos (19 * 8 pixels)
+	ldr r1, =(ATTR1_SIZE_16)					@ Attrib 1 settings
+	orr r1, #(19 * 8 - 2)						@ Orr in the x pos (19 * 8 pixels)
 	ldr r2, =cursorPos							@ Load the cursorPos address
 	ldr r2, [r2]								@ Load the cursorPos value
 	add r1, r2, lsl #3							@ Add the cursorPos * 8
@@ -455,6 +463,7 @@ saveHiScore:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl fxFadeBlackInit
 	bl fxColorPulseOff							@ Turn off color pulse
 	bl fxCopperTextOff							@ Turn off copper text
 	bl fxStarfieldOff							@ Turn off starfield

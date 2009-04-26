@@ -60,6 +60,14 @@ showContinue:
 	
 	bl initStarData
 	
+	ldr r0, =hofsSF
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =hofsSB
+	mov r1, #0
+	str r1, [r0]
+	
 	ldr r0, =optionLevelNum						@ Read optionLevelNum address
 	ldr r1, [r0]								@ Write optionLevelNum index
 	
@@ -121,6 +129,11 @@ updateContinue:
 	ldr r1, [r0]								@ Load levelNum value
 	ldr r2, =menuPos							@ Load menuPos address
 	ldr r3, [r2]								@ Load menuPos value
+	ldr r4, =colorHilight
+	mov r5, #0
+	add r5, r3, lsl #1
+	add r5, #10
+	str r5, [r4]
 	
 	bl readInput								@ read the input
 	

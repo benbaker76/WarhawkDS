@@ -27,7 +27,8 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FIREWORK_COUNT				64
+	#define FIREWORK_COUNT				1
+	#define FIREWORK_BURST				512
 
 	.arm
 	.align
@@ -61,35 +62,11 @@ fxFireworksOnLoop:
 	
 	bne fxFireworksOnLoop
 
+	bl fxFireworkGenerate
+
 @	bl randomStarsMulti									@ generate em!
 @	bl moveFireworks									@ draw them
 
-	@ dummy values
-	mov r0,#32
-	lsl r0,#12
-	ldr r1,=fireworkXCoord
-	str r0,[r1]
-	ldr r0,=383
-	lsl r0,#12
-	ldr r1,=fireworkYCoord
-	str r0,[r1]
-	mov r0,#11
-	ldr r1,=fireworkShade
-	strb r0,[r1]
-	mov r0,#1
-	lsl r0,#12
-	ldr r1,=fireworkSpeed
-	str r0,[r1]	
-	ldr r0,=400											@ this should be +/- 64 of 384
-	ldr r1,=fireworkDirection							@ dont think we will need this, only for the explosion perhaps???
-	str r0,[r1]
-	ldr r0,=100
-	ldr r1,=fireworkLife
-	str r0,[r1]
-	mov r0,#1
-	ldr r1,=fireworkCurveDir
-	str r0,[r1]
-	
 	ldr r0, =fxMode
 	ldr r1, [r0]
 	orr r1, #FX_FIREWORKS
@@ -124,6 +101,64 @@ fxFireworksVBlank:
 	ldmfd sp!, {r0, pc}
 
 	@ ---------------------------------------
+
+fxFireworkGenerate:
+	stmfd sp!, {r0-r12, lr}
+	@ ok, to generate a firework, all plots are at an initial X,y
+	
+	ldr r0,=fireworkLife
+	bl getRandom
+	and r8,#0xff
+	add r8,#128
+	str r8,[r0]
+	
+	bl getRandom						@ generate x/y in r0,r1
+	
+	and r8,#0xff
+	lsl r8,#12
+	mov r0,r8
+
+	bl getRandom
+	and r8,#0xff
+	lsl r8,#12
+	mov r1,r0
+	
+		ldr r3,=fireworkX	
+		ldr r4,=fireworkY
+		ldr r5,=0x1ff
+		ldr r6,=fireworkAngle
+		ldr r7,=fireworkSpeed
+		ldr r9,=fireworkGravity	
+		ldr r10,=0x1fff
+
+		mov r2,#FIREWORK_BURST				@ number of particles in a firework
+		sub r2,#1
+	
+	fireworkGenerateLoop:
+		str r0,[r3,r2, lsl #2]			@ store X and Y
+		str r1,[r4,r2, lsl #2]
+	
+		bl getRandom
+		and r8,r5						@ reduce to 0-511
+		str r8,[r6,r2, lsl #2]			@ store angle
+		
+		bl getRandom
+		and r8,r10						@ make 0.xxx-7.xxx (20.12)
+		add r8,#512
+		str r8,[r7,r2, lsl #2]			@ store speed
+		
+		mov r8,#0
+		str r8,[r9,r2, lsl #2]			@ store gravity
+		
+		subs r2,#1
+	
+	bpl fireworkGenerateLoop	
+
+	ldmfd sp!, {r0-r12, pc}
+
+
+	@ ---------------------------------------
+
 	
 fxDrawFirePixel:
 	stmfd sp!, {r0-r6, lr}
@@ -153,178 +188,105 @@ fxDrawFirePixel:
 	str r4, [r3, r5, lsr #10]						@ store it back	
 	ldmfd sp!, {r0-r6, pc}
 
+@------------------------------------------------
+
 fxMoveFireworks:
 
-	stmfd sp!, {r0-r11, lr}
+	stmfd sp!, {r0-r12, lr}
 	
-
-	@ move in the set direction 
-
-	ldr r8,=fireworkDirection
-	ldr r9,[r8]
-	lsl r9,#1
-	ldr r4,=fireworkSpeed
-	ldr r4,[r4]						@ r4,=speed	of star	
+	mov r6,#FIREWORK_COUNT
+	sub r6,#1
 	
-	ldr r7,=COS_bin
-	ldrsh r7, [r7,r9]				@ r7= 16bit signed cos (for X)
-	ldr r3,=fireworkXCoord
-	ldr r0,[r3]						@ r0=X coord
-
-	muls r10,r4,r7					@ mul cos by speed
-	adds r0,r10, asr #12			@ add to x
-
-	ldr r7,=SIN_bin
-	ldrsh r7, [r7,r9]				@ r7= 16bit signed cos (for Y)
-	ldr r3,=fireworkYCoord
-	ldr r1,[r3]						@ r1=Y coord
-
-	muls r10,r4,r7					@ mul sin by speed
-	adds r1,r10, asr #12			@ add to Y
+	fireworkNumberLoop:
 	
-	@ r0,r1 hold X/Y coords
+	ldr r1,=fireworkLife
+	ldr r1,[r1,r6, lsl #2]
+	cmp r1,#0
+	beq fireworkNext
+	
+	push {r6}
+	
+		mov r7,#FIREWORK_BURST
+		sub r7,#1
+	
+		ldr r11,=COS_bin				@ we will use these a lot, so...
+		ldr r12,=SIN_bin				@ keep them out of the loop
+		ldr r8,=fireworkX	
+		ldr r9,=fireworkY
+		ldr r10,=fireworkSpeed
+	
+		fireworkMoveLoop:
+		@ ok, first grab the X and y and update them with speed and cos/sin
+			mov r5, r7, lsl#2
+			ldr r6,[r10, r5]				@ r6 = speed (keep r6 for y calcs)
+			ldr r3,=fireworkAngle
+			ldr r3,[r3, r5]				@ r3 = angle (keep r3 for y calcs)
+			lsl r3,#1
+
+			ldr r0,[r8, r5]				@ r0 = X coord
+			ldrsh r4, [r11,r3]				@ r4 = cosine	( from amgle)
+			muls r4,r6						@ r4 = cosine * speed
+			adds r0,r4, asr #12				@ add cosine result to x coord	
+			ldr r1,[r9, r5]				@ r1 = Y coord
+			ldrsh r4, [r12,r3]				@ r4 = sine	
+			muls r4,r6						@ r4 = sine * speed
+			adds r1,r4, asr #12				@ add sine result to x coord	
+	
+			ldr r3,=fireworkGravity			@ update gravity	
+			ldr r4,[r3, r5]				@ for a good effect, a slower speed generated
+			add r1,r4						@ should result in a quicker gravity
+			add r4,#64						@ but this will do for now
+			str r4,[r3, r5]				@ store gravity back
+	
+			@ if r0 (x) is now less than 0 or greater than 255
+			@ we need to kill it... the same goes for y<0
+	
+			cmp r0,#0
+			bmi fxFireworkNoDraw
+			cmp r0,#0xff000
+			bgt fxFireworkNoDraw
+			cmp r1,#0
+			bmi fxFireworkNoDraw
+			cmp r1,#0x180000
+			blt fxFireworkNoBounce
+				mov r1,#0x180000				@ i may take this code out???
+				str r4,[r3,r5]					
+				ldr r4,=fireworkAngle
+				ldr r6,[r4, r5]				@ r3 = angle (keep r3 for y calcs)
+				cmp r6,#256
+				addlt r6,#256
+				movge r2,#1024
+				strge r2,[r3,r5]
+				str r6,[r4, r5]				@ store angle back
+			fxFireworkNoBounce:
+	
+			str r0,[r8, r7, lsl #2]			@ store new X
+			str r1,[r9, r7, lsl #2]			@ store new Y
+	
+			mov r2,#11							@ set palette
+			bl fxDrawFirePixel
+	
+			fxFireworkNoDraw:
+	
+			subs r7,#1
+		bpl fireworkMoveLoop
+
+		pop {r6}
+	
+	fireworkNext:
 	
 	ldr r3,=fireworkLife
-	ldr r4,[r3]
-	cmp r4,#0
-	subne r4,#1
-	strne r4,[r3]
-	bne fxFireworkOK
+	ldr r4,[r3,r6, lsl #2]
+	subs r4,#1
+	movmi r4,#0
+	str r4,[r3,r6, lsl #2]
+	blmi fxFireworkGenerate
+	subs r6,#1
 	
-		@ the firework has flown to its max height? what the fuck now???
-		ldr r3,=fireworkCurveDir
-		ldr r3,[r3]					@ 0=left/1=right
-		cmp r3,#0
-		beq fireworkLeft
-			@ ok, we are curving right (dir 384-(0)-128)
-			ldr r3,=fireworkDirection
-			ldr r4,[r3]
-			
-			
-			ldr r5,=fireworkRotateSpeed
-			ldr r5,[r5]
-			
-			
-			
-			
-			
-			
-			
-			add r4,#2				@ speed of curve (we will need to affect this)
-			cmp r4,#512
-			movpl r4,#0
-			cmp r4,#384	
-			bpl fireworkCurveDone
-				cmp r4,#128
-				movpl r4,#128
-			b fireworkCurveDone
-		
-		fireworkLeft:
-			ldr r3,=fireworkDirection
-			ldr r4,[r3]	
-
-
-			@ add code later
-
-
-
-		fireworkCurveDone:
-			@ now we need to add a hint of gravity?
-			
-		cmp r4,#256
-		blt fireworkAccel
-			@ we need to pull the firework down here!
-			ldr r5,=fireworkXSpeed
-			ldr r6,[r5]
-			cmp r4,#384
-			bmi fireworkAccelX
-				subs r6,#16
-			fireworkAccelX:
-				adds r6,#16
-			fireworkAccelDone:
-			str r6,[r5]
-			adds r0,r6		
-		
-		b fireworkGravityDone
-		
-		fireworkAccel:
-			@ here, we are fully falling - increase speed??
-			
-			ldr r5,=fireworkYSpeed
-			ldr r6,[r5]
-			cmp r6,#-1
-			beq fireworkGravityDone
-			adds r6,#64
-			str r6,[r5]
-			add r1,r6
-		
-		
-		
-		fireworkGravityDone:
-
-		str r4,[r3]				@ R4 has now been affected by the curve	(fireworkDirection)
-	
-	fxFireworkOK:
-	
-		@ ok, we now need to check Y coord
-		cmp r1,#0x180000		@ 384 in 20.12
-		blt fireworkNoBounce
-			mov r1,#0x180000
-			sub r1,#4
-			@ now change the direction and slow the speed
-			ldr r5,=fireworkDirection
-			ldr r6,[r5]
-			add r6,#256
-			str r6,[r5]
-			ldr r5,=fireworkYSpeed
-			mov r6,#-1
-			str r6,[r5]
-			ldr r5,=fireworkSpeed
-			ldr r6,[r5]
-			subs r6,#768
-			movmi r6,#0
-			str r6,[r5]
-			
-		
-		
-		
-		
-		
-		
-		
-		
-		fireworkNoBounce:
+	bpl	fireworkNumberLoop
 	
 	
-	
-	@fxFireworkDraw:
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	mov r2,#11						@ r2= palette to plot
-	
-	
-	
-	
-	
-	
-	ldr r7,=fireworkXCoord
-	str r0,[r7]	
-	ldr r7,=fireworkYCoord
-	str r1,[r7]
-	
-	
-	bl fxDrawFirePixel
-	
-
-	ldmfd sp!, {r0-r11, pc}
+	ldmfd sp!, {r0-r12, pc}
 
 
 
@@ -350,31 +312,18 @@ fireworkSub:
 	.data
 	.pool
 	.align
-fireworkDelay:
-	.word 0
-
-fireworkShade:					@ bytes
-	.space FIREWORK_COUNT
 fireworkSpeed:
-	.space FIREWORK_COUNT*4	
-fireworkXSpeed:
-	.space FIREWORK_COUNT*4	
-fireworkYSpeed:
-	.space FIREWORK_COUNT*4	
-fireworkYCoord:
-	.space FIREWORK_COUNT*4
-fireworkXCoord:
-	.space FIREWORK_COUNT*4
-fireWorkPhase:
-	.space FIREWORK_COUNT*4
-fireworkDirection:
-	.space FIREWORK_COUNT*4
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4	
+fireworkX:
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4	
+fireworkY:
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+fireworkAngle:
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+fireworkGravity:
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
 fireworkLife:
 	.space FIREWORK_COUNT*4
-fireworkCurveDir:
-	.space FIREWORK_COUNT*4
-fireworkRotateSpeed:
-	.space FIREWORK_COUNT
 	
 	.end
 

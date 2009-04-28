@@ -27,7 +27,7 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FIREWORK_COUNT				4
+	#define FIREWORK_COUNT				6
 	#define FIREWORK_BURST				256
 
 	.arm
@@ -62,8 +62,12 @@ fxFireworksOnLoop:
 	
 	bne fxFireworksOnLoop
 	
-	mov r0, #0										
+	mov r0, #FIREWORK_COUNT	
+	sub r0,#1
+	fireworkMake:
 	bl fxFireworkGenerate							@ r0=firework to generate
+	subs r0,#1
+	bpl fireworkMake
 
 @	bl randomStarsMulti									@ generate em!
 @	bl moveFireworks									@ draw them
@@ -143,29 +147,29 @@ fxFireworkGenerate:
 	fireworkGenerateLoop:
 	
 		ldr r4,=fireworkX	
-		str r0,[r4,r12, lsl #2]			@ store X and Y
+		str r0,[r4,r12]			@ store X and Y
 		ldr r4,=fireworkY
-		str r1,[r4,r12, lsl #2]
+		str r1,[r4,r12]
 	
 		bl getRandom
 		and r8,r5							@ reduce to 0-511
-		str r8,[r6,r12, lsl #2]			@ store angle
+		str r8,[r6,r12]			@ store angle
 		
 		bl getRandom
 		and r8,r10							@ make 0.xxx-7.xxx (20.12)
 		add r8,#512
-		str r8,[r7,r12, lsl #2]			@ store speed
+		str r8,[r7,r12]			@ store speed
 		
 		mov r8,#0
-		str r8,[r9,r12, lsl #2]			@ store gravity
+		str r8,[r9,r12]			@ store gravity
 
 		bl getRandom
 		and r8,#0x7							@ 0-7
-		str r8,[r11,r12, lsl #2]			@ store twinkle value
-		sub r12,#1
+		str r8,[r11,r12]			@ store twinkle value
+		add r12,#4
 		subs r2,#1
 	
-	bpl fireworkGenerateLoop	
+	bne fireworkGenerateLoop	
 
 	ldmfd sp!, {r0-r12, pc}
 
@@ -319,6 +323,7 @@ fxMoveFireworks:
 	@ generate new firework based on life
 
 	mov r0,#FIREWORK_COUNT
+	sub r0,#1
 
 	fireworkGenLoop:
 	
@@ -327,9 +332,9 @@ fxMoveFireworks:
 		subs r4,#1						@ take 1 off the life
 		movmi r4,#0
 		str r4,[r3,r0, lsl #2]			@ store it back
-		cmp r4,#0
+	@	cmp r4,#0
 		@ time to regenerate
-		bleq fxFireworkGenerate			@ regenerate based on r0 (firework count)
+		blmi fxFireworkGenerate			@ regenerate based on r0 (firework count)
 		subs r0,#1
 	bpl fireworkGenLoop	
 	
@@ -345,18 +350,20 @@ fireworkSub:
 	.align
 fireworkColor:
 	.word 0
+	
+	.align
 fireworkSpeed:
-	.space (FIREWORK_COUNT*FIREWORK_BURST*4)	
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4	
 fireworkX:
-	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
 fireworkY:
-	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
 fireworkAngle:
-	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
 fireworkGravity:
-	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
 fireworkTwinkle:
-	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
+	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
 fireworkLife:
 	.space (FIREWORK_COUNT*4)
 

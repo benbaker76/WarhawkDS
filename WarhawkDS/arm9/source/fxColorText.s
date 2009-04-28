@@ -28,11 +28,6 @@
 #include "windows.h"
 
 	#define FONT_COLOR_OFFSET				255
-	#define COLOR_WHITE						0x7FFF
-	#define COLOR_BLUE						0x7C00
-	#define COLOR_RED						0x001F
-	#define COLOR_YELLOW					0x03FF
-	#define COLOR_CYAN						0x7FE0
 	
 	#define COLOR_HILIGHT					COLOR_YELLOW
 

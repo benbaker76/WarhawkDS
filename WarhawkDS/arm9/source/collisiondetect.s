@@ -351,6 +351,10 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	lsr r3,#5					@ divide by 32 (our blocks)
 	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
+	
+	@ LOCATION OF NB BUG. In certain circumstances (near the boss) the value of r3 is massive
+	@ I recorded 81701358 but I was only displaying 8 digits on output so it could have been larger
+	@ Perhaps r3 is a negative number?
 
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset

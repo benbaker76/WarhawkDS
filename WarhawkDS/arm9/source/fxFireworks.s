@@ -27,8 +27,8 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FIREWORK_COUNT				1
-	#define FIREWORK_BURST				512
+	#define FIREWORK_COUNT				4
+	#define FIREWORK_BURST				256
 
 	.arm
 	.align
@@ -62,7 +62,7 @@ fxFireworksOnLoop:
 	
 	bne fxFireworksOnLoop
 	
-	mov r0,#0										
+	mov r0, #0										
 	bl fxFireworkGenerate							@ r0=firework to generate
 
 @	bl randomStarsMulti									@ generate em!
@@ -308,7 +308,7 @@ fxMoveFireworks:
 			cmp r1,#0x180000
 			bpl fxFireworkNoDraw
 			
-			mov r2,#11							@ set palette
+			mov r2, #11
 			bl fxDrawFirePixel
 	
 			fxFireworkNoDraw:
@@ -336,27 +336,29 @@ fxMoveFireworks:
 	ldmfd sp!, {r0-r12, pc}
 
 fireworkMain:
-.word 0
+	.word 0
 fireworkSub:
-.word 0
+	.word 0
 
 	.data
 	.pool
 	.align
+fireworkColor:
+	.word 0
 fireworkSpeed:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4	
+	.space (FIREWORK_COUNT*FIREWORK_BURST*4)	
 fireworkX:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4	
+	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
 fireworkY:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
 fireworkAngle:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
 fireworkGravity:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
 fireworkTwinkle:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*FIREWORK_BURST*4)
 fireworkLife:
-	.space FIREWORK_COUNT*4
+	.space (FIREWORK_COUNT*4)
 
 
 twinkle:								@ one for each firework

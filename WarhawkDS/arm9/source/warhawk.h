@@ -164,6 +164,8 @@
 #define FX_STARFIELD_MULTI			BIT(23)
 #define FX_FIREWORKS				BIT(24)
 
+@ Sprite types
+
 #define SPRITE_TYPE_MINE			8192
 #define SPRITE_TYPE_HUNTER			16384
 #define SPRITE_TYPE_ALIENWAVE		32768
@@ -196,6 +198,8 @@
 #define SPRITE_BURST_DELAY_COUNT_OFFS	12288
 #define SPRITE_SPEED_DELAY_OFFS			12800
 
+@ Screen positions
+
 #define SCREEN_LEFT					64
 #define SCREEN_RIGHT				319
 #define SCREEN_SUB_WHITESPACE		383
@@ -205,3 +209,19 @@
 #define SCREEN_MAIN_BOTTOM			767
 #define SCREEN_MAIN_WHITESPACE		768
 #define SPRITE_KILL					788+32
+
+@ Colors
+
+#define COLOR_BLACK					0x0000
+#define COLOR_WHITE					0x7FFF
+#define COLOR_RED					0x001F
+#define COLOR_YELLOW				0x03FF
+#define COLOR_ORANGE				0x029F
+#define COLOR_LIME					0x03E0
+#define COLOR_GREEN					0x0200
+#define COLOR_CYAN					0x7FE0
+#define COLOR_BLUE					0x7C00
+#define COLOR_PURPLE				0x4010
+#define COLOR_VIOLET				0x761D
+#define COLOR_MAGENTA				0x7C1F
+#define COLOR_BROWN					0x14B4

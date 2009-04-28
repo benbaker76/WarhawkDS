@@ -116,7 +116,7 @@ showHiScoreEntry:
 	bl clearBG2
 	bl clearBG3
 	
-@	bl initStarData
+	bl initStarData
 	
 	mov r0, r6									@ Move hiScore value to r0
 	bl getHiScoreIndex							@ Get the hiscore index

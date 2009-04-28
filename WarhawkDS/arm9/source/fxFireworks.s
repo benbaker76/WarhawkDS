@@ -27,8 +27,13 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FIREWORK_COUNT				12
-	#define FIREWORK_BURST				128
+	#define FIREWORK_COUNT				5
+	#define FIREWORK_BURST				256
+	
+	@ 5 * 256 = 128, times 4 = 5120 pixels plotted :(
+	@ this is always going to be a lot slower that framebuffer as the calcs
+	@ for the tile and pixle write consume a lot of cpu!
+	@ what is better 5*256 or 10*128???
 
 	.arm
 	.align

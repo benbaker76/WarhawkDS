@@ -40,6 +40,7 @@
 	.global scrollStars
 	.global scrollStarBack
 	.global scrollStarsHoriz
+	.global scrollStarsHorizFast
 	.global levelDrift
 	.global checkEndOfLevel
 	
@@ -373,7 +374,7 @@ checkEndOfLevel:
 			mov r1, #1
 			str r1, [r0]
 			
-			@bl fxSineWobbleOn				@ Start our wobble effect
+			@bl fxSineWobbleOn				@ Start our wobble effect (not any more :( SNIFF )
 	levelPlay:
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -394,7 +395,7 @@ scrollStarBack:
 
 noScrollStarBack:
 
-	ldr r0, =delaySB
+@	ldr r0, =delaySB
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -442,13 +443,38 @@ noScrollSFHoriz:
 
 noScrollSBHoriz:
 
-	ldr r0, =delaySB
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
 	
 	@---------------------------------
+scrollStarsHorizFast:
 
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =delaySB						@ Delay Starback for every 4 updates
+	ldr r1, [r0]
+	subs r1, #1
+	bpl noScrollSBHorizFast
+	
+	ldr r2, =hofsSB
+	ldr r3, [r2]
+	add r3, #1
+	ldr r4, =REG_BG3HOFS					@ Load our horizontal scroll register for BG1 on the main screen
+	ldr r5, =REG_BG3HOFS_SUB				@ Load our horizontal scroll register for BG1 on the sub screen
+	strb r3, [r2]
+	strb r3, [r4]
+	strb r3, [r5]
+	bl scrollSBSub
+	bl scrollSBMain
+	mov r1,#8
+noScrollSBHorizFast:
+
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	
 	.pool
 	.end
 

@@ -262,9 +262,9 @@ updateHiScoreEntry:
 hiScoreEntrySkip:
 	
 	bl drawCursorSprite							@ Draw the cursor sprite
-	bl updateLogoSprites
-@	bl scrollStarsHoriz							@ this also scrolls the fireworks????
-
+@	bl updateLogoSprites
+@	bl scrollStarsHoriz							@ this affects BG2 also, so.....
+	bl scrollStarsHorizFast						@ we will use this instead
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value
 	tst r1, #BUTTON_A							@ Button A?

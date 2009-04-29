@@ -59,15 +59,14 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	push {r8-r11}
 	mov r10,r3						@ Read value
 	mov r8,#21						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #9						@ x pos
+	mov r9,#12						@ Number of digits
+	mov r11, #4						@ x pos
 	bl drawDigits					@ Draw
 	pop {r8-r11}
 
 cmp r3,#7488
-movpl r3,#0							@ this is a bodge in the hope it is r3
-@crashme1:
-@bpl crashme1
+crashme1:
+bge crashme1
 
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
@@ -208,15 +207,14 @@ movpl r3,#0							@ this is a bodge in the hope it is r3
 	push {r8-r11}
 	mov r10,r3						@ Read value
 	mov r8,#21						@ y pos
-	mov r9,#8						@ Number of digits
+	mov r9,#12						@ Number of digits
 	mov r11, #18					@ x pos
 	bl drawDigits					@ Draw
 	pop {r8-r11}
 
 cmp r3,#7488
-movpl r3,#0							@ this is a bodge in the hope it is r3
-@crashme3:
-@bpl crashme3
+crashme2:
+bge crashme2
 
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
@@ -258,15 +256,14 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	push {r8-r11}
 	mov r10,r3						@ Read value
 	mov r8,#22						@ y pos
-	mov r9,#8						@ Number of digits
-	mov r11, #9						@ x pos
+	mov r9,#12						@ Number of digits
+	mov r11, #4						@ x pos
 	bl drawDigits					@ Draw
 	pop {r8-r11}
 
 cmp r3,#7488
-movpl r3,#0							@ this is a bodge in the hope it is r3
-@crashme2:
-@bpl crashme2
+crashme3:
+bge crashme3
 
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
@@ -403,15 +400,14 @@ movpl r3,#0							@ this is a bodge in the hope it is r3
 	push {r8-r11}
 	mov r10,r3						@ Read value
 	mov r8,#22						@ y pos
-	mov r9,#8						@ Number of digits
+	mov r9,#12						@ Number of digits
 	mov r11, #18						@ x pos
 	bl drawDigits					@ Draw
 	pop {r8-r11}
-
+	
 cmp r3,#7488
-movpl r3,#0							@ this is a bodge in the hope it is r3
-@crashme2:
-@bpl crashme2
+crashme4:
+bge crashme4
 	
 	@ LOCATION OF NB BUG. In certain circumstances (near the boss) the value of r3 is massive
 	@ I recorded 81701358 but I was only displaying 8 digits on output so it could have been larger

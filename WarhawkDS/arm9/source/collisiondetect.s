@@ -54,20 +54,6 @@ detectBGL:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
-@ ok let us watch the values!!
-@ these should never excede 0-7487
-	push {r8-r11}
-	mov r10,r3						@ Read value
-	mov r8,#21						@ y pos
-	mov r9,#12						@ Number of digits
-	mov r11, #4						@ x pos
-	bl drawDigits					@ Draw
-	pop {r8-r11}
-
-cmp r3,#7488
-crashme1:
-bge crashme1
-
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
 	cmp r6,#0					@ if we find a 0 = no hit!
@@ -202,20 +188,6 @@ bge crashme1
 	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
 
-@ ok let us watch the values!!
-@ these should never excede 0-7487
-	push {r8-r11}
-	mov r10,r3						@ Read value
-	mov r8,#21						@ y pos
-	mov r9,#12						@ Number of digits
-	mov r11, #18					@ x pos
-	bl drawDigits					@ Draw
-	pop {r8-r11}
-
-cmp r3,#7488
-crashme2:
-bge crashme2
-
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
 	cmp r6,#0					@ if we find a 0 = no hit!
@@ -249,21 +221,6 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	lsr r3,#5					@ divide by 32 (our blocks)
 	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
-
-
-@ ok let us watch the values!!
-@ these should never excede 0-7487
-	push {r8-r11}
-	mov r10,r3						@ Read value
-	mov r8,#22						@ y pos
-	mov r9,#12						@ Number of digits
-	mov r11, #4						@ x pos
-	bl drawDigits					@ Draw
-	pop {r8-r11}
-
-cmp r3,#7488
-crashme3:
-bge crashme3
 
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset
@@ -374,6 +331,7 @@ bge crashme3
 		mov r1,#6
 		strb r1,[r0]
 		bl addScore
+		ldmfd sp!, {r0-r6, pc} @ <--- This was missing and caused our NB bug!
 
 	no_hitR:
 	ldr r1, =spriteX+4			@ DO X COORD CONVERSION
@@ -394,24 +352,6 @@ bge crashme3
 	lsr r3,#5					@ divide by 32 (our blocks)
 	lsl r3,#4					@ mul by 16	to convert to our colMapStore format	
 	add r3,r1					@ add our X, r3 is now an offset to our collision data
-
-@ ok let us watch the values!!
-@ these should never excede 0-7487
-	push {r8-r11}
-	mov r10,r3						@ Read value
-	mov r8,#22						@ y pos
-	mov r9,#12						@ Number of digits
-	mov r11, #18						@ x pos
-	bl drawDigits					@ Draw
-	pop {r8-r11}
-	
-cmp r3,#7488
-crashme4:
-bge crashme4
-	
-	@ LOCATION OF NB BUG. In certain circumstances (near the boss) the value of r3 is massive
-	@ I recorded 81701358 but I was only displaying 8 digits on output so it could have been larger
-	@ Perhaps r3 is a negative number?
 
 	ldr r4,=colMapStore
 	ldrb r6,[r4,r3]			@ Check in collision map with r3 as byte offset

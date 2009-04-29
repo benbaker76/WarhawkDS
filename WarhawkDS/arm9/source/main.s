@@ -99,7 +99,7 @@ main:
 	@ ----
 	
 	ldr r0, =9000000
-	bl showHiScoreEntry
+	@bl showHiScoreEntry
 	
 	@ ----
 
@@ -129,7 +129,7 @@ main:
 
 	@ ----
 
-	@bl showIntro1
+	bl showIntro1
 
 	@ ------------------------------------
 	

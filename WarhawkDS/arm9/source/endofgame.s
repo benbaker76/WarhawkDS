@@ -94,12 +94,14 @@ showEndOfGame:
 	mov r1, #0
 	str r1, [r0]
 
+	bl stopSound
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
+	bl swiWaitForVBlank
 	
 	bl initStarData
 	bl initWindow
@@ -308,6 +310,7 @@ initLargeShipFly:
 	bl dmaCopy
 	
 	bl updateLargeShipFly
+	bl swiWaitForVBlank
 	
 	ldr r0, =6000								@ 5 seconds
 	ldr r1, =initSmallShipFly					@ Callback function address
@@ -401,6 +404,7 @@ initSmallShipFly:
 	bl dmaCopy
 	
 	bl updateSmallShipFly
+	bl swiWaitForVBlank
 	
 	ldr r0, =4000								@ 2 seconds
 	ldr r1, =initSmallShipLanded				@ Callback function address
@@ -422,6 +426,7 @@ initSmallShipLanded:
 	str r1, [r0]
 	
 	bl updateSmallShipLanded
+	bl swiWaitForVBlank
 	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =initMotherShipFly					@ Callback function address
@@ -451,6 +456,7 @@ initMotherShipFly:
 	strh r1, [r0]
 	
 	bl updateMotherShipFly
+	bl swiWaitForVBlank
 	
 	ldr r0, =3000								@ 1 seconds
 	ldr r1, =initEndOfGame						@ Callback function address

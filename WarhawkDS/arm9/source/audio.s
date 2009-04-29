@@ -29,6 +29,7 @@
 	.align
 	.text
 	
+	.global stopSound
 	.global playBlasterSound							@ Use = Normal Fire
 	.global playExplosionSound
 	.global playAlienExplodeSound
@@ -45,6 +46,22 @@
 	.global playSteelSound
 	.global playBossExplodeSound
 	.global playFireworksSound
+	
+stopSound:
+
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	mov r1, #0											@ Zero
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	mov r1, #-1											@ Stop sound value
+	str r1, [r0]										@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 playBlasterSound:
 

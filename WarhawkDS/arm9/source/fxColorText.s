@@ -111,7 +111,7 @@ fxColorCycleTextOff:
 	
 fxCopperTextHBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =colorHilight
 	ldr r0, [r0]
@@ -150,7 +150,7 @@ fxCopperTextVBlankContinue:
 	
 fxCopperTextVBlankDone:
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 
 	@ ---------------------------------------
 	
@@ -161,7 +161,6 @@ fxCopperTextVBlank:
 	bl DC_FlushAll
 	
 	ldr r0, =colorPal
-	ldrh r3, [r0]
 	
 	ldr r0, =colorPal
 	ldr r1, =colorPal
@@ -170,8 +169,9 @@ fxCopperTextVBlank:
 	bl dmaCopy
 	
 	ldr r0, =colorPal
-	ldr r1, =(255 * 2)
-	strh r3, [r0, r1]
+	ldrh r1, [r0]
+	ldr r2, =(255 * 2)
+	strh r1, [r0, r2]
 	
 	ldmfd sp!, {r0-r6, pc}
 

@@ -47,9 +47,6 @@ showEndOfLevel:
 	ldr r1, =GAMEMODE_ENDOFLEVEL				@ Set the gameMode to end of level
 	str r1, [r0]								@ Store back gameMode
 	
-	bl fxOff
-	bl fxFadeBlackInit
-	
 	ldr r0, =levelCount
 	ldr r1, =levelNum
 	ldr r1, [r1]
@@ -74,12 +71,16 @@ showEndOfLevel:
 	moveq r3, r5
 	str r3, [r2]
 	
+	bl stopSound
+	bl fxOff
+	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
+	bl swiWaitForVBlank
 	
 	bl initStarData
 	

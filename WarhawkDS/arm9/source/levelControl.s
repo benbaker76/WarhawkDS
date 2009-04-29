@@ -106,6 +106,7 @@ levelStart:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl stopSound
 	bl fxOff
 	bl fxFadeBlackInit
 	bl initVideoMain
@@ -114,11 +115,11 @@ levelStart:
 	bl clearOAM
 	bl initSprites
 	bl initLevelSprites
-	
 	bl clearBG0
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3	
+	bl swiWaitForVBlank
 	
 	bl drawMapScreenMain
 	bl drawMapScreenSub

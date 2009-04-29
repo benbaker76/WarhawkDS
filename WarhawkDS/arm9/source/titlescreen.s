@@ -44,6 +44,7 @@ showTitleScreen:
 	ldr r1, =GAMEMODE_TITLESCREEN
 	str r1, [r0]
 	
+	bl stopSound
 	bl fxOff
 	bl fxFadeBlackInit
 	bl initCheat
@@ -53,6 +54,7 @@ showTitleScreen:
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
+	bl swiWaitForVBlank
 	
 	mov r0,#0
 	ldr r1,=pixelOffsetSFSub

@@ -35,7 +35,7 @@
 
 initInterruptHandler:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	bl irqInit								@ Initialize Interrupts
 		
@@ -58,47 +58,47 @@ initInterruptHandler:
 	ldr r0, =(IRQ_VBLANK | IRQ_HBLANK | IRQ_TIMER1 | IRQ_TIMER2)		@ Interrupts
 	bl irqEnable							@ Enable
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
 	
 interruptHandlerVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl fxVBlank
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {pc}
 	
 	@ ------------------------------------
 	
 interruptHandlerHBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl fxHBlank
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {pc}
 	
 	@ ------------------------------------
 	
 interruptHandlerTimer1:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl audioStreamTimer1
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {pc}
 	
 	@ ------------------------------------
 	
 interruptHandlerTimer2:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl timerTimer2
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {pc}
 	
 	@ ------------------------------------
 

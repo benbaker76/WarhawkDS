@@ -107,6 +107,7 @@ showHiScoreEntry:
 	ldr r1, =GAMEMODE_HISCORE_ENTRY				@ Set the gameMode to hiscore entry
 	str r1, [r0]								@ Store back gameMode
 	
+	bl stopSound
 	bl fxOff
 	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
@@ -115,6 +116,7 @@ showHiScoreEntry:
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
+	bl swiWaitForVBlank
 	
 	bl initStarData
 	

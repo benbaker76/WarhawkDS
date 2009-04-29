@@ -27,7 +27,7 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FIREWORK_COUNT				4
+	#define FIREWORK_COUNT				6
 	#define PARTICLE_COUNT				128
 	
 	@ 5 * 256 = 128, times 4 = 5120 pixels plotted :(

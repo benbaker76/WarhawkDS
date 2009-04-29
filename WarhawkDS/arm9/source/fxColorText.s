@@ -139,8 +139,10 @@ fxCopperTextVBlankContinue:
 	ldr r1, =BG_PALETTE_SUB
 	ldr r2, =REG_VCOUNT
 	ldrh r2, [r2]
+	cmp r2,#32
+	blt fxCopperTextVBlankDone
 	add r2, #1
-	lsl r2, #1
+	lsl r2, #1						@ why does this (commented) make it less noticable?
 	ldr r3, =colorPal
 	ldrh r2, [r3, r2]
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
@@ -158,7 +160,7 @@ fxCopperTextVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl DC_FlushAll
+@	bl DC_FlushAll								@ these are not needed
 	
 	ldr r0, =colorPal
 	ldr r1, =colorPal
@@ -166,7 +168,7 @@ fxCopperTextVBlank:
 	ldr r2, =(255 * 2)
 	bl dmaCopy
 	
-	bl DC_FlushAll
+@	bl DC_FlushAll
 	
 	ldr r0, =colorPal
 	ldrh r1, [r0]

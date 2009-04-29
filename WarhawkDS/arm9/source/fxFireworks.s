@@ -132,6 +132,8 @@ generateFireworks:
 	@ will need to pass this the number of the firework!
 	@ r0=firework to generate....
 	@ so r0 * PARTICLE_COUNT = start pos
+	
+	bl playFireworksSound				@ Play fireworks sound
 
 	ldr r2,=fireworkLife
 	bl getRandom
@@ -396,7 +398,6 @@ updateFireworks:
 		ldr r4,[r3,r0, lsl #2]			@ load the life of the firework based on r0 into r4
 		subs r4,#1						@ take 1 off the life
 		str r4,[r3,r0, lsl #2]			@ store it back
-		bleq playFireworksSound			@ Play fireworks sound
 		bleq generateFireworks			@ regenerate based on r0 (firework count)
 		subs r0,#1
 	bpl updateFireworksGenLoop	

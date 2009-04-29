@@ -27,8 +27,8 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define FIREWORK_COUNT				5
-	#define FIREWORK_BURST				256
+	#define FIREWORK_COUNT				4
+	#define PARTICLE_COUNT				128
 	
 	@ 5 * 256 = 128, times 4 = 5120 pixels plotted :(
 	@ this is always going to be a lot slower that framebuffer as the calcs
@@ -46,22 +46,24 @@ fxFireworksOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl initVideoStar
+	bl initVideoParticles
 	
 	@ Clear the tile data
 	
-	bl clearStars
+	bl clearFireworks
 	
 	@ set the screen up to use numbered tiles from 0-767, a hybrid bitmap!	
 	
 	mov r0, #0										@ tile number
-	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)				@ where to store it
-	ldr r2, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)		@ where to store it
+	ldr r2, =BG_MAP_RAM(BG2_MAP_BASE)				@ where to store it
+	ldr r3, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)		@ where to store it
 
 fxFireworksOnLoop:
 
-	strh r0, [r1], #2
-	strh r0, [r2], #2
+	mov r1, r0
+	orr r1, #(1 << 12)								@ Set palette entry 1
+	strh r1, [r2], #2
+	strh r1, [r3], #2
 	add r0, #1
 	cmp r0, #(32 * 24)
 	
@@ -69,10 +71,23 @@ fxFireworksOnLoop:
 	
 	mov r0, #FIREWORK_COUNT	
 	sub r0,#1
-	fireworkMake:
-		bl fxFireworkGenerate							@ r0=firework to generate
-		subs r0,#1
-	bpl fireworkMake
+	
+createFireworksLoop:
+
+	bl generateFireworks							@ r0=firework to generate
+	subs r0,#1
+	
+	bpl createFireworksLoop
+	
+	ldr r0, =fireworkPalette
+	ldr r1, =BG_PALETTE
+	ldr r2, =8*2
+	ldr r3, =16*2
+	add r1, r3
+	bl dmaCopy
+	ldr r1, =BG_PALETTE_SUB
+	add r1, r3
+	bl dmaCopy
 
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -102,19 +117,21 @@ fxFireworksVBlank:
 
 	stmfd sp!, {r0, lr}
 	
-	bl clearStars									@ clear them (could use a dma to clear the screen?)
-	bl fxMoveFireworks								@ move em, based on x/y speeds and plot
+	bl clearFireworks								@ clear them (could use a dma to clear the screen?)
+	bl updateFireworks								@ move em, based on x/y speeds and plot
 	
 	ldmfd sp!, {r0, pc}
 
 	@ ---------------------------------------
 
-fxFireworkGenerate:
+generateFireworks:
+
 	stmfd sp!, {r0-r12, lr}
+	
 	@ ok, to generate a firework, all plots are at an initial X,y
 	@ will need to pass this the number of the firework!
 	@ r0=firework to generate....
-	@ so r0 * firework_burst = start pos
+	@ so r0 * PARTICLE_COUNT = start pos
 
 	ldr r2,=fireworkLife
 	bl getRandom
@@ -122,7 +139,7 @@ fxFireworkGenerate:
 	add r8,#64
 	str r8,[r2,r0, lsl #2]				@ life of firework (r0 = firework number)
 
-	mov r1,#FIREWORK_BURST				@ number of particles in a burst
+	mov r1,#PARTICLE_COUNT				@ number of particles in a burst
 	mul r12,r1,r0						@ r12= offset - firework number*burst amount
 
 	lsl r12,#2							@ THIS IS WHAT IS FUCKING FORGOT - TWAT!!!!
@@ -140,20 +157,19 @@ fxFireworkGenerate:
 
 	bl getRandom						@ colour
 	and r8,#0x7							@ 0-7
-	ldr r3,=fireworkPalette
-	ldrb r3,[r3,r8]
+	mov r3, r8
 	
 	ldr r5,=0x1ff
 	ldr r6,=fireworkAngle
 	ldr r7,=fireworkSpeed
 	ldr r9,=fireworkGravity	
 	ldr r10,=0xfff
-	ldr r11,=fireworkTwinkle
+	ldr r11,=fireworkColor
 
-	mov r2,#FIREWORK_BURST				@ number of particles in a firework
+	mov r2,#PARTICLE_COUNT				@ number of particles in a firework
 	sub r2,#1							@ minus 1
 		
-	fireworkGenerateLoop:
+	generateFireworksLoop:
 	
 		ldr r4,=fireworkX	
 		str r0,[r4,r12]			@ store X and Y
@@ -172,32 +188,28 @@ fxFireworkGenerate:
 		mov r8,#0
 		str r8,[r9,r12]			@ store gravity
 
-		str r3,[r11,r12]			@ store twinkle value
+		str r3,[r11,r12]			@ store color value
 		
 		add r12,#4
 		subs r2,#1
 	
-	bpl fireworkGenerateLoop	
+	bpl generateFireworksLoop	
 
 	ldmfd sp!, {r0-r12, pc}
 
 	@ ---------------------------------------
-
 	
-fxDrawFirePixel:
+drawParticle:
+
 	stmfd sp!, {r0-r7, lr}
+	
 	@ pass r0,r1 = x/y
 	@ r2 = palette entry
 	
-	ldr r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)
-	str r6,fireworkMain										@ store like this a quicker to retrieve directly
-	ldr r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
-	str r6,fireworkSub										@ these 2 vars MUST remain local for speed
-
 	push {r1}
 	cmp r1,#0xc0000									@ 192 in 20.12 format
-	ldrpl r6,fireworkMain							@ bottom screen
-	ldrlt r6,fireworkSub							@ top screen
+	ldrpl r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)		@ bottom screen
+	ldrlt r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)@ top screen
 	subpl r1,#0xC0000								@ 192 in 20.12 format
 	mov r5, r1, lsr #15								@ r9 = y / 8 (+12) (THESE COMMENTS DO NOT REALLY MATCH NOW)
 	lsl r5, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
@@ -210,8 +222,6 @@ fxDrawFirePixel:
 	orr r4, r2, lsl r7								@ or our colour in (shifted x units)
 	str r4, [r3, r5, lsr #10]						@ store it back	
 
-@ldmfd sp!, {r0-r7, pc}
-	
 	add r0,#0x1000	
 	mov r5, r1, lsr #15								@ r9 = y / 8 (+12) (THESE COMMENTS DO NOT REALLY MATCH NOW)
 	lsl r5, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
@@ -224,13 +234,12 @@ fxDrawFirePixel:
 	orr r4, r2, lsl r7								@ or our colour in (shifted x units)
 	str r4, [r3, r5, lsr #10]						@ store it back		
 	
-	
 	pop {r1}
 	add r1,#0x1000
 	sub r0,#0x1000
 	cmp r1,#0xc0000									@ 192 in 20.12 format
-	ldrpl r6,fireworkMain							@ bottom screen
-	ldrlt r6,fireworkSub							@ top screen
+	ldrpl r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)		@ bottom screen
+	ldrlt r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)@ top screen
 	subpl r1,#0xC0000								@ 192 in 20.12 format
 	mov r5, r1, lsr #15								@ r9 = y / 8 (+12) (THESE COMMENTS DO NOT REALLY MATCH NOW)
 	lsl r5, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
@@ -258,13 +267,13 @@ fxDrawFirePixel:
 	
 	ldmfd sp!, {r0-r7, pc}
 
-@------------------------------------------------
+	@ ---------------------------------------
 
-fxMoveFireworks:
+updateFireworks:
 
 	stmfd sp!, {r0-r12, lr}
 	
-		mov r7,#FIREWORK_BURST*FIREWORK_COUNT
+		mov r7,#PARTICLE_COUNT*FIREWORK_COUNT
 		sub r7,#1
 		@ need to calculte r7 based on firework numbers
 		
@@ -274,7 +283,7 @@ fxMoveFireworks:
 		ldr r9,=fireworkY
 		ldr r10,=fireworkSpeed
 
-		fireworkMoveLoop:
+		updateFireworksLoop:
 
 		@ ok, first grab the X and y and update them with speed and cos/sin
 		
@@ -302,27 +311,23 @@ fxMoveFireworks:
 			str r0,[r8, r5]				@ store new X
 			str r1,[r9, r5]				@ store new Y
 	
-			ldr r4,=fireworkTwinkle
+			ldr r4,=fireworkColor
 			ldr r2,[r4, r5]				@ r2=firework colour
 
 			cmp r0,#0
-			bmi fxFireworkNoDraw
+			bmi updateFireworksNoDraw
 			cmp r0,#0xff000
-			bgt fxFireworkNoDraw
+			bgt updateFireworksNoDraw
 			cmp r1,#0
-			bmi fxFireworkNoDraw
+			bmi updateFireworksNoDraw
 			cmp r1,#0x180000
-			bpl fxFireworkNoDraw
+			bpl updateFireworksNoDraw
 			
-				ldr r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)
-				str r6,fireworkMain										@ store like this a quicker to retrieve directly
-				ldr r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
-				str r6,fireworkSub										@ these 2 vars MUST remain local for speed
 				push {r7}
 				push {r1}
 				cmp r1,#0xc0000									@ 192 in 20.12 format
-				ldrpl r6,fireworkMain							@ bottom screen
-				ldrlt r6,fireworkSub							@ top screen
+				ldrpl r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)		@ bottom screen
+				ldrlt r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)@ top screen
 				subpl r1,#0xC0000								@ 192 in 20.12 format
 				mov r5, r1, lsr #15								@ r9 = y / 8 (+12) (THESE COMMENTS DO NOT REALLY MATCH NOW)
 				lsl r5, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
@@ -349,8 +354,8 @@ fxMoveFireworks:
 				add r1,#0x1000
 				sub r0,#0x1000
 				cmp r1,#0xc0000									@ 192 in 20.12 format
-				ldrpl r6,fireworkMain							@ bottom screen
-				ldrlt r6,fireworkSub							@ top screen
+				ldrpl r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)		@ bottom screen
+				ldrlt r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)@ top screen
 				subpl r1,#0xC0000								@ 192 in 20.12 format
 				mov r5, r1, lsr #15								@ r9 = y / 8 (+12) (THESE COMMENTS DO NOT REALLY MATCH NOW)
 				lsl r5, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
@@ -375,10 +380,10 @@ fxMoveFireworks:
 				str r4, [r3, r5, lsr #10]						@ store it back	
 				pop {r7}
 
-			fxFireworkNoDraw:
+			updateFireworksNoDraw:
 	
 			subs r7,#1
-		bpl fireworkMoveLoop
+		bpl updateFireworksLoop
 
 	@ generate new firework based on life
 
@@ -386,50 +391,67 @@ fxMoveFireworks:
 	sub r0,#1
 	ldr r3,=fireworkLife
 
-	fireworkGenLoop:
+	updateFireworksGenLoop:
 	
 		ldr r4,[r3,r0, lsl #2]			@ load the life of the firework based on r0 into r4
 		subs r4,#1						@ take 1 off the life
 		str r4,[r3,r0, lsl #2]			@ store it back
-		bleq fxFireworkGenerate			@ regenerate based on r0 (firework count)
+		bleq generateFireworks			@ regenerate based on r0 (firework count)
 		subs r0,#1
-	bpl fireworkGenLoop	
+	bpl updateFireworksGenLoop	
 	
 	ldmfd sp!, {r0-r12, pc}
+	
+	@ ---------------------------------------
+	
+clearFireworks:
 
-fireworkMain:
-	.word 0
-fireworkSub:
-	.word 0
+	stmfd sp!, {r0-r6, lr}
+	
+	mov r0, #0
+	ldr r1, =BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
+	ldr r2, =(32 * 24 * 32)
+	bl dmaFillWords
+	ldr r1, =BG_TILE_RAM(STAR_BG2_TILE_BASE)
+	bl dmaFillWords
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
 
 	.data
-	.pool
 	.align
-fireworkColor:
-	.word 0
-	
-	.align
+
 fireworkSpeed:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4	
+	.space (FIREWORK_COUNT*PARTICLE_COUNT*4)	
+	
 fireworkX:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*PARTICLE_COUNT*4)
+	
 fireworkY:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*PARTICLE_COUNT*4)
+	
 fireworkAngle:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*PARTICLE_COUNT*4)
+	
 fireworkGravity:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
-fireworkTwinkle:
-	.space (FIREWORK_COUNT*FIREWORK_BURST)*4
+	.space (FIREWORK_COUNT*PARTICLE_COUNT*4)
+	
+fireworkColor:
+	.space (FIREWORK_COUNT*PARTICLE_COUNT*4)
+	
 fireworkLife:
 	.space (FIREWORK_COUNT*4)
+	
 fireworkPalette:
-	.byte 4,2,5,6,11,12,13,11
-
+	.hword COLOR_RED, COLOR_LIME, COLOR_BLUE, COLOR_YELLOW, COLOR_CYAN, COLOR_MAGENTA, COLOR_ORANGE, COLOR_VIOLET
+	
+	.pool
 	.end
 
+	@ ---------------------------------------
 
-@ plot code (condensed)
+	@ plot code (condensed)
 
 	r1=y (20.12)
 	r0=x (20.12)
@@ -437,15 +459,9 @@ fireworkPalette:
 	
 	uses r3,r4,r5,r6
 
-
-	ldr r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)
-	str r6,starMain										@ store like this a quicker to retrieve directly
-	ldr r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
-	str r6,starSub										@ these 2 vars MUST remain local for speed
-
 	cmp r1,#0xc0000									@ 192 in 20.12 format
-	ldrpl r6,fireworkMain							@ bottom screen
-	ldrlt r6,fireworkSub							@ top screen
+	ldrpl r6,BG_TILE_RAM(STAR_BG2_TILE_BASE)		@ bottom screen
+	ldrlt r6,BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)@ top screen
 	subpl r1,#0xC0000								@ 192 in 20.12 format
 	mov r5, r1, lsr #15								@ r9 = y / 8 (+12) (THESE COMMENTS DO NOT REALLY MATCH NOW)
 	lsl r5, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)

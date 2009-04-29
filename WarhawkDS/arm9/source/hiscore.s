@@ -151,6 +151,20 @@ showHiScoreEntry:
 	
 	bl clearOAM									@ Reset all sprites
 	
+	@ Write the tile data
+	
+	ldr r0 ,=MoonscapeTiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =MoonscapeTilesLen
+	bl dmaCopy
+
+	@ Write map
+	
+	ldr r0, =MoonscapeMap
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =MoonscapeMapLen
+	bl dmaCopy
+	
 @	bl initLogoSprites
 	
 	ldr r0, =FontPal

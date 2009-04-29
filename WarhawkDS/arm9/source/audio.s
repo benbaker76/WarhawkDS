@@ -44,8 +44,10 @@
 	.global playLowSound
 	.global playSteelSound
 	.global playBossExplodeSound
+	.global playFireworksSound
 
 playBlasterSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -67,7 +69,10 @@ playBlasterSound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playExplosionSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -89,7 +94,10 @@ playExplosionSound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playAlienExplodeSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -110,8 +118,11 @@ playAlienExplodeSound:
 	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 playAlienExplodeScreamSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -132,8 +143,11 @@ playAlienExplodeScreamSound:
 	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 playElecShotSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -155,7 +169,10 @@ playElecShotSound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playLaserShotSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -176,8 +193,11 @@ playLaserShotSound:
 	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 playShipArmourHit1Sound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -199,7 +219,10 @@ playShipArmourHit1Sound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playShipArmourHit2Sound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -221,7 +244,10 @@ playShipArmourHit2Sound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playClassicSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -242,8 +268,11 @@ playClassicSound:
 	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 playCrashBuzSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -264,8 +293,11 @@ playCrashBuzSound:
 	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 playDinkDinkSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -286,8 +318,11 @@ playDinkDinkSound:
 	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 playHitWallSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -309,7 +344,10 @@ playHitWallSound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playLowSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -331,7 +369,10 @@ playLowSound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playSteelSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -353,7 +394,10 @@ playSteelSound:
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
+	@ ---------------------------------------------
+	
 playBossExplodeSound:
+
 	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
@@ -374,6 +418,33 @@ playBossExplodeSound:
 	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playFireworksSound:
+
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =fireworks_raw_end							@ Get the sample end
+	ldr r2, =fireworks_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =fireworks_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	@ldr r0, =REG_IPC_SYNC
+	@ldrh r1, [r0]
+	@ldr r2, =0xf0ff
+	@and r1, r2
+	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_SOUND)
+	@strh r1, [r0]
+	
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 	
 	.pool
 	.end

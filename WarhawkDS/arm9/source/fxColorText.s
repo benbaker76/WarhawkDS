@@ -161,12 +161,12 @@ fxCopperTextVBlank:
 	bl DC_FlushAll
 	
 	ldr r0, =colorPal
-	
-	ldr r0, =colorPal
 	ldr r1, =colorPal
 	add r0, #2
 	ldr r2, =(255 * 2)
 	bl dmaCopy
+	
+	bl DC_FlushAll
 	
 	ldr r0, =colorPal
 	ldrh r1, [r0]

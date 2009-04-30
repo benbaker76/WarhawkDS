@@ -71,6 +71,22 @@ fxCopperTextOff:
 	strh r2, [r0, r3]
 	strh r2, [r1, r3]
 	
+	mov r0, #0
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
+	mov r0, #1
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
@@ -104,22 +120,6 @@ fxColorCycleTextOff:
 	strh r2, [r0, r3]
 	strh r2, [r1, r3]
 	
-	mov r0, #0
-	mov r1, #0
-	mov r2, #0
-	mov r3, #0
-	mov r4, #0
-	
-	bl dmaTransfer
-	
-	mov r0, #1
-	mov r1, #0
-	mov r2, #0
-	mov r3, #0
-	mov r4, #0
-	
-	bl dmaTransfer
-	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
@@ -152,19 +152,11 @@ fxCopperTextVBlank:
 	beq fxCopperTextVBlankContinue
 	
 	ldr r1, =colorBuffer
-	ldr r2, =COLOR_HILIGHT
-	mov r3, #0
-	
-fxCopperTextVBlankLoop:
-
-	mov r4, r0, lsl #4
-	sub r4, #1
-	add r4, r3, lsl #1
-	strh r2, [r1, r4]
-
-	add r3, #1
-	cmp r3, #8
-	bne fxCopperTextVBlankLoop
+	add r1, r0, lsl #4
+	sub r1, #1
+	ldr r2, =(8 * 2)
+	ldr r0, =COLOR_HILIGHT
+	bl dmaFillHalfWords
 	
 fxCopperTextVBlankContinue:
 	

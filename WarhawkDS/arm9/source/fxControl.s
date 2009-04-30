@@ -51,6 +51,10 @@ fxOff:
 	blne fxFadeOff
 	tst r0, #FX_FADE_WHITE_OUT
 	blne fxFadeOff
+	tst r0, #FX_FADE_BG0_IN
+	blne fxFadeOff
+	tst r0, #FX_FADE_BG0_OUT
+	blne fxFadeOff
 	tst r0, #FX_MOSAIC_IN
 	blne fxMosaicOff
 	tst r0, #FX_MOSAIC_OUT
@@ -118,13 +122,17 @@ fxVBlank:
 	cmp r0, #0
 	beq fxVBlankDone
 	tst r0, #FX_FADE_BLACK_IN
-	blne fxFadeBlackInVBlank
+	blne fxFadeInVBlank
 	tst r0, #FX_FADE_BLACK_OUT
-	blne fxFadeBlackOutVBlank
+	blne fxFadeOutVBlank
 	tst r0, #FX_FADE_WHITE_IN
-	blne fxFadeWhiteInVBlank
+	blne fxFadeInVBlank
 	tst r0, #FX_FADE_WHITE_OUT
-	blne fxFadeWhiteOutVBlank
+	blne fxFadeOutVBlank
+	tst r0, #FX_FADE_BG0_IN
+	blne fxFadeInVBlank
+	tst r0, #FX_FADE_BG0_OUT
+	blne fxFadeOutVBlank
 	tst r0, #FX_MOSAIC_IN
 	blne fxMosaicInVBlank
 	tst r0, #FX_MOSAIC_OUT

@@ -177,9 +177,12 @@ showTextScroller:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl fxFadeBG0Init
 	bl fxTextScrollerOn
 	bl fxCopperTextOn
 	bl drawCreditText
+	
+	bl fxFadeBG0In
 	
 	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showCredits						@ Callback function address
@@ -365,10 +368,10 @@ updateTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	@ldr r1, =REG_KEYINPUT						@ Read Key Input
-	@ldr r2, [r1]
-	@tst r2, #BUTTON_A							@ Start button pressed?
-	@bleq showTitleScreen
+	ldr r1, =REG_KEYINPUT						@ Read Key Input
+	ldr r2, [r1]
+	tst r2, #BUTTON_A							@ Start button pressed?
+	bleq showTitleScreen
 	
 	bl scrollStarsHoriz							@ Scroll stars
 	bl updateLogoSprites						@ Update logo sprites

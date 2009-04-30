@@ -93,8 +93,6 @@ fxOff:
 	blne fxScanlineOff
 	tst r0, #FX_CROSSWIPE
 	blne fxCrossWipeOff
-	tst r0, #FX_COPPER_TEXT
-	blne fxCopperTextOff
 	tst r0, #FX_COLOR_CYCLE_TEXT
 	blne fxColorCycleTextOff
 	tst r0, #FX_FIREWORKS
@@ -186,8 +184,6 @@ fxHBlank:
 	blne fxScanlineHBlank
 	tst r0, #FX_CROSSWIPE
 	blne fxCrossWipeHBlank
-	tst r0, #FX_COPPER_TEXT
-	blne fxCopperTextHBlank
 	tst r0, #FX_COLOR_CYCLE_TEXT
 	blne fxColorCycleTextHBlank
 	

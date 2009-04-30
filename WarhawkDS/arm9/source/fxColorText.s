@@ -36,7 +36,6 @@
 	.text
 	.global fxCopperTextOn
 	.global fxCopperTextOff
-	.global fxCopperTextHBlank
 	.global fxCopperTextVBlank
 	.global fxColorCycleTextOn
 	.global fxColorCycleTextOff
@@ -105,54 +104,23 @@ fxColorCycleTextOff:
 	strh r2, [r0, r3]
 	strh r2, [r1, r3]
 	
+	mov r0, #0
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
+	mov r0, #1
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
 	ldmfd sp!, {r0-r6, pc}
-
-	@ ---------------------------------------
-	
-fxCopperTextHBlank:
-
-	stmfd sp!, {r0-r4, lr}
-	
-	ldr r0, =colorHilight
-	ldr r0, [r0]
-	cmp r0, #0
-	beq fxCopperTextVBlankContinue
-	
-	lsl r0, #3
-	sub r0, #1
-	ldr r1, =BG_PALETTE_SUB
-	ldr r2, =REG_VCOUNT
-	ldrh r2, [r2]
-	ldr r3, =(FONT_COLOR_OFFSET * 2)
-	ldr r4, =COLOR_HILIGHT
-	cmp r2, r0
-	blt fxCopperTextVBlankContinue
-	add r0, #8
-	cmp r2, r0
-	bge fxCopperTextVBlankContinue
-	strh r4, [r1, r3]
-	b fxCopperTextVBlankDone
-	
-fxCopperTextVBlankContinue:
-	
-	ldr r0, =BG_PALETTE
-	ldr r1, =BG_PALETTE_SUB
-	ldr r2, =REG_VCOUNT
-	ldrh r2, [r2]
-@	cmp r2,#32
-@	blt fxCopperTextVBlankDone
-	add r2, #1
-	lsl r2, #1						@ why does this (commented) make it less noticable?
-	ldr r3, =colorPal
-	ldrh r2, [r3, r2]
-	ldr r3, =(FONT_COLOR_OFFSET * 2)
-		
-	strh r2, [r0, r3]
-	strh r2, [r1, r3]
-	
-fxCopperTextVBlankDone:
-	
-	ldmfd sp!, {r0-r4, pc}
 
 	@ ---------------------------------------
 	
@@ -168,12 +136,57 @@ fxCopperTextVBlank:
 	ldr r2, =(255 * 2)
 	bl dmaCopy
 	
-	bl DC_FlushAll
-	
 	ldr r0, =colorPal
 	ldrh r1, [r0]
 	ldr r2, =(255 * 2)
 	strh r1, [r0, r2]
+	
+	ldr r0, =colorPal
+	ldr r1, =colorBuffer
+	ldr r2, =(256 * 2)
+	bl dmaCopy
+	
+	ldr r0, =colorHilight
+	ldr r0, [r0]
+	cmp r0, #0
+	beq fxCopperTextVBlankContinue
+	
+	ldr r1, =colorBuffer
+	ldr r2, =COLOR_HILIGHT
+	mov r3, #0
+	
+fxCopperTextVBlankLoop:
+
+	mov r4, r0, lsl #4
+	sub r4, #1
+	add r4, r3, lsl #1
+	strh r2, [r1, r4]
+
+	add r3, #1
+	cmp r3, #8
+	bne fxCopperTextVBlankLoop
+	
+fxCopperTextVBlankContinue:
+	
+	mov r0, #0								@ Dma channel
+	ldr r1, =colorBuffer					@ Source
+	ldr r2, =BG_PALETTE						@ Dest
+	ldr r3, =(FONT_COLOR_OFFSET * 2)
+	add r2, r3
+	mov r3, #1								@ Count
+	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_FIX)
+	
+	bl dmaTransfer
+	
+	mov r0, #1								@ Dma channel
+	ldr r1, =colorBuffer					@ Source
+	ldr r2, =BG_PALETTE_SUB					@ Dest
+	ldr r3, =(FONT_COLOR_OFFSET * 2)
+	add r2, r3
+	mov r3, #1								@ Count
+	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_FIX)
+	
+	bl dmaTransfer
 	
 	ldmfd sp!, {r0-r6, pc}
 
@@ -259,6 +272,10 @@ colorPal:
 	.hword 0x3def,0x4631,0x4e73,0x5294,0x5ad6,0x6318,0x6739,0x6f7b
 	.hword 0x6f7b,0x6739,0x6318,0x5ad6,0x5294,0x4e73,0x4631,0x3def
 	.hword 0x39ce,0x318c,0x294a,0x2529,0x1ce7,0x14a5,0x0c63,0x0842
+	
+	.align
+colorBuffer:
+	.space (256 * 2)
 	
 	.pool
 	.end

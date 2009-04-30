@@ -155,20 +155,16 @@ showTitleScreen:
 	bl drawSBMapScreenMain
 	bl drawSBMapScreenSub
 	
-	bl drawCreditText
-	
 	bl initLogoSprites
-	@bl drawStartSprites
 	
 	ldr r0, =ppotRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
 	
 	bl fxColorPulseOn
-	bl fxCopperTextOn
 	bl fxSpotlightIn	
 	bl fxFadeBlackIn
 	
-	ldr r0, =2000								@ 2 seconds
+	ldr r0, =1000								@ 1 seconds
 	ldr r1, =showTextScroller					@ Callback function address
 	
 	bl startTimer
@@ -182,6 +178,8 @@ showTextScroller:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl fxTextScrollerOn
+	bl fxCopperTextOn
+	bl drawCreditText
 	
 	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showCredits						@ Callback function address
@@ -370,7 +368,7 @@ updateTitleScreen:
 	@ldr r1, =REG_KEYINPUT						@ Read Key Input
 	@ldr r2, [r1]
 	@tst r2, #BUTTON_A							@ Start button pressed?
-	@bleq initTitleScreen
+	@bleq showTitleScreen
 	
 	bl scrollStarsHoriz							@ Scroll stars
 	bl updateLogoSprites						@ Update logo sprites

@@ -44,20 +44,17 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 
 	cmp r3,#127
 	ble waveInitPossible
-
 	ldmfd sp!, {r0-r10, pc}
 
 	waveInitPossible:
 
-
-@push {r8-r11}
-@mov r10,r3
-@mov r8,#10						@ y pos
-@mov r9,#6						@ Number of digits
-@mov r11, #0						@ x pos
-@bl drawDigits	
-@pop {r8-r11}
-
+push {r8-r11}
+@	mov r10,r3
+@	mov r8,#0						@ y pos
+@	mov r9,#3						@ Number of digits
+@	mov r11, #9						@ x pos
+@	bl drawDigits					@ Draw
+pop {r8-r11}
 
 
 	ldr r2,=alienLevel
@@ -74,15 +71,6 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 	ldmfd sp!, {r0-r10, pc}
 
 	readyToInit:
-
-@push {r8-r11}
-@mov r10,r5
-@mov r8,#12						@ y pos
-@mov r9,#6						@ Number of digits
-@mov r11, #0						@ x pos
-@bl drawDigits	
-@pop {r8-r11}
-
 
 	ldr r4,=yposSub				
 	ldr r4,[r4]						@ r4= our scroll position
@@ -106,23 +94,6 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		sub r4,r7
 		lsr r4,#16					@ r4= ident
 		mov r6,r4					@ move to r6 for later
-
-@push {r8-r11}
-@mov r10,r6
-@mov r8,#14						@ y pos
-@mov r9,#6						@ Number of digits
-@mov r11, #0						@ x pos
-@bl drawDigits	
-@pop {r8-r11}
-
-@push {r8-r11}
-@mov r10,r7
-@mov r8,#14						@ y pos
-@mov r9,#6						@ Number of digits
-@mov r11, #10						@ x pos
-@bl drawDigits	
-@pop {r8-r11}
-
 
 	cmp r7,#SPRITE_TYPE_MINE		@ Check for a "MINE FIELD" request
 	bne noMines
@@ -173,8 +144,8 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	ldr r4,=alienDescript		@ r4=LOCATION OF ALIEN DESCRIPTION
 	add r4,r1, lsl #7			@ add it to aliendescrip so we know where to grab from
 								@ now er need to find a blank alien
-	ldr r3,=spriteActive+68
-
+	ldr r3,=spriteActive+68		@ IS +68 CORRECT, SOMEHOW AN ALIEN IS BECOMING A BULLET??
+								@ IT IS, SO WHAT IS IT????
 cmp r6,#5
 bpl initReversed
 
@@ -205,6 +176,9 @@ initReversed:					@	We scan from start to finish here to find spare slots
 	cmp r6, #6
 	blt notAnIdent
 
+@ there may be a problem here that causes normal aliens to colide and kill other aliens?
+@ it is a blead somewhere in the init? hmmmmm....
+
 	mov r0,#0
 	findSpaceExplodeLoop:
 		ldr r2,[r3,r0, lsl #2]
@@ -231,16 +205,6 @@ initReversed:					@	We scan from start to finish here to find spare slots
 		ldmfd sp!, {r0-r10, pc}	@ No space for the alien, so lets exit!	
 		
 	foundSpace:
-
-@push {r8-r11}
-@mov r10,r0
-@mov r8,#16						@ y pos
-@mov r9,#8						@ Number of digits
-@mov r11, #0						@ x pos
-@bl drawDigits	
-@pop {r8-r11}
-
-
 
 	mov r5,r0					@ store the sprite number for later retrieval
 	

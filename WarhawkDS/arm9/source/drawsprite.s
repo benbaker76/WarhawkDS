@@ -109,7 +109,7 @@ drawSprite:
 				str r1,[r0]
 				add r0,#512
 				add r2,#1
-				cmp r2,#22
+				cmp r2,#23
 			bne spriteClearLoop
 		
 			mov r1, #ATTR0_DISABLED			@ this should destroy the sprite

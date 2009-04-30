@@ -98,8 +98,8 @@ main:
 	
 	@ ----
 	
-	@ldr r0, =9000000
-	@bl showHiScoreEntry
+	ldr r0, =9000000
+@	bl showHiScoreEntry
 	
 	@ ----
 

@@ -165,7 +165,6 @@ alienFireMove:
 				add r2,r4, lsl #2			@ Set r2 to bullets offset
 				mov r3,#SPRITE_FIRE_TYPE_OFFS
 				ldr r3,[r2,r3]				@ r3= fire type to update
-	
 				cmp r3,#9					@ check for standard shot 1-12
 					blmi moveStandardShot
 				cmp r3,#9

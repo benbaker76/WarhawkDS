@@ -38,16 +38,16 @@ initData:
 	stmfd sp!, {r0-r10, lr}
 
 	ldr r0,=levelNum
-	mov r1,#1
+	mov r1,#8
 	str r1,[r0]
 	
 	ldr r0,=bossSpreadAngle
 	mov r1,#0
 	str r1,[r0]
 	
-@	ldr r0,=cheatMode
-@	mov r1,#1
-@	str r1,[r0]
+	ldr r0,=cheatMode
+	mov r1,#1
+	str r1,[r0]
 	
 	ldr r0,=powerUp
 	str r1,[r0]				@ set to one for autofire (on the original this carries on)

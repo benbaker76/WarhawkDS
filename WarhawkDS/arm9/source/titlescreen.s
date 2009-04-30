@@ -185,9 +185,28 @@ showTextScroller:
 	bl fxFadeBG0In
 	
 	ldr r0, =15000								@ 15 seconds
-	ldr r1, =showCredits						@ Callback function address
+	ldr r1, =showHiScore						@ Callback function address
 	
 	bl startTimer
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showHiScore:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubInit
+	bl clearBG0Sub								@ Clear BG0 (Sub screen)
+	bl drawHiScoreText							@ Draw the hiscore text
+	
+	bl fxFadeBG0SubIn
+	
+	ldr r0, =15000								@ 15 seconds
+	ldr r1, =showCredits						@ Callback function address
+	
+	bl startTimer								@ Start the timer
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -197,7 +216,11 @@ showCredits:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl fxFadeBG0SubInit
+	bl clearBG0Sub								@ Clear BG0 (Sub screen)
 	bl drawCreditText
+	
+	bl fxFadeBG0SubIn
 	
 	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showHiScore						@ Callback function address
@@ -211,8 +234,6 @@ showCredits:
 drawCreditText:
 
 	stmfd sp!, {r0-r6, lr}
-	
-	bl clearBG0Sub
 
 	ldr r0, =proteusDevelopmentsText			@ Load out text pointer
 	ldr r1, =3									@ x pos

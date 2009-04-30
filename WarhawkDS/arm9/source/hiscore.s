@@ -42,9 +42,9 @@
 	.align
 	.text
 	.global readHiScore
-	.global showHiScore
 	.global showHiScoreEntry
 	.global updateHiScoreEntry
+	.global drawHiScoreText
 	.global byte2Int
 	
 readHiScore:
@@ -57,23 +57,6 @@ readHiScore:
 	bl readFileBuffer							@ Read the HiScore.dat
 	
 	bl DC_FlushAll								@ Flush the cache
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
-	
-	@---------------------------------
-
-showHiScore:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	bl clearBG0Sub								@ Clear BG0 (Sub screen)
-
-	bl drawHiScoreText							@ Draw the hiscore text
-	
-	ldr r0, =15000								@ 15 seconds
-	ldr r1, =showCredits						@ Callback function address
-	
-	bl startTimer								@ Start the timer
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

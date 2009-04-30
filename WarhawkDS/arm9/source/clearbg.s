@@ -54,7 +54,7 @@ clearBG0:
 	
 clearBG0Sub:
 
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r0-r6, lr}	
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)

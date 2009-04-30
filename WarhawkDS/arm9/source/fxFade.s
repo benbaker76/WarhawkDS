@@ -32,6 +32,7 @@
 	.global fxFadeBlackInit
 	.global fxFadeWhiteInit
 	.global fxFadeBG0Init
+	.global fxFadeBG0SubInit
 	.global fxFadeOff
 	.global fxFadeBlackIn
 	.global fxFadeBlackOut
@@ -39,6 +40,8 @@
 	.global fxFadeWhiteOut
 	.global fxFadeBG0In
 	.global fxFadeBG0Out
+	.global fxFadeBG0SubIn
+	.global fxFadeBG0SubOut
 	.global fxFadeInVBlank
 	.global fxFadeOutVBlank
 	
@@ -111,11 +114,35 @@ fxFadeBG0Init:
 	str r1, [r0]
 	
 	ldr r0, =BLEND_AB					@ Blend register
-	ldr r1, =0							@ Set to fade out
+	ldr r1, =(0xF << 8)					@ Set to fade out
 	strh r1, [r0]						@ Write to BLEND_AB
 	
 	ldr r0, =SUB_BLEND_AB				@ Blend register
-	ldr r1, =0							@ Set to fade out
+	ldr r1, =(0xF << 8)					@ Set to fade out
+	strh r1, [r0]						@ Write to SUB_BLEND_AB
+	
+	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeBG0SubInit:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =BLEND_CR
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =SUB_BLEND_CR
+	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_DST_BG0 | BLEND_DST_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
+	str r1, [r0]
+	
+	ldr r0, =SUB_BLEND_AB				@ Blend register
+	ldr r1, =(0xF << 8)					@ Set to fade out
 	strh r1, [r0]						@ Write to SUB_BLEND_AB
 	
 	ldr r0, =fadeValue					@ Get our fadeValue
@@ -132,7 +159,7 @@ fxFadeOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_FADE_BLACK_IN | FX_FADE_BLACK_OUT | FX_FADE_WHITE_IN | FX_FADE_WHITE_OUT | FX_FADE_BG0_IN | FX_FADE_BG0_OUT)
+	and r1, #~(FX_FADE_IN | FX_FADE_OUT)
 	str r1, [r0]
 	
 	ldr r0, =BLEND_CR
@@ -155,7 +182,7 @@ fxFadeBlackIn:
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_BLACK_IN
+	orr r1, #FX_FADE_IN
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -170,7 +197,7 @@ fxFadeBlackOut:
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_BLACK_OUT
+	orr r1, #FX_FADE_OUT
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -185,7 +212,7 @@ fxFadeWhiteIn:
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_WHITE_IN
+	orr r1, #FX_FADE_IN
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -200,7 +227,7 @@ fxFadeWhiteOut:
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_WHITE_OUT
+	orr r1, #FX_FADE_OUT
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -215,7 +242,7 @@ fxFadeBG0In:
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_BG0_IN
+	orr r1, #FX_FADE_IN
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -230,7 +257,37 @@ fxFadeBG0Out:
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
-	orr r1, #FX_FADE_BG0_OUT
+	orr r1, #FX_FADE_OUT
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeBG0SubIn:
+
+	stmfd sp!, {r0-r6, lr}
+
+	bl fxFadeBG0SubInit
+	
+	ldr r0, =fxMode					@ lets set the fade effect
+	ldr r1, [r0]
+	orr r1, #FX_FADE_IN
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeBG0SubOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubInit
+	
+	ldr r0, =fxMode					@ lets set the fade effect
+	ldr r1, [r0]
+	orr r1, #FX_FADE_OUT
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

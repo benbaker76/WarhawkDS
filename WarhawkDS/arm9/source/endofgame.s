@@ -298,6 +298,7 @@ initLargeShipFly:
 	str r1, [r0]
 	
 	bl clearBG0
+	bl updateLargeShipFly
 	
 	ldr r0, =LargeShipTiles
 	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
@@ -308,9 +309,6 @@ initLargeShipFly:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =LargeShipMapLen
 	bl dmaCopy
-	
-	bl updateLargeShipFly
-	bl swiWaitForVBlank
 	
 	ldr r0, =6000								@ 5 seconds
 	ldr r1, =initSmallShipFly					@ Callback function address
@@ -357,6 +355,7 @@ initSmallShipFly:
 	strh r1, [r0]
 	
 	bl clearBG1
+	bl updateSmallShipFly
 	
 	@ Clear Sprites
 	
@@ -403,9 +402,6 @@ initSmallShipFly:
 	ldr r1, =SPRITE_GFX_SUB
 	bl dmaCopy
 	
-	bl updateSmallShipFly
-	bl swiWaitForVBlank
-	
 	ldr r0, =4000								@ 2 seconds
 	ldr r1, =initSmallShipLanded				@ Callback function address
 	
@@ -426,7 +422,6 @@ initSmallShipLanded:
 	str r1, [r0]
 	
 	bl updateSmallShipLanded
-	bl swiWaitForVBlank
 	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =initMotherShipFly					@ Callback function address
@@ -445,7 +440,7 @@ initMotherShipFly:
 	ldr r1, =MODE_MOTHERSHIP_FLY
 	str r1, [r0]
 	
-	bl initWindow
+	@bl initWindow
 	
 	ldr r0, =WIN_OUT						@ Make bg's appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
@@ -456,7 +451,6 @@ initMotherShipFly:
 	strh r1, [r0]
 	
 	bl updateMotherShipFly
-	bl swiWaitForVBlank
 	
 	ldr r0, =3000								@ 1 seconds
 	ldr r1, =initEndOfGame						@ Callback function address

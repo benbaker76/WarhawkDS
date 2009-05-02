@@ -369,7 +369,7 @@ energyLevel:
 	.align
 getReadyText:
 	.asciz "GET READY!"
-	
+	.align
 pausedText:
 	.asciz "PAUSED"
 	

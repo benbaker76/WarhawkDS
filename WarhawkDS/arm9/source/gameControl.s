@@ -111,6 +111,10 @@ showGameUnPause:
 	
 	bl fxCopperTextOff
 	bl clearBG0
+
+	mov r1,#1
+	ldr r0,=fireTrap
+	str r1,[r0]					@ this stops a fire when a is pressed!
 		
 	ldmfd sp!, {r0-r1, pc}
 	
@@ -169,7 +173,7 @@ updateGameUnPause:
 	ldr r1, [r0]
 	tst r1, #BUTTON_A							@ Select button pressed?
 	bleq showGameUnPause
-		
+
 	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------

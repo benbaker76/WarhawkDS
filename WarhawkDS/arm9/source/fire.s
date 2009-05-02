@@ -79,7 +79,10 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			cmp r1,#255
 			moveq r1,#255			@ but not to go too high
 			str r1,[r0]
-					
+			
+			cmp r1,#1				@ this bit enables a fire on press and release
+			beq initFire			@ of the fire button, better?? or TOO MUCH?
+			
 		@ and exit!
 		ldmfd sp!, {r0-r6, pc}
 

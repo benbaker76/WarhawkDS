@@ -51,10 +51,10 @@ writePowerManagement:
 	stmfd sp!, {r1-r3, lr}
 	
 	ldr r2, =REG_SPICNT
-	ldr r3, [r2]
 
 writePowerManagementLoop1:
 
+	ldrh r3, [r2]
 	tst r3, #SPI_BUSY
 	bne writePowerManagementLoop1
 	
@@ -66,10 +66,10 @@ writePowerManagementLoop1:
 	strh r3, [r2]
 	
 	ldr r2, =REG_SPICNT
-	ldr r3, [r2]
-	
+
 writePowerManagementLoop2:
 
+	ldrh r3, [r2]
 	tst r3, #SPI_BUSY
 	bne writePowerManagementLoop2
 	
@@ -81,15 +81,15 @@ writePowerManagementLoop2:
 	strh r3, [r2]
 	
 	ldr r2, =REG_SPICNT
-	ldr r3, [r2]
 	
 writePowerManagementLoop3:
 
+	ldrh r3, [r2]
 	tst r3, #SPI_BUSY
 	bne writePowerManagementLoop3
 	
 	ldr r0, =REG_SPIDATA
-	ldr r0, [r0]
+	ldrh r0, [r0]
 	and r0, #0xFF
 
 	ldmfd sp!, {r1-r3, pc} 					@ restore registers and return

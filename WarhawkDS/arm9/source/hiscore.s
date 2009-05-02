@@ -68,7 +68,8 @@ showHiScoreEntry:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	push {r0}
+	ldr r1, =hiScoreValue
+	str r0, [r1]
 	
 	bl getHiScoreIndex							@ Get the hiscore index
 	
@@ -112,12 +113,13 @@ showHiScoreEntry:
 	mov r1, #0
 	str r1, [r0]
 	
+	ldr r0, =hiScoreValue
+	ldr r0, [r0]
 	ldr r1, =colorHilight						@ Load colorHilight address
 	mov r2, r0									@ Move hiscore index
 	add r2, #10									@ Add 10 line offset
 	str r2, [r1]								@ Write back to colorHilight
 	
-	pop {r0}
 	bl addHiScore								@ Add the hiscore
 	
 	ldr r0, =nameAAA							@ Load "AAA" address
@@ -621,6 +623,9 @@ byte2IntLoop:
 	.align
 	
 cursorPos:
+	.word 0
+	
+hiScoreValue:
 	.word 0
 	
 hiScoreIndex:

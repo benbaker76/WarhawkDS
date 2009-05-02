@@ -101,10 +101,6 @@ showHiScoreEntry:
 	mov r1, #0
 	str r1, [r0]
 	
-	ldr r0, =hiScoreIndex						@ Reset hiscoreIndex
-	mov r1, #0
-	str r1, [r0]
-	
 	ldr r0, =hofsSF
 	mov r1, #0
 	str r1, [r0]
@@ -115,10 +111,6 @@ showHiScoreEntry:
 	
 	ldr r0, =hiScoreValue
 	ldr r0, [r0]
-	ldr r1, =colorHilight						@ Load colorHilight address
-	mov r2, r0									@ Move hiscore index
-	add r2, #10									@ Add 10 line offset
-	str r2, [r1]								@ Write back to colorHilight
 	
 	bl addHiScore								@ Add the hiscore
 	
@@ -193,6 +185,12 @@ showHiScoreEntry:
 @	bl fxStarfieldOn							@ Tune on starfield
 	bl fxFadeBlackIn
 	bl fxFireworksOn
+	
+	ldr r0, =hiScoreIndex
+	ldr r1, =colorHilight						@ Load colorHilight address
+	ldr r2, [r0]								@ Move hiscore index
+	add r2, #10									@ Add 10 line offset
+	str r2, [r1]								@ Write back to colorHilight
 	
 	b showHiScoreEntryDone
 	
@@ -471,6 +469,7 @@ saveHiScore:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl fxOff
+	bl fxFadeBlackInit
 	bl stopSound
 	bl stopAudioStream							@ Turn off music
 	

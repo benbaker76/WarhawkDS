@@ -68,7 +68,31 @@ showHiScoreEntry:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	mov r6, r0									@ Move the hiscore value into r6
+	bl getHiScoreIndex							@ Get the hiscore index
+	
+	ldr r1, =hiScoreIndex						@ Read hiScoreIndex address
+	str r0, [r1]								@ Write hiscore index
+	
+	cmp r0, #-1									@ Is the hiscore index -1? (No hiscore entry)
+	bleq showHiScoreEntryTitleScreen			@ Yes then go back to the title screen
+	
+	ldr r0, =gameMode							@ Get gameMode address
+	ldr r1, =GAMEMODE_HISCORE_ENTRY				@ Set the gameMode to hiscore entry
+	str r1, [r0]								@ Store back gameMode
+	
+	bl fxOff
+	bl stopSound
+	bl stopAudioStream
+	bl fxFadeBlackInit
+	bl initMainTiles							@ Initialize main tiles
+	bl resetScrollRegisters						@ Reset scroll registers
+	bl clearBG0									@ Clear bg's
+	bl clearBG1
+	bl clearBG2
+	bl clearBG3
+	bl swiWaitForVBlank
+	
+	bl initStarData
 	
 	ldr r0, =cursorPos							@ Reset cursorPos
 	mov r1, #0
@@ -85,32 +109,6 @@ showHiScoreEntry:
 	ldr r0, =hofsSB
 	mov r1, #0
 	str r1, [r0]
-	
-	ldr r0, =gameMode							@ Get gameMode address
-	ldr r1, =GAMEMODE_HISCORE_ENTRY				@ Set the gameMode to hiscore entry
-	str r1, [r0]								@ Store back gameMode
-	
-	bl stopSound
-	bl fxOff
-	bl fxFadeBlackInit
-	bl initMainTiles							@ Initialize main tiles
-	bl resetScrollRegisters						@ Reset scroll registers
-	bl clearBG0									@ Clear bg's
-	bl clearBG1
-	bl clearBG2
-	bl clearBG3
-	bl swiWaitForVBlank
-	
-	bl initStarData
-	
-	mov r0, r6									@ Move hiScore value to r0
-	bl getHiScoreIndex							@ Get the hiscore index
-	
-	ldr r1, =hiScoreIndex						@ Read hiScoreIndex address
-	str r0, [r1]								@ Write hiscore index
-	
-	cmp r0, #-1									@ Is the hiscore index -1? (No hiscore entry)
-	bleq showHiScoreEntryTitleScreen			@ Yes then go back to the title screen
 	
 	ldr r1, =colorHilight						@ Load colorHilight address
 	mov r2, r0									@ Move hiscore index
@@ -468,17 +466,15 @@ saveHiScore:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeBlackInit
-	bl fxColorPulseOff							@ Turn off color pulse
-	bl fxCopperTextOff							@ Turn off copper text
-	bl fxStarfieldOff							@ Turn off starfield
+	bl fxOff
+	bl stopSound
 	bl stopAudioStream							@ Turn off music
 	
 	ldr r0, =colorHilight						@ Load colorHilight address
 	mov r1, #0									@ Zero
 	str r1, [r0]								@ Set it to zero to turn off
 	
-	ldr r0, =nameBuffer					@ Load nameBuffer
+	ldr r0, =nameBuffer							@ Load nameBuffer
 	ldr r1, =hiScoreBuffer						@ Load hiScoreBuffer
 	ldr r2, =hiScoreIndex						@ Load hiScoreIndex address
 	ldr r2, [r2]								@ Load hiScoreIndex value

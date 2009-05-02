@@ -31,27 +31,27 @@
 	.arm
 	.align
 	.text
-	.global gameStart
-	.global gameStop
-	.global gamePause
+	.global showGameStart
+	.global showGameStop
+	.global showGamePause
+	.global showGameContinue
+	.global checkGameContinue
+	.global checkGamePause
+	.global updateGameUnPause
 	.global checkGameOver
 	
-gameStart:
+showGameStart:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 
-@	ldr r0, =gameMode
-@	ldr r1, =GAMEMODE_RUNNING
-@	str r1, [r0]
-
-	bl initData								@ setup actual game data
+	bl initData									@ setup actual game data
 	bl initLevel								@ Start level
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {pc}
 	
 	@ ------------------------------------
 	
-gameStop:
+showGameStop:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -63,40 +63,112 @@ gameStop:
 	
 	@ ------------------------------------
 	
-gamePause:
+showGamePause:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_PAUSED
 	str r1, [r0]
 		
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ------------------------------------
+	
+showGameUnPause:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_RUNNING
+	str r1, [r0]
+		
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ------------------------------------
+	
+checkGameContinue:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =levelNum
+	ldr r1, [r0]
+	ldr r2, =optionLevelNum
+	ldr r3, [r2]
+	
+	cmp r1, r3
+	ble checkGameContinueDone
+	
+	cmp r1, #LEVEL_4
+	streq r1, [r2]
+
+	cmp r1, #LEVEL_8
+	streq r1, [r2]
+	
+	cmp r1, #LEVEL_12
+	streq r1, [r2]
+	
+	cmp r1, #LEVEL_16
+	streq r1, [r2]
+	
+	bl writeOptions
+	
+checkGameContinueDone:
+	
+	ldmfd sp!, {r0-r2, pc}
+
+	@ ------------------------------------
+	
+checkGamePause:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =REG_KEYINPUT						@ Read Key Input
+	ldr r1, [r0]
+	tst r1, #BUTTON_START						@ Start button pressed?
+	bleq showGamePause
+		
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ------------------------------------
+	
+updateGameUnPause:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =REG_KEYINPUT						@ Read Key Input
+	ldr r1, [r0]
+	tst r1, #BUTTON_START						@ Start button pressed?
+	bleq showGameUnPause
+		
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
 	
 checkGameOver:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =energy
 	ldr r1, [r0]
 	cmp r1, #0
-	beq acivatePlayerDeath
-
-	ldmfd sp!, {r0-r6, pc}
+	beq activatePlayerDeath
 	
-	@-----------------
+	b checkGameOverDone
 
-acivatePlayerDeath:
+activatePlayerDeath:
 
 	ldr r0,=playerDeath
 	ldr r1,[r0]
 	cmp r1,#0
 	moveq r1,#1
-	str r1,[r0];
+	str r1,[r0]
+	
+checkGameOverDone:
 		
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ------------------------------------
 
 	.pool
 	.end

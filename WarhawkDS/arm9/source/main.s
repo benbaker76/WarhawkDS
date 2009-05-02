@@ -75,7 +75,7 @@ initSystem:
 	ldmfd sp!, {r0-r2, pc}
 
 main:
-	bl gameStop
+	bl showGameStop
 	bl initVideo
 	
 	bl initInterruptHandler						@ initialize the interrupt handler
@@ -94,7 +94,7 @@ main:
 	@ldr r0, =optionLevelNum
 	@ldr r1, =5
 	@str r1, [r0]
-	@bl showContinue
+	@bl showGameContinue
 	
 	@ ----
 	
@@ -143,24 +143,28 @@ mainLoop:
 	beq gameLoop
 	cmp r1, #GAMEMODE_STOPPED
 	beq mainLoopDone
+	cmp r1, #GAMEMODE_PAUSED
+	beq updateGameUnPause
 	cmp r1, #GAMEMODE_INTRO
 	bleq updateIntro
 	cmp r1, #GAMEMODE_LOADING
 	bleq updateLoading
 	cmp r1, #GAMEMODE_TITLESCREEN
 	bleq updateTitleScreen
-	cmp r1, #GAMEMODE_CONTINUE
-	bleq updateContinue
+	cmp r1, #GAMEMODE_GAMECONTINUE
+	bleq updateGameContinue
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
-	cmp r1, #GAMEMODE_HISCORE_ENTRY
-	bleq updateHiScoreEntry
+	cmp r1, #GAMEMODE_BOSSDIE
+	bleq updateBossDie
 	cmp r1, #GAMEMODE_ENDOFLEVEL
 	bleq updateEndOfLevel
+	cmp r1, #GAMEMODE_HISCORE_ENTRY
+	bleq updateHiScoreEntry
 	cmp r1, #GAMEMODE_ENDOFGAME
 	bleq updateEndOfGame
+	
 	b mainLoop
-
 
 gameLoop:
 
@@ -189,14 +193,15 @@ gameLoop:
 	bl checkLevelControl						@ check to see if we want to change level
 	bl playerDeathCheck							@ check and do DEATH stuff
 	bl useCheat									@ a call to restore health if cheat is active
+	bl checkGamePause							@ check if the game is paused
 	
 @	bl drawDebugText							@ draw some numbers :)
 
 
 	ldr r0,=levelEnd
 	ldr r0,[r0]
-	cmp r0,#2
-	bleq levelComplete
+	cmp r0,#LEVELENDMODE_BOSSDIE
+	bleq showBossDie
 	
 mainLoopDone:
 

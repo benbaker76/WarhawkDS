@@ -28,25 +28,33 @@
 #include "sprite.h"
 #include "ipc.h"
 
-	#define MENU_ITEM_COUNT			2
+	#define MENUITEM_RESTART		0
+	#define MENUITEM_CONTINUE		1
+
+	#define MENUITEM_COUNT			2
 	#define ARROW_COLOR_OFFSET		11
 
 	.arm
 	.align
 	.text
-	.global showContinue
-	.global updateContinue
+	.global showGameContinue
+	.global updateGameContinue
 	
-showContinue:
+showGameContinue:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =menuPos							@ Reset cursorPos
-	mov r1, #0
-	str r1, [r0]
+	ldr r0, =optionLevelNum						@ Read optionLevelNum address
+	ldr r0, [r0]								@ Read optionLevelNum value
+	
+	cmp r0, #1									@ Is optionLevelNum <= 1
+	ble showGameContinueGameStart				@ Yes then go to game start
+	
+	ldr r1, =levelNum
+	str r0, [r1]
 	
 	ldr r0, =gameMode							@ Get gameMode address
-	ldr r1, =GAMEMODE_CONTINUE					@ Set the gameMode to continue game
+	ldr r1, =GAMEMODE_GAMECONTINUE				@ Set the gameMode to continue game
 	str r1, [r0]								@ Store back gameMode
 	
 	bl stopSound
@@ -62,6 +70,10 @@ showContinue:
 	
 	bl initStarData
 	
+	ldr r0, =menuNum							@ Reset menuNum
+	mov r1, #0
+	str r1, [r0]
+	
 	ldr r0, =hofsSF
 	mov r1, #0
 	str r1, [r0]
@@ -69,13 +81,6 @@ showContinue:
 	ldr r0, =hofsSB
 	mov r1, #0
 	str r1, [r0]
-	
-	ldr r0, =optionLevelNum						@ Read optionLevelNum address
-	ldr r1, [r0]								@ Write optionLevelNum index
-	
-	cmp r1, #0									@ Is optionLevelNum 0?
-	bleq gameStart								@ Yes then go to game start
-	beq showContinueDone						@ And were done
 	
 	ldr r0, =SpritePal
 	ldr r1, =SPRITE_PALETTE
@@ -117,42 +122,42 @@ showContinue:
 	bl fxStarfieldOn							@ Tune on starfield
 	bl fxFadeBlackIn
 	
-showContinueDone:
+	ldr r0, =colorHilight
+	mov r1, #10
+	str r1, [r0]
+	
+	b showGameContinueDone
+	
+showGameContinueGameStart:
+
+	bl showGameStart
+	
+showGameContinueDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-updateContinue:
+updateGameContinue:
 
-	stmfd sp!, {r0-r8, lr}
-	
-	ldr r0, =levelNum							@ Load levelNum address
-	ldr r1, [r0]								@ Load levelNum value
-	ldr r2, =menuPos							@ Load menuPos address
-	ldr r3, [r2]								@ Load menuPos value
-	ldr r4, =colorHilight
-	mov r5, #0
-	add r5, r3, lsl #1
-	add r5, #10
-	str r5, [r4]
-	
+	stmfd sp!, {r0-r6, lr}
+		
 	bl readInput								@ read the input
 	
 	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
-	bne updateContinueSkip
+	bne updateGameContinueSkip
 	
 	ldr r0, =levelNum							@ Load levelNum address
-
+	ldr r1, [r0]								@ Load levelNum value
+	ldr r2, =menuNum							@ Load menuNum address
+	ldr r3, [r2]								@ Load menuNum value
+	
 	ldr r4, =REG_KEYINPUT						@ Read key input register
 	ldr r5, [r4]								@ Read key input value
 	tst r5, #BUTTON_UP							@ Button up?
 	subeq r3, #1								@ Move menu up
 	tst r5, #BUTTON_DOWN						@ Button down?
 	addeq r3, #1								@ Move menu down
-	
-	ldr r4, =REG_KEYINPUT						@ Read key input register
-	ldr r5, [r4]								@ Read key input value
 	tst r5, #BUTTON_LEFT						@ Button left?
 	subeq r1, #1								@ Move cursor left
 	tst r5, #BUTTON_RIGHT						@ Button right?
@@ -164,38 +169,51 @@ updateContinue:
 	cmp r1, #1									@ levelNum 0
 	movlt r1, #1								@ levelNum < 0 then make it 0
 	cmp r1, r4									@ levelNum optionLevelNum?
-	movgt r1, r4								@ levelNum > 2 then make it optionLevelNum
-	cmp r1, #LEVEL_COUNT						@ levelNum 2?
-	movgt r1, #LEVEL_COUNT						@ levelNum > 2 then make it 2
+	movgt r1, r4								@ levelNum > optionLevelNum then make it optionLevelNum
+	cmp r1, #LEVEL_COUNT						@ levelNum LEVEL_COUNT?
+	movgt r1, #LEVEL_COUNT						@ levelNum > LEVEL_COUNT then make it 2
 	
-	cmp r3, #0									@ menuPos 0
-	movlt r3, #MENU_ITEM_COUNT - 1				@ menuPos < 0 then make it 0
-	cmp r3, #MENU_ITEM_COUNT - 1				@ menuPos MENU_ITEM_COUNT?
-	movgt r3, #0								@ menuPos > 2 then make it MENU_ITEM_COUNT
+	cmp r3, #0									@ menuNum 0
+	movlt r3, #MENUITEM_COUNT - 1				@ menuNum < 0 then make it MENUITEM_COUNT
+	cmp r3, #MENUITEM_COUNT - 1					@ menuNum (MENU_ITEM_COUNT - 1)?
+	movgt r3, #0								@ menuNum > MENUITEM_COUNT then make it (MENU_ITEM_COUNT - 1)
 	
+	ldr r4, =colorHilight
+	mov r5, #0
+	add r5, r3, lsl #1
+	add r5, #10
+	str r5, [r4]
 	str r1, [r0]								@ Write back to levelNum
-	str r3, [r2]								@ Write back to menuPos
+	str r3, [r2]								@ Write back to menuNum
 
-updateContinueSkip:
+updateGameContinueSkip:
 	
 	bl drawArrowSprite							@ Draw the arrow sprite
-	bl drawContinueText							@ Draw the continue text
+	bl drawGameContinueText						@ Draw the continue text
 	bl scrollStarsHoriz
 	bl updateLogoSprites
 
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value
 	tst r1, #BUTTON_A							@ Button A?
-	bleq fxColorPulseOff						@ Turn off color pulse
-	bleq fxCopperTextOff						@ Turn off copper text fx
-	bleq fxStarfieldOff							@ Tune off starfield
-	bleq initLevel								@ Start level
+	bne updateGameContinueDone
+
+	ldr r0, =levelNum
+	ldr r1, =menuNum
+	ldr r1, [r1]
+	mov r2, #1
+	cmp r1, #MENUITEM_RESTART
+	streq r2, [r0]
+
+	bl initLevel								@ Start level
 	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+updateGameContinueDone:
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-drawContinueText:
+drawGameContinueText:
 
 	stmfd sp!, {r0-r6, lr}
 
@@ -236,7 +254,7 @@ drawArrowSprite:
 	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)				@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
 	orr r1, #(10 * 8)							@ Orr in the y pos (10 * 8 pixels + 2 pixels so cursor is below text)
-	ldr r2, =menuPos							@ Load the hiScoreIndex address
+	ldr r2, =menuNum							@ Load the hiScoreIndex address
 	ldr r2, [r2] 								@ Load the hiScoreIndex value
 	lsl r2, #1
 	add r1, r2, lsl #3							@ Add the hiScoreIndex * 8
@@ -258,7 +276,7 @@ drawArrowSprite:
 	.data
 	.align
 	
-menuPos:
+menuNum:
 	.word 0
 	
 	.align

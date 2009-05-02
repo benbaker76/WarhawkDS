@@ -56,21 +56,21 @@ checkBossInit:
 	
 	ldr r0,=bossMan
 	ldr r0,[r0]
-	cmp r0,#0
+	cmp r0,#BOSSMODE_CHECK_SCROLL
 	beq bossInit
-	cmp r0,#1
+	cmp r0,#BOSSMODE_GET_READY
 	beq bossActiveScroll		@ Use this to scroll the Boss with the bg1
-	cmp r0,#2
+	cmp r0,#BOSSMODE_ATTACK
 	bne bossDeadCheck
 		bl bossAttack			@ if he is active, let "bossAttack" do the work
 		b checkBossInitFail
 	bossDeadCheck:
-	cmp r0,#3
+	cmp r0,#BOSSMODE_EXPLODE
 	bne bossDeadCheck2
 		bl bossIsDead
 		b checkBossInitFail
 	bossDeadCheck2:
-	cmp r0,#4
+	cmp r0,#BOSSMODE_EXPLODE_DONE
 	bne checkBossInitFail
 		ldr r0,=explodeSpriteBossCount	@ if bossMan=4 we want to use this bit of code
 		ldr r0,[r0]						@ so that we can keep him moving for a bit
@@ -88,7 +88,7 @@ checkBossInit:
 	bne checkBossInitFail		@ not time yet :(
 		@ here we need to lay all the sprites and data out for the boss
 	
-		mov r1,#1
+		mov r1,#BOSSMODE_GET_READY
 		ldr r0,=bossMan
 		str r1,[r0]				@ set to "scroll mode" (So he will move with scroll only!)
 	
@@ -176,10 +176,10 @@ checkBossInit:
 		@ So, take y coord, add 1, call bossDraw!
 		ldr r0,=levelEnd
 		ldr r0,[r0]
-		cmp r0,#1
+		cmp r0,#LEVELENDMODE_BOSSATTACK
 		bne bossStillScroll
 			ldr r0,=bossMan
-			mov r1,#2
+			mov r1,#BOSSMODE_ATTACK
 			str r1,[r0]
 			bl fxFadeWhiteIn				@ need a FLASH to WHITE and back to NORMAL
 		bossStillScroll:
@@ -246,7 +246,7 @@ bossIsShot:
 	stmfd sp!, {r0-r8, lr}
 		ldr r8,=levelEnd
 		ldr r8,[r8]
-		cmp r8,#2
+		cmp r8,#LEVELENDMODE_BOSSDIE
 		beq heBeDead
 		
 		ldr r8,=playerDeath
@@ -262,7 +262,7 @@ bossIsShot:
 		cmp r6,#0
 		bpl bossIsOK
 			ldr r8,=bossMan
-			mov r6,#3
+			mov r6,#BOSSMODE_EXPLODE
 			str r6,[r8]
 			ldmfd sp!, {r0-r8, pc}
 		bossIsOK:
@@ -302,11 +302,11 @@ bossIsDead:
 	stmfd sp!, {r0-r8, lr}
 
 	ldr r1,=levelEnd
-	mov r0,#2
+	mov r0,#LEVELENDMODE_BOSSDIE
 	str r0,[r1]
 	
 	ldr r1,=bossMan
-	mov r0,#4
+	mov r0,#BOSSMODE_EXPLODE_DONE
 	str r0,[r1]
 
 	ldmfd sp!, {r0-r8, pc}
@@ -341,7 +341,7 @@ bossAttack:
 
 	ldr r5,=bossMan
 	ldr r5,[r5]					@ if boss is exploding, do not fire!
-	cmp r5,#3
+	cmp r5,#BOSSMODE_EXPLODE
 	bllt bossFire				@ do our fire checks, and shoot if needed
 	
 	bl bossDraw					@ redraw our boss
@@ -356,7 +356,7 @@ bossFire:
 	@ add to fire phase also
 	ldr r1,=levelEnd
 	ldr r1,[r1]
-	cmp r1,#2
+	cmp r1,#LEVELENDMODE_BOSSDIE
 	beq bossNoNeedReset
 	
 	ldr r1,=bossFireDelay
@@ -588,7 +588,7 @@ bossExploder:
 
 	ldr r2,=levelEnd
 	ldr r2,[r2]
-	cmp r2,#3
+	cmp r2,#LEVELENDMODE_BOSSEXPLODE
 	beq stillExplodingBoss
 
 	beloop:
@@ -701,7 +701,7 @@ bossExploder:
 	cmp r6,#1						@ this is "HOW LONG FOR IT????" (tie this to Explosion sound)
 	ble stillExplodingBoss
 		ldr r6,=levelEnd
-		mov r8,#3
+		mov r8,#LEVELENDMODE_BOSSEXPLODE
 		str r8,[r6]
 	stillExplodingBoss:
 

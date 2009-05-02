@@ -29,9 +29,6 @@
 #include "ipc.h"
 #include "efs.h"
 
-	#define LEVEL_VALUE_SIZE			1
-	#define LEVEL_CRLF_SIZE				2
-
 	.arm
 	.align
 	.text
@@ -43,17 +40,17 @@ readOptions:
 
 	stmfd sp!, {r0-r2, lr}
 	
+	bl writeOptions
+	
 	ldr r0, =optionsDatText
 	ldr r1, =optionsBuffer
 	bl readFileBuffer
 	
 	ldr r0, =optionsBuffer
 	ldr r1, =optionLevelNum
-	ldrb r2, [r0], #LEVEL_VALUE_SIZE
+	ldrb r2, [r0], #1
 	str r2, [r1]
-	
-	add r0, #LEVEL_CRLF_SIZE
-	
+
 	@ More options here
 	
 	ldmfd sp!, {r0-r2, pc}
@@ -67,10 +64,8 @@ writeOptions:
 	ldr r0, =optionsBuffer
 	ldr r1, =optionLevelNum
 	ldr r2, [r1]
-	strb r2, [r0], #LEVEL_VALUE_SIZE
+	strb r2, [r0], #1
 
-	add r0, #LEVEL_CRLF_SIZE
-	
 	@ More options here
 	
 	ldr r0, =optionsDatText
@@ -85,7 +80,7 @@ writeOptions:
 	.align
 
 optionLevelNum:
-	.word 0
+	.word 1
 	
 optionsDatText:
 	.asciz "/Options.dat"
@@ -93,4 +88,3 @@ optionsDatText:
 	.align
 optionsBuffer:
 	.incbin "../../efsroot/Options.dat"
-

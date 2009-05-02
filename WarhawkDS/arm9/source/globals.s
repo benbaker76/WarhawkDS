@@ -262,7 +262,7 @@ bossMan:
 	.word 0
 	
 levelNum:
-	.word 0
+	.word 1
 levelEnd:
 	.word 0
 levelMap:

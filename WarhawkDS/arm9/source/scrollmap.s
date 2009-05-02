@@ -50,7 +50,7 @@ scrollMain:
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
 	ldr r1, [r0]
-	cmp r1, #0
+	cmp r1, #LEVELENDMODE_NONE
 	bne scrollDone					@ Yes then lets quit
 	
 	ldr r0, =pixelOffsetMain
@@ -90,7 +90,7 @@ scrollSub:
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
 	ldr r1, [r0]
-	cmp r1, #0
+	cmp r1, #LEVELENDMODE_NONE
 	bne scrollDone					@ Yes then lets quit
 	
 	ldr r0, =pixelOffsetSub
@@ -364,14 +364,14 @@ checkEndOfLevel:
 	
 	ldr r0,=levelEnd
 	ldr r1,[r0]
-	cmp r1,#0
+	cmp r1,#LEVELENDMODE_NONE
 	bne levelPlay
 		ldr r0,=yposSub						@ Ypos is the Y position in the map data
 		ldr r0, [r0]
 		cmp r0, #192 - 32					@ are we at 192 - 32 - top of the map?
 		bne levelPlay						@ If so, and scroll is 0 also - Stop Main Scroll!
 			ldr r0, =levelEnd
-			mov r1, #1
+			mov r1, #LEVELENDMODE_BOSSATTACK
 			str r1, [r0]
 			
 			@bl fxSineWobbleOn				@ Start our wobble effect (not any more :( SNIFF )

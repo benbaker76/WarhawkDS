@@ -44,8 +44,9 @@ showTitleScreen:
 	ldr r1, =GAMEMODE_TITLESCREEN
 	str r1, [r0]
 	
-	bl stopSound
 	bl fxOff
+	bl stopSound
+	bl stopAudioStream
 	bl fxFadeBlackInit
 	bl initCheat
 	bl initMainTiles							@ Initialize main tiles
@@ -389,9 +390,9 @@ updateTitleScreen:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	@ldr r1, =REG_KEYINPUT						@ Read Key Input
-	@ldr r2, [r1]
-	@tst r2, #BUTTON_A							@ Start button pressed?
+	@ldr r0, =REG_KEYINPUT						@ Read Key Input
+	@ldr r1, [r0]
+	@tst r1, #BUTTON_A							@ Start button pressed?
 	@bleq showTitleScreen
 	
 	bl scrollStarsHoriz							@ Scroll stars
@@ -399,15 +400,11 @@ updateTitleScreen:
 	bl updateStartSprites						@ Update start sprites
 	bl updateCheatCheck							@ check for cheat sequence
 	
-	ldr r1, =REG_KEYINPUT						@ Read Key Input
-	ldr r2, [r1]
-	tst r2, #BUTTON_START						@ Start button pressed?
-	bleq fxColorPulseOff						@ Turn of color pulse effect
-	bleq fxSpotlightOff							@ Turn off the spotlight effect
-	bleq fxTextScrollerOff						@ Turn off the scroller effect
-	bleq fxCopperTextOff						@ Turn off the copper text effect
+	ldr r0, =REG_KEYINPUT						@ Read Key Input
+	ldr r1, [r0]
+	tst r1, #BUTTON_START						@ Start button pressed?
 	bleq stopTimer								@ Stop the timer
-	bleq gameStart								@ Start the game
+	bleq showGameContinue						@ Start the game
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 

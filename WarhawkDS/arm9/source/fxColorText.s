@@ -51,6 +51,10 @@ fxCopperTextOn:
 	orr r1, #FX_COPPER_TEXT
 	str r1, [r0]
 	
+	ldr r0, =colorHilight
+	mov r1, #0
+	str r1, [r0]
+	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------

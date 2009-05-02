@@ -71,8 +71,9 @@ showEndOfLevel:
 	moveq r3, r5
 	str r3, [r2]
 	
-	bl stopSound
 	bl fxOff
+	bl stopSound
+	bl stopAudioStream
 	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
@@ -421,7 +422,7 @@ calcEnergyRemaining:
 calcEnergyRemainingNext:
 
 	ldr r0, =4000								@ 2 seconds
-	ldr r1, =endOfLevelDone						@ Callback function address
+	ldr r1, =showLevelNext						@ Callback function address
 	
 	bl startTimer
 	
@@ -442,18 +443,6 @@ updateEndOfLevel:
 	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
 	
 	@---------------------------------
-	
-endOfLevelDone:
-
-	stmfd sp!, {r0-r8, lr}
-
-	bl fxCopperTextOff							@ Turn off copper text fx
-	bl fxStarfieldOff							@ Turn off starfield
-	bl levelNext
-	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
-	
-	@--------------------------------
 
 	.data
 	.align

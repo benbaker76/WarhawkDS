@@ -318,7 +318,9 @@ playerIsAllDead:										@ --- PHASE 5
 		ldmfd sp!, {r0-r6, pc}
 	playerIsToast:
 	
-	bl fxCopperTextOff
+	bl fxOff
+	bl fxFadeBlackInit
+	bl checkGameContinue
 
 	ldr r0, =score
 	bl byte2Int					@ why does this fail?

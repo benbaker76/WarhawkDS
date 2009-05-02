@@ -38,7 +38,7 @@ initData:
 	stmfd sp!, {r0-r10, lr}
 
 	ldr r0,=levelNum
-	mov r1,#1
+	mov r1,#LEVEL_1
 	str r1,[r0]
 	
 	ldr r0,=bossSpreadAngle

@@ -156,12 +156,6 @@ initLevel:
 	mov r1,#3
 	str r1,[r0]				@ set the anim to start on first call
 	
-	ldr r0,=levelEnd
-	mov r1,#0				@ make 1 for TEST
-	str r1,[r0]
-	ldr r0,=bossMan
-	str r1,[r0]				@ comment out for boss test!!!!
-	
 	@ we NEED to copy colmapX to a place in ram to modify it, otherwise
 	@ when we come back to play the level - the bases will still be destroyed
 	@ from that last time!
@@ -171,7 +165,7 @@ initLevel:
 	
 	ldr r8,=levelNum
 	ldr r8,[r8]
-	cmp r8,#1
+	cmp r8,#LEVEL_1
 	bne level2
 							@ Set level 1
 		ldr r0,=Level1Map
@@ -198,7 +192,7 @@ initLevel:
 		
 		
 	level2:
-	cmp r8,#2
+	cmp r8,#LEVEL_2
 	bne level3
 							@ Set level 2
 		ldr r0,=Level2Map
@@ -224,7 +218,7 @@ initLevel:
 		str r0,[r1]
 
 	level3:
-	cmp r8,#3
+	cmp r8,#LEVEL_3
 	bne level4
 							@ Set level 3
 		ldr r0,=Level3Map
@@ -250,7 +244,7 @@ initLevel:
 		str r0,[r1]
 	
 	level4:
-	cmp r8,#4
+	cmp r8,#LEVEL_4
 	bne level5
 							@ Set level 4
 		ldr r0,=Level4Map
@@ -276,7 +270,7 @@ initLevel:
 		str r0,[r1]
 		
 	level5:
-	cmp r8,#5
+	cmp r8,#LEVEL_5
 	bne level6
 							@ Set level 5
 		ldr r0,=Level5Map
@@ -302,7 +296,7 @@ initLevel:
 		str r0,[r1]
 		
 	level6:
-	cmp r8,#6
+	cmp r8,#LEVEL_6
 	bne level7
 							@ Set level 6
 		ldr r0,=Level6Map
@@ -328,7 +322,7 @@ initLevel:
 		str r0,[r1]
 
 	level7:
-	cmp r8,#7
+	cmp r8,#LEVEL_7
 	bne level8
 							@ Set level 7
 		ldr r0,=Level7Map
@@ -354,7 +348,7 @@ initLevel:
 		str r0,[r1]
 	
 	level8:
-	cmp r8,#8
+	cmp r8,#LEVEL_8
 	bne level9
 							@ Set level 8
 		ldr r0,=Level8Map
@@ -380,7 +374,7 @@ initLevel:
 		str r0,[r1]
 	
 	level9:
-	cmp r8,#9
+	cmp r8,#LEVEL_9
 	bne level10
 							@ Set level 9
 		ldr r0,=Level9Map
@@ -406,7 +400,7 @@ initLevel:
 		str r0,[r1]
 		
 	level10:
-	cmp r8,#10
+	cmp r8,#LEVEL_10
 	bne level11
 							@ Set level 10
 		ldr r0,=Level10Map
@@ -432,7 +426,7 @@ initLevel:
 		str r0,[r1]
 		
 	level11:
-	cmp r8,#11
+	cmp r8,#LEVEL_11
 	bne level12
 							@ Set level 11
 		ldr r0,=Level11Map
@@ -458,7 +452,7 @@ initLevel:
 		str r0,[r1]
 
 	level12:
-	cmp r8,#12
+	cmp r8,#LEVEL_12
 	bne level13
 							@ Set level 12
 		ldr r0,=Level12Map
@@ -483,7 +477,7 @@ initLevel:
 		ldr r1,=starBackPal
 		str r0,[r1]
 	level13:
-	cmp r8,#13
+	cmp r8,#LEVEL_13
 	bne level14
 							@ Set level 13
 		ldr r0,=Level13Map
@@ -508,7 +502,7 @@ initLevel:
 		ldr r1,=starBackPal
 		str r0,[r1]	
 	level14:
-	cmp r8,#14
+	cmp r8,#LEVEL_14
 	bne level15
 							@ Set level 14
 		ldr r0,=Level14Map
@@ -533,7 +527,7 @@ initLevel:
 		ldr r1,=starBackPal
 		str r0,[r1]
 	level15:
-	cmp r8,#15
+	cmp r8,#LEVEL_15
 	bne level16
 							@ Set level 15
 		ldr r0,=Level15Map
@@ -559,7 +553,7 @@ initLevel:
 		str r0,[r1]		
 
 	level16:
-	cmp r8,#16
+	cmp r8,#LEVEL_16
 	bne levelDone
 							@ Set level 16
 		ldr r0,=Level16Map
@@ -641,7 +635,7 @@ initLevel:
 		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
 		bl dmaCopy
 	
-		bl levelStart
+		bl showLevelStart
 
 	ldmfd sp!, {r0-r6, pc}
 

@@ -54,9 +54,6 @@ int readFileBuffer(char *fileName, char *pBuffer)
 	FILE *pFile;
 	struct stat fileStat;
 	size_t result;
-	
-	if(pfileBuffer != NULL)
-		free(pfileBuffer);
 
 	pFile = fopen(fileName, "rb");
 	

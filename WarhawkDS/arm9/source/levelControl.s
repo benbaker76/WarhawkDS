@@ -32,13 +32,14 @@
 	.align
 	.text
 	.global checkLevelControl
-	.global bossJump
-	.global levelStart
-	.global levelBack
-	.global levelNext
-	.global levelGetReady
+	.global showBossJump
+	.global showLevelStart
+	.global showLevelBack
+	.global showLevelNext
+	.global showGetReady
 	.global updateGetReady
-	.global levelComplete
+	.global showBossDie
+	.global updateBossDie
 
 checkLevelControl:
 
@@ -47,16 +48,16 @@ checkLevelControl:
 	ldr r1,=REG_KEYINPUT
 	ldr r2,[r1]
 	tst r2,#BUTTON_L
-	bleq levelBack
+	bleq showLevelBack
 	bleq skipit
 	tst r2,#BUTTON_R
-	bleq levelNext
+	bleq showLevelNext
 	bleq skipit
 	tst r2,#BUTTON_START
 	bleq initLevel
 	bleq skipit
 	tst r2,#BUTTON_SELECT
-	bleq bossJump
+	bleq showBossJump
 	
 	skipit:
 	@ by adding this skip here stops it jumping to boss battle when i skip levels
@@ -65,7 +66,7 @@ checkLevelControl:
 	
 	@ ------------------------------------
 
-bossJump:
+showBossJump:
 
 	stmfd sp!, {r0-r2, lr}
 	
@@ -102,7 +103,7 @@ bossJump:
 	@ LEVEL START
 	@ ===========================================================
 	
-levelStart:
+showLevelStart:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -144,13 +145,13 @@ levelStart:
 	@bl fxCrossWipe
 	@bl fxSineWobbleOn
 	
-	bl levelGetReady
+	bl showGetReady
 
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ------------------------------------
 	
-levelBack:
+showLevelBack:
 
 	stmfd sp!, {r0-r2, lr}
 	
@@ -167,7 +168,7 @@ levelBack:
 
 	@ ------------------------------------
 
-levelNext:
+showLevelNext:
 
 	stmfd sp!, {r0-r2, lr}
 
@@ -176,29 +177,31 @@ levelNext:
 	add r1, #1
 	cmp r1, #LEVEL_COUNT + 1
 	moveq r1, #1
-	beq levelNextEndOfGame
+	beq showLevelNextEndOfGame
 	str r1,[r0]
 	bl initLevel
 
-	ldmfd sp!, {r0-r2, pc}
+	b showLevelNextDone
 	
-levelNextEndOfGame:
+showLevelNextEndOfGame:
 
 	bl showEndOfGame
+	
+showLevelNextDone:
 	
 	ldmfd sp!, {r0-r2, pc}
 
 	@ ------------------------------------
 	
-levelGetReady:
+showGetReady:
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_GETREADY
 	str r1, [r0]
+	
+	bl drawGetReadyText
 
 	bl fxCopperTextOn
-
-	bl drawGetReadyText
 	
 	ldr r0, =3000								@ 3 seconds
 	ldr r1, =timerDoneGetReady					@ Callback function address
@@ -215,11 +218,18 @@ updateGetReady:
 	
 	bl scrollStars								@ update scroll stars
 	
+	bl readInput								@ read the input
+	
+	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
+	bne updareGetReadyDone
+	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
 	tst r2, #BUTTON_A
 	bleq stopTimer
 	bleq timerDoneGetReady
+	
+updareGetReadyDone:
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -241,7 +251,7 @@ timerDoneGetReady:
 	
 	@---------------------------------
 
-levelComplete:
+showBossDie:
 
 	stmfd sp!, {r0-r2, lr}
 	
@@ -273,10 +283,15 @@ levelComplete:
 
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
 	bl playBossExplodeSound
+	
+	ldmfd sp!, {r0-r2, pc}
 
-bossDeathLoop:
+	@ ------------------------------------
 
-	bl swiWaitForVBlank							@ Wait for vblank
+updateBossDie:
+
+	stmfd sp!, {r0-r2, lr}
+	
 	bl moveShip									@ check and move your ship
 	bl alienFireMove							@ check and move alien bullets
 	bl fireCheck								@ check for your wish to shoot!
@@ -292,23 +307,23 @@ bossDeathLoop:
 
 	ldr r0,=levelEnd
 	ldr r1,[r0]
-	cmp r1,#3									@ if levelEnd=3, just wait for explosions to finish	
-	bne notTimeToEndDeath	
-		ldr r0,=explodeSpriteBossCount			@ use this as a little delay to let explosions settle
-		ldr r1,[r0]
-		cmp r1,#127								@ delay for explosions
-		beq levelFinishDone
-		add r1,#1
-		str r1,[r0]
+	cmp r1,#LEVELENDMODE_BOSSEXPLODE			@ if levelEnd=3, just wait for explosions to finish	
+	bne updateBossDieDone
+	
+	ldr r0,=explodeSpriteBossCount				@ use this as a little delay to let explosions settle
+	ldr r1,[r0]
+	cmp r1,#127									@ delay for explosions
+	beq updateBossDieEndOfLevel
+	add r1,#1
+	str r1,[r0]
+	
+	b updateBossDieDone
 		
-
-notTimeToEndDeath:
-	
-	b bossDeathLoop
-	
-levelFinishDone:
+updateBossDieEndOfLevel:
 
 	bl showEndOfLevel
+	
+updateBossDieDone:
 	
 	ldmfd sp!, {r0-r2, pc}
 

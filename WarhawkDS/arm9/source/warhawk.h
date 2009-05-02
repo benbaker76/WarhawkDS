@@ -120,7 +120,7 @@
 #define GAMEMODE_LOADING			3
 #define GAMEMODE_INTRO				4
 #define GAMEMODE_TITLESCREEN		5
-#define GAMEMODE_CONTINUE			6
+#define GAMEMODE_GAMECONTINUE		6
 #define GAMEMODE_GETREADY			7
 #define GAMEMODE_BOSSDIE			8
 #define GAMEMODE_ENDOFLEVEL			9
@@ -128,9 +128,18 @@
 #define GAMEMODE_HISCORE_ENTRY		11
 #define GAMEMODE_ENDOFGAME			12
 
-@ Level count
+#define BOSSMODE_CHECK_SCROLL		0
+#define BOSSMODE_GET_READY			1
+#define BOSSMODE_ATTACK				2
+#define BOSSMODE_EXPLODE			3
+#define BOSSMODE_EXPLODE_DONE		4
 
-#define LEVEL_COUNT					16
+#define LEVELENDMODE_NONE			0
+#define LEVELENDMODE_BOSSATTACK		1
+#define LEVELENDMODE_BOSSDIE		2
+#define LEVELENDMODE_BOSSEXPLODE	3
+
+@ Audio control
 
 #define AUDIO_PLAY_SOUND			0
 #define AUDIO_PLAY_MUSIC			1
@@ -224,3 +233,24 @@
 #define COLOR_VIOLET				0x761D
 #define COLOR_MAGENTA				0x7C1F
 #define COLOR_BROWN					0x14B4
+
+@ Levels
+
+#define LEVEL_1						1
+#define LEVEL_2						2
+#define LEVEL_3						3
+#define LEVEL_4						4
+#define LEVEL_5						5
+#define LEVEL_6						6
+#define LEVEL_7						7
+#define LEVEL_8						8
+#define LEVEL_9						9
+#define LEVEL_10					10
+#define LEVEL_11					11
+#define LEVEL_12					12
+#define LEVEL_13					13
+#define LEVEL_14					14
+#define LEVEL_15					15
+#define LEVEL_16					16
+
+#define LEVEL_COUNT					16

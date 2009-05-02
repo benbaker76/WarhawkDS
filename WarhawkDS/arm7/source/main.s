@@ -246,10 +246,6 @@ stopSound:
 
 	stmfd sp!, {r0-r3, lr}
 	
-	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
-	mov r1, #0
-	str r1, [r0]
-	
 	mov r0, #15									@ Reset the counter
 	ldr r1, =SCHANNEL_CR(0)						@ This is the base address of the sound channel
 	mov r2, #0									@ Clear
@@ -259,6 +255,10 @@ stopSoundLoop:
 	str r2, [r1, r0, lsl #4]					@ Add the offset (0x04000400 + ((n)<<4))
 	subs r0, #1									@ sub one from our counter
 	bpl stopSoundLoop							@ back to our loop
+
+	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
+	mov r1, #0
+	str r1, [r0]
 
 	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	

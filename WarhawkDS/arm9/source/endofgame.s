@@ -52,7 +52,19 @@ showEndOfGame:
 	str r1, [r0]								@ Store back gameMode
 
 	bl fxOff
+	bl stopSound
+	bl stopAudioStream
 	bl fxFadeBlackInit
+	bl initMainTiles							@ Initialize main tiles
+	bl resetScrollRegisters						@ Reset scroll registers
+	bl clearBG0									@ Clear bg's
+	bl clearBG1
+	bl clearBG2
+	bl clearBG3
+	bl swiWaitForVBlank
+	
+	bl initStarData
+	bl initWindow
 	
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_LARGESHIP
@@ -93,18 +105,6 @@ showEndOfGame:
 	ldr r0, =hofsSB
 	mov r1, #0
 	str r1, [r0]
-
-	bl stopSound
-	bl initMainTiles							@ Initialize main tiles
-	bl resetScrollRegisters						@ Reset scroll registers
-	bl clearBG0									@ Clear bg's
-	bl clearBG1
-	bl clearBG2
-	bl clearBG3
-	bl swiWaitForVBlank
-	
-	bl initStarData
-	bl initWindow
 	
 	@ Write the palette
 
@@ -494,11 +494,7 @@ initGameOverEnd:
 
 	stmfd sp!, {r0-r6, lr}
 
-	bl stopAudioStream
 	bl clearWindow
-	bl stopTimer
-	bl fxStarfieldOff							@ Turn off the spotlight effect
-	bl fxCopperTextOff							@ Turn off the copper text effect
 
 	ldr r0, =score
 	bl byte2Int									@ why does this fail?

@@ -404,7 +404,7 @@ updateTitleScreen:
 	ldr r1, [r0]
 	tst r1, #BUTTON_START						@ Start button pressed?
 	bleq stopTimer								@ Stop the timer
-	bleq showGameContinue						@ Start the game
+	bleq showGameContinueMenu					@ Start the game
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 

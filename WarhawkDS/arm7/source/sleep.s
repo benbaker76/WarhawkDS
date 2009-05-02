@@ -19,74 +19,98 @@
 @ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "warhawk.h"
 #include "system.h"
-#include "video.h"
-#include "background.h"
-#include "dma.h"
 #include "interrupts.h"
-#include "sprite.h"
-#include "ipc.h"
-#include "efs.h"
+#include "serial.h"
+	
+	#define KEY_LID				(1<<7)
 
 	.arm
 	.align
 	.text
-	.global readOptions
-	.global writeOptions
-	.global optionLevelNum
+	.global checkSleepMode
+	
+checkSleepMode:
 
-readOptions:
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =REG_KEYXY
+	ldrh r1, [r0]
+	tst r1, #KEY_LID
+	bne checkSleepModeReset
+	
+	ldr r0, =sleepCounter
+	ldr r1, [r0]
+	add r1, #1
+	str r1, [r0]	
+	cmp r1, #20
+	blt checkSleepModeDone
+	
+	bl systemSleep
 
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =optionsDatText
-	ldr r1, =optionsBuffer
-	bl readFileBuffer
-	
-	bl DC_FlushAll
-	
-	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
-	ldrb r2, [r0], #1
-	str r2, [r1]
+checkSleepModeReset:
 
-	@ More options here
+	ldr r0, =sleepCounter
+	mov r1, #0
+	str r1, [r0]
 	
-	ldmfd sp!, {r0-r2, pc}
-	
-	@------------------------------------
+checkSleepModeDone:
 
-writeOptions:
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
-	stmfd sp!, {r0-r2, lr}
+	@ ------------------------------------
 	
-	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
-	ldr r2, [r1]
-	strb r2, [r0], #1
+systemSleep:
+
+	stmfd sp!, {r0-r3, lr}
 	
-	@ More options here
+	ldr r0, =REG_IE
+	ldr r2, [r0]
 	
-	ldr r0, =optionsDatText
-	ldr r1, =optionsBuffer
-	bl writeFileBuffer
+	mov r0, #0
+	mov r1, #0x400
+	bl swiChangeSoundBias
 	
-	bl DC_FlushAll
+	ldr r0, =PM_CONTROL_REG
+	bl readPowerManagement
+	mov r3, r0
 	
-	ldmfd sp!, {r0-r2, pc}
+	ldr r0, =PM_CONTROL_REG
+	ldr r1, =PM_LED_CONTROL(1)
+	bl writePowerManagement
 	
-	@------------------------------------
+	ldr r0, =REG_IE
+	ldr r1, =IRQ_LID
+	str r1, [r0]
+	
+	bl swiSleep
+	
+	ldr r0, =838000
+	bl swiDelay
+	
+	ldr r0, =REG_IE
+	str r2, [r0]
+	
+	ldr r0, =PM_CONTROL_REG
+	mov r1, r3
+	bl writePowerManagement
+	
+	ldr r0, =1
+	ldr r1, =0x400
+	bl swiChangeSoundBias
+
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
+
+	@ ------------------------------------
 
 	.data
 	.align
-
-optionLevelNum:
-	.word 1
+	
+sleepCounter:
+	.word 0
 	
 	.align
-optionsBuffer:
-	.incbin "../../efsroot/Options.dat"
+	.pool
+	.end
 
-optionsDatText:
-	.asciz "/Options.dat"
+	

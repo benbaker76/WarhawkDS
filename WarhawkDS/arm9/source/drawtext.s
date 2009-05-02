@@ -32,7 +32,6 @@
 	.align
 	.text
 	.global drawDebugText
-	.global drawGetReadyText
 	.global drawText
 	.global drawTextCount
 	.global drawDigits
@@ -103,33 +102,6 @@ drawDebugText:
 
 	ldmfd sp!, {r0-r10, pc}
 
-	@ ---------------------------------------------
-	
-drawGetReadyText:
-
-	stmfd sp!, {r0-r3, lr} 
-
-	ldr r0, =getReadyText			@ Load out text pointer
-	ldr r1, =11						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =0						@ Draw on sub screen
-	bl drawText
-	
-	ldr r0, =levelText				@ Load out text pointer
-	ldr r1, =12						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =1						@ Draw on main screen
-	bl drawText
-	
-	ldr r10, =levelNum				@ Pointer to data
-	ldr r10, [r10]					@ Read value
-	mov r8, #10						@ y pos
-	mov r9, #2						@ Number of digits
-	mov r11, #18					@ x pos
-	bl drawDigits					@ Draw
-	
-	ldmfd sp!, {r0-r3, pc}
-	
 	@ ---------------------------------------------
 
 drawText:

@@ -32,6 +32,7 @@
 	.align
 	.text
 	.global showGameStart
+	.global showGameContinue
 	.global showGameStop
 	.global showGamePause
 	.global showGameContinue
@@ -45,6 +46,17 @@ showGameStart:
 	stmfd sp!, {lr}
 
 	bl initData									@ setup actual game data
+	bl initLevel								@ Start level
+	
+	ldmfd sp!, {pc}
+	
+	@ ------------------------------------
+	
+showGameContinue:
+
+	stmfd sp!, {lr}
+
+	bl initDataGameContinue						@ setup actual game data
 	bl initLevel								@ Start level
 	
 	ldmfd sp!, {pc}
@@ -70,6 +82,20 @@ showGamePause:
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_PAUSED
 	str r1, [r0]
+	
+	ldr r0, =pausedText				@ Load out text pointer
+	ldr r1, =13						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =0						@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =pausedText				@ Load out text pointer
+	ldr r1, =13						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =1						@ Draw on main screen
+	bl drawText
+	
+	bl fxCopperTextOn
 		
 	ldmfd sp!, {r0-r1, pc}
 	
@@ -82,6 +108,9 @@ showGameUnPause:
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_RUNNING
 	str r1, [r0]
+	
+	bl fxCopperTextOff
+	bl clearBG0
 		
 	ldmfd sp!, {r0-r1, pc}
 	
@@ -125,7 +154,7 @@ checkGamePause:
 	
 	ldr r0, =REG_KEYINPUT						@ Read Key Input
 	ldr r1, [r0]
-	tst r1, #BUTTON_START						@ Start button pressed?
+	tst r1, #BUTTON_SELECT						@ Select button pressed?
 	bleq showGamePause
 		
 	ldmfd sp!, {r0-r1, pc}
@@ -138,7 +167,7 @@ updateGameUnPause:
 	
 	ldr r0, =REG_KEYINPUT						@ Read Key Input
 	ldr r1, [r0]
-	tst r1, #BUTTON_START						@ Start button pressed?
+	tst r1, #BUTTON_A							@ Select button pressed?
 	bleq showGameUnPause
 		
 	ldmfd sp!, {r0-r1, pc}

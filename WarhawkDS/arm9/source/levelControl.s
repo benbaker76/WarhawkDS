@@ -49,19 +49,18 @@ checkLevelControl:
 	ldr r2,[r1]
 	tst r2,#BUTTON_L
 	bleq showLevelBack
-	bleq skipit
+	@bne checkLevelControlDone
 	tst r2,#BUTTON_R
 	bleq showLevelNext
-	bleq skipit
+	@bne checkLevelControlDone
 	tst r2,#BUTTON_START
 	bleq initLevel
-	bleq skipit
-	tst r2,#BUTTON_SELECT
-	bleq showBossJump
+	@bne checkLevelControlDone
+	@tst r2,#BUTTON_SELECT
+	@bleq showBossJump
 	
-	skipit:
-	@ by adding this skip here stops it jumping to boss battle when i skip levels
-	@ sorry!! It does it on hardware and in no$ for me? strange... but this fixes it
+@checkLevelControlDone:
+	
 	ldmfd sp!, {r0-r2, pc}
 	
 	@ ------------------------------------
@@ -130,7 +129,6 @@ showLevelStart:
 	bl drawSBMapScreenSub
 	bl levelDrift
 	bl drawSprite
-	bl drawGetReadyText
 	
 	ldr r0, =inGameRawText					@ Read the path to the file
 	bl playAudioStream						@ Play the audio stream
@@ -199,7 +197,24 @@ showGetReady:
 	ldr r1, =GAMEMODE_GETREADY
 	str r1, [r0]
 	
-	bl drawGetReadyText
+	ldr r0, =getReadyText			@ Load out text pointer
+	ldr r1, =11						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =0						@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =levelText				@ Load out text pointer
+	ldr r1, =12						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =1						@ Draw on main screen
+	bl drawText
+	
+	ldr r10, =levelNum				@ Pointer to data
+	ldr r10, [r10]					@ Read value
+	mov r8, #10						@ y pos
+	mov r9, #2						@ Number of digits
+	mov r11, #18					@ x pos
+	bl drawDigits					@ Draw
 
 	bl fxCopperTextOn
 	

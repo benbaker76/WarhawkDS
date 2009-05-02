@@ -19,74 +19,8 @@
 @ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 @ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "warhawk.h"
-#include "system.h"
-#include "video.h"
-#include "background.h"
-#include "dma.h"
-#include "interrupts.h"
-#include "sprite.h"
-#include "ipc.h"
-#include "efs.h"
-
 	.arm
-	.align
-	.text
-	.global readOptions
-	.global writeOptions
-	.global optionLevelNum
-
-readOptions:
-
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =optionsDatText
-	ldr r1, =optionsBuffer
-	bl readFileBuffer
-	
-	bl DC_FlushAll
-	
-	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
-	ldrb r2, [r0], #1
-	str r2, [r1]
-
-	@ More options here
-	
-	ldmfd sp!, {r0-r2, pc}
-	
-	@------------------------------------
-
-writeOptions:
-
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
-	ldr r2, [r1]
-	strb r2, [r0], #1
-	
-	@ More options here
-	
-	ldr r0, =optionsDatText
-	ldr r1, =optionsBuffer
-	bl writeFileBuffer
-	
-	bl DC_FlushAll
-	
-	ldmfd sp!, {r0-r2, pc}
-	
-	@------------------------------------
-
 	.data
 	.align
+	.global sleep
 
-optionLevelNum:
-	.word 1
-	
-	.align
-optionsBuffer:
-	.incbin "../../efsroot/Options.dat"
-
-optionsDatText:
-	.asciz "/Options.dat"

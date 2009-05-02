@@ -26,6 +26,21 @@
 #define POWER_SOUND       	BIT(0)
 #define POWER_UNKNOWN     	BIT(1)
 
+#define PM_CONTROL_REG		0
+#define PM_BATTERY_REG		1
+#define PM_AMPLIFIER_REG	2
+#define PM_READ_REGISTER	(1<<7)
+#define PM_AMP_OFFSET		2
+#define PM_GAIN_OFFSET		3
+#define PM_GAIN_20			0
+#define PM_GAIN_40			1
+#define PM_GAIN_80			2
+#define PM_GAIN_160			3
+#define PM_AMP_ON			1
+#define PM_AMP_OFF			0
+
+#define PM_LED_CONTROL(m)  ((m)<<4)
+
 @ Key input register.
 @ On the ARM9, the hinge "button", the touch status, and the
 @ X and Y buttons cannot be accessed directly.
@@ -38,13 +53,13 @@
 @ Default location for the user's personal data (see %PERSONAL_DATA).
 #define PersonalData		0x27FFC80
 
-#define KEY_A          BIT(0)
-#define KEY_B          BIT(1)
-#define KEY_SELECT     BIT(2)
-#define KEY_START      BIT(3)
-#define KEY_RIGHT      BIT(4)
-#define KEY_LEFT       BIT(5)
-#define KEY_UP         BIT(6)
-#define KEY_DOWN       BIT(7)
-#define KEY_R          BIT(8)
-#define KEY_L          BIT(9)
+#define BUTTON_A          BIT(0)
+#define BUTTON_B          BIT(1)
+#define BUTTON_SELECT     BIT(2)
+#define BUTTON_START      BIT(3)
+#define BUTTON_RIGHT      BIT(4)
+#define BUTTON_LEFT       BIT(5)
+#define BUTTON_UP         BIT(6)
+#define BUTTON_DOWN       BIT(7)
+#define BUTTON_R          BIT(8)
+#define BUTTON_L          BIT(9)

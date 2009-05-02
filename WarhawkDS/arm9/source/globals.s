@@ -98,6 +98,7 @@
 	.global spriteExplodeDelay
 	.global spriteBloom
 	.global getReadyText
+	.global pausedText
 	.global levelText
 	.global spriteXText
 	.global spriteYText
@@ -368,6 +369,9 @@ energyLevel:
 	.align
 getReadyText:
 	.asciz "GET READY!"
+	
+pausedText:
+	.asciz "PAUSED"
 	
 	.align
 levelText:

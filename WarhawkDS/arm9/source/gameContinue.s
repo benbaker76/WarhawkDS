@@ -37,10 +37,10 @@
 	.arm
 	.align
 	.text
-	.global showGameContinue
-	.global updateGameContinue
+	.global showGameContinueMenu
+	.global updateGameContinueMenu
 	
-showGameContinue:
+showGameContinueMenu:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -48,7 +48,7 @@ showGameContinue:
 	ldr r0, [r0]								@ Read optionLevelNum value
 	
 	cmp r0, #1									@ Is optionLevelNum <= 1
-	ble showGameContinueGameStart				@ Yes then go to game start
+	ble showGameContinueMenuGameStart			@ Yes then go to game start
 	
 	ldr r1, =levelNum
 	str r0, [r1]
@@ -126,26 +126,26 @@ showGameContinue:
 	mov r1, #10
 	str r1, [r0]
 	
-	b showGameContinueDone
+	b showGameContinueMenuDone
 	
-showGameContinueGameStart:
+showGameContinueMenuGameStart:
 
 	bl showGameStart
 	
-showGameContinueDone:
+showGameContinueMenuDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-updateGameContinue:
+updateGameContinueMenu:
 
 	stmfd sp!, {r0-r6, lr}
 		
 	bl readInput								@ read the input
 	
 	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
-	bne updateGameContinueSkip
+	bne updateGameContinueMenuSkip
 	
 	ldr r0, =levelNum							@ Load levelNum address
 	ldr r1, [r0]								@ Load levelNum value
@@ -186,17 +186,17 @@ updateGameContinue:
 	str r1, [r0]								@ Write back to levelNum
 	str r3, [r2]								@ Write back to menuNum
 
-updateGameContinueSkip:
+updateGameContinueMenuSkip:
 	
 	bl drawArrowSprite							@ Draw the arrow sprite
-	bl drawGameContinueText						@ Draw the continue text
+	bl drawGameContinueMenuText						@ Draw the continue text
 	bl scrollStarsHoriz
 	bl updateLogoSprites
 
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value
 	tst r1, #BUTTON_A							@ Button A?
-	bne updateGameContinueDone
+	bne updateGameContinueMenuDone
 
 	ldr r0, =levelNum
 	ldr r1, =menuNum
@@ -205,15 +205,15 @@ updateGameContinueSkip:
 	cmp r1, #MENUITEM_RESTART
 	streq r2, [r0]
 
-	bl initLevel								@ Start level
+	bl showGameContinue							@ Start level
 	
-updateGameContinueDone:
+updateGameContinueMenuDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
-drawGameContinueText:
+drawGameContinueMenuText:
 
 	stmfd sp!, {r0-r6, lr}
 

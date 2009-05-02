@@ -68,6 +68,8 @@ showHiScoreEntry:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	push {r0}
+	
 	bl getHiScoreIndex							@ Get the hiscore index
 	
 	ldr r1, =hiScoreIndex						@ Read hiScoreIndex address
@@ -115,7 +117,7 @@ showHiScoreEntry:
 	add r2, #10									@ Add 10 line offset
 	str r2, [r1]								@ Write back to colorHilight
 	
-	mov r0, r6									@ Move hiscore value to r0
+	pop {r0}
 	bl addHiScore								@ Add the hiscore
 	
 	ldr r0, =nameAAA							@ Load "AAA" address

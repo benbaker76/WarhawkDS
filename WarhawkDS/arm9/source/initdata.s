@@ -32,10 +32,12 @@
 	.align
 	.text
 	.global initData
+	.global initDataGameContinue
 	
 initData:
+
 	@ use this to init data for the start of the game
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0,=levelNum
 	mov r1,#LEVEL_1
@@ -61,7 +63,38 @@ initData:
 	str r1,[r0],#4
 	str r1,[r0]
 
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ---------------------------------------
+	
+initDataGameContinue:
+
+	@ use this to init data for the start of the game
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0,=bossSpreadAngle
+	mov r1,#0
+	str r1,[r0]
+	
+@	ldr r0,=cheatMode
+@	mov r1,#1
+@	str r1,[r0]
+	
+	ldr r0,=powerUp
+	str r1,[r0]				@ set to one for autofire (on the original this carries on)
+	ldr r0,=powerUpDelay
+	str r1,[r0]				@ clear the fire delay
+
+	@ NEED TO RESET SCORE HERE (see, was already noted HK :) )
+	
+	ldr r0,=score			@ reset (zero) score
+	mov r1,#0				@ just to make sure we always get a highscore
+	str r1,[r0],#4
+	str r1,[r0]
+
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ---------------------------------------
 	
 	.pool
 	.end

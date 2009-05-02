@@ -24,14 +24,24 @@
 #include "audio.h"
 #include "ipc.h"
 
-#define AUDIO_PLAY_SOUND			0
-#define AUDIO_PLAY_MUSIC			1
-#define AUDIO_STOP_MUSIC			2
+	#define AUDIO_PLAY_SOUND			0
+	#define AUDIO_PLAY_MUSIC			1
+	#define AUDIO_STOP_MUSIC			2
 
 	.arm
 	.align
 	.text
 	.global main
+	
+interruptHandlerVCount:
+
+	stmfd sp!, {lr}
+	
+	@bl checkLid
+
+	ldmfd sp!, {pc} 							@ restore registers and return
+
+	@ ------------------------------------
 	
 interruptHandlerVBlank:
 
@@ -83,6 +93,10 @@ interruptHandlerIPC:
 	
 main:
 	bl irqInit									@ Initialize Interrupts
+	
+	ldr r0, =IRQ_VCOUNT							@ VCOUNT interrupt
+	ldr r1, =interruptHandlerVCount				@ Function Address
+	bl irqSet									@ Set the interrupt
 		
 	ldr r0, =IRQ_VBLANK							@ VBLANK interrupt
 	ldr r1, =interruptHandlerVBlank				@ Function Address
@@ -92,8 +106,8 @@ main:
 	@ldr r1, =interruptHandlerIPC				@ Function Address
 	@bl irqSet									@ Set the interrupt
 	
-	@ldr r0, =(IRQ_VBLANK | IRQ_IPC_SYNC)		@ Interrupts
-	ldr r0, =(IRQ_VBLANK)						@ Interrupts
+	@ldr r0, =(IRQ_VCOUNT | IRQ_VBLANK | IRQ_IPC_SYNC)		@ Interrupts
+	ldr r0, =(IRQ_VCOUNT | IRQ_VBLANK)			@ Interrupts
 	bl irqEnable								@ Enable
 	
 	@ldr r0, =REG_IPC_SYNC

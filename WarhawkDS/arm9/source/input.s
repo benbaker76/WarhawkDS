@@ -46,8 +46,8 @@ readInput:
 	ldr r3, [r2]								@ Read key value
 	
 	mov r4, r3
-	and r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A)	
-	cmp r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A)
+	and r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A | BUTTON_B | BUTTON_SELECT | BUTTON_START)	
+	cmp r4, #(BUTTON_UP	| BUTTON_DOWN | BUTTON_LEFT | BUTTON_RIGHT | BUTTON_A | BUTTON_B | BUTTON_SELECT | BUTTON_START)
 	moveq r1, #0								@ if so, set to 0
 	addne r1, #1								@ if not, a key is pressed, so add 1
 	

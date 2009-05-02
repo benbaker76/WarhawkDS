@@ -98,8 +98,8 @@ main:
 	
 	@ ----
 	
-	ldr r0, =9000000
-@	bl showHiScoreEntry
+	@ldr r0, =9000000
+	@bl showHiScoreEntry
 	
 	@ ----
 
@@ -152,7 +152,7 @@ mainLoop:
 	cmp r1, #GAMEMODE_TITLESCREEN
 	bleq updateTitleScreen
 	cmp r1, #GAMEMODE_GAMECONTINUE
-	bleq updateGameContinue
+	bleq updateGameContinueMenu
 	cmp r1, #GAMEMODE_GETREADY
 	bleq updateGetReady
 	cmp r1, #GAMEMODE_BOSSDIE

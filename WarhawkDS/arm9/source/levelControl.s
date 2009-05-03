@@ -118,7 +118,10 @@ showLevelStart:
 	bl clearBG0
 	bl clearBG1
 	bl clearBG2
-	bl clearBG3	
+	bl clearBG3
+	
+	bl checkGameContinue
+	
 	bl swiWaitForVBlank
 	
 	bl drawMapScreenMain

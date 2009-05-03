@@ -132,17 +132,21 @@ checkGameContinue:
 	cmp r1, r3
 	ble checkGameContinueDone
 	
-	cmp r1, #LEVEL_4
-	streq r1, [r2]
+	ldr r3, =LEVEL_4
+	cmp r1, r3
+	strge r3, [r2]
 
-	cmp r1, #LEVEL_8
-	streq r1, [r2]
+	ldr r3, =LEVEL_8
+	cmp r1, r3
+	strge r3, [r2]
 	
-	cmp r1, #LEVEL_12
-	streq r1, [r2]
+	ldr r3, =LEVEL_12
+	cmp r1, r3
+	strge r3, [r2]
 	
-	cmp r1, #LEVEL_16
-	streq r1, [r2]
+	ldr r3, =LEVEL_16
+	cmp r1, r3
+	strge r3, [r2]
 	
 	bl writeOptions
 	

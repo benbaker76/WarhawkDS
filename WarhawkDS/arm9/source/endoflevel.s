@@ -85,14 +85,7 @@ showEndOfLevel:
 	
 	bl initStarData
 	
-	ldr r0, =SpritePal
-	ldr r1, =SPRITE_PALETTE
-	ldr r2, =512
-	bl dmaCopy
-	
-	bl clearOAM									@ Reset all sprites
-	
-	bl initLogoSprites
+	@ Write the palette
 	
 	ldr r0, =FontPal
 	ldr r1, =BG_PALETTE
@@ -103,6 +96,29 @@ showEndOfLevel:
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
 	strh r3, [r1]
+
+	@ Write the tile data
+	
+	ldr r0 ,=MoonscapeTiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =MoonscapeTilesLen
+	bl dmaCopy
+
+	@ Write map
+	
+	ldr r0, =MoonscapeMap
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =MoonscapeMapLen
+	bl dmaCopy
+	
+	bl clearOAM									@ Reset all sprites
+	
+	ldr r0, =SpritePal
+	ldr r1, =SPRITE_PALETTE
+	ldr r2, =512
+	bl dmaCopy
+	
+	bl initLogoSprites
 	
 	ldr r0, =wellDoneText						@ Load out text pointer
 	ldr r1, =11									@ x pos

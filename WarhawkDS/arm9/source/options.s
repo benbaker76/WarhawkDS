@@ -35,6 +35,7 @@
 	.global readOptions
 	.global writeOptions
 	.global optionLevelNum
+	.global optionMentalVer
 
 readOptions:
 
@@ -48,6 +49,10 @@ readOptions:
 	
 	ldr r0, =optionsBuffer
 	ldr r1, =optionLevelNum
+	ldrb r2, [r0], #1
+	str r2, [r1]
+	
+	ldr r1, =optionMentalVer
 	ldrb r2, [r0], #1
 	str r2, [r1]
 	
@@ -70,6 +75,10 @@ writeOptions:
 	ldr r2, [r1]
 	strb r2, [r0], #1
 	
+	ldr r1, =optionMentalVer
+	ldr r2, [r1]
+	strb r2, [r0], #1
+	
 	@ More options here
 	
 	ldr r0, =optionsDatText
@@ -87,6 +96,9 @@ writeOptions:
 
 optionLevelNum:
 	.word 1
+	
+optionMentalVer:
+	.word 0
 	
 	.align
 optionsBuffer:

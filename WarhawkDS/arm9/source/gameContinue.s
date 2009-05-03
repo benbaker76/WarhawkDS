@@ -29,9 +29,10 @@
 #include "ipc.h"
 
 	#define MENUITEM_RESTART		0
-	#define MENUITEM_CONTINUE		1
+	#define MENUITEM_STARTLEVEL		1
+	#define MENUITEM_MENTALVERSION	2
 
-	#define MENUITEM_COUNT			2
+	#define MENUITEM_COUNT			3
 	#define ARROW_COLOR_OFFSET		11
 
 	.arm
@@ -71,10 +72,12 @@ showGameContinueMenu:
 	bl dmaCopy
 	
 	ldr r0, =ContinueText						@ Load out text pointer
-	ldr r1, =9									@ x pos
+	ldr r1, =7									@ x pos
 	ldr r2, =10									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
+	
+	bl fxCopperTextOn
 	
 	ldr r0, =colorHilight
 	mov r1, #14
@@ -99,49 +102,76 @@ updateGameContinueMenu:
 	bl readInput								@ read the input
 	
 	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
-	bne updateGameContinueMenuSkip
+	bne updateGameContinueMenuContinue
 	
-	ldr r0, =levelNum							@ Load levelNum address
-	ldr r1, [r0]								@ Load levelNum value
-	ldr r2, =menuNum							@ Load menuNum address
-	ldr r3, [r2]								@ Load menuNum value
+	ldr r0, =menuNum							@ Load menuNum address
+	ldr r1, [r0]								@ Load menuNum value
 	
-	ldr r4, =REG_KEYINPUT						@ Read key input register
-	ldr r5, [r4]								@ Read key input value
-	tst r5, #BUTTON_UP							@ Button up?
-	subeq r3, #1								@ Move menu up
-	tst r5, #BUTTON_DOWN						@ Button down?
-	addeq r3, #1								@ Move menu down
-	tst r5, #BUTTON_LEFT						@ Button left?
-	subeq r1, #1								@ Move cursor left
-	tst r5, #BUTTON_RIGHT						@ Button right?
-	addeq r1, #1								@ Move cursor right
+	ldr r2, =REG_KEYINPUT						@ Read key input register
+	ldr r3, [r2]								@ Read key input value
+	tst r3, #BUTTON_UP							@ Button up?
+	subeq r1, #1								@ Move menu up
+	tst r3, #BUTTON_DOWN						@ Button down?
+	addeq r1, #1								@ Move menu down
 	
-	ldr r4, =optionLevelNum
-	ldr r4, [r4]
-	
-	cmp r1, #1									@ levelNum 0
-	movlt r1, #1								@ levelNum < 0 then make it 0
-	cmp r1, r4									@ levelNum optionLevelNum?
-	movgt r1, r4								@ levelNum > optionLevelNum then make it optionLevelNum
-	cmp r1, #LEVEL_COUNT						@ levelNum LEVEL_COUNT?
-	movgt r1, #LEVEL_COUNT						@ levelNum > LEVEL_COUNT then make it 2
-	
-	cmp r3, #0									@ menuNum 0
-	movlt r3, #MENUITEM_COUNT - 1				@ menuNum < 0 then make it MENUITEM_COUNT
-	cmp r3, #MENUITEM_COUNT - 1					@ menuNum (MENU_ITEM_COUNT - 1)?
-	movgt r3, #0								@ menuNum > MENUITEM_COUNT then make it (MENU_ITEM_COUNT - 1)
+	cmp r1, #0									@ menuNum 0
+	movlt r1, #MENUITEM_COUNT - 1				@ menuNum < 0 then make it MENUITEM_COUNT
+	cmp r1, #MENUITEM_COUNT - 1					@ menuNum (MENU_ITEM_COUNT - 1)?
+	movgt r1, #0								@ menuNum > MENUITEM_COUNT then make it (MENU_ITEM_COUNT - 1)
 	
 	ldr r4, =colorHilight
 	mov r5, #0
-	add r5, r3, lsl #1
+	add r5, r1, lsl #1
 	add r5, #14
 	str r5, [r4]
-	str r1, [r0]								@ Write back to levelNum
-	str r3, [r2]								@ Write back to menuNum
-
-updateGameContinueMenuSkip:
+	str r1, [r0]
 	
+	cmp r1, #MENUITEM_RESTART
+	beq updateGameContinueMenuContinue
+	cmp r1, #MENUITEM_STARTLEVEL
+	beq updateGameContinueMenuStartLevel
+	cmp r1, #MENUITEM_MENTALVERSION
+	beq updateGameContinueMenuMentalVersion
+	
+updateGameContinueMenuMentalVersion:
+
+	ldr r0, =optionMentalVer					@ Load optionMentalVer address
+	ldr r1, [r0]								@ Load optionMentalVer value
+	
+	tst r3, #BUTTON_LEFT						@ Button left?
+	mvneq r1, r1								@ Move cursor left
+	tst r3, #BUTTON_RIGHT						@ Button right?
+	mvneq r1, r1								@ Move cursor right
+
+	and r1, #1
+	str r1, [r0]
+
+	b updateGameContinueMenuContinue
+
+updateGameContinueMenuStartLevel:
+
+	ldr r0, =levelNum							@ Load levelNum address
+	ldr r1, [r0]								@ Load levelNum value
+	
+	tst r3, #BUTTON_LEFT						@ Button left?
+	subeq r1, #1								@ Move cursor left
+	tst r3, #BUTTON_RIGHT						@ Button right?
+	addeq r1, #1								@ Move cursor right
+	
+	ldr r2, =optionLevelNum
+	ldr r2, [r2]
+	
+	cmp r1, #1									@ levelNum 0
+	movlt r1, #1								@ levelNum < 0 then make it 0
+	cmp r1, r2									@ levelNum optionLevelNum?
+	movgt r1, r2								@ levelNum > optionLevelNum then make it optionLevelNum
+	cmp r1, #LEVEL_COUNT						@ levelNum LEVEL_COUNT?
+	movgt r1, #LEVEL_COUNT						@ levelNum > LEVEL_COUNT then make it 2
+	
+	str r1, [r0]
+	
+updateGameContinueMenuContinue:
+
 	bl drawArrowSprite							@ Draw the arrow sprite
 	bl drawGameContinueMenuText					@ Draw the continue text
 	bl updateTitleScreen
@@ -157,6 +187,8 @@ updateGameContinueMenuSkip:
 	mov r2, #1
 	cmp r1, #MENUITEM_RESTART
 	streq r2, [r0]
+	cmp r1, #MENUITEM_MENTALVERSION
+	beq updateGameContinueMenuDone
 
 	bl showGameContinue							@ Start level
 	
@@ -171,13 +203,13 @@ drawGameContinueMenuText:
 	stmfd sp!, {r0-r6, lr}
 
 	ldr r0, =restartText
-	ldr r1, =10									@ x pos
+	ldr r1, =8									@ x pos
 	ldr r2, =14									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =startLevelText
-	ldr r1, =10									@ x pos
+	ldr r1, =8									@ x pos
 	ldr r2, =16									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
@@ -186,8 +218,26 @@ drawGameContinueMenuText:
 	ldr r10, [r10]
 	mov r8, #16									@ y pos
 	mov r9, #2									@ Number of digits
-	mov r11, #22								@ x pos
+	mov r11, #21								@ x pos
 	bl drawDigits								@ Draw
+	
+	ldr r0, =mentalVerText
+	ldr r1, =8									@ x pos
+	ldr r2, =18									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =optionMentalVer
+	ldr r0, [r0]
+	ldr r1, =yesText
+	ldr r2, =noText
+	cmp r0, #1
+	moveq r0, r1
+	movne r0, r2
+	ldr r1, =24									@ x pos
+	ldr r2, =18									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -215,7 +265,7 @@ drawArrowSprite:
 	
 	ldr r0, =OBJ_ATTRIBUTE1_SUB(0)				@ Attrib 1
 	ldr r1, =(ATTR1_SIZE_8)						@ Attrib 1 settings
-	orr r1, #(8 * 8)							@ Orr in the x pos (19 * 8 pixels)
+	orr r1, #(6 * 8)							@ Orr in the x pos (19 * 8 pixels)
 	strh r1, [r0]								@ Write to Attrib 1
 	
 	ldr r0, =OBJ_ATTRIBUTE2_SUB(0)				@ Attrib 2
@@ -242,7 +292,19 @@ restartText:
 
 	.align
 startLevelText:
-	.asciz "START LEVEL 00"
+	.asciz "START LEVEL:"
+	
+	.align
+mentalVerText:
+	.asciz "MENTAL VERSION:"
+	
+	.align
+yesText:
+	.asciz "YES"
+	
+	.align
+noText:
+	.asciz "NO "
 	
 	.pool
 	.end

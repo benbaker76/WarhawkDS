@@ -62,19 +62,6 @@ showGameContinueMenu:
 	ldr r0, =menuNum							@ Reset menuNum
 	mov r1, #0
 	str r1, [r0]
-	
-	ldr r0, =hofsSF
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =hofsSB
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =SpritePal
-	ldr r1, =SPRITE_PALETTE
-	ldr r2, =512
-	bl dmaCopy
 
 	@ Write the tile data to VRAM
 	

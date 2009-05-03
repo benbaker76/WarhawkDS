@@ -31,7 +31,7 @@
 	.text
 	.global fxSineWobbleOn
 	.global fxSineWobbleOff
-	.global fxSineWobbleHBlank
+	.global fxSineWobbleVBlank
 	
 fxSineWobbleOn:
 
@@ -40,6 +40,14 @@ fxSineWobbleOn:
 	ldr r0, =fxMode					@ lets set the sine wobble effect
 	ldr r1, [r0]
 	orr r1, #FX_SINE_WOBBLE
+	str r1, [r0]
+	
+	ldr r0, =sineOfsMain
+	ldr r1, =192 * 4
+	str r1, [r0]
+	
+	ldr r0, =sineOfsSub
+	ldr r1, =0
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -55,59 +63,118 @@ fxSineWobbleOff:
 	and r1, #~(FX_SINE_WOBBLE)
 	str r1, [r0]
 	
+	mov r0, #0
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
+	mov r0, #1
+	mov r1, #0
+	mov r2, #0
+	mov r3, #0
+	mov r4, #0
+	
+	bl dmaTransfer
+	
 	ldmfd sp!, {r0-r6, pc}
 	
 	@ ---------------------------------------
 
-fxSineWobbleHBlank:
+fxSineWobbleVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r7, lr}
 
-	ldr r0, =SIN_bin				@ Address of sine table
-	ldr r1, =REG_VCOUNT				@ REG_VCOUNT address
-	ldrh r1, [r1]					@ REG_VCOUNT value
+	ldr r0, =SIN_bin						@ Address of sine table
+	ldr r1, =hOfsBufMain					@ Horizontal scroll register offset
+	ldr r2, =hOfsBufSub						@ Horizontal scroll register offset
+	ldr r3, =sineOfsMain
+	ldr r3, [r3]
+	ldr r4, =sineOfsSub
+	ldr r4, [r4]
+	ldr r5, =0x3FF
+	mov r6, #0
 	
-	add r0, r1, lsl #1				@ Add the REG_VCOUNT * 2 (16 bit values in SIN table)
-	ldrsh r1, [r0]					@ Load the SIN value
-	asr r1, #6						@ Right shift the SIN value 4 bits plus 2 bits to make it smaller
-	rsb r1, r1, #0					@ Reverse subtract to make it negative (r1=#0 - r1)
+fxSineWobbleVBlankLoop:
 	
-	ldr r2, =REG_BG2HOFS_SUB		@ Horizontal scroll register offset
-	strh r1, [r2]
+	add r7, r3, r6, lsl #2
+	and r7, r5
+	ldrsh r7, [r0, r7]						@ Load the SIN value
+	asr r7, #8								@ Right shift the SIN value
+	strh r7, [r1], #2
 	
-	add r0, #(192 * 2)				@ Add our Main screen offset (* 2 for 16 bit values)
+	add r7, r4, r6, lsl #2
+	and r7, r5
+	ldrsh r7, [r0, r7]						@ Load the SIN value
+	asr r7, #8								@ Right shift the SIN value
+	strh r7, [r2], #2
 	
-	ldrsh r1, [r0]					@ Load the SIN value
-	asr r1, #6						@ Right shift the SIN value 4 bits plus 2 bits to make it smaller
-	rsb r1, r1, #0					@ Reverse subtract to make it negative (r1=#0 - r1)
+	add r6, #1
+	cmp r6, #192
+	bne fxSineWobbleVBlankLoop
 	
-	ldr r2, =REG_BG2HOFS			@ Horizontal scroll register offset
-	strh r1, [r2]
+	ldr r1, =hOfsBufMain					@ Horizontal scroll register offset
+	ldr r2, =hOfsBufSub						@ Horizontal scroll register offset
 	
-	@ -------------------------
+	ldr r6, =(192 * 2)
+	ldrh r7, [r1]
+	strh r7, [r1, r6]
 	
-	ldr r0, =SIN_bin				@ Address of sine table
-	ldr r1, =REG_VCOUNT				@ REG_VCOUNT address
-	ldrh r1, [r1]					@ REG_VCOUNT value
-
-	add r0, r1, lsl #1				@ Add the REG_VCOUNT * 2 (16 bit values in SIN table)	
-	ldrsh r1, [r0]					@ Load the SIN value
-	asr r1, #7						@ Right shift the SIN value 4 bits plus 3 bits to make it smaller
+	ldrh r7, [r2]
+	strh r7, [r2, r6]
 	
-	ldr r2, =REG_BG3HOFS_SUB		@ Horizontal scroll register offset
-	strh r1, [r2]
+	ldr r0, =sineOfsMain
+	ldrh r1, [r0]
+	add r1, #8
+	strh r1, [r0]
 	
-	add r0, #(192 * 2)				@ Add our Main screen offset (* 2 for 16 bit values)
-		
-	ldrsh r1, [r0]					@ Load the SIN value
-	asr r1, #7						@ Right shift the SIN value 4 bits plus 3 bits to make it smaller
+	ldr r0, =sineOfsSub
+	ldrh r1, [r0]
+	add r1, #8
+	strh r1, [r0]
 	
-	ldr r2, =REG_BG3HOFS			@ Horizontal scroll register offset
-	strh r1, [r2]
-
-	ldmfd sp!, {r0-r6, pc}
+	bl DC_FlushAll
+	
+	mov r0, #0								@ Dma channel
+	ldr r1, =hOfsBufMain					@ Source
+	add r1, #2
+	ldr r2, =REG_BG1HOFS					@ Dest
+	mov r3, #1								@ Count
+	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_RESET)
+	
+	bl dmaTransfer
+	
+	mov r0, #1								@ Dma channel
+	ldr r1, =hOfsBufSub						@ Source
+	add r1, #2
+	ldr r2, =REG_BG1HOFS_SUB				@ Dest
+	mov r3, #1								@ Count
+	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_RESET)
+	
+	bl dmaTransfer
+	
+	ldmfd sp!, {r0-r7, pc}
 	
 	@ ---------------------------------------
+	
+	.data
+	.align
+	
+sineOfsMain:
+	.word 0
+	
+sineOfsSub:
+	.word 0
+	
+	.align
+hOfsBufMain:
+	.space ((192+1) * 2)
+	
+	.align
+hOfsBufSub:
+	.space ((192+1) * 2)
 
 	.pool
 	.end

@@ -43,6 +43,8 @@ fxOff:
 	
 	cmp r0, #0
 	beq fxOffDone
+	tst r0, #FX_SINE_WOBBLE
+	blne fxSineWobbleOff
 	tst r0, #FX_FADE_IN
 	blne fxFadeOff
 	tst r0, #FX_FADE_OUT
@@ -83,8 +85,6 @@ fxOff:
 	blne fxStarfieldOff
 	tst r0, #FX_STARFIELD_MULTI
 	blne fxStarfieldOff
-	tst r0, #FX_SINE_WOBBLE
-	blne fxSineWobbleOff
 	tst r0, #FX_SCANLINE
 	blne fxScanlineOff
 	tst r0, #FX_CROSSWIPE
@@ -113,6 +113,8 @@ fxVBlank:
 	
 	cmp r0, #0
 	beq fxVBlankDone
+	tst r0, #FX_SINE_WOBBLE
+	blne fxSineWobbleVBlank
 	tst r0, #FX_FADE_IN
 	blne fxFadeInVBlank
 	tst r0, #FX_FADE_OUT
@@ -170,8 +172,6 @@ fxHBlank:
 	
 	cmp r0, #0
 	beq fxHBlankDone
-	tst r0, #FX_SINE_WOBBLE
-	blne fxSineWobbleHBlank
 	tst r0, #FX_SCANLINE
 	blne fxScanlineHBlank
 	tst r0, #FX_CROSSWIPE

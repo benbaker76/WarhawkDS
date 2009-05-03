@@ -170,7 +170,7 @@ fxCopperTextVBlankContinue:
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
 	add r2, r3
 	mov r3, #1								@ Count
-	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_FIX)
+	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_RESET)
 	
 	bl dmaTransfer
 	
@@ -180,7 +180,7 @@ fxCopperTextVBlankContinue:
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
 	add r2, r3
 	mov r3, #1								@ Count
-	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_FIX)
+	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_RESET)
 	
 	bl dmaTransfer
 	

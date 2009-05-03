@@ -164,7 +164,7 @@ showTitleScreen:
 	bl fxColorPulseOn
 	bl fxSpotlightIn	
 	bl fxFadeBlackIn
-	
+
 	ldr r0, =1000								@ 1 seconds
 	ldr r1, =showTextScroller					@ Callback function address
 	

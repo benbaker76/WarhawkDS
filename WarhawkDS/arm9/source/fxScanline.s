@@ -92,12 +92,12 @@ fxScanlineOff:
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
+	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 	
 	ldr r0, =REG_DISPCNT_SUB
 	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
+	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 
 	ldmfd sp!, {r0-r6, pc}

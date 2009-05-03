@@ -98,17 +98,17 @@ fxSpotlightOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_SPOTLIGHT_IN | FX_SPOTLIGHT_OUT)
+	bic r1, #(FX_SPOTLIGHT_IN | FX_SPOTLIGHT_OUT)
 	str r1, [r0]
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
+	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 	
 	ldr r0, =REG_DISPCNT_SUB
 	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
+	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 	
 	mov r0, #0

@@ -93,47 +93,47 @@ fxMosaicOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_MOSAIC_IN | FX_MOSAIC_OUT)
+	bic r1, #(FX_MOSAIC_IN | FX_MOSAIC_OUT)
 	str r1, [r0]
 	
 	ldr r0, =REG_BG0CNT					@ BG 0 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldr r0, =REG_BG1CNT					@ BG 1 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldr r0, =REG_BG2CNT					@ BG 2 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldr r0, =REG_BG3CNT					@ BG 3 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldr r0, =REG_BG0CNT_SUB				@ SUB BG 0 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldr r0, =REG_BG1CNT_SUB				@ SUB BG 1 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldr r0, =REG_BG2CNT_SUB				@ SUB BG 2 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldr r0, =REG_BG3CNT_SUB				@ SUB BG 3 Register
 	ldr r1, [r0]
-	and r1, #(~BG_MOSAIC_ON)			@ Turn on mosaic
+	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

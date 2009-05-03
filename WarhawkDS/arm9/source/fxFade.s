@@ -159,7 +159,7 @@ fxFadeOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_FADE_IN | FX_FADE_OUT)
+	bic r1, #(FX_FADE_IN | FX_FADE_OUT)
 	str r1, [r0]
 	
 	ldr r0, =BLEND_CR

@@ -63,7 +63,7 @@ fxColorCycleOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_COLOR_CYCLE)
+	bic r1, #FX_COLOR_CYCLE
 	str r1, [r0]
 	
 	bl DC_FlushAll

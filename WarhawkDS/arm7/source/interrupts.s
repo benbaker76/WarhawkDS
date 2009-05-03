@@ -153,17 +153,17 @@ irqDisable:
 	ldr r1, =REG_DISPSTAT				@ Load REG_DISPSTAT
 	ldr r2, [r1]						@ Read value
 	
-	ldr r3, =~DISP_VBLANK_IRQ			@ VBlank
+	ldr r3, =DISP_VBLANK_IRQ			@ VBlank
 	tst r0, #IRQ_VBLANK					@ Set?
-	andne r2, r3						@ Unset
+	bicne r2, r3						@ Unset
 	
-	ldr r3, =~DISP_HBLANK_IRQ			@ HBlank
+	ldr r3, =DISP_HBLANK_IRQ			@ HBlank
 	tst r0, #IRQ_HBLANK					@ Set?
-	andne r2, r3						@ Unset
+	bicne r2, r3						@ Unset
 	
-	ldr r3, =~DISP_YTRIGGER_IRQ			@ VCount
+	ldr r3, =DISP_YTRIGGER_IRQ			@ VCount
 	tst r0, #IRQ_VCOUNT					@ Set?
-	andne r2, r3						@ Unset
+	bicne r2, r3						@ Unset
 	
 	str r2, [r1]						@ Write back to REG_DISPSTAT
 	

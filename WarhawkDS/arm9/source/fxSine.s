@@ -60,7 +60,7 @@ fxSineWobbleOff:
 	
 	ldr r0, =fxMode					@ lets unset the sine wobble effect
 	ldr r1, [r0]
-	and r1, #~(FX_SINE_WOBBLE)
+	bic r1, #FX_SINE_WOBBLE
 	str r1, [r0]
 	
 	mov r0, #0

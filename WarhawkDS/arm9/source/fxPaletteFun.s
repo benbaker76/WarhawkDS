@@ -43,7 +43,7 @@ fxPaletteFadeToRedOff:
 
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_PALETTE_FADE_TO_RED)
+	bic r1, #FX_PALETTE_FADE_TO_RED
 	str r1, [r0]
 	
 	bl fxPaletteRestore

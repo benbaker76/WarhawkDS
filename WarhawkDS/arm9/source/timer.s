@@ -72,7 +72,7 @@ stopTimer:
 	
 	ldr r0, =TIMER2_CR
 	ldrh r1, [r0]
-	and r1, #~(TIMER_ENABLE)
+	bic r1, #TIMER_ENABLE
 	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}								@ Return

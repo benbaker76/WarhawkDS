@@ -106,7 +106,7 @@ fxFireworksOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_FIREWORKS)
+	bic r1, #FX_FIREWORKS
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

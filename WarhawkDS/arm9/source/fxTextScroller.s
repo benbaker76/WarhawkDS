@@ -99,7 +99,7 @@ fxTextScrollerOff:
 	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
+	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 	
 	ldr r0, =WIN_IN
@@ -112,7 +112,7 @@ fxTextScrollerOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_TEXT_SCROLLER)
+	bic r1, #FX_TEXT_SCROLLER
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

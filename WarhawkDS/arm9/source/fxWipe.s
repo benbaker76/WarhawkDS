@@ -76,17 +76,17 @@ fxWipeOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_WIPE_IN_LEFT | FX_WIPE_IN_RIGHT | FX_WIPE_OUT_UP | FX_WIPE_OUT_DOWN)
+	bic r1, #(FX_WIPE_IN_LEFT | FX_WIPE_IN_RIGHT | FX_WIPE_OUT_UP | FX_WIPE_OUT_DOWN)
 	str r1, [r0]
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
+	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 	
 	ldr r0, =REG_DISPCNT_SUB
 	ldr r1, [r0]
-	and r1, #~(DISPLAY_WIN0_ON)
+	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 
 	ldmfd sp!, {r0-r6, pc}

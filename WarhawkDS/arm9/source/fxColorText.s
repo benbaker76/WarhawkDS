@@ -65,7 +65,7 @@ fxCopperTextOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_COPPER_TEXT)
+	bic r1, #FX_COPPER_TEXT
 	str r1, [r0]
 	
 	ldr r0, =BG_PALETTE
@@ -114,7 +114,7 @@ fxColorCycleTextOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_COLOR_CYCLE_TEXT)
+	bic r1, #FX_COLOR_CYCLE_TEXT
 	str r1, [r0]
 	
 	ldr r0, =BG_PALETTE

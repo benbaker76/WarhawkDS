@@ -114,12 +114,12 @@ stopAudioStream:
 	
 	ldr r0, =TIMER0_CR
 	ldrh r1, [r0]
-	and r1, #~(TIMER_ENABLE)
+	bic r1, #TIMER_ENABLE
 	strh r1, [r0]
 
 	ldr r0, =TIMER1_CR
 	ldrh r1, [r0]
-	and r1, #~(TIMER_ENABLE)
+	bic r1, #TIMER_ENABLE
 	strh r1, [r0]
 	
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address

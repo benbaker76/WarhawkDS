@@ -57,7 +57,7 @@ fxColorPulseOff:
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
-	and r1, #~(FX_COLOR_PULSE)
+	bic r1, #FX_COLOR_PULSE
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

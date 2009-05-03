@@ -50,6 +50,10 @@ readOptions:
 	ldr r1, =optionLevelNum
 	ldrb r2, [r0], #1
 	str r2, [r1]
+	
+	@ldr r0, =optionLevelNum						@ Read optionLevelNum address
+	@ldr r1, =8
+	@str r1, [r0]								@ Read optionLevelNum value
 
 	@ More options here
 	

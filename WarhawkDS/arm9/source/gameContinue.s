@@ -57,18 +57,7 @@ showGameContinueMenu:
 	ldr r1, =GAMEMODE_GAMECONTINUE				@ Set the gameMode to continue game
 	str r1, [r0]								@ Store back gameMode
 	
-	bl stopSound
-	bl fxOff
-	bl fxFadeBlackInit
-	bl initMainTiles							@ Initialize main tiles
-	bl resetScrollRegisters						@ Reset scroll registers
-	bl clearBG0									@ Clear bg's
-	bl clearBG1
-	bl clearBG2
-	bl clearBG3
-	bl swiWaitForVBlank
-	
-	bl initStarData
+	bl clearBG0Sub
 	
 	ldr r0, =menuNum							@ Reset menuNum
 	mov r1, #0
@@ -86,23 +75,9 @@ showGameContinueMenu:
 	ldr r1, =SPRITE_PALETTE
 	ldr r2, =512
 	bl dmaCopy
-	
-	bl clearOAM									@ Reset all sprites
-	
-	ldr r0, =FontPal
-	ldr r1, =BG_PALETTE
-	ldr r2, =32
-	bl dmaCopy
-	mov r3, #0
-	strh r3, [r1]
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-	strh r3, [r1]
 
 	@ Write the tile data to VRAM
 	
-	bl initLogoSprites
-
 	ldr r0, =ArrowSpriteTiles					@ Load cursor sprite tiles
 	ldr r1, =SPRITE_GFX_SUB
 	ldr r2, =ArrowSpriteTilesLen
@@ -110,20 +85,12 @@ showGameContinueMenu:
 	
 	ldr r0, =ContinueText						@ Load out text pointer
 	ldr r1, =9									@ x pos
-	ldr r2, =5									@ y pos
+	ldr r2, =10									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
-	ldr r0, =hiScoreRawText						@ Read the path to the file
-	bl playAudioStream							@ Play the audio stream
-	
-	bl fxColorPulseOn							@ Turn on color pulse
-	bl fxCopperTextOn							@ Turn on copper text fx
-	bl fxStarfieldOn							@ Tune on starfield
-	bl fxFadeBlackIn
-	
 	ldr r0, =colorHilight
-	mov r1, #10
+	mov r1, #14
 	str r1, [r0]
 	
 	b showGameContinueMenuDone
@@ -181,7 +148,7 @@ updateGameContinueMenu:
 	ldr r4, =colorHilight
 	mov r5, #0
 	add r5, r3, lsl #1
-	add r5, #10
+	add r5, #14
 	str r5, [r4]
 	str r1, [r0]								@ Write back to levelNum
 	str r3, [r2]								@ Write back to menuNum
@@ -189,9 +156,8 @@ updateGameContinueMenu:
 updateGameContinueMenuSkip:
 	
 	bl drawArrowSprite							@ Draw the arrow sprite
-	bl drawGameContinueMenuText						@ Draw the continue text
-	bl scrollStarsHoriz
-	bl updateLogoSprites
+	bl drawGameContinueMenuText					@ Draw the continue text
+	bl updateTitleScreen
 
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value
@@ -219,19 +185,19 @@ drawGameContinueMenuText:
 
 	ldr r0, =restartText
 	ldr r1, =10									@ x pos
-	ldr r2, =10									@ y pos
+	ldr r2, =14									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =startLevelText
 	ldr r1, =10									@ x pos
-	ldr r2, =12									@ y pos
+	ldr r2, =16									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r10, =levelNum							@ Pointer to data
 	ldr r10, [r10]
-	mov r8, #12									@ y pos
+	mov r8, #16									@ y pos
 	mov r9, #2									@ Number of digits
 	mov r11, #22								@ x pos
 	bl drawDigits								@ Draw
@@ -253,7 +219,7 @@ drawArrowSprite:
 	
 	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)				@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
-	orr r1, #(10 * 8)							@ Orr in the y pos (10 * 8 pixels + 2 pixels so cursor is below text)
+	orr r1, #(14 * 8)							@ Orr in the y pos (10 * 8 pixels + 2 pixels so cursor is below text)
 	ldr r2, =menuNum							@ Load the hiScoreIndex address
 	ldr r2, [r2] 								@ Load the hiScoreIndex value
 	lsl r2, #1

@@ -72,52 +72,7 @@ showGameStop:
 	str r1, [r0]
 		
 	ldmfd sp!, {r0-r6, pc}
-	
-	@ ------------------------------------
-	
-showGamePause:
 
-	stmfd sp!, {r0-r1, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_PAUSED
-	str r1, [r0]
-	
-	ldr r0, =pausedText				@ Load out text pointer
-	ldr r1, =13						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =0						@ Draw on sub screen
-	bl drawText
-	
-	ldr r0, =pausedText				@ Load out text pointer
-	ldr r1, =13						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =1						@ Draw on main screen
-	bl drawText
-	
-	bl fxCopperTextOn
-		
-	ldmfd sp!, {r0-r1, pc}
-	
-	@ ------------------------------------
-	
-showGameUnPause:
-
-	stmfd sp!, {r0-r1, lr}
-	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_RUNNING
-	str r1, [r0]
-	
-	bl fxCopperTextOff
-	bl clearBG0
-
-	mov r1,#1
-	ldr r0,=fireTrap
-	str r1,[r0]					@ this stops a fire when a is pressed!
-		
-	ldmfd sp!, {r0-r1, pc}
-	
 	@ ------------------------------------
 	
 checkGameContinue:
@@ -159,27 +114,90 @@ checkGameContinueDone:
 checkGamePause:
 
 	stmfd sp!, {r0-r1, lr}
-	
+
 	ldr r0, =REG_KEYINPUT						@ Read Key Input
 	ldr r1, [r0]
-	tst r1, #BUTTON_SELECT						@ Select button pressed?
+	tst r1, #BUTTON_START						@ Start button pressed?
 	bleq showGamePause
 		
 	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
-	
-updateGameUnPause:
+
+showGamePause:
 
 	stmfd sp!, {r0-r1, lr}
 	
-	ldr r0, =REG_KEYINPUT						@ Read Key Input
-	ldr r1, [r0]
-	tst r1, #BUTTON_A							@ Select button pressed?
-	bleq showGameUnPause
-
+	ldr r0, =gameMode
+	ldr r1, =GAMEMODE_PAUSED
+	str r1, [r0]
+	
+	ldr r0, =pausedText				@ Load out text pointer
+	ldr r1, =13						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =0						@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =pausedText				@ Load out text pointer
+	ldr r1, =13						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =1						@ Draw on main screen
+	bl drawText
+	
+	bl fxCopperTextOn
+	
+	ldr r0, =buttonWaitPress
+	mov r1,#1
+	str r1,[r0]						@ set the button to active
+	mov r1,#0
+	ldr r0, =pauseStartHeld
+	str r1,[r0]
+		
 	ldmfd sp!, {r0-r1, pc}
 	
+	@ ------------------------------------
+	
+updateGameUnPause:								@ SORRY about messing with this HK!! :)
+
+	stmfd sp!, {r0-r1, lr}
+
+	ldr r0,=pauseStartHeld
+	ldr r1,[r0]
+	cmp r1,#1
+	beq showGameUnPause
+
+	mov r1,#BUTTON_START						@ set keyWait to check for START as an option
+	bl keyWait									@ ANY BL from here crashes?
+	cmp r1,#1
+	beq updateGameUnPauseWait
+
+		ldr r0, =buttonWaitPress	
+		mov r1,#1
+		str r1,[r0]								@ set the button to active, we need this clear for release
+		ldr r0, =pauseStartHeld
+		str r1,[r0]								@ tell the code we are waiting for release to continue
+
+	updateGameUnPauseWait:	
+	ldmfd sp!, {r0-r1, pc}
+
+showGameUnPause:
+
+	mov r1,#BUTTON_START						@ set keyWait to check for START as an option
+	bl keyWait									@ ANY BL from here crashes?
+	ldr r1,=buttonWaitPress
+	ldr r0,[r1]
+	cmp r0,#0
+	bne showGameUnPauseWait
+
+		ldr r0, =gameMode
+		ldr r1, =GAMEMODE_RUNNING
+		str r1, [r0]
+		bl fxCopperTextOff
+		bl clearBG0Partial
+
+	showGameUnPauseWait:
+	ldmfd sp!, {r0-r1, pc}
+		
 	@ ------------------------------------
 	
 checkGameOver:
@@ -206,6 +224,9 @@ checkGameOverDone:
 	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
+
+pauseStartHeld:
+	.word 0
 
 	.pool
 	.end

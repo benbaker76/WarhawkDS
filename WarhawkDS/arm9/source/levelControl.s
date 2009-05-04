@@ -49,17 +49,17 @@ checkLevelControl:
 	ldr r2,[r1]
 	tst r2,#BUTTON_L
 	bleq showLevelBack
-	@bne checkLevelControlDone
+	beq checkLevelControlDone
 	tst r2,#BUTTON_R
 	bleq showLevelNext
-	@bne checkLevelControlDone
-	tst r2,#BUTTON_START
-	bleq initLevel
-	@bne checkLevelControlDone
-	@tst r2,#BUTTON_SELECT
-	@bleq showBossJump
+	beq checkLevelControlDone				@ still skips to end of level!
+@	tst r2,#BUTTON_START
+@	bleq initLevel
+@	bne checkLevelControlDone
+	tst r2,#BUTTON_SELECT
+	bleq showBossJump
 	
-@checkLevelControlDone:
+	checkLevelControlDone:
 	
 	ldmfd sp!, {r0-r2, pc}
 	

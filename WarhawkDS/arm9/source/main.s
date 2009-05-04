@@ -144,7 +144,7 @@ mainLoop:
 	cmp r1, #GAMEMODE_STOPPED
 	beq mainLoopDone
 	cmp r1, #GAMEMODE_PAUSED
-	beq updateGameUnPause
+	bleq updateGameUnPause
 	cmp r1, #GAMEMODE_INTRO
 	bleq updateIntro
 	cmp r1, #GAMEMODE_LOADING
@@ -167,8 +167,6 @@ mainLoop:
 	b mainLoop
 
 gameLoop:
-
-	ldmed r0,{r0-r12}							@ just trying something - this is the only way i can find to empty the stack?
 
 	bl moveShip									@ check and move your ship
 	bl alienFireMove							@ check and move alien bullets
@@ -196,7 +194,6 @@ gameLoop:
 	bl checkGamePause							@ check if the game is paused
 	
 @	bl drawDebugText							@ draw some numbers :)
-
 
 	ldr r0,=levelEnd
 	ldr r0,[r0]

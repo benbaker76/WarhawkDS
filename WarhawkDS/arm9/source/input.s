@@ -34,6 +34,9 @@
 	.align
 	.text
 	.global readInput
+	.global buttonPress
+	.global buttonWaitPress
+	.global keyWait
 	
 readInput:
 
@@ -62,10 +65,41 @@ readInput:
 	
 	@---------------------------------
 
+keyWait:										@ this waits for key init and release... see pause for usage
+	@ pass r1 as key and r1 will return 0 until that key is released!
+	@ (remember to set buttonWaitPress=1 BEFORE any calls to this)
+	@ also buttonWaitPress is used for secondary release check
+	stmfd sp!, {r0,r2-r6, lr}
+
+	ldr r0, =REG_KEYINPUT						@ Read Key Input
+	ldr r0, [r0]								@ r0=key values
+	tst r0,r1									@ test if the key is pressed
+	beq keyWaitPressed							@ is it pressed?
+
+		ldr r0,=buttonWaitPress					@ key is clear
+		mov r1,#0
+		str r1,[r0]								@ so zero button press
+		mov r1,#1
+	
+		ldmfd sp!, {r0,r2-r6, pc}				@ and return with r1 as 0
+	
+	keyWaitPressed:
+	
+	ldr r0,=buttonWaitPress
+	ldr r2,[r0]
+	cmp r2,#0
+
+	moveq r1,#0									@ if button is released return non-zero
+	movne r1,#1									@ else return 0
+
+	ldmfd sp!, {r0,r2-r6, pc}
+	
 	.data
 	.align
 
 buttonPress:
+	.word 0
+buttonWaitPress:
 	.word 0
 	
 	.pool

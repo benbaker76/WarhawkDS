@@ -32,6 +32,7 @@
 	.align
 	.text
 	.global clearBG0
+	.global clearBG0Partial
 	.global clearBG0Sub
 	.global clearBG1
 	.global clearBG2
@@ -52,6 +53,21 @@ clearBG0:
 	
 	@---------------------------------
 	
+clearBG0Partial:								@ this stops the flicker when pause/unpause is repeated on the score etc
+
+	stmfd sp!, {r0-r6, lr} 
+
+	mov r0, #0
+	ldr r1, =BG_MAP_RAM(BG0_MAP_BASE)
+	ldr r2, =32*20*2
+	bl dmaFillWords
+	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
+	bl dmaFillWords
+
+	ldmfd sp!, {r0-r6, pc}
+	
+	@---------------------------------
+		
 clearBG0Sub:
 
 	stmfd sp!, {r0-r6, lr}	

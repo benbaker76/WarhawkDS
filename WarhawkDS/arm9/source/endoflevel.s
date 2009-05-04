@@ -167,7 +167,51 @@ showEndOfLevel:
 	ldr r2, =20									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
-	
+
+
+	ldr r4,=levelCount
+	ldr r4,[r4]
+	cmp r4,#1
+	bne notLevel1
+			ldr r0, =levelCompletionSuckerText5			@ Load out text pointer
+			ldr r1, =4									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText6			@ Load out text pointer
+			ldr r1, =3									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel1:
+	cmp r4,#10
+	bne notLevel10
+			ldr r0, =levelCompletionSuckerText1			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =4									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText2			@ Load out text pointer
+			ldr r1, =0									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText3			@ Load out text pointer
+			ldr r1, =2									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText4			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =12									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel10:
+
 	bl drawEndOfLevelValues
 	
 	ldr r0, =hiScoreRawText						@ Read the path to the file
@@ -500,6 +544,26 @@ levelCompletionBonusText:
 	.align
 levelCompletionBonusCalcText:
 	.asciz "00 x 0000 = 000000"
+
+	.align
+levelCompletionSuckerText1:
+	.asCiz "SO, THINK YOU'VE DONE SO WELL,"
+	.align
+levelCompletionSuckerText2:
+	.asCiz "CLEARING THE ORIGINAL 10 LEVELS?"
+	.align
+levelCompletionSuckerText3:
+	.asCiz "SADLY, THINGS GET FAR WORSE!"
+	.align
+levelCompletionSuckerText4:
+	.asCiz "OH, NEARLY FORGOT, 'GOOD LUCK'"
 	
+levelCompletionSuckerText5:
+	.asCiz "SO, YOU CLEARED LEVEL 1?"
+	.align
+levelCompletionSuckerText6:
+	.asCiz "ALL I CAN SAY IS 'WHOOPEE'"
+	
+		
 	.pool
 	.end

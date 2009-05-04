@@ -99,16 +99,16 @@ showEndOfLevel:
 
 	@ Write the tile data
 	
-	ldr r0 ,=MoonscapeTiles
+	ldr r0 ,=OrbscapeTiles
 	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =MoonscapeTilesLen
+	ldr r2, =OrbscapeTilesLen
 	bl dmaCopy
 
 	@ Write map
 	
-	ldr r0, =MoonscapeMap
+	ldr r0, =OrbscapeMap
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =MoonscapeMapLen
+	ldr r2, =OrbscapeMapLen
 	bl dmaCopy
 	
 	bl clearOAM									@ Reset all sprites
@@ -118,7 +118,7 @@ showEndOfLevel:
 	ldr r2, =512
 	bl dmaCopy
 	
-	bl initLogoSprites
+	@bl initLogoSprites
 	
 	ldr r0, =wellDoneText						@ Load out text pointer
 	ldr r1, =11									@ x pos
@@ -454,7 +454,7 @@ updateEndOfLevel:
 	
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
-	bl updateLogoSprites
+	@bl updateLogoSprites
 	
 	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
 	

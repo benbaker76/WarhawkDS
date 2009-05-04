@@ -16,6 +16,7 @@
 #include "../build/LargeShip.h"
 #include "../build/WarShip.h"
 #include "../build/Moonscape.h"
+#include "../build/Orbscape.h"
 #include "../build/LogoSprites.h"
 #include "../build/CheatSprites.h"
 #include "../build/StartSprites.h"

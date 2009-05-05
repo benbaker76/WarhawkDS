@@ -60,7 +60,7 @@ checkPowerUp:
 	ldr r0,=delayPowerUp				@ this is our counter
 	ldr r1,[r0]
 	add r1,#1							@ add to it
-	cmp r1,#400							@ we will use this for a test value
+	cmp r1,#368							@ we will use this for a test value
 	str r1,[r0]							@ store it back
 	bpl powerInit
 		ldmfd sp!, {r0-r6, pc}	
@@ -146,7 +146,7 @@ dropShipShot:						@------------ We have shot a drop ship!!
 	mov r1,#29
 	mov r0,#SPRITE_OBJ_OFFS
 	str r1,[r3,r0]
-	mov r1,#4					@ powerup takes 4 shots to destroy
+	mov r1,#8					@ powerup takes 4 shots to destroy
 	mov r0,#SPRITE_HIT_OFFS		@ set its hit points to 2
 	str r1,[r3,r0]	
 	
@@ -200,28 +200,26 @@ movePowerUp:
 	str r2,[r1,r8,lsl #2]
 	cmp r2,#0
 	bne powerupXDone
-	mov r2,#12
+	mov r2,#10
 	str r2,[r1,r8,lsl #2]
 	
 	cmp r0,r4
 	bgt powerupRight
-		@ move hunter left!
 		ldr r2,=spriteSpeedX
 		add r2, r8, lsl #2
 		ldrsb r3,[r2]
 		subs r3,#1
-		cmp r3,#-2
-		movmi r3,#-2
+		cmp r3,#-4
+		movmi r3,#-4
 		str r3,[r2]				@ store new speed back
 		b powerupXDone
 	powerupRight:
-		@ move hunter left!
 		ldr r2,=spriteSpeedX
 		add r2, r8, lsl #2
 		ldrsb r3,[r2]
 		add r3,#1
-		cmp r3,#2
-		movpl r3,#2
+		cmp r3,#4
+		movpl r3,#4
 		str r3,[r2]				@ store new speed back
 	
 	powerupXDone:

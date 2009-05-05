@@ -73,7 +73,7 @@ showGameContinueMenu:
 	
 	ldr r0, =ContinueText						@ Load out text pointer
 	ldr r1, =7									@ x pos
-	ldr r2, =10									@ y pos
+	ldr r2, =11									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
@@ -82,6 +82,10 @@ showGameContinueMenu:
 	ldr r0, =colorHilight
 	mov r1, #14
 	str r1, [r0]
+	
+	ldr r0,=buttonWaitPress
+	mov r1,#1
+	str r1,[r0]									@ set button active (start)
 	
 	b showGameContinueMenuDone
 	
@@ -132,6 +136,7 @@ updateGameContinueMenu:
 	beq updateGameContinueMenuStartLevel
 	cmp r1, #MENUITEM_MENTALVERSION
 	beq updateGameContinueMenuMentalVersion
+	b updateGameContinueMenuContinue
 	
 updateGameContinueMenuMentalVersion:
 
@@ -176,10 +181,11 @@ updateGameContinueMenuContinue:
 	bl drawGameContinueMenuText					@ Draw the continue text
 	bl updateTitleScreen
 
-	ldr r0, =REG_KEYINPUT						@ Read key input register
-	ldr r1, [r0]								@ Read key input value
-	tst r1, #BUTTON_A							@ Button A?
-	bne updateGameContinueMenuDone
+	mov r1, #BUTTON_START
+	bl keyWait
+	cmp r1,#1									@ 1 is returned if key pressed and released
+
+	beq updateGameContinueMenuDone
 
 	ldr r0, =levelNum
 	ldr r1, =menuNum

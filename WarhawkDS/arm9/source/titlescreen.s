@@ -170,6 +170,11 @@ showTitleScreen:
 	
 	bl startTimer
 	
+	ldr r0,=buttonWaitPress
+	mov r1,#1
+	str r1,[r0]									@ set button active (start)
+	
+	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
@@ -399,12 +404,21 @@ updateTitleScreen:
 	bl updateLogoSprites						@ Update logo sprites
 	bl updateStartSprites						@ Update start sprites
 	bl updateCheatCheck							@ check for cheat sequence
+
+	ldr r0, =gameMode							@ Get gameMode address
+	ldr r1,[r0]
+	cmp r1, #GAMEMODE_GAMECONTINUE				@ update menu is called from continue
+	beq updateTitleNoStart						@ we dont want to loop with the start, so skip titles start check!
 	
-	ldr r0, =REG_KEYINPUT						@ Read Key Input
-	ldr r1, [r0]
-	tst r1, #BUTTON_START						@ Start button pressed?
-	bleq stopTimer								@ Stop the timer
-	bleq showGameContinueMenu					@ Start the game
+		mov r1, #BUTTON_START
+		bl keyWait
+		cmp r1,#1								@ 1 is returned if key pressed and released
+		beq updateTitleNoStart
+	
+			bl stopTimer						@ Stop the timer
+			bl showGameContinueMenu				@ Start the game
+	
+	updateTitleNoStart:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 

@@ -48,15 +48,6 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 
 	waveInitPossible:
 
-push {r8-r11}
-@	mov r10,r3
-@	mov r8,#0						@ y pos
-@	mov r9,#3						@ Number of digits
-@	mov r11, #9						@ x pos
-@	bl drawDigits					@ Draw
-pop {r8-r11}
-
-
 	ldr r2,=alienLevel
 	ldr r4,=levelNum				@ we need to modify alienLevel based on game level
 	ldr r4,[r4]						@ r4=current level
@@ -619,8 +610,8 @@ aliensLinear:
 		lsl r3,#3
 		ldr r4,[r2,r3]
 	linearNoLoop:
-@		moveq r3,#0			@ if direction if 0 = loop pattern
-@		beq linInstruct
+		moveq r3,#0			@ if direction if 0 = loop pattern
+		beq linInstruct
 		cmp r4,#2048
 		beq killTracker
 		

@@ -30,23 +30,26 @@
 	.text
 	
 	.global stopSound
-	.global playBlasterSound							@ Use = Normal Fire
-	.global playExplosionSound
-	.global playAlienExplodeSound
-	.global playAlienExplodeScreamSound
-	.global playElecShotSound
-	.global playLaserShotSound
-	.global playShipArmourHit1Sound
-	.global playShipArmourHit2Sound
-	.global playClassicSound
-	.global playCrashBuzSound							@ Use = Low Energy
-	.global playDinkDinkSound
-	.global playHitWallSound
-	.global playLowSound
-	.global playSteelSound
-	.global playBossExplodeSound
-	.global playFireworksSound
-	
+	.global playBlasterSound					@ Used = Normal Fire
+	.global playExplosionSound					@ used = player death & base explode
+	.global playAlienExplodeSound				@ used = alien explode (need better for big aliens)
+	.global playAlienExplodeScreamSound			@ used = powershot, mineshot explode, player death
+	.global playElecShotSound					@ used = alien fire
+	.global playLaserShotSound					@ used = alien fire
+	.global playShipArmourHit1Sound				@ used = boss shot, player/alien collision
+	.global playShipArmourHit2Sound				@ not used (using for powerup collect for now)
+	.global playClassicSound					@ not used
+	.global playCrashBuzSound					@ used = alien fire
+	.global playDinkDinkSound					@ used = cheatmode and level start
+	.global playHitWallSound					@ not used
+	.global playLowSound						@ used = alien fire
+	.global playSteelSound						@ used = eol counter, alien/player collide, alien fire
+	.global playBossExplodeSound				@ used = boss/player explode
+	.global playFireworksSound					@ used = fireworks
+	@global playPowerupCollect					@ for powerup collection
+	@global playpowerupLostSound				@ powerup runs out
+	@global playIdentShipExplode				@ for when a multi-sprite ship is destroyed
+	@global playKeyboardClickSound				@ for menu navigation/options
 stopSound:
 
 	stmfd sp!, {r0-r2, lr}

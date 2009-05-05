@@ -166,8 +166,8 @@ powerupCollect:
 	mov r2,#SPRITE_Y_OFFS
 	str r0,[r1,r2]
 	
-	@bl playPowerupCollect
-	
+	@bl playPowerupCollect	@ play sound for poweup collect
+	bl playShipArmourHit2Sound	@ something for now
 	mov r0,#1
 	ldr r1,=powerUp
 	str r0,[r1]

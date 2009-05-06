@@ -230,11 +230,11 @@ getLevelNum:
 	ldr r1, =optionLevelNum
 	ldr r2, [r1]
 	
-	ldr r3, =optionNormalLevelNum				@ Read optionNormalLevelNum address
-	ldr r3, [r3]								@ Read optionNormalLevelNum value
+	ldr r3, =optionLevelNumNormal				@ Read optionLevelNumNormal address
+	ldr r3, [r3]								@ Read optionLevelNumNormal value
 	
-	ldr r4, =optionMentalLevelNum				@ Read optionMentalLevelNum address
-	ldr r4, [r4]								@ Read optionMentalLevelNum value
+	ldr r4, =optionLevelNumMental				@ Read optionLevelNumMental address
+	ldr r4, [r4]								@ Read optionLevelNumMental value
 	
 	cmp r0, #OPTION_GAMEMODECURRENT_NORMAL
 	moveq r2, r3
@@ -263,11 +263,11 @@ setLevelNum:
 	ldr r1, =optionLevelNum
 	ldr r1, [r1]
 	
-	ldr r2, =optionNormalLevelNum				@ Read optionNormalLevelNum address
-	ldr r3, [r2]								@ Read optionNormalLevelNum value
+	ldr r2, =optionLevelNumNormal				@ Read optionLevelNumNormal address
+	ldr r3, [r2]								@ Read optionLevelNumNormal value
 	
-	ldr r4, =optionMentalLevelNum				@ Read optionMentalLevelNum address
-	ldr r5, [r4]								@ Read optionMentalLevelNum value
+	ldr r4, =optionLevelNumMental				@ Read optionLevelNumMental address
+	ldr r5, [r4]								@ Read optionLevelNumMental value
 	
 	cmp r0, #OPTION_GAMEMODECURRENT_NORMAL
 	moveq r3, r1

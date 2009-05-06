@@ -36,8 +36,8 @@
 	.global writeOptions
 	.global optionGameModeCurrent
 	.global optionGameModeComplete
-	.global optionNormalLevelNum
-	.global optionMentalLevelNum
+	.global optionLevelNumNormal
+	.global optionLevelNumMental
 	.global optionLevelNum
 
 readOptions:
@@ -60,11 +60,11 @@ readOptions:
 	ldrb r2, [r0], #1
 	str r2, [r1]
 	
-	ldr r1, =optionNormalLevelNum
+	ldr r1, =optionLevelNumNormal
 	ldrb r2, [r0], #1
 	str r2, [r1]
 	
-	ldr r1, =optionMentalLevelNum
+	ldr r1, =optionLevelNumMental
 	ldrb r2, [r0], #1
 	str r2, [r1]
 	
@@ -80,11 +80,11 @@ readOptions:
 	@ldr r1, =OPTION_GAMEMODECOMPLETE_NORMAL
 	@str r1, [r0]
 	
-	@ldr r0, =optionNormalLevelNum
+	@ldr r0, =optionLevelNumNormal
 	@ldr r1, =LEVEL_16
 	@str r1, [r0]
 	
-	@ldr r0, =optionMentalLevelNum
+	@ldr r0, =optionLevelNumMental
 	@ldr r1, =LEVEL_4
 	@str r1, [r0]
 	
@@ -108,11 +108,11 @@ writeOptions:
 	ldr r2, [r1]
 	strb r2, [r0], #1
 	
-	ldr r1, =optionNormalLevelNum
+	ldr r1, =optionLevelNumNormal
 	ldr r2, [r1]
 	strb r2, [r0], #1
 	
-	ldr r1, =optionMentalLevelNum
+	ldr r1, =optionLevelNumMental
 	ldr r2, [r1]
 	strb r2, [r0], #1
 	
@@ -137,10 +137,10 @@ optionGameModeCurrent:
 optionGameModeComplete:
 	.word 0
 
-optionNormalLevelNum:
+optionLevelNumNormal:
 	.word 0
 	
-optionMentalLevelNum:
+optionLevelNumMental:
 	.word 0
 	
 optionLevelNum:

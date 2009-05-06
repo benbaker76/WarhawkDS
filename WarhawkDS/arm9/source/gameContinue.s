@@ -144,9 +144,9 @@ updateGameContinueMenuGameMode:
 
 	ldr r0, =optionGameModeComplete
 	ldr r0, [r0]
-	
-	cmp r0, #OPTION_GAMEMODECOMPLETE_NORMAL
-	bne updateGameContinueMenuContinue
+
+	tst r0, #OPTION_GAMEMODECOMPLETE_NORMAL
+	beq updateGameContinueMenuContinue
 
 	ldr r0, =optionGameModeCurrent				@ Load optionGameModeCurrent address
 	ldr r1, [r0]								@ Load optionGameModeCurrent value

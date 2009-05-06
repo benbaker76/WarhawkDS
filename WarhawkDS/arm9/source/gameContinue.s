@@ -49,8 +49,6 @@ showGameContinueMenu:
 	
 	bl getLevelNum
 	
-	ldr r0, =optionLevelNum
-	ldr r0, [r0]
 	cmp r0, #1									@ Is optionLevelNum <= 1
 	ble showGameContinueMenuGameStart			@ Yes then go to game start
 	
@@ -162,6 +160,12 @@ updateGameContinueMenuGameMode:
 	str r1, [r0]
 	
 	bl getLevelNum
+	
+	ldr r1, =levelNum
+	ldr r2, [r1]
+	cmp r2, r0
+	movgt r2, r0
+	str r2, [r1]
 
 	b updateGameContinueMenuContinue
 
@@ -222,7 +226,7 @@ updateGameContinueMenuDone:
 	
 getLevelNum:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r1-r6, lr}
 
 	ldr r0, =optionGameModeCurrent
 	ldr r0, [r0]
@@ -242,14 +246,9 @@ getLevelNum:
 	moveq r2, r4
 	
 	str r2, [r1]
+	mov r0, r2
 	
-	ldr r0, =levelNum
-	ldr r1, [r0]
-	cmp r1, r2
-	movgt r1, r2
-	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r1-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 

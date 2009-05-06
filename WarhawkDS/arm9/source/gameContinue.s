@@ -177,9 +177,13 @@ updateGameContinueMenuStartLevel:
 	
 updateGameContinueMenuContinue:
 
+	bl scrollStarsHoriz							@ Scroll stars
+	bl updateLogoSprites						@ Update logo sprites
+	bl updateStartSprites						@ Update start sprites
+	bl updateCheatCheck							@ check for cheat sequence
+
 	bl drawArrowSprite							@ Draw the arrow sprite
 	bl drawGameContinueMenuText					@ Draw the continue text
-	bl updateTitleScreen
 
 	mov r1, #BUTTON_START
 	bl keyWait

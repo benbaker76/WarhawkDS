@@ -33,6 +33,7 @@
 	.text
 	.global showTitleScreen
 	.global showCredits
+	.global updateStartSprites
 	.global updateTitleScreen
 	.global drawCreditText
 
@@ -405,20 +406,15 @@ updateTitleScreen:
 	bl updateStartSprites						@ Update start sprites
 	bl updateCheatCheck							@ check for cheat sequence
 
-	ldr r0, =gameMode							@ Get gameMode address
-	ldr r1,[r0]
-	cmp r1, #GAMEMODE_GAMECONTINUE				@ update menu is called from continue
-	beq updateTitleNoStart						@ we dont want to loop with the start, so skip titles start check!
+	mov r1, #BUTTON_START
+	bl keyWait
+	cmp r1,#1								@ 1 is returned if key pressed and released
+	beq updateTitleScreenDone
+
+	bl stopTimer						@ Stop the timer
+	bl showGameContinueMenu				@ Start the game
 	
-		mov r1, #BUTTON_START
-		bl keyWait
-		cmp r1,#1								@ 1 is returned if key pressed and released
-		beq updateTitleNoStart
-	
-			bl stopTimer						@ Stop the timer
-			bl showGameContinueMenu				@ Start the game
-	
-	updateTitleNoStart:
+updateTitleScreenDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 

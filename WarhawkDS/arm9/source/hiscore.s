@@ -174,6 +174,18 @@ showHiScoreEntry:
 	ldr r2, =7									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
+
+	ldr r0, =highInstruct1						@ Load out text pointer
+	ldr r1, =3									@ x pos
+	ldr r2, =5									@ y pos
+	ldr r3, =0									@ Draw on MAIN screen
+	bl drawText	
+
+	ldr r0, =highInstruct2						@ Load out text pointer
+	ldr r1, =6									@ x pos
+	ldr r2, =7									@ y pos
+	ldr r3, =0									@ Draw on MAIN screen
+	bl drawText		
 	
 	bl drawHiScoreText							@ Draw the hiscore text
 	
@@ -653,6 +665,14 @@ wellDoneText:
 	.align
 enterNameText:
 	.asciz "PLEASE ENTER YOUR NAME"
+
+	.align
+highInstruct1:
+	.asciz "USE D-PAD TO ENTER LETTERS"
+
+	.align
+highInstruct2:
+	.asciz "PRESS FIRE TO FINISH"
 
 	.align
 hiScoreBuffer:

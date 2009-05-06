@@ -77,7 +77,7 @@ showGameStop:
 	
 checkGameContinue:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl getLevelNum
 	
@@ -110,7 +110,7 @@ checkGameContinue:
 	
 checkGameContinueDone:
 	
-	ldmfd sp!, {r0-r2, pc}
+	ldmfd sp!, {r0-r3, pc}
 
 	@ ------------------------------------
 	

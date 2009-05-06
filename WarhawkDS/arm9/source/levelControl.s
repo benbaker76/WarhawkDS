@@ -199,6 +199,7 @@ showLevelNextEndOfGame:
 	
 	str r2, [r1]
 
+	bl writeOptions
 	bl showEndOfGame
 	
 showLevelNextDone:

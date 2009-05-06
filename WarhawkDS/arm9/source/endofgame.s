@@ -177,6 +177,36 @@ showEndOfGame:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
+	ldr r0, =wellDoneText						@ Load out text pointer
+	ldr r1, =11									@ x pos
+	ldr r2, =18									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =optionGameModeComplete
+	ldr r0, [r0]
+	
+	tst r0, #OPTION_GAMEMODECOMPLETE_MENTAL
+	bne showEndOfGameWarhawkElite
+
+	ldr r0, =mentalModeUnlockedText				@ Load out text pointer
+	ldr r1, =2									@ x pos
+	ldr r2, =20									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	b showEndOfGameContinue
+	
+showEndOfGameWarhawkElite:
+	
+	ldr r0, =warhawkEliteText					@ Load out text pointer
+	ldr r1, =3									@ x pos
+	ldr r2, =20									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+showEndOfGameContinue:
+	
 	bl drawScoreSub
 	
 	ldr r0, =endOfGameRawText					@ Read the path to the file
@@ -932,6 +962,18 @@ finalScoreText:
 	.align
 gameOverText:
 	.asciz "GAME OVER!"
+	
+	.align
+wellDoneText:
+	.asciz "WELL DONE!"
+	
+	.align
+mentalModeUnlockedText:
+	.asciz "MENTAL MODE IS NOW UNLOCKED!"
+	
+	.align
+warhawkEliteText:
+	.asciz "YOU ARE THE WARHAWK ELITE!"
 
 	.pool
 	.end

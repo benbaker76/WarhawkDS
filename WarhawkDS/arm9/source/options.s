@@ -34,8 +34,11 @@
 	.text
 	.global readOptions
 	.global writeOptions
+	.global optionGameModeCurrent
+	.global optionGameModeComplete
+	.global optionNormalLevelNum
+	.global optionMentalLevelNum
 	.global optionLevelNum
-	.global optionMentalVer
 
 readOptions:
 
@@ -48,19 +51,44 @@ readOptions:
 	bl DC_FlushAll
 	
 	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
+	
+	ldr r1, =optionGameModeCurrent
 	ldrb r2, [r0], #1
 	str r2, [r1]
 	
-	ldr r1, =optionMentalVer
+	ldr r1, =optionGameModeComplete
 	ldrb r2, [r0], #1
 	str r2, [r1]
 	
-	@ldr r0, =optionLevelNum						@ Read optionLevelNum address
-	@ldr r1, =8
-	@str r1, [r0]								@ Read optionLevelNum value
-
+	ldr r1, =optionNormalLevelNum
+	ldrb r2, [r0], #1
+	str r2, [r1]
+	
+	ldr r1, =optionMentalLevelNum
+	ldrb r2, [r0], #1
+	str r2, [r1]
+	
 	@ More options here
+	
+	@ --------------- TEST VALUES START ----------------
+	
+	@ldr r0, =optionGameModeCurrent
+	@ldr r1, =OPTION_GAMEMODECURRENT_NORMAL
+	@str r1, [r0]
+
+	@ldr r0, =optionGameModeComplete
+	@ldr r1, =OPTION_GAMEMODECOMPLETE_NORMAL
+	@str r1, [r0]
+	
+	@ldr r0, =optionNormalLevelNum
+	@ldr r1, =LEVEL_16
+	@str r1, [r0]
+	
+	@ldr r0, =optionMentalLevelNum
+	@ldr r1, =LEVEL_4
+	@str r1, [r0]
+	
+	@ --------------- TEST VALUES END ----------------
 	
 	ldmfd sp!, {r0-r2, pc}
 	
@@ -71,11 +99,20 @@ writeOptions:
 	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =optionsBuffer
-	ldr r1, =optionLevelNum
+	
+	ldr r1, =optionGameModeCurrent
 	ldr r2, [r1]
 	strb r2, [r0], #1
 	
-	ldr r1, =optionMentalVer
+	ldr r1, =optionGameModeComplete
+	ldr r2, [r1]
+	strb r2, [r0], #1
+	
+	ldr r1, =optionNormalLevelNum
+	ldr r2, [r1]
+	strb r2, [r0], #1
+	
+	ldr r1, =optionMentalLevelNum
 	ldr r2, [r1]
 	strb r2, [r0], #1
 	
@@ -93,11 +130,20 @@ writeOptions:
 
 	.data
 	.align
-
-optionLevelNum:
-	.word 1
 	
-optionMentalVer:
+optionGameModeCurrent:
+	.word 0
+	
+optionGameModeComplete:
+	.word 0
+
+optionNormalLevelNum:
+	.word 0
+	
+optionMentalLevelNum:
+	.word 0
+	
+optionLevelNum:
 	.word 0
 	
 	.align

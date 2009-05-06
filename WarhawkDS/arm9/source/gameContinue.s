@@ -30,7 +30,7 @@
 
 	#define MENUITEM_RESTART		0
 	#define MENUITEM_STARTLEVEL		1
-	#define MENUITEM_MENTALVERSION	2
+	#define MENUITEM_GAMEMODE		2
 
 	#define MENUITEM_COUNT			3
 	#define ARROW_COLOR_OFFSET		11
@@ -40,14 +40,17 @@
 	.text
 	.global showGameContinueMenu
 	.global updateGameContinueMenu
+	.global getLevelNum
+	.global setLevelNum
 	
 showGameContinueMenu:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =optionLevelNum						@ Read optionLevelNum address
-	ldr r0, [r0]								@ Read optionLevelNum value
+	bl getLevelNum
 	
+	ldr r0, =optionLevelNum
+	ldr r0, [r0]
 	cmp r0, #1									@ Is optionLevelNum <= 1
 	ble showGameContinueMenuGameStart			@ Yes then go to game start
 	
@@ -134,14 +137,21 @@ updateGameContinueMenu:
 	beq updateGameContinueMenuContinue
 	cmp r1, #MENUITEM_STARTLEVEL
 	beq updateGameContinueMenuStartLevel
-	cmp r1, #MENUITEM_MENTALVERSION
-	beq updateGameContinueMenuMentalVersion
+	cmp r1, #MENUITEM_GAMEMODE
+	beq updateGameContinueMenuGameMode
+	
 	b updateGameContinueMenuContinue
 	
-updateGameContinueMenuMentalVersion:
+updateGameContinueMenuGameMode:
 
-	ldr r0, =optionMentalVer					@ Load optionMentalVer address
-	ldr r1, [r0]								@ Load optionMentalVer value
+	ldr r0, =optionGameModeComplete
+	ldr r0, [r0]
+	
+	cmp r0, #OPTION_GAMEMODECOMPLETE_NORMAL
+	bne updateGameContinueMenuContinue
+
+	ldr r0, =optionGameModeCurrent				@ Load optionGameModeCurrent address
+	ldr r1, [r0]								@ Load optionGameModeCurrent value
 	
 	tst r3, #BUTTON_LEFT						@ Button left?
 	mvneq r1, r1								@ Move cursor left
@@ -150,6 +160,8 @@ updateGameContinueMenuMentalVersion:
 
 	and r1, #1
 	str r1, [r0]
+	
+	bl getLevelNum
 
 	b updateGameContinueMenuContinue
 
@@ -197,13 +209,74 @@ updateGameContinueMenuContinue:
 	mov r2, #1
 	cmp r1, #MENUITEM_RESTART
 	streq r2, [r0]
-	cmp r1, #MENUITEM_MENTALVERSION
+	cmp r1, #MENUITEM_GAMEMODE
 	beq updateGameContinueMenuDone
 
 	bl showGameContinue							@ Start level
 	
 updateGameContinueMenuDone:
 	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+getLevelNum:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =optionGameModeCurrent
+	ldr r0, [r0]
+	
+	ldr r1, =optionLevelNum
+	ldr r2, [r1]
+	
+	ldr r3, =optionNormalLevelNum				@ Read optionNormalLevelNum address
+	ldr r3, [r3]								@ Read optionNormalLevelNum value
+	
+	ldr r4, =optionMentalLevelNum				@ Read optionMentalLevelNum address
+	ldr r4, [r4]								@ Read optionMentalLevelNum value
+	
+	cmp r0, #OPTION_GAMEMODECURRENT_NORMAL
+	moveq r2, r3
+	cmp r0, #OPTION_GAMEMODECURRENT_MENTAL
+	moveq r2, r4
+	
+	str r2, [r1]
+	
+	ldr r0, =levelNum
+	ldr r1, [r0]
+	cmp r1, r2
+	movgt r1, r2
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+
+setLevelNum:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =optionGameModeCurrent
+	ldr r0, [r0]
+	
+	ldr r1, =optionLevelNum
+	ldr r1, [r1]
+	
+	ldr r2, =optionNormalLevelNum				@ Read optionNormalLevelNum address
+	ldr r3, [r2]								@ Read optionNormalLevelNum value
+	
+	ldr r4, =optionMentalLevelNum				@ Read optionMentalLevelNum address
+	ldr r5, [r4]								@ Read optionMentalLevelNum value
+	
+	cmp r0, #OPTION_GAMEMODECURRENT_NORMAL
+	moveq r3, r1
+	cmp r0, #OPTION_GAMEMODECURRENT_MENTAL
+	moveq r5, r1
+	
+	str r3, [r2]
+	str r5, [r4]
+
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
@@ -231,20 +304,20 @@ drawGameContinueMenuText:
 	mov r11, #21								@ x pos
 	bl drawDigits								@ Draw
 	
-	ldr r0, =mentalVerText
+	ldr r0, =gameModeText
 	ldr r1, =8									@ x pos
 	ldr r2, =18									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
-	ldr r0, =optionMentalVer
+	ldr r0, =optionGameModeCurrent
 	ldr r0, [r0]
-	ldr r1, =yesText
-	ldr r2, =noText
-	cmp r0, #1
+	ldr r1, =mentalText
+	ldr r2, =normalText
+	cmp r0, #OPTION_GAMEMODECURRENT_MENTAL
 	moveq r0, r1
 	movne r0, r2
-	ldr r1, =24									@ x pos
+	ldr r1, =19									@ x pos
 	ldr r2, =18									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
@@ -305,16 +378,16 @@ startLevelText:
 	.asciz "START LEVEL:"
 	
 	.align
-mentalVerText:
-	.asciz "MENTAL VERSION:"
+gameModeText:
+	.asciz "GAME MODE:"
 	
 	.align
-yesText:
-	.asciz "YES"
+normalText:
+	.asciz "NORMAL"
 	
 	.align
-noText:
-	.asciz "NO "
+mentalText:
+	.asciz "MENTAL"
 	
 	.pool
 	.end

@@ -186,6 +186,19 @@ showLevelNext:
 	
 showLevelNextEndOfGame:
 
+	ldr r0, =optionGameModeCurrent
+	ldr r0, [r0]
+	
+	ldr r1, =optionGameModeComplete
+	ldr r2, [r1]
+	
+	cmp r0, #OPTION_GAMEMODECURRENT_NORMAL
+	orreq r2, #OPTION_GAMEMODECOMPLETE_NORMAL
+	cmp r0, #OPTION_GAMEMODECURRENT_MENTAL
+	orreq r2, #OPTION_GAMEMODECOMPLETE_MENTAL
+	
+	str r2, [r1]
+
 	bl showEndOfGame
 	
 showLevelNextDone:

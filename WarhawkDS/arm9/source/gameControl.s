@@ -79,6 +79,8 @@ checkGameContinue:
 
 	stmfd sp!, {r0-r2, lr}
 	
+	bl getLevelNum
+	
 	ldr r0, =levelNum
 	ldr r1, [r0]
 	ldr r2, =optionLevelNum
@@ -104,6 +106,7 @@ checkGameContinue:
 	strge r3, [r2]
 	
 	bl writeOptions
+	bl setLevelNum
 	
 checkGameContinueDone:
 	

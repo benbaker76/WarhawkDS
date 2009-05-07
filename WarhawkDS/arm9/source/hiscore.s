@@ -234,8 +234,10 @@ updateHiScoreEntry:
 	ldr r5, [r4]								@ Read key input value
 	tst r5, #BUTTON_UP							@ Button up?
 	addeq r3, #1								@ Move ASCII character up
+	bleq playKeyboardClickSound
 	tst r5, #BUTTON_DOWN						@ Button down?
 	subeq r3, #1								@ Move ASCII character down
+	bleq playKeyboardClickSound
 	
 	cmp r3, #32									@ ASCII character 32 - 90
 	movlt r3, #32								@ if < 32 set to 32
@@ -251,8 +253,10 @@ updateHiScoreEntry:
 	ldr r5, [r4]								@ Read key input value
 	tst r5, #BUTTON_LEFT						@ Button left?
 	subeq r2, #1								@ Move cursor left
+	bleq playKeyboardClickSound
 	tst r5, #BUTTON_RIGHT						@ Button right?
 	addeq r2, #1								@ Move cursor right
+	bleq playKeyboardClickSound
 	
 	cmp r2, #0									@ Cursor in pos 0?
 	movlt r2, #0								@ Cursor pos < 0 then make it 0

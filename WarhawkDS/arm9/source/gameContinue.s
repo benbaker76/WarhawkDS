@@ -116,8 +116,10 @@ updateGameContinueMenu:
 	ldr r3, [r2]								@ Read key input value
 	tst r3, #BUTTON_UP							@ Button up?
 	subeq r1, #1								@ Move menu up
+	bleq playKeyboardClickSound
 	tst r3, #BUTTON_DOWN						@ Button down?
 	addeq r1, #1								@ Move menu down
+	bleq playKeyboardClickSound
 	
 	cmp r1, #0									@ menuNum 0
 	movlt r1, #MENUITEM_COUNT - 1				@ menuNum < 0 then make it MENUITEM_COUNT
@@ -153,8 +155,10 @@ updateGameContinueMenuGameMode:
 	
 	tst r3, #BUTTON_LEFT						@ Button left?
 	mvneq r1, r1								@ Move cursor left
+	bleq playKeyboardClickSound
 	tst r3, #BUTTON_RIGHT						@ Button right?
 	mvneq r1, r1								@ Move cursor right
+	bleq playKeyboardClickSound
 
 	and r1, #1
 	str r1, [r0]
@@ -176,8 +180,10 @@ updateGameContinueMenuStartLevel:
 	
 	tst r3, #BUTTON_LEFT						@ Button left?
 	subeq r1, #1								@ Move cursor left
+	bleq playKeyboardClickSound
 	tst r3, #BUTTON_RIGHT						@ Button right?
 	addeq r1, #1								@ Move cursor right
+	bleq playKeyboardClickSound
 	
 	ldr r2, =optionLevelNum
 	ldr r2, [r2]

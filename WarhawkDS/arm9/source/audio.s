@@ -44,12 +44,13 @@
 	.global playHitWallSound					@ not used
 	.global playLowSound						@ used = alien fire
 	.global playSteelSound						@ used = eol counter, alien/player collide, alien fire
-	.global playBossExplodeSound				@ used = boss/player explode
+	.global playBossExplodeSound				@ used = Player explode
 	.global playFireworksSound					@ used = fireworks
-	@global playPowerupCollect					@ for powerup collection
-	@global playpowerupLostSound				@ powerup runs out
-	@global playIdentShipExplode				@ for when a multi-sprite ship is destroyed
-	@global playKeyboardClickSound				@ for menu navigation/options
+	.global playPowerupCollect					@ for powerup collection
+	.global playpowerupLostSound				@ powerup runs out
+	.global playIdentShipExplode				@ for when a multi-sprite ship is destroyed
+	.global playKeyboardClickSound				@ for menu navigation/options
+	.global playBossExplode2Sound				@ used = Boss Explosion (not happy with it :( )
 stopSound:
 
 	stmfd sp!, {r0-r2, lr}
@@ -465,6 +466,97 @@ playFireworksSound:
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
 	@ ---------------------------------------------
+
+playBossExplode2Sound:
+
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =boss_explode2_raw_end							@ Get the sample end
+	ldr r2, =boss_explode2_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
 	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =boss_explode2_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+
+	@ ---------------------------------------------
+	
+playKeyboardClickSound:
+
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =keyclick_raw_end							@ Get the sample end
+	ldr r2, =keyclick_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =keyclick_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+
+	@ ---------------------------------------------
+	
+playPowerupCollect:
+
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =powerupcollect_raw_end							@ Get the sample end
+	ldr r2, =powerupcollect_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =powerupcollect_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+
+	@ ---------------------------------------------
+	
+playpowerupLostSound:
+
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =poweruplost_raw_end							@ Get the sample end
+	ldr r2, =poweruplost_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =poweruplost_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+
+	@ ---------------------------------------------
+	
+playIdentShipExplode:
+
+	stmfd sp!, {r0-r2, lr}
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =bigshipexplode_raw_end							@ Get the sample end
+	ldr r2, =bigshipexplode_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =bigshipexplode_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+		
+
 	.pool
 	.end

@@ -314,7 +314,7 @@ showBossDie:
 	bl stopAudioStream
 
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
-	bl playBossExplodeSound
+	bl playBossExplode2Sound
 	
 	ldmfd sp!, {r0-r2, pc}
 

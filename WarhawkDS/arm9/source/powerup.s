@@ -53,7 +53,7 @@ checkPowerUp:
 			ldr r0,=powerUp
 			str r1,[r0]
 			
-			@playpowerupLostSound		@ this is for when powerup RUNS out!!
+			bl playpowerupLostSound		@ this is for when powerup RUNS out!!
 	
 	checkPowerDelay:
 	
@@ -166,8 +166,8 @@ powerupCollect:
 	mov r2,#SPRITE_Y_OFFS
 	str r0,[r1,r2]
 	
-	@bl playPowerupCollect	@ play sound for poweup collect
-	bl playShipArmourHit2Sound	@ something for now
+	bl playPowerupCollect	@ play sound for poweup collect
+
 	mov r0,#1
 	ldr r1,=powerUp
 	str r0,[r1]

@@ -185,6 +185,61 @@ showEndOfLevel:
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
 	notLevel1:
+	cmp r4,#2
+	bne notLevel2
+			ldr r0, =levelCompletionSuckerText7			@ Load out text pointer
+			ldr r1, =3									@ x pos
+			ldr r2, =5									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText8			@ Load out text pointer
+			ldr r1, =2									@ x pos
+			ldr r2, =7									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+
+			ldr r0, =levelCompletionSuckerText14			@ Load out text pointer
+			ldr r1, =2									@ x pos
+			ldr r2, =9									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel2:
+	cmp r4,#3
+	bne notLevel3
+			ldr r0, =levelCompletionSuckerText9			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText10			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel3:
+	cmp r4,#4
+	bne notLevel4
+			ldr r0, =levelCompletionSuckerText11			@ Load out text pointer
+			ldr r1, =5									@ x pos
+			ldr r2, =5									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText12			@ Load out text pointer
+			ldr r1, =0									@ x pos
+			ldr r2, =7									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+
+			ldr r0, =levelCompletionSuckerText13			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =9									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel4:
+
 	cmp r4,#10
 	bne notLevel10
 			ldr r0, =levelCompletionSuckerText1			@ Load out text pointer
@@ -557,13 +612,40 @@ levelCompletionSuckerText3:
 	.align
 levelCompletionSuckerText4:
 	.asCiz "OH, NEARLY FORGOT, 'GOOD LUCK'"
-	
+
+	.align	
 levelCompletionSuckerText5:
 	.asCiz "SO, YOU CLEARED LEVEL 1?"
 	.align
 levelCompletionSuckerText6:
 	.asCiz "ALL I CAN SAY IS 'WHOOPEE'"
-	
-		
+
+	.align	
+levelCompletionSuckerText7:
+	.asCiz "SO LEVEL 2 DONE AND DUSTED"		@26
+	.align
+levelCompletionSuckerText8:
+	.asCiz "IT MUST BE TOO EASY FOR YOU?"	@28	
+	.align
+levelCompletionSuckerText14:
+	.asCiz "(NOW YOU EVEN GET POWERUPS!)"	@28	
+
+
+	.align
+levelCompletionSuckerText9:
+	.asCiz "WELL DONE FOR CLEARING A WHOLE"	@30
+	.align
+levelCompletionSuckerText10:
+	.asCiz "3 LEVELS, YOU MUST BE SO PROUD"	@30		
+
+	.align
+levelCompletionSuckerText11:
+	.asCiz "REALLY SNOWBALLING NOW"	@22
+	.align
+levelCompletionSuckerText12:
+	.asCiz "PERHAPS YOU SHOULD HAVE A BIT OF"	@32	
+	.align
+levelCompletionSuckerText13:
+	.asCiz "A REST, MAYBE A LIE DOWN ALSO?"	@30	
 	.pool
 	.end

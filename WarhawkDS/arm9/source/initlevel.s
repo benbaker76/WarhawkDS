@@ -752,7 +752,17 @@ initLevelSpecialSprites:
 		add r1, #6*512
 		bl dmaCopy
 	noSkulls:
-	
+	cmp r8,#16
+	bne noRings
+		ldr r0, =ExplodeRingTiles
+		ldr r2, =ExplodeRingTilesLen	
+		ldr r1, =SPRITE_GFX
+		add r1, #6*512
+		bl dmaCopy
+		ldr r1, =SPRITE_GFX_SUB
+		add r1, #6*512
+		bl dmaCopy
+	noRings:	
 	bl playDinkDinkSound
 	
 	ldmfd sp!, {r0-r6, pc}

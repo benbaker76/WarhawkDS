@@ -485,6 +485,22 @@ drawSprite:
 				str r1,[r0,r8,lsl #2]
 
 		noMoreStuff:
+		
+		@ just a bit of code to add a pulse to the little bullets!
+		@ does not really work well, but does not detract either!
+		ldr r0,=spriteObj
+		ldr r1,[r0,r8,lsl #2]
+		cmp r1,#27
+		bne drawSpriteNotBullet
+
+			ldr r0,=spriteBloom
+			ldr r1,[r0,r8,lsl #2]
+			cmp r1,#0
+			moveq r1,#15
+			subne r1,#1
+			str r1,[r0,r8,lsl #2]
+		
+		drawSpriteNotBullet:
 	subs r8,#1
 	bpl SLoop
 

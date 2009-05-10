@@ -58,6 +58,7 @@
 #include "../build/SpritesLev14.h"
 #include "../build/SpritesLev15.h"
 #include "../build/SpritesLev16.h"
+#include "../build/Spritesboss1.h"
 #include "../build/ExplodeOriginal.h"
 #include "../build/ExplodeSkull.h"
 #include "../build/ExplodeRing.h"

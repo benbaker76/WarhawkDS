@@ -35,21 +35,25 @@ bigBossInit:
 	stmfd sp!, {r0-r10, lr}
 	@ need to init sprites starting at sprite 17 and up to 81 max
 	@ use bossX and bossY for the coords (top left)
-	@ use sprite image 62 throughout for now!
+	@ use sprite image 30 throughout for now!
 	@ we will use sriteActive value of 256 to signal big boss and 512 for the "hit zone"
 	@ the only downside is that we can only spare 34 sprite images!!
 	
 	@----------------------------------
 	@ SO, AND I NEED YOUR INPUT HERE!!!!
 	@ the size it is now, we can also release powerups
-	@ or another row of 7 and no powerup but a bigger ship! More impressive?? We could make "powerup" perminent for this
+	@ or another row of 7 and no powerup but a bigger ship! More impressive?? We could make "powerup" perminant for this
 	@ boss fight, so powerup collection is not needed...
 	@ also, should we give player full hitpoints at the start of the battle??
+	@ Ps - bigger works for me :)
+	@ also - should we add animation to parts of it? I think it would really help to show that we are a great team... and
+	@ it is easy to do, could look cool?
 	@----------------------------------
 	
 	@ one good thing or 2...
 	@ drawsprite and standard collision handles everything here with this
 	@ also, it was so so easy to integrate!! :)
+	@ and, I REALLY love your idea for adding this!!! :) <chuckle>
 	
 	@-----------------------------------
 	@
@@ -87,7 +91,7 @@ bigBossInit:
 		ldr r5,=spriteHits+68
 		mov r6,#512
 		str r6,[r5, r0, lsl #2]			@ number of hits
-		mov r6,#62
+		mov r6,#30
 		ldr r5,=spriteObj+68
 		str r6,[r5, r0, lsl #2]			@ set the sprite image
 
@@ -121,19 +125,29 @@ bigBossInit:
 		cmp r0,#56
 	bne bigBossInitLoop
 	
-	@ set the dummy shoot areas for now!
+	@ set the dummy shoot area for now!
 	ldr r5,=spriteActive+276
 	mov r6,#512
 	str r6,[r5]
-	ldr r5,=spriteActive+372	
-	str r6,[r5]	
-	ldr r5,=spriteActive+368	
-	str r6,[r5]	
+
 	@ from here we will have to set the shots of the boss sections
 	@ or, have our own code to do it!
-	
+	@ the existing code should work if we set any sprite to firing and set the burst,speed,type etc... the code should just handle it!
 	
 	@ now we need to copy the new sprites across (spritesboss1 for now)
+	@ this replaces animated alien and hunters, metoers, etc!
+	@ so sprites for the big boss are 30-63 - We could get a few more if needed from repacing the base explosions giving another 9 sprites = 43
+	@ this may be worth doing to make it even more varied and SPECIAL - up to you mate??
+	
+		ldr r0, =Spritesboss1Tiles
+		ldr r2, =Spritesboss1TilesLen	
+		ldr r1, =SPRITE_GFX
+		add r1, #30*512
+		bl dmaCopy
+		ldr r1, =SPRITE_GFX_SUB
+		add r1, #30*512
+		bl dmaCopy	
+	
 
 	mov r1,#GAMEMODE_BIGBOSS					@ set gamemode to switch to bigboss battle
 	ldr r0,=gameMode

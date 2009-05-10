@@ -510,24 +510,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				ldr r6,[r4,r8]
 				subs r6,r7
 				str r6,[r4,r8]
-				
-				
-				
-				
-@	push {r0-r12}			
-@	mov r10,r6					@ Read value
-@	mov r8,#0						@ y pos
-@	mov r9,#3						@ Number of digits
-@	mov r11, #9						@ x pos
-@	bl drawDigits					@ Draw
-@				
-@	pop {r0-r12}			
-				
-				
-				
-				
-				
-				
+
 				cmp r6,#0
 				bmi detectAlienKill			@ Alien	*IS DEAD*
 				multishotBloom:

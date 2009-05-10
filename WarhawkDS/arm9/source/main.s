@@ -163,6 +163,8 @@ mainLoop:
 	bleq updateHiScoreEntry
 	cmp r1, #GAMEMODE_ENDOFGAME
 	bleq updateEndOfGame
+	cmp r1, #GAMEMODE_BIGBOSS
+	bleq updateBigBoss
 	
 	b mainLoop
 

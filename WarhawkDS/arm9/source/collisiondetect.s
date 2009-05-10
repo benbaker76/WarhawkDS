@@ -453,6 +453,10 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		beq detectNoAlien
 		cmp r5,#128
 		beq bossDetect
+		cmp r5,#256
+		beq bossDetect
+		cmp r5,#512
+		beq bossDetect
 		cmp r5,#9					@ drop ship
 		beq bossDetect
 		cmp r5,#10					@ powerup
@@ -490,10 +494,12 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				str r6, [r8,r0, lsl #2]				
 				
 				cmp r5,#128
-				bne standardAlienHit
+				bne bigBossHitCheck1
 					bl bossIsShot			@ it is the Boss!!!
 					b detectNoAlien
-				standardAlienHit:
+				bigBossHitCheck1:
+				cmp r5,#256					@ this is big boss, normal area... so, kill bullet and shard
+				beq alienBloomed
 				
 				@ ok, now we need to see how many hits to kill
 				cmp r5,#2					@ this is a meteor!
@@ -504,6 +510,24 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				ldr r6,[r4,r8]
 				subs r6,r7
 				str r6,[r4,r8]
+				
+				
+				
+				
+@	push {r0-r12}			
+@	mov r10,r6					@ Read value
+@	mov r8,#0						@ y pos
+@	mov r9,#3						@ Number of digits
+@	mov r11, #9						@ x pos
+@	bl drawDigits					@ Draw
+@				
+@	pop {r0-r12}			
+				
+				
+				
+				
+				
+				
 				cmp r6,#0
 				bmi detectAlienKill			@ Alien	*IS DEAD*
 				multishotBloom:
@@ -520,9 +544,9 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 						@ ok, for this ident, we need to flash all matching
 						@ r6=hits, copy to all idented aliens
 						mov r7,#63
-						ldr r5,=spriteIdent+68
+						ldr r9,=spriteIdent+68
 						fireBloomLoop:
-							ldr r3,[r5,r7,lsl #2]
+							ldr r3,[r9,r7,lsl #2]
 							cmp r3,r8
 							bne fireBloomNot
 								@ ok, we have found a matching ident
@@ -545,12 +569,14 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		
 					@ ok, alien not dead yet!!, so, play "Hit" sound
 					@ and perhaps a "shard" (mini explosion) activated under BaseExplosion?
+					push {r7}
 					mov r8,#SPRITE_X_OFFS
 					ldr r6,[r4,r8]
 					mov r6,r1			@ just test with bullet x (comment out to use alien x)
 					mov r8,#SPRITE_Y_OFFS
 					ldr r7,[r4,r8]
 					bl drawShard
+					pop {r7}
 					
 					@ add score
 					ldr r8,=adder+7				@ add 5 to the score
@@ -561,7 +587,9 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					b detectNoAlien
 			
 			detectAlienKill:
-
+			@ we use this do DESTROY an alien, but if it is a bigboss, we really want to use our code for that!
+			cmp r5,#512							@ is it a big boss??
+			beq bigBossDestroyedSkip
 			mov r8,#SPRITE_IDENT_OFFS
 			ldr r8,[r4,r8]
 			cmp r8,#3
@@ -581,6 +609,12 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 		bpl detectAlienLoop
 	
 	ldmfd sp!, {r0-r8, pc}
+
+bigBossDestroyedSkip:
+
+	bl bigBossInitExplode				@ this must change all values of spriteActive and init the explosion
+	b detectNoAlien
+
 
 meteorShot:
 	@ this code alters the way meteors work when shot
@@ -766,10 +800,14 @@ alienCollideCheck:
 				movmi r7,#0						@ if less than 0 make 0
 				str r7,[r6]
 				
-				mov r6,#SPRITE_IDENT_OFFS
+				mov r6,#SPRITE_IDENT_OFFS		@ skip if normal boss
 				ldr r7,[r1, r6]
 				cmp r7,#128
 				beq missForBoss
+				mov r6,#SPRITE_ACTIVE_OFFS		@ skip if big boss
+				ldr r7,[r1,r6]
+				cmp r7,#256
+				bge missForBoss
 				
 					ldr r6,=SPRITE_HIT_OFFS			@ get alien hit points
 					ldr r7,[r1,r6]

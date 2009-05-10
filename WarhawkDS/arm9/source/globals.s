@@ -97,6 +97,9 @@
 	.global spritePhase
 	.global spriteExplodeDelay
 	.global spriteBloom
+	.global spriteFireType
+	.global spriteFireDelay
+	.global spriteFireMax
 	.global getReadyText
 	.global pausedText
 	.global levelText
@@ -457,7 +460,6 @@ spriteY:
 	.space 512
 spriteSpeedX:
 	.space 512
-
 spriteSpeedY:
 	.space 512
 spriteSpeedDelayX:

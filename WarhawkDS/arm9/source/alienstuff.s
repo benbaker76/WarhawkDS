@@ -340,8 +340,12 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		ldr r0,[r1,r7, lsl #2]
 		cmp r0,#0					@ r0 = spriteActive Value
 		beq noAlienMove
-	
+
 		add r1,r7, lsl #2
+
+		cmp r0,#256
+		bge doDetect
+
 	@
 	@	We will need to do checks here for special alien types
 	@	2=mines, 3=hunter, 

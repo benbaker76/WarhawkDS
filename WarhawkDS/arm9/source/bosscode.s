@@ -88,6 +88,19 @@ checkBossInit:
 	bne checkBossInitFail		@ not time yet :(
 		@ here we need to lay all the sprites and data out for the boss
 	
+	
+	@ for demopurposes to init bigboss
+	@---------------------------------
+	ldr r0,=levelNum
+	ldr r1,[r0]
+	cmp r1,#16
+	bne demoBossNo
+		bl bigBossInit
+		ldmfd sp!, {r1-r2, pc}		
+	demoBossNo:
+	@---------------------------------	
+
+		
 		mov r1,#BOSSMODE_GET_READY
 		ldr r0,=bossMan
 		str r1,[r0]				@ set to "scroll mode" (So he will move with scroll only!)

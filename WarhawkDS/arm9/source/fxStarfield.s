@@ -52,7 +52,7 @@ fxStarfieldOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl initVideoParticles
+	bl initVideoStars
 	
 	@ Clear the tile data
 	
@@ -93,7 +93,7 @@ fxStarfieldDownOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl initVideoParticles
+	bl initVideoStars
 	
 	@ Clear the tile data
 	
@@ -136,7 +136,7 @@ fxStarfieldMultiOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl initVideoParticles
+	bl initVideoStars
 	
 	@ Clear the tile data
 	

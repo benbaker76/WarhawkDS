@@ -33,7 +33,7 @@
 	.text
 	.global initVideo
 	.global initVideoMain
-	.global initVideoParticles
+	.global initVideoStars
 	.global resetScrollRegisters
 	
 initVideo:
@@ -122,7 +122,7 @@ initVideoMain:
 	
 	@ ------------------------------------
 	
-initVideoParticles:
+initVideoStars:
 
 	stmfd sp!, {r0-r6, lr}
 	

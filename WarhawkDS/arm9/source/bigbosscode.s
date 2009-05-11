@@ -64,6 +64,18 @@ bigBossInit:
 	@
 	@------------------------------------
 	
+	mov r1,#GAMEMODE_BIGBOSS					@ set gamemode to switch to bigboss battle
+	ldr r0,=gameMode
+	str r1,[r0]
+	
+	bl resetScrollRegisters						@ Reset the scroll registers
+	bl clearBG0									@ Clear bgs
+	bl clearBG1
+	bl clearBG2
+	bl clearBG3
+	
+	bl initStarData
+	
 	ldr r0,=bossX
 	mov r3,#96+16			@ r3=x
 	str r3,[r0]
@@ -148,10 +160,7 @@ bigBossInit:
 		add r1, #30*512
 		bl dmaCopy	
 	
-
-	mov r1,#GAMEMODE_BIGBOSS					@ set gamemode to switch to bigboss battle
-	ldr r0,=gameMode
-	str r1,[r0]
+	bl fxStarfieldDownOn
 
 	ldmfd sp!, {r0-r10, pc}
 
@@ -171,10 +180,15 @@ updateBigBoss:
 @	bl scrollSub								@ Main + Sub				@ and here
 	bl levelDrift								@ update level with the horizontal drift
 	bl moveBullets								@ check and then moves bullets
-	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ just done this for effect
-	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ though we will need a different backgroung
-	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ faded in... hmmm...??
-	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ we do have to make this stand out! :)
+
+@	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ just done this for effect
+@	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ though we will need a different backgroung
+@	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ faded in... hmmm...??
+@	bl scrollStars								@ Scroll Stars (BG2,BG3)	@ we do have to make this stand out! :)
+
+	bl scrollSBMain
+	bl scrollSBSub
+
 	bl drawSprite								@ drawsprites and do update bloom effect
 	bl checkGameOver							@ check if the game is over
 	bl checkLevelControl						@ check to see if we want to change level

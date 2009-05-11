@@ -46,7 +46,7 @@ fxFireworksOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl initVideoParticles
+	bl initVideoStars
 	
 	@ Clear the tile data
 	

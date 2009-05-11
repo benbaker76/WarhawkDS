@@ -129,9 +129,12 @@ checkGamePause:
 
 showGamePause:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =gameMode
+	ldr r1,[r0]						@ load current mode
+	ldr r2,=gameModeBackup
+	str r1,[r2]						@ and store a backup
 	ldr r1, =GAMEMODE_PAUSED
 	str r1, [r0]
 	
@@ -156,13 +159,13 @@ showGamePause:
 	ldr r0, =pauseStartHeld
 	str r1,[r0]
 		
-	ldmfd sp!, {r0-r1, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ------------------------------------
 	
 updateGameUnPause:								@ SORRY about messing with this HK!! :)
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r2, lr}
 
 	ldr r0,=pauseStartHeld
 	ldr r1,[r0]
@@ -181,7 +184,7 @@ updateGameUnPause:								@ SORRY about messing with this HK!! :)
 		str r1,[r0]								@ tell the code we are waiting for release to continue
 
 	updateGameUnPauseWait:	
-	ldmfd sp!, {r0-r1, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 showGameUnPause:
 
@@ -193,13 +196,15 @@ showGameUnPause:
 	bne showGameUnPauseWait
 
 		ldr r0, =gameMode
-		ldr r1, =GAMEMODE_RUNNING
+		ldr r2, =gameModeBackup
+		ldr r1,[r2]
+@		ldr r1, =GAMEMODE_RUNNING
 		str r1, [r0]
 		bl fxCopperTextOff
 		bl clearBG0Partial
 
 	showGameUnPauseWait:
-	ldmfd sp!, {r0-r1, pc}
+	ldmfd sp!, {r0-r2, pc}
 		
 	@ ------------------------------------
 	
@@ -230,6 +235,8 @@ checkGameOverDone:
 
 pauseStartHeld:
 	.word 0
-
+gameModeBackup:
+	.word 0
+	
 	.pool
 	.end

@@ -32,6 +32,16 @@
 	
 checkPowerUp:
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0,=bigBossMode
+	ldr r1,[r0]
+	cmp r1,#0
+	beq powerUpMiss
+
+		ldmfd sp!, {r0-r6, pc}	
+	
+	powerUpMiss:
+	
 	ldr r0,=levelNum
 	ldr r0,[r0]
 	cmp r0,#3
@@ -180,6 +190,18 @@ powerupCollect:
 	
 movePowerUp:
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0,=bigBossMode
+	ldr r1,[r0]
+	cmp r1,#0
+	beq movePowerUpActive
+	
+		ldr r0,=spriteY
+		mov r1,#800
+		str r1,[r0, r8, lsl #2]
+
+	movePowerUpActive:
+	
 	ldr r0,=spriteY
 	ldr r1,[r0,r8,lsl #2]
 	add r1,#2							@ move it down screen

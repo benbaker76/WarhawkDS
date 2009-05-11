@@ -27,6 +27,7 @@
 	.global bigBossInit
 	.global updateBigBoss
 	.global bigBossInitExplode
+	.global bigBossMode
 	
 	#define	bbOffset		68
 	#define bbSpriteNum		54
@@ -72,13 +73,18 @@ bigBossInit:
 	ldr r0,=gameMode
 	str r1,[r0]
 	
+@ kill ALL srite daTA!!!!!! (SOMEHOW)
+
 	bl resetScrollRegisters						@ Reset the scroll registers
 	bl clearBG0									@ Clear bgs
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
 	
+	bl killAllSpritesBoss						@ this SHOULD kill everyother sprite except you and bullets
 	bl initStarData
+
+	bl DC_FlushAll
 	
 	ldr r0,=bossX			@ set initial boss X/Y (20.12 format)
 	mov r3,#32				@ r3=x
@@ -101,13 +107,11 @@ bigBossInit:
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
 		ldr r5,=spriteHits+bbOffset
-		mov r6,#160
+		mov r6,#128
 		str r6,[r5, r0, lsl #2]			@ number of hits
 
-
-		ldr r4,=bigBossSpriteTable1			@ load the image from out table!
+		ldr r4,=bigBossSpriteTable1			@ load the image from our table!
 		ldr r6,[r4, r0, lsl #2]
-@		mov r6,#30
 		ldr r5,=spriteObj+bbOffset
 		str r6,[r5, r0, lsl #2]			@ set the sprite image
 
@@ -163,7 +167,7 @@ bigBossInit:
 		add r1, #29*512
 		bl dmaCopy	
 	
-	bl fxStarfieldDownOn
+	bl fxStarfieldDownOn						@ turn on the standard starfield
 	
 	ldr r0,=bigBossMode
 	mov r1,#1
@@ -171,6 +175,35 @@ bigBossInit:
 												@ 2= move phase, 3=explode init
 	ldmfd sp!, {r0-r10, pc}
 
+@------------------------------------------------------
+
+killAllSpritesBoss:
+	stmfd sp!, {r0-r10, lr}
+	@ we need to kill all sprites that are not used!!
+	@ all we "SHOULD" need to do is mark spriteActive to 0
+
+	mov r0,#0
+	mov r1,#0
+	mov r5,#812
+	ldr r2,=spriteActive+68						@ from sprite 17 (16)
+	ldr r3,=spriteX+68
+	ldr r4,=spriteY+68
+	ldr r6,=spriteObj+68
+	killAllSpritesBossLoop:
+		str r1,[r2, r0, lsl #2]				@ active
+		str r1,[r3, r0, lsl #2]				@ x
+		str r5,[r4, r0, lsl #2]				@ y
+		str r1,[r6, r0, lsl #2]				@ object	
+		add r0,#1
+		cmp r0,#48								@ 17+48=65 = end-1
+	bne killAllSpritesBossLoop
+	
+	mov r1,#0
+	ldr r0,=powerUp
+	str r1,[r0]
+
+
+	ldmfd sp!, {r0-r10, pc}
 @------------------------------------------------------
 
 updateBigBoss:
@@ -261,8 +294,19 @@ bigBossInitExplode:
 		ldr r5,=spriteActive+bbOffset
 		str r6,[r5, r0, lsl #2]			@ make it something that has no detection value
 		add r0,#1
-		cmp r0,#63
+		cmp r0,#bbSpriteNum
 	bne bigBossActiveKill
+
+
+			ldr r8,=bossMan
+			mov r6,#BOSSMODE_EXPLODE
+			str r6,[r8]
+
+
+
+	ldr r0,=bigBossMode
+	mov r1,#3								@ set bossmode to DEAD and scroll of screen quickly
+	str r1,[r0]
 
 	ldmfd sp!, {r0-r10, pc}
 
@@ -270,11 +314,15 @@ bigBossInitExplode:
 
 bigBossMovement:
 
+	@ we use this to handle the several phases of the boss mode
+	@ we also use "bossman" as in a normal boss, as this is what we used
+	@ to nullify the detection code...
+
 	stmfd sp!, {r0-r10, lr}
 
 	ldr r0,=bigBossMode
 	ldr r0,[r0]
-	cmp r0,#1
+	cmp r0,#1										@ PHASE=SCROLL ON
 	bne bigBossMovementPhase2
 	
 	@ ok, we just need to bring it on and change bigBossMode to 2 when there!
@@ -301,7 +349,7 @@ bigBossMovement:
 	ldmfd sp!, {r0-r10, pc}
 	
 bigBossMovementPhase2:	
-	cmp r0,#2
+	cmp r0,#2																		@ PHASE=MOVEMENT
 	bne bigBossMovementPhase3
 	@ sine/cos movement?
 
@@ -336,11 +384,48 @@ bigBossMovementPhase2:
 	adds r1,r5
 	str r1,[r0]
 
-
 	bl bigBossDraw							@ update to new position
 
-bigBossMovementPhase3:
+	ldmfd sp!, {r0-r10, pc}
 
+bigBossMovementPhase3:
+	cmp r0,#3																		@ PHASE+SCROLL OFF
+	bne bigBossMovementPhase4
+	
+		@ play bigboss explode init sound - firecrackers???
+		ldr r0,=bossY
+		ldr r1,[r0]
+		mov r2,#6
+		lsl r2,#12
+		add r1,r2
+		str r1,[r0]
+		
+		bl bigBossDraw							@ update to new position
+		
+		mov r2,#768
+		lsl r2,#12
+		cmp r1,r2
+		
+		ble bigbossDeathNo
+			
+			ldr r0,=bigBossMode
+			mov r1,#4
+			str r1,[r0]
+
+		bigbossDeathNo:
+	
+		ldmfd sp!, {r0-r10, pc}
+		
+bigBossMovementPhase4:
+	cmp r0,#4																		@ PHASE=INIT BIG BOSS EXPLODE
+	bne bigBossMovementPhase5
+		@ here we need to init code to handle a special explosion!
+	
+		@ play bigboss explode main explosion sound
+
+	ldmfd sp!, {r0-r10, pc}	
+	
+bigBossMovementPhase5:
 	ldmfd sp!, {r0-r10, pc}
 
 @------------------------------------------------------

@@ -100,9 +100,6 @@
 	.global spriteFireType
 	.global spriteFireDelay
 	.global spriteFireMax
-	.global getReadyText
-	.global pausedText
-	.global levelText
 	.global spriteXText
 	.global spriteYText
 	.global spriteInstruct
@@ -111,6 +108,9 @@
 	.global blockXText
 	.global blockYText
 	.global tileNumText
+	.global getReadyText
+	.global pausedText
+	.global levelText
 	.global irqTable
 	.global digits
 	.global moveBaseExplosion

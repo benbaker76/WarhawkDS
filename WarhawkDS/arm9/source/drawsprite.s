@@ -420,13 +420,25 @@ drawSprite:
 			b noMoreStuff
 		moveDropShip:
 		cmp r1,#9
-		bne movePowerup							@ --------------- Drop ship
+		bne movePowerup2							@ --------------- Drop ship
+			ldr r0,=bigBossMode
+			ldr r0,[r0]
+			cmp r0,#0
+			beq movePowerup3
+			
+				ldr r0,=spriteActive
+				mov r1,#0
+				str r1,[r0, r8, lsl #2]
+				b noMoreStuff
+			
+			movePowerup3:
+
 			ldr r0,=spriteY
 			ldr r1,[r0,r8,lsl #2]
 			add r1,#3							@ move it down screen
 			str r1,[r0,r8,lsl #2]
 			b noMoreStuff
-		movePowerup:
+		movePowerup2:
 		cmp r1,#10
 		bne movePlayerExplosion
 			bl movePowerUp

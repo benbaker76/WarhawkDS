@@ -1175,6 +1175,11 @@ moveHunter:
 
 animateAliens:
 stmfd sp!, {r0-r10, lr}
+	ldr r0,=gameMode
+	ldr r0,[r0]
+	cmp r0,#GAMEMODE_BIGBOSS
+	beq animateAliensDelay
+	
 	ldr r0,=animDelay
 	ldr r1,[r0]
 	add r1,#1

@@ -41,7 +41,7 @@ bigBossInit:
 	@ use bossX and bossY for the coords (top left)
 	@ use sprite image 30 throughout for now!
 	@ we will use sriteActive value of 256 to signal big boss and 512 for the "hit zone"
-	@ the only downside is that we can only spare 34 sprite images!!
+	@ the only downside is that we can only spare 35 sprite images!!
 	
 	@----------------------------------
 	@ SO, AND I NEED YOUR INPUT HERE!!!!
@@ -86,6 +86,7 @@ bigBossInit:
 	str r3,[r0]
 	ldr r0,=bossY
 	mov r4,#384+16			@ r4=y
+	mov r4,#128
 	lsl r4,#12
 	str r4,[r0]
 
@@ -100,9 +101,13 @@ bigBossInit:
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
 		ldr r5,=spriteHits+bbOffset
-		mov r6,#32
+		mov r6,#160
 		str r6,[r5, r0, lsl #2]			@ number of hits
-		mov r6,#30
+
+
+		ldr r4,=bigBossSpriteTable1			@ load the image from out table!
+		ldr r6,[r4, r0, lsl #2]
+@		mov r6,#30
 		ldr r5,=spriteObj+bbOffset
 		str r6,[r5, r0, lsl #2]			@ set the sprite image
 
@@ -133,10 +138,10 @@ bigBossInit:
 	bl bigBossDraw
 	
 	@ set the dummy shoot area for now!
-	ldr r5,=spriteActive+276
+	ldr r5,=spriteActive+bbOffset+(52*4)
 	mov r6,#512
 	str r6,[r5]
-	ldr r5,=spriteActive+280
+	ldr r5,=spriteActive+bbOffset+(53*4)
 	mov r6,#512
 	str r6,[r5]
 
@@ -146,22 +151,22 @@ bigBossInit:
 	
 	@ now we need to copy the new sprites across (spritesboss1 for now)
 	@ this replaces animated alien and hunters, metoers, etc!
-	@ so sprites for the big boss are 30-63 - We could get a few more if needed from repacing the base explosions giving another 9 sprites = 43
+	@ so sprites for the big boss are 29-63 - We could get a few more if needed from repacing the base explosions giving another 9 sprites = 44??
 	@ this may be worth doing to make it even more varied and SPECIAL - up to you mate??
 	
 		ldr r0, =Spritesboss1Tiles
 		ldr r2, =Spritesboss1TilesLen	
 		ldr r1, =SPRITE_GFX
-		add r1, #30*512
+		add r1, #29*512
 		bl dmaCopy
 		ldr r1, =SPRITE_GFX_SUB
-		add r1, #30*512
+		add r1, #29*512
 		bl dmaCopy	
 	
 	bl fxStarfieldDownOn
 	
 	ldr r0,=bigBossMode
-	mov r1,#2
+	mov r1,#1
 	str r1,[r0]									@ set bossmode to 1 = bring on from top
 												@ 2= move phase, 3=explode init
 	ldmfd sp!, {r0-r10, pc}
@@ -192,22 +197,15 @@ updateBigBoss:
 @	bl drawDebugText							@ draw some numbers :)	
 	bl bigBossMovement							@ move big boss
 
-	ldr r10,=horizDrift				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#0						@ y pos
-	mov r9,#3						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw
-
 	ldr r0, =horizDrift
 	ldr r0, [r0]
-	ldr r1, =REG_BG2HOFS			@ Load our horizontal scroll register for BG1 on the main screen
-	ldr r2, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	ldr r1, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
+	ldr r2, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
 	strh r0,[r1]
 	strh r0,[r2]	
 	lsr r0,#1
-	ldr r1, =REG_BG3HOFS			@ Load our horizontal scroll register for BG1 on the main screen
-	ldr r2, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	ldr r1, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
+	ldr r2, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
 	strh r0,[r1]
 	strh r0,[r2]
 	
@@ -273,6 +271,38 @@ bigBossInitExplode:
 bigBossMovement:
 
 	stmfd sp!, {r0-r10, lr}
+
+	ldr r0,=bigBossMode
+	ldr r0,[r0]
+	cmp r0,#1
+	bne bigBossMovementPhase2
+	
+	@ ok, we just need to bring it on and change bigBossMode to 2 when there!
+	
+	ldr r0,=bossY
+	ldr r1,[r0]
+	lsr r1,#12
+	cmp r1,#384
+	beq bigBossMovementPhaseChange
+	
+		add r1,#1
+		lsl r1,#12
+		str r1,[r0]
+		bl bigBossDraw							@ update to new position	
+		
+		ldmfd sp!, {r0-r10, pc}
+
+	bigBossMovementPhaseChange:	
+	
+		ldr r0,=bigBossMode
+		mov r1,#2
+		str r1,[r0]									@ set to "ready to move"
+	
+	ldmfd sp!, {r0-r10, pc}
+	
+bigBossMovementPhase2:	
+	cmp r0,#2
+	bne bigBossMovementPhase3
 	@ sine/cos movement?
 
 	ldr r0,=bossX
@@ -308,6 +338,9 @@ bigBossMovement:
 
 
 	bl bigBossDraw							@ update to new position
+
+bigBossMovementPhase3:
+
 	ldmfd sp!, {r0-r10, pc}
 
 @------------------------------------------------------
@@ -366,7 +399,113 @@ bigBossInitFire:
 	str r1,[r0]
 	ldr r0,=spriteBurstDelayCount+bbOffset+(47*4)
 	str r1,[r0]	
+@3
+	mov r1,#23
+	ldr r0,=spriteFireType+bbOffset+(52*4)
+	str r1,[r0]
 
+	mov r1,#120
+	ldr r0,=spriteFireDelay+bbOffset+(52*4)
+	str r1,[r0]
+	ldr r0,=spriteFireMax+bbOffset+(52*4)
+	str r1,[r0]
+
+	mov r1,#2
+	ldr r0,=spriteFireSpeed+bbOffset+(52*4)
+	str r1,[r0]
+
+	mov r1,#4
+	ldr r0,=spriteBurstNum+bbOffset+(52*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+bbOffset+(52*4)
+	str r1,[r0]	
+	
+	mov r1,#4
+	ldr r0,=spriteBurstDelay+bbOffset+(52*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstDelayCount+bbOffset+(52*4)
+	str r1,[r0]	
+
+@4
+	mov r1,#23
+	ldr r0,=spriteFireType+bbOffset+(53*4)
+	str r1,[r0]
+
+	mov r1,#120
+	ldr r0,=spriteFireDelay+bbOffset+(53*4)
+	str r1,[r0]
+	ldr r0,=spriteFireMax+bbOffset+(53*4)
+	str r1,[r0]
+
+	mov r1,#2
+	ldr r0,=spriteFireSpeed+bbOffset+(53*4)
+	str r1,[r0]
+
+	mov r1,#4
+	ldr r0,=spriteBurstNum+bbOffset+(53*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+bbOffset+(53*4)
+	str r1,[r0]	
+	
+	mov r1,#4
+	ldr r0,=spriteBurstDelay+bbOffset+(53*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstDelayCount+bbOffset+(53*4)
+	str r1,[r0]	
+	
+@5
+	mov r1,#10
+	ldr r0,=spriteFireType+bbOffset+(40*4)
+	str r1,[r0]
+
+	mov r1,#70
+	ldr r0,=spriteFireDelay+bbOffset+(40*4)
+	str r1,[r0]
+	ldr r0,=spriteFireMax+bbOffset+(40*4)
+	str r1,[r0]
+
+	mov r1,#2
+	ldr r0,=spriteFireSpeed+bbOffset+(40*4)
+	str r1,[r0]
+
+	mov r1,#0
+	ldr r0,=spriteBurstNum+bbOffset+(40*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+bbOffset+(40*4)
+	str r1,[r0]	
+	
+	mov r1,#0
+	ldr r0,=spriteBurstDelay+bbOffset+(40*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstDelayCount+bbOffset+(40*4)
+	str r1,[r0]	
+
+@6
+	mov r1,#10
+	ldr r0,=spriteFireType+bbOffset+(49*4)
+	str r1,[r0]
+
+	mov r1,#70
+	ldr r0,=spriteFireDelay+bbOffset+(49*4)
+	str r1,[r0]
+	ldr r0,=spriteFireMax+bbOffset+(49*4)
+	str r1,[r0]
+
+	mov r1,#2
+	ldr r0,=spriteFireSpeed+bbOffset+(49*4)
+	str r1,[r0]
+
+	mov r1,#0
+	ldr r0,=spriteBurstNum+bbOffset+(49*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+bbOffset+(49*4)
+	str r1,[r0]	
+	
+	mov r1,#0
+	ldr r0,=spriteBurstDelay+bbOffset+(49*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstDelayCount+bbOffset+(49*4)
+	str r1,[r0]	
 	ldmfd sp!, {r0-r10, pc}
 
 @------------------------------------------------------
@@ -376,16 +515,18 @@ bigBossInitFire:
 @ we may have another for level 32?
 @ 7*9 = 63 sprites (is this ok?)
 
+	.align
+
 bigBossSpriteTable1:				@ sprite images used in order 0-63 
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
-.word 0,0,0,0,0,0,0
+.word 29,30,32,33,34,35,36
+.word 37,38,39,40,41,42,43
+.word 44,45,46,47,48,49,50
+.word 30,30,30,30,30,30,30
+.word 30,30,30,30,30,30,30
+.word 30,30,30,30,30,30,30
+.word 30,30,30,30,30,30,30
+.word 30,30,30,30,30,30,30
+.word 30,30,30,30,30,30,30
 bigBossSpritesX1:					@ x offsets for sprites 0-63
 .word 128,160,192,224,160,192,0,32,64,96
 .word 160,192,256,288,320,352,0,32,64,96

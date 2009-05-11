@@ -224,6 +224,11 @@ fxVertTextScrollerVBlank:
 	cmp r2, #0
 	streq r3, [r1]
 	
+	ldr r1, =ofsScroll
+	ldr r1, [r1]
+	tst r1, #(0x3F-1)
+	bne fxVertTextScrollerVBlankContinue
+	
 	ldr r1, =0									@ x pos
 	ldr r2, =scrollPos
 	ldr r2, [r2]
@@ -233,6 +238,8 @@ fxVertTextScrollerVBlank:
 	ldr r4, =32									@ Maximum number of characters
 	bl drawTextCount
 	
+fxVertTextScrollerVBlankContinue:
+	
 	ldr r0, =ofsScroll
 	ldr r1, [r0]
 	ldr r2, =textPos
@@ -240,10 +247,11 @@ fxVertTextScrollerVBlank:
 	ldr r4, =scrollPos
 	ldr r5, [r4]
 	add r1, #1
-	ldr r6, =0x7
+	ldr r6, =0x3F
 	and r6, r1
-	cmp r6, #0
+	tst r6, #0x3F
 	addeq r3, #1
+	tst r6, #0x7
 	addeq r5, #1
 	ldr r6, =REG_BG0VOFS
 	str r3, [r2]
@@ -273,22 +281,25 @@ hscrollText:
 	
 	.align
 vscrollText:
-	.ascii "          WARHAWK DS            "
+	.ascii "           WARHAWK DS           "
 	.ascii "                                "
 	.ascii "        ASM PROGRAMMING         "
 	.ascii "                                "
 	.ascii "             FLASH              "
-	.ascii "           HEADKAZE             "
+	.ascii "            HEADKAZE            "
 	.ascii "                                "
-	.ascii "           GRAPHICS             "
+	.ascii "            GRAPHICS            "
 	.ascii "                                "
-	.ascii "             LOBO               "
+	.ascii "              LOBO              "
 	.ascii "            BADTOAD             "
 	.ascii "                                "
-	.ascii "             MUSIC              "
+	.ascii "              MUSIC             "
 	.ascii "                                "
 	.ascii "       PRESS PLAY ON TAPE       "
-	.ascii "         SPACE FRACTAL          "
+	.ascii "          SPACE FRACTAL         "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
 	.ascii "                                "
 	.ascii "                                "
 	.ascii "\0"

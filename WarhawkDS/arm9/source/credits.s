@@ -55,8 +55,9 @@ showCredits:
 	bl clearBG3
 	bl swiWaitForVBlank
 	
-	bl initStarData
 	bl initVideoBG1_16
+	bl initStarData
+	bl clearBG0
 	
 	@ Write the palette
 
@@ -90,11 +91,12 @@ showCredits:
 
 	bl startTimer
 	
-	ldr r0, =colorPal
-	ldr r1, =colorPal2
-	str r1, [r0]
+	ldr r0, =colorPal2
+	ldr r1, =colorPalMain
+	ldr r2, =(256 * 2)
+	bl dmaCopy
 	
-	ldr r0, =colorNoScroll
+	ldr r0, =colorNoScrollMain
 	mov r1, #1
 	str r1, [r0]
 
@@ -121,6 +123,14 @@ initCredits01:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =Credits01MapLen
 	bl dmaCopy
+	
+	@ Draw text
+	
+	ldr r0, =c64LoadingText							@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits02					@ Callback function address
@@ -149,6 +159,14 @@ initCredits02:
 	ldr r2, =Credits02MapLen
 	bl dmaCopy
 	
+	@ Draw text
+	
+	ldr r0, =c64TitleText						@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits03					@ Callback function address
 	
@@ -175,6 +193,14 @@ initCredits03:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =Credits03MapLen
 	bl dmaCopy
+	
+	@ Draw text
+	
+	ldr r0, =c64GameText						@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits04					@ Callback function address
@@ -203,6 +229,14 @@ initCredits04:
 	ldr r2, =Credits04MapLen
 	bl dmaCopy
 	
+	@ Draw text
+	
+	ldr r0, =xlTitleText						@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits05					@ Callback function address
 	
@@ -229,6 +263,14 @@ initCredits05:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =Credits05MapLen
 	bl dmaCopy
+	
+	@ Draw text
+	
+	ldr r0, =xlGameText							@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits06					@ Callback function address
@@ -257,6 +299,14 @@ initCredits06:
 	ldr r2, =Credits06MapLen
 	bl dmaCopy
 	
+	@ Draw text
+	
+	ldr r0, =cpcTitleText						@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits07					@ Callback function address
 	
@@ -283,6 +333,14 @@ initCredits07:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =Credits07MapLen
 	bl dmaCopy
+	
+	@ Draw text
+	
+	ldr r0, =cpcGameText						@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits08					@ Callback function address
@@ -311,6 +369,14 @@ initCredits08:
 	ldr r2, =Credits08MapLen
 	bl dmaCopy
 	
+	@ Draw text
+	
+	ldr r0, =stLoadingText						@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits09					@ Callback function address
 	
@@ -337,6 +403,14 @@ initCredits09:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =Credits09MapLen
 	bl dmaCopy
+	
+	@ Draw text
+	
+	ldr r0, =stTitleText						@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits10					@ Callback function address
@@ -365,6 +439,14 @@ initCredits10:
 	ldr r2, =Credits10MapLen
 	bl dmaCopy
 	
+	@ Draw text
+	
+	ldr r0, =stGameText							@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits01					@ Callback function address
 	
@@ -392,6 +474,46 @@ updateCredits:
 	
 	.data
 	.align
+	
+	.align
+c64LoadingText:
+	.asciz "       C64 LOADING SCREEN       "
+	
+	.align
+c64TitleText:
+	.asciz "        C64 TITLE SCREEN        "
+	
+	.align
+c64GameText:
+	.asciz "        C64 GAME SCREEN         "
+
+	.align
+xlTitleText:
+	.asciz "        XL TITLE SCREEN         "
+	
+	.align
+xlGameText:
+	.asciz "         XL GAME SCREEN         "
+	
+	.align
+cpcTitleText:
+	.asciz "        CPC TITLE SCREEN        "
+	
+	.align
+cpcGameText:
+	.asciz "        CPC GAME SCREEN         "
+	
+	.align
+stLoadingText:
+	.asciz "       ST LOADING SCREEN        "
+	
+	.align
+stTitleText:
+	.asciz "        ST TITLE SCREEN         "
+	
+	.align
+stGameText:
+	.asciz "        ST GAME SCREEN          "
 
 	.pool
 	.end

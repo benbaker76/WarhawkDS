@@ -39,9 +39,12 @@
 	.global fxColorCycleTextOn
 	.global fxColorCycleTextOff
 	.global fxColorCycleTextHBlank
-	.global colorNoScroll
-	.global colorHilight
-	.global colorPal
+	.global colorNoScrollMain
+	.global colorNoScrollSub
+	.global colorHilightMain
+	.global colorHilightSub
+	.global colorPalMain
+	.global colorPalSub
 	.global colorPal1
 	.global colorPal2
 
@@ -54,15 +57,29 @@ fxCopperTextOn:
 	orr r1, #FX_COPPER_TEXT
 	str r1, [r0]
 	
-	ldr r0, =colorPal
-	ldr r1, =colorPal1
-	str r1, [r0]
+	ldr r0, =colorPal1
+	ldr r1, =colorPalMain
+	ldr r2, =(256 * 2)
+	bl dmaCopy
 	
-	ldr r0, =colorNoScroll
+	ldr r0, =colorPal1
+	ldr r1, =colorPalSub
+	ldr r2, =(256 * 2)
+	bl dmaCopy
+	
+	ldr r0, =colorNoScrollMain
 	mov r1, #0
 	str r1, [r0]
 	
-	ldr r0, =colorHilight
+	ldr r0, =colorNoScrollSub
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =colorHilightMain
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =colorHilightSub
 	mov r1, #0
 	str r1, [r0]
 	
@@ -143,50 +160,84 @@ fxCopperTextVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl DC_FlushAll								@ these are not needed (yes they/it are in hardware :( )
+	bl DC_FlushAll
 	
-	ldr r0, =colorNoScroll
+	ldr r0, =colorNoScrollMain
 	ldr r0, [r0]
 	cmp r0, #1
-	beq fxCopperTextVBlankScrollSkip
+	beq fxCopperTextVBlankScrollSkipMain
 	
-	ldr r0, =colorPal
-	ldr r0, [r0]
+	ldr r0, =colorPalMain
 	mov r1, r0
 	add r0, #2
 	ldr r2, =(255 * 2)
 	bl dmaCopy
 	
-	ldr r0, =colorPal
-	ldr r0, [r0]
+	ldr r0, =colorPalMain
 	ldrh r1, [r0]
 	ldr r2, =(255 * 2)
 	strh r1, [r0, r2]
 	
-fxCopperTextVBlankScrollSkip:
+fxCopperTextVBlankScrollSkipMain:
 	
-	ldr r0, =colorPal
+	ldr r0, =colorNoScrollSub
 	ldr r0, [r0]
-	ldr r1, =colorBuffer
+	cmp r0, #1
+	beq fxCopperTextVBlankScrollSkipSub
+	
+	ldr r0, =colorPalSub
+	mov r1, r0
+	add r0, #2
+	ldr r2, =(255 * 2)
+	bl dmaCopy
+	
+	ldr r0, =colorPalSub
+	ldrh r1, [r0]
+	ldr r2, =(255 * 2)
+	strh r1, [r0, r2]
+
+fxCopperTextVBlankScrollSkipSub:
+
+	ldr r0, =colorPalMain
+	ldr r1, =colorBufferMain
 	ldr r2, =(256 * 2)
 	bl dmaCopy
 	
-	ldr r0, =colorHilight
+	ldr r0, =colorPalSub
+	ldr r1, =colorBufferSub
+	ldr r2, =(256 * 2)
+	bl dmaCopy
+	
+	ldr r0, =colorHilightMain
 	ldr r0, [r0]
 	cmp r0, #0
-	beq fxCopperTextVBlankContinue
+	beq fxCopperTextVBlankContinueMain
 	
-	ldr r1, =colorBuffer
+	ldr r1, =colorBufferMain
 	add r1, r0, lsl #4
 	sub r1, #1
 	ldr r2, =(8 * 2)
 	ldr r0, =COLOR_HILIGHT
 	bl dmaFillHalfWords
 	
-fxCopperTextVBlankContinue:
+fxCopperTextVBlankContinueMain:
+
+	ldr r0, =colorHilightSub
+	ldr r0, [r0]
+	cmp r0, #0
+	beq fxCopperTextVBlankContinueSub
+	
+	ldr r1, =colorBufferSub
+	add r1, r0, lsl #4
+	sub r1, #1
+	ldr r2, =(8 * 2)
+	ldr r0, =COLOR_HILIGHT
+	bl dmaFillHalfWords
+	
+fxCopperTextVBlankContinueSub:
 	
 	mov r0, #0								@ Dma channel
-	ldr r1, =colorBuffer					@ Source
+	ldr r1, =colorBufferMain				@ Source
 	ldr r2, =BG_PALETTE						@ Dest
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
 	add r2, r3
@@ -196,7 +247,7 @@ fxCopperTextVBlankContinue:
 	bl dmaTransfer
 	
 	mov r0, #1								@ Dma channel
-	ldr r1, =colorBuffer					@ Source
+	ldr r1, =colorBufferSub					@ Source
 	ldr r2, =BG_PALETTE_SUB					@ Dest
 	ldr r3, =(FONT_COLOR_OFFSET * 2)
 	add r2, r3
@@ -246,22 +297,24 @@ fxColorCycleTextHBlank:
 	.data
 	.align
 
-colorNoScroll:
+colorNoScrollMain:
 	.word 0
 	
-colorHilight:
+colorNoScrollSub:
 	.word 0
 	
+colorHilightMain:
+	.word 0
+		
+colorHilightSub:
+	.word 0
+
 colorOffset:
 	.word 0
 	
 colorWait:
 	.word 0
 	
-	.align
-colorPal:
-	.word 0
-
 	.align
 colorPal1:
 	.hword 0x0c00,0x1c00,0x2800,0x3400,0x4400,0x5000,0x6000,0x6c00
@@ -331,9 +384,21 @@ colorPal2:
 	.hword 0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000
 	.hword 0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000
 	.hword 0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000
+
+	.align
+colorPalMain:
+	.space (256 * 2)
 	
 	.align
-colorBuffer:
+colorPalSub:
+	.space (256 * 2)
+
+	.align
+colorBufferMain:
+	.space (256 * 2)
+	
+	.align
+colorBufferSub:
 	.space (256 * 2)
 	
 	.pool

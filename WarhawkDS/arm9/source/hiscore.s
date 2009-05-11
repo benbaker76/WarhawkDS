@@ -199,7 +199,7 @@ showHiScoreEntry:
 	bl fxFireworksOn
 	
 	ldr r0, =hiScoreIndex
-	ldr r1, =colorHilight						@ Load colorHilight address
+	ldr r1, =colorHilightSub					@ Load colorHilight address
 	ldr r2, [r0]								@ Move hiscore index
 	add r2, #10									@ Add 10 line offset
 	str r2, [r1]								@ Write back to colorHilight
@@ -489,7 +489,7 @@ saveHiScore:
 	bl stopSound
 	bl stopAudioStream							@ Turn off music
 	
-	ldr r0, =colorHilight						@ Load colorHilight address
+	ldr r0, =colorHilightSub					@ Load colorHilight address
 	mov r1, #0									@ Zero
 	str r1, [r0]								@ Set it to zero to turn off
 	

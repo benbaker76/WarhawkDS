@@ -80,7 +80,7 @@ showGameContinueMenu:
 	
 	bl fxCopperTextOn
 	
-	ldr r0, =colorHilight
+	ldr r0, =colorHilightSub
 	mov r1, #14
 	str r1, [r0]
 	
@@ -126,7 +126,7 @@ updateGameContinueMenu:
 	cmp r1, #MENUITEM_COUNT - 1					@ menuNum (MENU_ITEM_COUNT - 1)?
 	movgt r1, #0								@ menuNum > MENUITEM_COUNT then make it (MENU_ITEM_COUNT - 1)
 	
-	ldr r4, =colorHilight
+	ldr r4, =colorHilightSub
 	mov r5, #0
 	add r5, r1, lsl #1
 	add r5, #14

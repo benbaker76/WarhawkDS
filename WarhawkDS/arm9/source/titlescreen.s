@@ -32,7 +32,6 @@
 	.align
 	.text
 	.global showTitleScreen
-	.global showCredits
 	.global updateStartSprites
 	.global updateTitleScreen
 	.global drawCreditText
@@ -175,7 +174,6 @@ showTitleScreen:
 	mov r1,#1
 	str r1,[r0]									@ set button active (start)
 	
-	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
@@ -192,7 +190,7 @@ showTextScroller:
 	bl fxFadeBG0In
 	
 	ldr r0, =15000								@ 15 seconds
-	ldr r1, =showHiScore						@ Callback function address
+	ldr r1, =showHiScoreText					@ Callback function address
 	
 	bl startTimer
 	
@@ -200,7 +198,7 @@ showTextScroller:
 	
 	@---------------------------------
 	
-showHiScore:
+showHiScoreText:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -211,7 +209,7 @@ showHiScore:
 	bl fxFadeBG0SubIn
 	
 	ldr r0, =15000								@ 15 seconds
-	ldr r1, =showCredits						@ Callback function address
+	ldr r1, =showCreditsText					@ Callback function address
 	
 	bl startTimer								@ Start the timer
 	
@@ -219,7 +217,7 @@ showHiScore:
 	
 	@---------------------------------
 	
-showCredits:
+showCreditsText:
 
 	stmfd sp!, {r0-r6, lr}
 	
@@ -230,7 +228,7 @@ showCredits:
 	bl fxFadeBG0SubIn
 	
 	ldr r0, =15000								@ 15 seconds
-	ldr r1, =showHiScore						@ Callback function address
+	ldr r1, =showHiScoreText					@ Callback function address
 	
 	bl startTimer
 	

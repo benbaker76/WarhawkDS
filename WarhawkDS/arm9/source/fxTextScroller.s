@@ -33,6 +33,9 @@
 	.global fxTextScrollerOn
 	.global fxTextScrollerOff
 	.global fxTextScrollerVBlank
+	.global fxVertTextScrollerOn
+	.global fxVertTextScrollerOff
+	.global fxVertTextScrollerVBlank
 
 fxTextScrollerOn:
 
@@ -81,7 +84,7 @@ fxTextScrollerOn:
 	mov r1, #0
 	str r1, [r0]
 	
-	ldr r0, =hofsScroll
+	ldr r0, =ofsScroll
 	mov r1, #0
 	str r1, [r0]
 	
@@ -97,6 +100,11 @@ fxTextScrollerOff:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	bic r1, #FX_TEXT_SCROLLER
+	str r1, [r0]
+	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
 	bic r1, #DISPLAY_WIN0_ON
@@ -110,11 +118,6 @@ fxTextScrollerOff:
 	mov r1, #0
 	strh r1, [r0]
 	
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	bic r1, #FX_TEXT_SCROLLER
-	str r1, [r0]
-	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
@@ -123,7 +126,7 @@ fxTextScrollerVBlank:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =scrollText
+	ldr r0, =hscrollText
 	ldr r1, =textPos
 	ldr r2, [r1]
 	add r0, r2
@@ -139,7 +142,7 @@ fxTextScrollerVBlank:
 	ldr r4, =1									@ Maximum number of characters
 	bl drawTextCount
 	
-	ldr r0, =hofsScroll
+	ldr r0, =ofsScroll
 	ldr r1, [r0]
 	ldr r2, =textPos
 	ldr r3, [r2]
@@ -162,6 +165,96 @@ fxTextScrollerVBlank:
 
 	@ ---------------------------------------
 	
+fxVertTextScrollerOn:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_VERTTEXT_SCROLLER
+	str r1, [r0]
+	
+	ldr r0, =textPos
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =scrollPos
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =ofsScroll
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =REG_BG0VOFS
+	mov r1, #0
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	@ ---------------------------------------
+	
+fxVertTextScrollerOff:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	bic r1, #FX_VERTTEXT_SCROLLER
+	str r1, [r0]
+	
+	ldr r0, =REG_BG0VOFS
+	mov r1, #0
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	@ ---------------------------------------
+	
+fxVertTextScrollerVBlank:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =vscrollText
+	ldr r1, =textPos
+	ldr r2, [r1]
+	add r0, r2, lsl #5
+	ldrb r2, [r0]
+	mov r3, #0
+	cmp r2, #0
+	streq r3, [r1]
+	
+	ldr r1, =0									@ x pos
+	ldr r2, =scrollPos
+	ldr r2, [r2]
+	add r2, #24									@ y pos
+	and r2, #0x1F
+	ldr r3, =0									@ Draw on sub screen
+	ldr r4, =32									@ Maximum number of characters
+	bl drawTextCount
+	
+	ldr r0, =ofsScroll
+	ldr r1, [r0]
+	ldr r2, =textPos
+	ldr r3, [r2]
+	ldr r4, =scrollPos
+	ldr r5, [r4]
+	add r1, #1
+	ldr r6, =0x7
+	and r6, r1
+	cmp r6, #0
+	addeq r3, #1
+	addeq r5, #1
+	ldr r6, =REG_BG0VOFS
+	str r3, [r2]
+	str r5, [r4]
+	strh r1, [r6]
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	@ ---------------------------------------
+	
 	.data
 	.align
 	
@@ -171,12 +264,34 @@ textPos:
 scrollPos:
 	.word 0
 	
-hofsScroll:
+ofsScroll:
 	.word 0
-
+	
 	.align
-scrollText:
+hscrollText:
 	.asciz "WELCOME TO THE WARHAWK DS DEMO... THIS IS ONLY A DEMO... FULL GAME COMING SOON!                 "
+	
+	.align
+vscrollText:
+	.ascii "          WARHAWK DS            "
+	.ascii "                                "
+	.ascii "        ASM PROGRAMMING         "
+	.ascii "                                "
+	.ascii "             FLASH              "
+	.ascii "           HEADKAZE             "
+	.ascii "                                "
+	.ascii "           GRAPHICS             "
+	.ascii "                                "
+	.ascii "             LOBO               "
+	.ascii "            BADTOAD             "
+	.ascii "                                "
+	.ascii "             MUSIC              "
+	.ascii "                                "
+	.ascii "       PRESS PLAY ON TAPE       "
+	.ascii "         SPACE FRACTAL          "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "\0"
 	
 	.pool
 	.end

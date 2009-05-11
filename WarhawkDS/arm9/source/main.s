@@ -128,6 +128,10 @@ main:
 	@bl showEndOfGame
 
 	@ ----
+	
+	@bl showCredits
+	
+	@ ----
 
 	bl showIntro1
 
@@ -165,6 +169,8 @@ mainLoop:
 	bleq updateEndOfGame
 	cmp r1, #GAMEMODE_BIGBOSS
 	bleq updateBigBoss
+	cmp r1, #GAMEMODE_CREDITS
+	bleq updateCredits
 	
 	b mainLoop
 

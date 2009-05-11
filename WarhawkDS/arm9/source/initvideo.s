@@ -33,6 +33,7 @@
 	.text
 	.global initVideo
 	.global initVideoMain
+	.global initVideoBG1_16
 	.global initVideoStars
 	.global resetScrollRegisters
 	
@@ -67,7 +68,17 @@ initVideo:
 	ldr r0, =VRAM_D_CR				@ Use this for sprite data
 	ldr r1, =(VRAM_ENABLE | VRAM_D_SUB_SPRITE)
 	strb r1, [r0]
+	
+	bl initVideoMain
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ------------------------------------
+	
+initVideoMain:
 
+	stmfd sp!, {r0-r6, lr}
+	
 	ldr r0, =REG_BG0CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG0_MAP_BASE) | BG_TILE_BASE(BG0_TILE_BASE) | BG_PRIORITY(BG0_PRIORITY))
 	strh r1, [r0]
@@ -100,22 +111,15 @@ initVideo:
 	
 	@ ------------------------------------
 	
-initVideoMain:
+initVideoBG1_16:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r0, =REG_BG2CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
-	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE) | BG_TILE_BASE(BG2_TILE_BASE) | BG_PRIORITY(BG2_PRIORITY))
+	ldr r0, =REG_BG1CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG1_MAP_BASE) | BG_TILE_BASE(BG1_TILE_BASE) | BG_PRIORITY(BG1_PRIORITY))
 	strh r1, [r0]
-	ldr r0, =REG_BG2CNT_SUB			@ Set sub screen BG0 format to be 64x64 tiles at base address
-	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE_SUB) | BG_TILE_BASE(BG2_TILE_BASE_SUB) | BG_PRIORITY(BG2_PRIORITY))
-	strh r1, [r0]
-
-	ldr r0, =REG_BG3CNT				@ Set main screen BG3 format to be 64x64 tiles at base address
-	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE) | BG_TILE_BASE(BG3_TILE_BASE) | BG_PRIORITY(BG3_PRIORITY))
-	strh r1, [r0]
-	ldr r0, =REG_BG3CNT_SUB			@ Set sub screen BG3 format to be 64x64 tiles at base address
-	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
+	ldr r0, =REG_BG1CNT_SUB			@ Set sub screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG1_MAP_BASE_SUB) | BG_TILE_BASE(BG1_TILE_BASE_SUB) | BG_PRIORITY(BG1_PRIORITY))
 	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}

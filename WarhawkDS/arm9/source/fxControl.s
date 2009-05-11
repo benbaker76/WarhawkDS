@@ -77,6 +77,8 @@ fxOff:
 	blne fxCopperTextOff
 	tst r0, #FX_TEXT_SCROLLER
 	blne fxTextScrollerOff
+	tst r0, #FX_VERTTEXT_SCROLLER
+	blne fxVertTextScrollerOff
 	tst r0, #FX_STARFIELD
 	blne fxStarfieldOff
 	tst r0, #FX_PALETTE_FADE_TO_RED
@@ -147,6 +149,8 @@ fxVBlank:
 	blne fxCopperTextVBlank
 	tst r0, #FX_TEXT_SCROLLER
 	blne fxTextScrollerVBlank
+	tst r0, #FX_VERTTEXT_SCROLLER
+	blne fxVertTextScrollerVBlank
 	tst r0, #FX_STARFIELD
 	blne fxStarfieldVBlank
 	tst r0, #FX_PALETTE_FADE_TO_RED

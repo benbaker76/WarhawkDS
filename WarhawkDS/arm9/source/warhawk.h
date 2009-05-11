@@ -17,6 +17,16 @@
 #include "../build/WarShip.h"
 #include "../build/Moonscape.h"
 #include "../build/Orbscape.h"
+#include "../build/Credits01.h"
+#include "../build/Credits02.h"
+#include "../build/Credits03.h"
+#include "../build/Credits04.h"
+#include "../build/Credits05.h"
+#include "../build/Credits06.h"
+#include "../build/Credits07.h"
+#include "../build/Credits08.h"
+#include "../build/Credits09.h"
+#include "../build/Credits10.h"
 #include "../build/LogoSprites.h"
 #include "../build/CheatSprites.h"
 #include "../build/StartSprites.h"
@@ -130,6 +140,7 @@
 #define GAMEMODE_HISCORE_ENTRY		11
 #define GAMEMODE_ENDOFGAME			12
 #define GAMEMODE_BIGBOSS			13
+#define GAMEMODE_CREDITS			14
 
 #define BOSSMODE_CHECK_SCROLL		0
 #define BOSSMODE_GET_READY			1
@@ -169,11 +180,12 @@
 #define FX_COPPER_TEXT				BIT(15)
 #define FX_COLOR_CYCLE_TEXT			BIT(16)
 #define FX_TEXT_SCROLLER			BIT(17)
-#define FX_STARFIELD				BIT(18)
-#define FX_PALETTE_FADE_TO_RED		BIT(19)
-#define FX_STARFIELD_DOWN			BIT(20)
-#define FX_STARFIELD_MULTI			BIT(21)
-#define FX_FIREWORKS				BIT(22)
+#define FX_VERTTEXT_SCROLLER		BIT(18)
+#define FX_STARFIELD				BIT(19)
+#define FX_PALETTE_FADE_TO_RED		BIT(20)
+#define FX_STARFIELD_DOWN			BIT(21)
+#define FX_STARFIELD_MULTI			BIT(22)
+#define FX_FIREWORKS				BIT(23)
 
 @ Sprite types
 

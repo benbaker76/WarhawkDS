@@ -63,15 +63,15 @@ fxSineWobbleOff:
 	bic r1, #FX_SINE_WOBBLE
 	str r1, [r0]
 	
-	mov r0, #0
-	mov r1, #0
-	mov r2, #0
-	mov r3, #0
-	mov r4, #0
+	@mov r0, #0
+	@mov r1, #0
+	@mov r2, #0
+	@mov r3, #0
+	@mov r4, #0
 	
-	bl dmaTransfer
+	@bl dmaTransfer
 	
-	mov r0, #1
+	mov r0, #2
 	mov r1, #0
 	mov r2, #0
 	mov r3, #0
@@ -137,16 +137,16 @@ fxSineWobbleVBlankLoop:
 	
 	bl DC_FlushAll
 	
-	mov r0, #0								@ Dma channel
-	ldr r1, =hOfsBufMain					@ Source
-	add r1, #2
-	ldr r2, =REG_BG1HOFS					@ Dest
-	mov r3, #1								@ Count
-	ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_RESET)
+	@mov r0, #0								@ Dma channel
+	@ldr r1, =hOfsBufMain					@ Source
+	@add r1, #2
+	@ldr r2, =REG_BG1HOFS					@ Dest
+	@mov r3, #1								@ Count
+	@ldr r4, =(DMA_ENABLE | DMA_REPEAT | DMA_START_HBL | DMA_DST_RESET)
 	
-	bl dmaTransfer
+	@bl dmaTransfer
 	
-	mov r0, #1								@ Dma channel
+	mov r0, #2								@ Dma channel
 	ldr r1, =hOfsBufSub						@ Source
 	add r1, #2
 	ldr r2, =REG_BG1HOFS_SUB				@ Dest

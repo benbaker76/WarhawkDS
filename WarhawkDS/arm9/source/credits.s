@@ -83,13 +83,12 @@ showCredits:
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldDownOn						@ Turn on starfield
 	bl fxVertTextScrollerOn						@ Turn on vert text scroller
+	bl fxSineWobbleOn
 	
 	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initCredits01					@ Callback function address
 
 	bl startTimer
-
-	bl fxFadeBlackIn
 	
 	ldr r0, =colorPal
 	ldr r1, =colorPal2
@@ -98,6 +97,8 @@ showCredits:
 	ldr r0, =colorNoScroll
 	mov r1, #1
 	str r1, [r0]
+
+	bl fxFadeBlackIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -379,6 +380,11 @@ updateCredits:
 	
 	bl scrollSBMain
 	bl scrollSBSub
+	
+	ldr r0, =REG_KEYINPUT						@ Read Key Input
+	ldr r1, [r0]
+	tst r1, #BUTTON_A							@ Start button pressed?
+	bleq showTitleScreen
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 

@@ -344,7 +344,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		add r1,r7, lsl #2
 
 		cmp r0,#256
-		bge doDetect
+		bge bossFireCheckThing
 
 	@
 	@	We will need to do checks here for special alien types
@@ -388,6 +388,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 				bl aliensTracker
 		alienPassed:
 		
+bossFireCheckThing:		
 		
 		mov r0,#SPRITE_Y_OFFS
 		ldr r10,[r1,r0]		
@@ -397,21 +398,23 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		@	This is where we need to check for alien fire and init if needed
 		@	sptFireTypeOffs = fire type (0=none) this is our first check
 
+
 			mov r0,#SPRITE_FIRE_TYPE_OFFS
 			ldr r3,[r1,r0]				@ load fire type (keep r3 as we use it later)
 			cmp r3,#0					@ is it a firing alien?
 			beq doDetect				@ if not, that is it!
+
 		@	
 		@	Now, we need to update the fire delay to see if it is time to fire
 		@	but also account for burst fire and random fire!
 		@
 		
-
 			mov r0,#SPRITE_FIRE_DELAY_OFFS
 			ldr r9,[r1,r0]				@ get fire delay
 			subs r9,#1					@ take 1 off the count
 			str r9,[r1,r0]				@ put it back
 			bpl doDetect				@ if this is not 0, do nothing
+
 				mov r9,#0
 				str r9,[r1,r0]			@ set to 0
 			
@@ -475,7 +478,9 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 				cmp r10,#384-48			@ Make sure alien is at least NEARLY on screen before firing
 				bmi doDetect			@ if no, just forget it
 				bl alienFireInit		@ time to fire, r3=fire type, r1=offset to alien
-			
+				
+				
+				
 			doDetect:
 				@ ok, now we need to check if this alien has hit YOU!!
 				@ r1 is alien base offset!

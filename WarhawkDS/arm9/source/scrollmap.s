@@ -358,15 +358,14 @@ levelDrift:
 	strh r0,[r1]
 	strh r0,[r2]
 	
-	
 	lsr r0,#1
-	ldr r1, =REG_BG2HOFS			@ Load our horizontal scroll register for BG1 on the main screen
-	ldr r2, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	ldr r1, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
+	ldr r2, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
 	strh r0,[r1]
 	strh r0,[r2]
 	lsr r0,#1
-	ldr r1, =REG_BG3HOFS			@ Load our horizontal scroll register for BG1 on the main screen
-	ldr r2, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	ldr r1, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
+	ldr r2, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
 	strh r0,[r1]
 	strh r0,[r2]
 	ldmfd sp!, {r0-r6, pc}

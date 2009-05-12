@@ -39,10 +39,12 @@
 	.global fxStarfieldOn
 	.global fxStarfieldDownOn
 	.global fxStarfieldMultiOn
+	.global fxStarburstOn
 	.global fxStarfieldOff
 	.global fxStarfieldVBlank
 	.global fxStarfieldDownVBlank
 	.global fxStarfieldMultiVBlank
+	.global fxStarburstVBlank
 	.global starDirection
 	.global clearStars
 	.global randomStarsMulti
@@ -83,6 +85,44 @@ fxStarfieldOnLoop:
 	ldr r0, =fxMode
 	ldr r1, [r0]
 	orr r1, #FX_STARFIELD
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+
+	@ ---------------------------------------
+
+fxStarburstOn:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl initVideoStars
+	
+	@ Clear the tile data
+	
+	bl clearStars
+	
+	@ set the screen up to use numbered tiles from 0-767, a hybrid bitmap!	
+	
+	mov r0, #0										@ tile number
+	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)				@ where to store it
+	ldr r2, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)		@ where to store it
+
+fxStarburstOnLoop:
+
+	strh r0, [r1], #2
+	strh r0, [r2], #2
+	add r0, #1
+	cmp r0, #(32 * 24)
+	
+	bne fxStarburstOnLoop
+
+	ldr r1,=0x3fff	
+	bl randomStarburst									@ generate em!
+	bl moveStarburst									@ draw them
+
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_STARBURST
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
@@ -196,6 +236,17 @@ fxStarfieldVBlank:
 
 	@ ---------------------------------------
 
+fxStarburstVBlank:
+
+	stmfd sp!, {r0, lr}
+	
+	bl clearStars									@ clear them (could use a dma to clear the screen?)
+	bl moveStarburst								@ move em, based on x/y speeds and plot
+
+	ldmfd sp!, {r0, pc}
+
+	@ ---------------------------------------
+
 fxStarfieldMultiVBlank:
 
 	stmfd sp!, {r0-r1, lr}
@@ -274,6 +325,51 @@ clearStars:
 	
 	@ ---------------------------------------
 
+randomStarburst:
+	stmfd sp!, {r0-r11, lr}
+
+	@ r1 is passed for the max speed (0x3fff is a good starter)
+	mov r3, #STAR_COUNT
+	sub r3,#1
+	ldr r4, =starXCoord32
+	ldr r5, =starYCoord
+	ldr r6, =starSpeed
+	ldr r10, =starShade
+	ldr r11, =starDir
+	ldr r7,=0x1ff
+
+	starburstloopMulti:
+	
+		mov r8,#128
+		lsl r8,#12
+		str r8, [r4, r3, lsl #2]						@ Store X
+		mov r8,#192
+		lsl r8,#12
+		str r8, [r5, r3, lsl #2] 						@ Store Y
+
+		bl getRandom									@ generate direction
+		and r8, r7
+		str r8, [r11, r3, lsl #2]
+
+		bl getRandom									@ generate speed
+		and r8, r1	
+@		add r8, #255
+@lsr r8,#19
+add r8,#1024
+		str r8, [r6, r3, lsl #2] 						@ Store Speed
+	
+		bl getRandom									@ generate colours
+		and r8,#0x3
+		add r8,#10
+		strb r8,[r10, r3]
+
+		subs r3, #1	
+	bne starburstloopMulti
+
+	ldmfd sp!, {r0-r11, pc}
+	
+	@ ---------------------------------------
+
 randomStarsMulti:
 
 	stmfd sp!, {r0-r10, lr}
@@ -307,7 +403,7 @@ starloopMulti:
 	
 	bl getRandom									@ generate colours
 	and r8,#0x3
-	add r8,#11
+	add r8,#10
 	strb r8,[r10, r3]
 
 	subs r3, #1	
@@ -423,6 +519,155 @@ moveStarsMultiLoop:
 	
 	ldmfd sp!, {r0-r12, pc}
 
+@----------------------------------
+
+moveStarburst:
+	stmfd sp!, {r0-r12, lr}
+	ldr r6,=BG_TILE_RAM(STAR_BG2_TILE_BASE)
+	str r6,starMain										@ store like this a quicker to retrieve directly
+	ldr r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
+	str r6,starSub										@ these 2 vars MUST remain local for speed
+	
+	mov r10, #STAR_COUNT								@ Set numstars
+	sub r10,#1
+	ldr r4, =starSpeed
+	ldr r3, =starYCoord
+	ldr r2, =starXCoord32
+	ldr r12, =starShade
+
+moveStarburstLoop:
+	ldr r0,=starDir
+	ldr r0,[r0, r10, lsl #2]
+	lsl r0,#1
+	ldr r7,=COS_bin
+	ldrsh r7, [r7,r0]								@ r7= 16bit signed cos
+	ldr r8,=SIN_bin
+	ldrsh r8, [r8,r0]								@ r8= 16bit signed sin
+
+
+	ldr r6, [r4, r10, lsl #2] 						@ R6 now holds the speed of the star
+
+	ldr r0, [r2, r10, lsl #2]						@ r0 is now X coord value					MOVE X
+	muls r9,r6,r7									@ mul cos by speed
+	adds r0,r9, asr #12								@ add to x
+
+bmi burstRegenerate
+cmp r0,#0xff000
+bge burstRegenerate
+	
+@	ldr r9,=0xfffff									@ reset to 0.12-255.12 (this is 1 cycle quicker than compairs)
+@	ands r0,r9
+	str r0, [r2,r10, lsl #2]
+			
+	ldr r1, [r3, r10, lsl #2]						@ r1 now holds the Y coord of the star		MOVE Y
+	muls r9,r6,r8
+	adds r1,r9, asr #12								@ add to Y coord (signed)
+@	movmi r1,#0x180000								@ reset at boundries (shifted 12)
+@	cmppl r1,#0x180000
+@	movpl r1,#0
+
+bmi burstRegenerate
+cmp r1,#0x180000
+bge burstRegenerate
+
+	str r1, [r3, r10, lsl #2]						@ store y 20.12
+	
+	ldrb r5,[r12,r10]								@ star colour
+@	mov r5,#11
+	
+	
+	
+	push {r3,r4}									@ just not ENOUGH registers :(
+	push {r1}										@ store y
+	cmp r1,#0xc0000									@ 192 in 20.12 format
+	ldrpl r6,starMain								@ bottom screen
+	ldrlt r6,starSub								@ top screen
+	subpl r1,#0xC0000								@ 192 in 20.12 format
+	mov r9, r1, lsr #15								@ r9 = y / 8 (+12) (THESE COMMENTS DO NOT REALLY MATCH NOW)
+	lsl r9, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
+	add r9, r0, lsr #15								@ add r9 x coord divided by 32768 (accounts for 20.12)
+	add r3,r6, r9, lsl #5							@ r3 now = tile base offset from tilemem
+	and r9,r1, #0x7000								@ take the low 3 bits (0-7) of y (each y is one word)
+	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
+	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
+	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
+	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	str r4, [r3, r9, lsr #10]						@ store it back
+
+
+
+	add r0,#0x1000									@ add 1 to x
+	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
+	lsl r9, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
+	add r9, r0, lsr #15								@ add r9 x coord divided by 32768 (accounts for 20.12)
+	add r3,r6, r9, lsl #5							@ r3 now = tile base offset from tilemem
+	and r9,r1, #0x7000								@ take the low 3 bits (0-7) of y (each y is one word)
+	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
+	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
+	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
+	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	str r4, [r3, r9, lsr #10]						@ store it back
+	pop {r1}										@ restore y and recalulate screen base
+	add r1,#0x1000									@ add 1 to y
+	cmp r1,#0xc0000									@ 192 in 20.12 format
+	ldrpl r6,starMain								@ bottom screen
+	ldrlt r6,starSub								@ top screen
+	subpl r1,#0xC0000								@ 192 in 20.12 format
+	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
+	lsl r9, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
+	add r9, r0, lsr #15								@ add r9 x coord divided by 32768 (accounts for 20.12)
+	add r3,r6, r9, lsl #5							@ r3 now = tile base offset from tilemem
+	and r9,r1, #0x7000								@ take the low 3 bits (0-7) of y (each y is one word)
+	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
+	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
+	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
+	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	str r4, [r3, r9, lsr #10]						@ store it back
+	sub r0,#0x1000									@ take 1 off x
+	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
+	lsl r9, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
+	add r9, r0, lsr #15								@ add r9 x coord divided by 32768 (accounts for 20.12)
+	add r3,r6, r9, lsl #5							@ r3 now = tile base offset from tilemem
+	and r9,r1, #0x7000								@ take the low 3 bits (0-7) of y (each y is one word)
+	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
+	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
+	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
+	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	str r4, [r3, r9, lsr #10]						@ store it back
+	pop {r3,r4}										@ restore registers
+
+burstSkip:
+
+	subs r10, #1									@ count down the number of starSpeed
+	bne moveStarburstLoop
+
+	ldmfd sp!, {r0-r12, pc}
+
+burstRegenerate:
+
+		mov r8,#128
+		lsl r8,#12
+		str r8, [r2, r10, lsl #2]						@ Store X
+		mov r8,#192
+		lsl r8,#12
+		str r8, [r3, r10, lsl #2] 						@ Store Y
+
+		bl getRandom									@ generate direction
+		ldr r6,=0x1ff
+		and r8, r6
+		ldr r0,=starDir
+		str r8, [r0, r10, lsl #2]
+
+		bl getRandom									@ generate speed
+		ldr r6,=0x3fff
+		and r8, r6	
+		add r8,#1024
+		ldr r0,=starSpeed
+		str r8, [r0, r10, lsl #2] 						@ Store Speed
+	
+	b burstSkip
+
+
 starMain:
 .word 0
 starSub:
@@ -442,5 +687,6 @@ starYCoord:
 	.space STAR_COUNT*4
 starXCoord32:
 	.space STAR_COUNT*4
-
+starDir:
+	.space STAR_COUNT*4
 	.end

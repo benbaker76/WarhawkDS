@@ -161,6 +161,8 @@ fxVBlank:
 	blne fxStarfieldMultiVBlank
 	tst r0, #FX_FIREWORKS
 	blne fxFireworksVBlank
+	tst r0, #FX_STARBURST
+	blne fxStarburstVBlank
 fxVBlankDone:
 	
 	ldmfd sp!, {r0-r6, pc}

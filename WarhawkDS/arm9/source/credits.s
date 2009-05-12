@@ -81,7 +81,8 @@ showCredits:
 	bl playAudioStream							@ Play the audio stream
 
 	bl fxCopperTextOn							@ Turn on copper text fx
-	bl fxStarfieldDownOn						@ Turn on starfield
+@	bl fxStarfieldDownOn						@ Turn on starfield
+	bl fxStarburstOn							@ Turn on starburst
 	bl fxVertTextScrollerOn						@ Turn on vert text scroller
 	bl fxSineWobbleOn
 	

@@ -180,6 +180,7 @@
 #define FX_STARFIELD_DOWN			BIT(21)
 #define FX_STARFIELD_MULTI			BIT(22)
 #define FX_FIREWORKS				BIT(23)
+#define FX_STARBURST				BIT(24)
 
 @ Sprite types
 

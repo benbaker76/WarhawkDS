@@ -93,6 +93,10 @@ showHiScoreEntry:
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
+
+	ldr r0, =horizDrift
+	mov r1, #0
+	str r1, [r0]
 	
 	bl initStarData
 	

@@ -199,6 +199,11 @@ resetScrollRegisters:
 	ldr r0, =REG_BG3VOFS_SUB		@ Load our vertical scroll register for BG3 on the sub screen
 	strh r1, [r0]
 	
+	
+	ldr r0, =horizDrift
+	mov r1, #0
+	str r1, [r0]
+	
 	ldmfd sp!, {r0-r8, pc}
 	
 	@ ------------------------------------

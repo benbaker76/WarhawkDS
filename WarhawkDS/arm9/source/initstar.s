@@ -68,6 +68,18 @@ initStarData:
 	ldr r1,=yposSBSub
 	str r0,[r1]
 
+	ldr r0, =hofsSF
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =hofsSB
+	mov r1, #0
+	str r1, [r0]
+	
+	ldr r0, =horizDrift
+	mov r1, #0
+	str r1, [r0]
+
 	@ Write the tile data
 	
 	ldr r0, =StarFrontTiles

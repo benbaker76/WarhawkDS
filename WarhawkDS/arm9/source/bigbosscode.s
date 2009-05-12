@@ -107,7 +107,7 @@ bigBossInit:
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
 		ldr r5,=spriteHits+bbOffset
-		mov r6,#128
+		mov r6,#160
 		str r6,[r5, r0, lsl #2]			@ number of hits
 
 		ldr r4,=bigBossSpriteTable1			@ load the image from our table!
@@ -218,8 +218,13 @@ updateBigBoss:
 	bl moveAliens								@ move the aliens and detect colisions with you
 	bl levelDrift								@ update level with the horizontal drift
 	bl moveBullets								@ check and then moves bullets
-	bl scrollSBMain
-	bl scrollSBSub
+	ldr r1,=bigBossMode
+	ldr r0,[r1]
+	cmp r0,#3
+	bge bigBossNoScroll
+		bl scrollSBMain
+		bl scrollSBSub
+	bigBossNoScroll:
 	bl drawSprite								@ drawsprites and do update bloom effect
 	bl checkGameOver							@ check if the game is over
 	bl checkLevelControl						@ check to see if we want to change level
@@ -269,6 +274,18 @@ bigBossDraw:
 	ldr r11,=spriteY+bbOffset	@ sprites Y coords	
 	mov r2,#0				@ r2 = sprite number
 	
+	ldr r7,=bigBossMode
+	ldr r7,[r7]
+	cmp r7,#3
+	bne bigBossDrawerLoop
+	
+		bl getRandom
+		and r8,#0xf
+		subs r8,#7
+		adds r0,r8
+		ldr r8,=bigBossSpritesX1	@ x table
+	
+	
 	bigBossDrawerLoop:
 		ldr r6,[r8, r2, lsl #2]		@ r6= x offset
 		adds r7,r0,r6					@ r7= actuall coord
@@ -297,12 +314,13 @@ bigBossInitExplode:
 		cmp r0,#bbSpriteNum
 	bne bigBossActiveKill
 
+	ldr r8,=bossMan							@ this stops bullets and sprite detection
+	mov r6,#BOSSMODE_EXPLODE
+	str r6,[r8]
 
-			ldr r8,=bossMan
-			mov r6,#BOSSMODE_EXPLODE
-			str r6,[r8]
-
-
+	ldr r0,=starDirection
+	mov r1,#384
+	str r1,[r0]
 
 	ldr r0,=bigBossMode
 	mov r1,#3								@ set bossmode to DEAD and scroll of screen quickly
@@ -322,7 +340,7 @@ bigBossMovement:
 
 	ldr r0,=bigBossMode
 	ldr r0,[r0]
-	cmp r0,#1										@ PHASE=SCROLL ON
+	cmp r0,#1																						@ PHASE=SCROLL ON
 	bne bigBossMovementPhase2
 	
 	@ ok, we just need to bring it on and change bigBossMode to 2 when there!
@@ -330,7 +348,7 @@ bigBossMovement:
 	ldr r0,=bossY
 	ldr r1,[r0]
 	lsr r1,#12
-	cmp r1,#384
+	cmp r1,#384-16
 	beq bigBossMovementPhaseChange
 	
 		add r1,#1
@@ -342,6 +360,7 @@ bigBossMovement:
 
 	bigBossMovementPhaseChange:	
 	
+		bl playBossExplodeSound				@ play an explosion
 		ldr r0,=bigBossMode
 		mov r1,#2
 		str r1,[r0]									@ set to "ready to move"
@@ -367,7 +386,6 @@ bigBossMovementPhase2:
 	lsl r5,#1
 	adds r1,r5
 	str r1,[r0]
-
 
 	ldr r0,=bossY
 	ldr r1,[r0]					@ r1= x coord (20.12)	
@@ -420,12 +438,140 @@ bigBossMovementPhase4:
 	cmp r0,#4																		@ PHASE=INIT BIG BOSS EXPLODE
 	bne bigBossMovementPhase5
 		@ here we need to init code to handle a special explosion!
-	
+		
+		ldr r0,=bigBossExplodeCount
+		mov r1,#0
+		str r1,[r0]
+		
+		mov r1,#17
+		ldr r0,=bigBossSpriteExp
+		str r1,[r0]
+		
+		ldr r0,=bigBossExpHigh
+		mov r1,#768-64
+		str r1,[r0]
+		
 		@ play bigboss explode main explosion sound
-
+		ldr r0,=bigBossMode
+		mov r1,#5
+		str r1,[r0]
+		
 	ldmfd sp!, {r0-r10, pc}	
 	
 bigBossMovementPhase5:
+	@this is our main explode thing!
+	cmp r0,#5																		@ PHASE=DO THE EXPLOSION
+	bne bigBossMovementPhase6
+	
+		mov r12,#0								@ our counter per phase
+			bigBossUpExplodeLoop:
+
+			ldr r0,=bigBossSpriteExp
+			ldr r1,[r0]								@ r1=sprite to explode (number 17-127)
+
+			@ generate a random X
+			bl getRandom							@ need 64-351
+			ldr r2,=0x1ff
+			and r8,r2
+			mov r2,#9
+			mul r8,r2
+			lsr r8,#4
+			add r8,#64
+			mov r10,r8								@ r10 holds our X
+			bl getRandom
+			and r8,#0x3f							@ 0-63
+			ldr r2,=bigBossExpHigh
+			ldr r3,[r2]
+			add r11, r8,r3							@ r11 holds our Y
+
+			ldr r6,=spriteActive
+			add r6, r1, lsl #2						@ r6=offset
+		
+			ldr r2,[r6]
+			cmp r2,#13
+			beq bigBossExpSkip
+		
+			mov r2,#13								@ explosion type
+			str r2,[r6]
+			mov r2,#6								@ initial frame
+			mov r8,#SPRITE_OBJ_OFFS				
+			str r2,[r6,r8]
+			mov r2,#8
+			mov r8,#SPRITE_EXP_DELAY_OFFS
+			str r2,[r6,r8]
+
+			mov r8,#SPRITE_X_OFFS
+			str r10,[r6,r8]
+			mov r8,#SPRITE_Y_OFFS
+			str r11,[r6,r8]
+
+			@ do a random bloom
+			bl getRandom
+			and r8,#0x2F		@ i know it is out of palette range, but give a shimmer!! :) (cheating)
+			mov r2,#SPRITE_BLOOM_OFFS
+			str r8,[r6,r2]
+
+		bigBossExpSkip:
+		add r1,#1
+		cmp r1,#128
+		moveq r1,#17
+		ldr r0,=bigBossSpriteExp
+		str r1,[r0]
+		add r12,#1
+		cmp r12,#14
+		bne bigBossUpExplodeLoop
+	
+		bl getRandom
+		and r8,#0xf
+		cmp r8,#2
+		bllt playExplosionSound
+	
+ldr r0,=bigBossExpHigh
+ldr r1,[r0]
+sub r1,#2
+str r1,[r0]
+
+ldr r0,=bigBossMode
+mov r2,#6
+cmp r1,#384
+strle r2,[r0]
+ldrle r0,=bigBossExpHigh
+movle r2,#100
+strle r2,[r0]
+	
+	ldmfd sp!, {r0-r10, pc}
+		
+bigBossMovementPhase6:
+	cmp r0,#6																			@ PHASE=WAIT A MO
+	bne bigBossAllDone
+	
+	ldr r0,=bigBossExpHigh
+	ldr r1,[r0]
+	subs r1,#1
+	str r1,[r0]
+	bpl bigBossToWait
+
+		ldr r0,=bigBossMode
+		mov r1,#7
+		str r1,[r0]
+	
+	bigBossToWait:
+
+	@ when r1=(around) 30, we need to init a nice fade!		**** NOTE
+
+	ldmfd sp!, {r0-r10, pc}
+	
+bigBossAllDone:
+	cmp r0,#7																			@ PHASE=GO TO COMPLETION
+	bne bigBossNoMorePhase
+
+	@ the boss if finished with!!!
+	@ all we need to do here is go to the completion code!
+
+		bl showEndOfGame
+
+	bigBossNoMorePhase:
+
 	ldmfd sp!, {r0-r10, pc}
 
 @------------------------------------------------------
@@ -634,4 +780,10 @@ bigBossXphase:
 .word 128
 bigBossYphase:
 .word 48
+bigBossExplodeCount:
+.word 0
+bigBossSpriteExp:
+.word 0
+bigBossExpHigh:
+.word 0
 .end

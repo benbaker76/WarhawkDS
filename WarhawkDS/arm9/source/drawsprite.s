@@ -477,7 +477,7 @@ drawSprite:
 
 		slowPlayerExplosion:
 		cmp r1,#12								@ -------------- Player explosion
-		bne noMoreStuff
+		bne bigBossExplodeSLOW
 
 			ldr r0,=spriteExplodeDelay			@ check our animation delay
 			ldr r1,[r0,r8,lsl #2]
@@ -495,7 +495,38 @@ drawSprite:
 				ldr r0,=spriteY
 				mov r1,#SPRITE_KILL
 				str r1,[r0,r8,lsl #2]
+	
+				b noMoreStuff
+	
+		bigBossExplodeSLOW:
+		cmp r1,#13								@ -------------- big boss explode
+		bne noMoreStuff
 
+			ldr r0,=spriteY						@ Load Y coord
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#6
+			str r1,[r0,r8,lsl #2]
+			cmp r1,#768
+			bpl noMorePexp2
+
+			ldr r0,=spriteExplodeDelay			@ check our animation delay
+			ldr r1,[r0,r8,lsl #2]
+			subs r1,#1							@ take 1 off the count					
+			movmi r1,#8						@ and reset if <0
+			str r1,[r0,r8,lsl #2]
+			bpl noMoreStuff
+			
+			ldr r0,=spriteObj
+			ldr r1,[r0,r8,lsl #2]				@ load anim frame
+			add r1,#1							@ add 1
+			str r1,[r0,r8,lsl #2]				@ store it back
+			cmp r1,#14							@ are we at the end frame?
+			bne noMoreStuff
+				noMorePexp2:
+				ldr r0,=spriteY
+				mov r1,#SPRITE_KILL
+				str r1,[r0,r8,lsl #2]
+				
 		noMoreStuff:
 		
 		@ just a bit of code to add a pulse to the little bullets!

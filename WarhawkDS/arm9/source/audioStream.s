@@ -43,8 +43,6 @@ initAudioStream:
 
 	stmfd sp!, {r0-r1, lr}
 	
-	bl DC_FlushAll
-	
 	ldr r0, =TIMER0_DATA
 	ldr r1, =SOUND_FREQ(AUDIO_FREQ) * 2
 	strh r1, [r0]
@@ -60,8 +58,6 @@ initAudioStream:
 	ldr r0, =TIMER1_CR
 	ldr r1, =(TIMER_ENABLE | TIMER_IRQ_REQ | TIMER_CASCADE)
 	strh r1, [r0]
-	
-	bl swiWaitForVBlank
 	
 	ldmfd sp!, {r0-r1, pc}								@ Return
 	
@@ -102,6 +98,8 @@ playAudioStream:
 	bl playBuffer
 	bl initAudioStream
 	
+	bl swiWaitForVBlank
+	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 
 	@ ---------------------------------------------
@@ -109,8 +107,6 @@ playAudioStream:
 stopAudioStream:
 
 	stmfd sp!, {r0-r1, lr}
-	
-	bl DC_FlushAll
 	
 	ldr r0, =TIMER0_CR
 	ldrh r1, [r0]
@@ -122,17 +118,14 @@ stopAudioStream:
 	bic r1, #TIMER_ENABLE
 	strh r1, [r0]
 	
+	ldr r0, =IPC_SOUND_DATA(0)
+	ldr r1, =0x10
+	bl DC_FlushRange
+	
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
 	mov r1, #-1											@ Get the sample address
 	str r1, [r0]
 	
-	@ldr r0, =REG_IPC_SYNC
-	@ldrh r1, [r0]
-	@ldr r2, =0xf0ff
-	@and r1, r2
-	@orr r1, #IPC_SEND_SYNC(AUDIO_STOP_MUSIC)
-	@strh r1, [r0]
-
 	bl swiWaitForVBlank
 	
 	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
@@ -142,6 +135,10 @@ stopAudioStream:
 playBuffer:
 
 	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_DATA(0)
+	ldr r1, =0x10
+	bl DC_FlushRange
 
 	ldr r0, =IPC_SOUND_LEN(0)							@ Get the IPC sound length address
 	ldr r1, =BUFFER_SIZE								@ buffer size
@@ -150,13 +147,6 @@ playBuffer:
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
 	ldr r1, =buffer										@ Get the sample address
 	str r1, [r0]										@ Write the value
-	
-	@ldr r0, =REG_IPC_SYNC
-	@ldrh r1, [r0]
-	@ldr r2, =0xf0ff
-	@and r1, r2
-	@orr r1, #IPC_SEND_SYNC(AUDIO_PLAY_MUSIC)
-	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 	

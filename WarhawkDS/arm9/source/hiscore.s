@@ -93,7 +93,6 @@ showHiScoreEntry:
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
-	bl swiWaitForVBlank
 	
 	bl initStarData
 	

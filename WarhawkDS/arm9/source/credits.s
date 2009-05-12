@@ -53,7 +53,6 @@ showCredits:
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
-	bl swiWaitForVBlank
 	
 	bl initVideoBG1_16
 	bl initStarData

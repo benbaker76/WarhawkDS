@@ -24,10 +24,6 @@
 #include "audio.h"
 #include "ipc.h"
 
-	#define AUDIO_PLAY_SOUND			0
-	#define AUDIO_PLAY_MUSIC			1
-	#define AUDIO_STOP_MUSIC			2
-
 	.arm
 	.align
 	.text
@@ -63,24 +59,6 @@ interruptHandlerVBlankDone:
 
 	@ ------------------------------------
 	
-interruptHandlerIPC:
-
-	stmfd sp!, {r0-r3, lr}
-	
-	ldr r0, =REG_IPC_SYNC
-	ldrh r1, [r0]
-	and r1, #0xF
-	cmp r1, #AUDIO_PLAY_SOUND
-	bleq playSound
-	@cmp r1, #AUDIO_PLAY_MUSIC
-	@bleq playMusic
-	@cmp r1, #AUDIO_STOP_MUSIC
-	@bleq stopMusic
-	
-	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
-
-	@ ------------------------------------
-	
 main:
 	bl irqInit									@ Initialize Interrupts
 	
@@ -88,17 +66,8 @@ main:
 	ldr r1, =interruptHandlerVBlank				@ Function Address
 	bl irqSet									@ Set the interrupt
 	
-	@ldr r0, =IRQ_IPC_SYNC						@ IPC_SYNC interrupt
-	@ldr r1, =interruptHandlerIPC				@ Function Address
-	@bl irqSet									@ Set the interrupt
-	
-	@ldr r0, =(IRQ_VBLANK | IRQ_IPC_SYNC)		@ Interrupts
 	ldr r0, =(IRQ_VBLANK)						@ Interrupts
 	bl irqEnable								@ Enable
-	
-	@ldr r0, =REG_IPC_SYNC
-	@ldr r1, =IPC_SYNC_IRQ_ENABLE
-	@strh r1, [r0]
 	
 	ldr r0, =REG_POWERCNT
 	ldr r1, =POWER_SOUND						@ Turn on sound
@@ -255,8 +224,9 @@ stopSound:
 stopSoundLoop:
 	
 	str r2, [r1, r0, lsl #4]					@ Add the offset (0x04000400 + ((n)<<4))
-	subs r0, #1									@ sub one from our counter
-	bpl stopSoundLoop							@ back to our loop
+	sub r0, #1									@ sub one from our counter
+	cmp r0, #1
+	bne stopSoundLoop							@ back to our loop
 
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	mov r1, #0

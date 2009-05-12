@@ -469,9 +469,9 @@ drawSBMapScreenSub:
 	ldr r2, [r3]					@ load y2 with ypos (map reference)
 	add r0, r2, lsl #5				@ ycoord * 32 added to screenbase
 	
-	sub r0, #1536						@ 24 * 32 * 2 tiles offset
+	sub r0, #1536					@ 24 * 32 * 2 tiles offset
 	
-	sub r1, #512				@ 32x8x2
+	sub r1, #512					@ 32x8x2
 	
 	ldr r2, =2048					@ 32x8x2
 	

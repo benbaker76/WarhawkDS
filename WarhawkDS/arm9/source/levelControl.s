@@ -122,8 +122,6 @@ showLevelStart:
 	
 	bl checkGameContinue
 	
-	bl swiWaitForVBlank
-	
 	bl drawMapScreenMain
 	bl drawMapScreenSub
 	bl drawSFMapScreenMain

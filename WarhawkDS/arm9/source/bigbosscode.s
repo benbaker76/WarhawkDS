@@ -568,6 +568,8 @@ bigBossAllDone:
 	@ the boss if finished with!!!
 	@ all we need to do here is go to the completion code!
 
+		bl resetScrollRegisters
+		bl fxStarfieldOff
 		bl showEndOfGame
 
 	bigBossNoMorePhase:

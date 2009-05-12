@@ -95,7 +95,9 @@ fxOff:
 	blne fxColorCycleTextOff
 	tst r0, #FX_FIREWORKS
 	blne fxFireworksOff
-	
+	tst r0, #FX_STARBURST
+	blne fxStarfieldOff	
+
 	ldr r0, =fxMode
 	mov r1, #FX_NONE
 	str r1, [r0]

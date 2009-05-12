@@ -150,7 +150,7 @@ initVideoStars:
 
 resetScrollRegisters:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r8, lr}
 
 	@ Reset horizontal scroll registers
 	
@@ -160,6 +160,8 @@ resetScrollRegisters:
 	ldr r3, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
 	ldr r4, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
 	ldr r5, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
+	ldr r7, =REG_BG0HOFS			@ Load our horizontal scroll register for BG3 on the main screen
+	ldr r8, =REG_BG0HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
 	mov r6, #0						@ Offset the horizontal scroll register by 32 pixels to centre the map
 	strh r6, [r0]					@ Write our offset value to REG_BG1HOFS
 	strh r6, [r1]					@ Write our offset value to REG_BG1HOFS_SUB
@@ -167,34 +169,37 @@ resetScrollRegisters:
 	strh r6, [r3]					@ Write our offset value to REG_BG2HOFS_SUB
 	strh r6, [r4]					@ Write our offset value to REG_BG3HOFS
 	strh r6, [r5]					@ Write our offset value to REG_BG3HOFS_SUB
+	strh r6, [r7]					@ Write our offset value to REG_BG0HOFS
+	strh r6, [r8]					@ Write our offset value to REG_BG0HOFS_SUB
 
 	@ Reset vertical scroll registers
 
-	ldr r0, =REG_BG1VOFS			@ Load our vertical scroll register for BG1 on the main screen
 	mov r1, #0						@ Reset
+	ldr r0, =REG_BG0VOFS			@ Load our vertical scroll register for BG0 on the main screen
+	strh r1, [r0]					@ Load the value into the scroll register
+
+	ldr r0, =REG_BG0VOFS_SUB		@ Load our vertical scroll register for BG0 on the sub screen
+	strh r1, [r0]					@ Load the value into the scroll register
+
+	ldr r0, =REG_BG1VOFS			@ Load our vertical scroll register for BG1 on the main screen
 	strh r1, [r0]					@ Load the value into the scroll register
 
 	ldr r0, =REG_BG1VOFS_SUB		@ Load our vertical scroll register for BG1 on the sub screen
-	mov r1, #0						@ Reset
 	strh r1, [r0]					@ Load the value into the scroll register
 	
 	ldr r0, =REG_BG2VOFS			@ Load our vertical scroll register for BG2 on the main screen
-	mov r1, #0						@ Reset
 	strh r1, [r0]					@ Load the value into the scroll register
 
 	ldr r0, =REG_BG2VOFS_SUB		@ Load our vertical scroll register for BG2 on the sub screen
-	mov r1, #0						@ Reset
 	strh r1, [r0]					@ Load the value into the scroll register
 
 	ldr r0, =REG_BG3VOFS			@ Load our vertical scroll register for BG3 on the main screen
-	mov r1, #0						@ Reset
 	strh r1, [r0]					@ Load the value into the scroll register
 
 	ldr r0, =REG_BG3VOFS_SUB		@ Load our vertical scroll register for BG3 on the sub screen
-	mov r1, #0						@ Reset
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r8, pc}
 	
 	@ ------------------------------------
 	

@@ -466,6 +466,7 @@ updateCredits:
 	ldr r0, =REG_KEYINPUT						@ Read Key Input
 	ldr r1, [r0]
 	tst r1, #BUTTON_A							@ Start button pressed?
+	
 	bleq showTitleScreen
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return

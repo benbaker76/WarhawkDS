@@ -180,6 +180,11 @@ drawSprite:
 		ldr r3,=spriteHFlip
 		ldr r3,[r3,r8, lsl #2]			@ load flip H
 		orr r2, r3, lsl #12
+		@------------------ Not needed at the moment (replicate in other sections)
+		@ldr r3,=spriteVFlip
+		@ldr r3,[r3,r8, lsl #2]			@ load flip H
+		@orr r2, r3, lsl #13
+		@------------------
 		strh r2,[r0]					@ and store back
 			@ Draw Attributes
 		ldr r0,=BUF_ATTRIBUTE2			@ load ref to attribute2

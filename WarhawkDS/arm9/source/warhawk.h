@@ -69,9 +69,11 @@
 #include "../build/SpritesLev15.h"
 #include "../build/SpritesLev16.h"
 #include "../build/Spritesboss1.h"
+#include "../build/Spritesboss2.h"
 #include "../build/ExplodeOriginal.h"
 #include "../build/ExplodeSkull.h"
 #include "../build/ExplodeRing.h"
+#include "../build/BossBullets.h"
 @ View the VRAM layout at http://dev-scene.com/NDS/Tutorials_Day_4#Background_Memory_Layout_and_VRAM_Management
 
 @ BG0 - Text / Score / Energy

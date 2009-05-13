@@ -91,13 +91,13 @@ checkBossInit:
 	
 	@ for demopurposes to init bigboss
 	@---------------------------------
-@	ldr r0,=levelNum
-@	ldr r1,[r0]
-@	cmp r1,#16
-@	bne demoBossNo
-@		bl bigBossInit
-@		ldmfd sp!, {r1-r2, pc}		
-@	demoBossNo:
+	ldr r0,=levelNum
+	ldr r1,[r0]
+	cmp r1,#16
+	bne demoBossNo
+		bl bigBossInit
+		ldmfd sp!, {r1-r2, pc}		
+	demoBossNo:
 	@---------------------------------	
 
 		

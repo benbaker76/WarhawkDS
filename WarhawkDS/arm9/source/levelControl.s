@@ -351,17 +351,17 @@ updateBossDie:
 		
 updateBossDieEndOfLevel:
 
-	ldr r0,=levelNum
-	ldr r1,[r0]
-	cmp r1,#16
-	bne BigBossComethNo
-		
-		@ we are definatley gonna need some kind of transitions!!
-		@ and perhaps big letters saying "WARNING" with a siren sound?
-	
-		bl bigBossInit
-		ldmfd sp!, {r0-r2, pc}		
-
+	@ldr r0,=levelNum
+	@ldr r1,[r0]
+	@cmp r1,#16
+	@bne BigBossComethNo
+	@	
+	@	@ we are definatley gonna need some kind of transitions!!
+	@	@ and perhaps big letters saying "WARNING" with a siren sound?
+	@
+	@	bl bigBossInit
+	@	ldmfd sp!, {r0-r2, pc}		
+@@
 	BigBossComethNo:
 
 	bl showEndOfLevel

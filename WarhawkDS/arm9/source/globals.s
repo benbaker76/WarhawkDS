@@ -103,6 +103,8 @@
 	.global spriteXText
 	.global spriteYText
 	.global spriteInstruct
+	.global spriteHFlip
+	.global spriteVFlip
 	.global vofsSubText
 	.global yposSubText
 	.global blockXText
@@ -504,7 +506,10 @@ spriteBurstDelayCount:
 	.space 512
 spriteSpeedDelay:
 	.space 512
-	
+spriteHFlip:
+	.space 512
+spriteVFlip:
+	.space 512	
 spriteInstruct:
 	.space 32768
 	

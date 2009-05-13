@@ -87,8 +87,8 @@ bigBossInit:
 	bl DC_FlushAll
 	
 	ldr r0,=bossX			@ set initial boss X/Y (20.12 format)
-	mov r3,#32				@ r3=x
-	lsl r3,#12
+	mov r3,#0				@ r3=x
+@	lsl r3,#12
 	str r3,[r0]
 	ldr r0,=bossY
 	mov r4,#384+16			@ r4=y
@@ -107,13 +107,18 @@ bigBossInit:
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
 		ldr r5,=spriteHits+bbOffset
-		mov r6,#160
+		mov r6,#130
 		str r6,[r5, r0, lsl #2]			@ number of hits
 
 		ldr r4,=bigBossSpriteTable1			@ load the image from our table!
 		ldr r6,[r4, r0, lsl #2]
 		ldr r5,=spriteObj+bbOffset
 		str r6,[r5, r0, lsl #2]			@ set the sprite image
+		
+		ldr r4,=bigBossFlipTable
+		ldr r6,[r4, r0, lsl #2]
+		ldr r5,=spriteHFlip+bbOffset
+		str r6,[r5, r0, lsl #2]
 
 		mov r6,#0							@ reset other data that may cock things up
 		ldr r5,=spriteFireType+bbOffset
@@ -759,7 +764,15 @@ bigBossSpriteTable1:				@ sprite images used in order 0-63
 .word 49,50,51,52,53,53,52,51,50,49
 .word 54,54
 .word 55,55
-
+bigBossFlipTable:
+.word 0,0,1,1
+.word 0,1
+.word 0,0,0,0,0,1,1,1,1,1
+.word 0,0,0,0,0,0,1,1,1,1,1,1
+.word 0,0,0,0,0,0,1,1,1,1,1,1
+.word 0,0,0,0,0,1,1,1,1,1
+.word 0,1
+.word 0,1
 bigBossSpritesX1:					@ x offsets for sprites 0-63
 .word 128,160,192,224,160,192,0,32,64,96
 .word 160,192,256,288,320,352,0,32,64,96

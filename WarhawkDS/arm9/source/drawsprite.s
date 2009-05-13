@@ -109,7 +109,7 @@ drawSprite:
 				str r1,[r0]
 				add r0,#512
 				add r2,#1
-				cmp r2,#23
+				cmp r2,#25
 			bne spriteClearLoop
 		
 			mov r1, #ATTR0_DISABLED			@ this should destroy the sprite
@@ -177,6 +177,9 @@ drawSprite:
 		ldr r2, =(ATTR1_SIZE_32)		@ set to 32x32 (we may need to change this later)
 		and r1,r3						@ and sprite y with 0x1ff (keep in region)
 		orr r2,r1						@ orr result with the attribute
+		ldr r3,=spriteHFlip
+		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		orr r2, r3, lsl #12
 		strh r2,[r0]					@ and store back
 			@ Draw Attributes
 		ldr r0,=BUF_ATTRIBUTE2			@ load ref to attribute2
@@ -219,6 +222,9 @@ drawSprite:
 		ldr r2, =(ATTR1_SIZE_32)
 		and r1,r3
 		orr r2,r1
+		ldr r3,=spriteHFlip
+		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		orr r2, r3, lsl #12
 		strh r2,[r0]
 			@ Draw Attributes
 		ldr r0,=BUF_ATTRIBUTE2_SUB
@@ -269,6 +275,9 @@ drawSprite:
 		ldr r2, =(ATTR1_SIZE_32)
 		and r1,r3
 		orr r2,r1
+		ldr r3,=spriteHFlip
+		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		orr r2, r3, lsl #12
 		strh r2,[r0]
 			@ Draw Attributes
 		ldr r0,=BUF_ATTRIBUTE2_SUB
@@ -318,6 +327,9 @@ drawSprite:
 		ldr r2, =(ATTR1_SIZE_32)	@ Need a way to modify! 16384,32768,49152 = 16,32,64
 		and r1,r3					@ kick out extranious on the Coord
 		orr r2,r1					@ Stick the Coord and Data together
+		ldr r3,=spriteHFlip
+		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		orr r2, r3, lsl #12
 		strh r2,[r0]				@ and store them!
 			@ Draw Attributes
 		ldr r0,=BUF_ATTRIBUTE2		@ Find out Buffer Attribute

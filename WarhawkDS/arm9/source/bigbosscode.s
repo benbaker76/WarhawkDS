@@ -573,6 +573,14 @@ bigBossAllDone:
 	@ the boss if finished with!!!
 	@ all we need to do here is go to the completion code!
 
+		ldr r0, =hofsSF
+		mov r1, #32
+		str r1, [r0]
+
+		ldr r0, =hofsSB
+		mov r1, #32
+		str r1, [r0]
+
 		bl resetScrollRegisters
 		bl fxStarfieldOff
 		bl showEndOfGame

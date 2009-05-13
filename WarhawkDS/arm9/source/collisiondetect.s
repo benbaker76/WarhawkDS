@@ -754,7 +754,6 @@ alienCollideCheck:
 				cmp r8,#10					@ have we collided with a powerup?
 				bne notPowerup
 					bl powerupCollect		@ if so, collect it!
-					@bl powerupCollectSound	@ PLAY a nice sound for COLLECTION
 					b acNoDestroy
 				notPowerup:
 				cmp r8,#9					@ is it a dropship?
@@ -787,9 +786,7 @@ alienCollideCheck:
 				ldr r7,[r1, r6]
 				cmp r7,#128
 				beq missForBoss
-				mov r6,#SPRITE_ACTIVE_OFFS		@ skip if big boss
-				ldr r7,[r1,r6]
-				cmp r7,#256
+				cmp r8,#256						@ skip if big boss
 				bge missForBoss
 				
 					ldr r6,=SPRITE_HIT_OFFS			@ get alien hit points

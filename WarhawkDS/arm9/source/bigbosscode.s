@@ -94,17 +94,6 @@ bigBossInit:
 	
 	bl bigBossInitAllSpriteData					@ set all sprite data (draw will handle possition)
 	bl bigBossDraw
-	
-	@ set the dummy shoot area for n
-
-	@ from here we will have to set the shots of the boss sections
-	@ or, have our own code to do it!
-	@ the existing code should work if we set any sprite to firing and set the burst,speed,type etc... the code should just handle it!
-	
-	@ now we need to copy the new sprites across (spritesboss1 for now)
-	@ this replaces animated alien and hunters, metoers, etc!
-	@ so sprites for the big boss are 29-63 - We could get a few more if needed from repacing the base explosions giving another 9 sprites = 44??
-	@ this may be worth doing to make it even more varied and SPECIAL - up to you mate??
 
 	bl fxStarfieldDownOn						@ turn on the standard starfield
 	
@@ -145,7 +134,7 @@ bigBossInitAllSpriteData:
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
 		ldr r5,=spriteHits+bbOffset
-		mov r6,#130
+		mov r6,#146
 		str r6,[r5, r0, lsl #2]			@ number of hits
 
 		ldr r6,[r8, r0, lsl #2]

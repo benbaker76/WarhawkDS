@@ -220,7 +220,7 @@ fxStarfieldOff:
 	str r1, [r0]
 
 	bl initVideoMain
-	
+
 	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
@@ -260,6 +260,15 @@ fxStarfieldMultiVBlank:
 	cmp r1,#512
 	movpl r1,#0
 	str r1,[r0]
+	
+	
+	@mov r10,r1					@ Read value
+	@mov r8,#2						@ y pos
+	@mov r9,#3						@ Number of digits
+	@mov r11, #9						@ x pos
+	@bl drawDigits					@ Draw	
+	
+	
 	
 	ldmfd sp!, {r0-r1, pc}
 	

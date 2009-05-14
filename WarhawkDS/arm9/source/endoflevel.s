@@ -533,8 +533,8 @@ calcEnergyRemainingNext:
 	
 	@ FADE DOES NOT WORK WHEN STARFIELD IS ENABLED!!! WHY???
 	
-	@ldr r1, =showEndOfLevelFadeOut				@ Callback function address
-	ldr r1, =showLevelNext
+	ldr r1, =showEndOfLevelFadeOut				@ Callback function address
+	@ldr r1, =showLevelNext
 	
 	bl startTimer
 	
@@ -546,17 +546,17 @@ calcEnergyRemainingDone:
 	
 showEndOfLevelFadeOut:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r8, lr}
 	
 	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =showLevelNext
 	str r1, [r0]
-	
+@bl fxStarfieldOff	
 	bl fxFadeOut
-
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+bl clearBG0
+	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	

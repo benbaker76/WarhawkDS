@@ -91,7 +91,7 @@ timerTimer2:
 	cmp r1, r2
 	bleq stopTimer
 	
-	push {lr}
+@	push {lr}
 
 	ldr lr, =timerReturn
 	ldr r0, =callbackAddress
@@ -100,7 +100,7 @@ timerTimer2:
 	
 timerReturn:
 	
-	pop {lr}
+@	pop {lr}
 	
 	ldr r0, =timerElapsed
 	ldr r1, [r0]

@@ -90,17 +90,14 @@ timerTimer2:
 	ldr r2, [r2]
 	cmp r1, r2
 	bleq stopTimer
-	
-@	push {lr}
+	blne timerTimer2Return
 
-	ldr lr, =timerReturn
+	ldr lr, =timerTimer2Return
 	ldr r0, =callbackAddress
 	ldr r0, [r0]
-	bxeq r0
+	bx r0
 	
-timerReturn:
-	
-@	pop {lr}
+timerTimer2Return:
 	
 	ldr r0, =timerElapsed
 	ldr r1, [r0]

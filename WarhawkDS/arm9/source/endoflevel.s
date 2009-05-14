@@ -282,7 +282,7 @@ showEndOfLevel:
 	
 drawEndOfLevelValues:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r11, lr}
 
 	ldr r10, =levelNum							@ Pointer to data
 	ldr r10, [r10]								@ Read value
@@ -357,13 +357,13 @@ drawEndOfLevelValues:
 	mov r11, #19								@ x pos
 	bl drawDigits								@ Draw
 
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r11, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 calcBasesDestroyed:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r2, =basesShot
 	ldr r3, [r2]
@@ -397,13 +397,13 @@ calcBasesDestroyedDone:
 
 	bl drawEndOfLevelValues
 	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 calcTotalBaseDestruct:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r2, =baseCount
 	ldr r3, [r2]
@@ -446,13 +446,13 @@ calcTotalBaseDestructDone:
 
 	bl drawEndOfLevelValues
 	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 calcLevelCompletionBonus:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r2, =levelCount
 	ldr r3, [r2]
@@ -495,13 +495,13 @@ calcLevelCompletionBonusDone:
 
 	bl drawEndOfLevelValues
 	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 calcEnergyRemaining:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r2, =energy
 	ldr r3, [r2]
@@ -530,45 +530,41 @@ calcEnergyRemaining:
 calcEnergyRemainingNext:
 
 	ldr r0, =4000								@ 2 seconds
-	
-	@ FADE DOES NOT WORK WHEN STARFIELD IS ENABLED!!! WHY???
-	
 	ldr r1, =showEndOfLevelFadeOut				@ Callback function address
-	@ldr r1, =showLevelNext
 	
 	bl startTimer
 	
 calcEnergyRemainingDone:
 	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showEndOfLevelFadeOut:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =showLevelNext
 	str r1, [r0]
-@bl fxStarfieldOff	
+	
 	bl fxFadeOut
-bl clearBG0
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateEndOfLevel:
 
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0, lr}
 	
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
 	@bl updateLogoSprites
 	
-	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	ldmfd sp!, {r0, pc} 					@ restore registers and return
 	
 	@---------------------------------
 

@@ -37,7 +37,7 @@
 
 fxCrossWipeOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -82,13 +82,13 @@ fxCrossWipeOn:
 	orr r1, #FX_CROSSWIPE
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ---------------------------------------
 	
 fxCrossWipeOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -105,13 +105,13 @@ fxCrossWipeOff:
 	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 
 fxCrossWipeVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =vtimer								@ Speed of wipe
 	ldr r1, [r0]
@@ -124,13 +124,13 @@ fxCrossWipeVBlank:
 	blgt fxCrossWipeOff
 	str r3, [r2]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 
 	@ ---------------------------------------
 	
 fxCrossWipeHBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =REG_VCOUNT
 	ldrb r1, [r0]
@@ -645,7 +645,7 @@ fxCrossDefault:
 
 fxCrossWipeDone:
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 
 	@ ---------------------------------------
 

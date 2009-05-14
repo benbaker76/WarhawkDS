@@ -221,9 +221,9 @@ checkGameOver:
 
 activatePlayerDeath:
 
-	ldr r0,=playerDeath
+	ldr r0,=deathMode
 	ldr r1,[r0]
-	cmp r1,#0
+	cmp r1,#DEATHMODE_STILL_ACTIVE
 	moveq r1,#1
 	str r1,[r0]
 	

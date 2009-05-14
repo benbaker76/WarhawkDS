@@ -39,7 +39,7 @@
 initLevel:
 
 	stmfd sp!, {r0-r6, lr}
-
+	
 	bl fxFadeBlackInit
 	bl fxFadeMax
 	bl clearSpriteData
@@ -59,9 +59,9 @@ initLevel:
 	str r1,[r0]				@ reset the base counter (count later)
 	ldr r0,=basesShot
 	str r1,[r0]
-	ldr r0,=playerDeath
+	ldr r0,=deathMode
 	str r1,[r0]
-	ldr r0,=playerDeathDelay
+	ldr r0,=deathModeDelay
 	str r1,[r0]
 	ldr r0,=animEnergyActive
 	str r1,[r0]				@ turn off the energy bar flash

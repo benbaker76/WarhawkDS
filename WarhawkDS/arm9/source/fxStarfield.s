@@ -52,7 +52,7 @@
 
 fxStarfieldOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -87,13 +87,13 @@ fxStarfieldOnLoop:
 	mov r1,#256
 	str r1,[r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 	@ ---------------------------------------
 
 fxStarburstOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -125,13 +125,13 @@ fxStarburstOnLoop:
 	bl randomStarburst									@ generate em!
 	bl moveStarburst									@ draw them
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 	@ ---------------------------------------
 
 fxStarfieldDownOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -167,14 +167,14 @@ fxStarfieldDownOnLoop:
 	mov r1,#128
 	str r1,[r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	
 	@ ---------------------------------------
 
 fxStarfieldMultiOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -206,7 +206,7 @@ fxStarfieldMultiOnLoop:
 	bl randomStarsMulti									@ generate em!
 	bl moveStarsMulti									@ draw them
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 	@ ---------------------------------------
 
@@ -220,7 +220,7 @@ fxStarfieldOff:
 	str r1, [r0]
 
 	bl initVideoMain
-
+	
 	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
@@ -260,15 +260,6 @@ fxStarfieldMultiVBlank:
 	cmp r1,#512
 	movpl r1,#0
 	str r1,[r0]
-	
-	
-	@mov r10,r1					@ Read value
-	@mov r8,#2						@ y pos
-	@mov r9,#3						@ Number of digits
-	@mov r11, #9						@ x pos
-	@bl drawDigits					@ Draw	
-	
-	
 	
 	ldmfd sp!, {r0-r1, pc}
 	

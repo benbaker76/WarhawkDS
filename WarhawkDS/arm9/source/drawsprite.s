@@ -47,9 +47,9 @@
 drawSprite:
 	stmfd sp!, {lr}
 	
-	ldr r0,=playerDeath
+	ldr r0,=deathMode
 	ldr r0,[r0]
-	cmp r0,#5
+	cmp r0,#DEATHMODE_ALL_DONE
 	bne drawSpriteActive
 	ldmfd sp!, {pc}
 	drawSpriteActive:
@@ -440,7 +440,7 @@ drawSprite:
 		bne movePowerup2							@ --------------- Drop ship
 			ldr r0,=bigBossMode
 			ldr r0,[r0]
-			cmp r0,#0
+			cmp r0,#BIGBOSSMODE_NONE
 			beq movePowerup3
 			
 				ldr r0,=spriteActive

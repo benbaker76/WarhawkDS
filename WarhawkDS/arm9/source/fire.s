@@ -38,9 +38,9 @@
 fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 	stmfd sp!, {r0-r6, lr}
 	
-	ldr r1,=playerDeath		@ if player is dying - firing is not allowed
+	ldr r1,=deathMode		@ if player is dying - firing is not allowed
 	ldr r1,[r1]
-	cmp r1,#0
+	cmp r1,#DEATHMODE_STILL_ACTIVE
 	beq fireAllowed
 		ldmfd sp!, {r0-r6, pc}
 	fireAllowed:

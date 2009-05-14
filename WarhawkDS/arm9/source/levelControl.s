@@ -67,7 +67,7 @@ checkLevelControl:
 
 showBossJump:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =vofsMain
 	ldr r1, =256+32
@@ -96,7 +96,7 @@ showBossJump:
 	bl drawMapScreenMain
 	bl drawMapScreenSub
 	
-	ldmfd sp!, {r0-r2, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ===========================================================
 	@ LEVEL START
@@ -104,7 +104,7 @@ showBossJump:
 	
 showLevelStart:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0, lr}
 	
 	bl fxOff
 	bl fxFadeBlackInit
@@ -148,13 +148,13 @@ showLevelStart:
 	
 	bl showGetReady
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0, pc}
 
 	@ ------------------------------------
 	
 showLevelBack:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0,=levelNum
 	ldr r1,[r0]
@@ -165,7 +165,7 @@ showLevelBack:
 
 	bl initLevel
 	
-	ldmfd sp!, {r0-r2, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ------------------------------------
 
@@ -180,6 +180,7 @@ showLevelNext:
 	moveq r1, #1
 	beq showLevelNextEndOfGame
 	str r1,[r0]
+	
 	bl initLevel
 
 	b showLevelNextDone
@@ -209,6 +210,8 @@ showLevelNextDone:
 	@ ------------------------------------
 	
 showGetReady:
+
+	stmfd sp!, {r0-r11, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_GETREADY
@@ -240,13 +243,13 @@ showGetReady:
 	
 	bl startTimer
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r11, pc}
 	
 	@ ------------------------------------
 	
 updateGetReady:
 	
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	bl scrollStars								@ update scroll stars
 	
@@ -263,7 +266,7 @@ updateGetReady:
 	
 updareGetReadyDone:
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ------------------------------------
 	
@@ -285,7 +288,7 @@ timerDoneGetReady:
 
 showBossDie:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_BOSSDIE
@@ -316,13 +319,13 @@ showBossDie:
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
 	bl playBossExplode2Sound
 	
-	ldmfd sp!, {r0-r2, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ------------------------------------
 
 updateBossDie:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl moveShip									@ check and move your ship
 	bl alienFireMove							@ check and move alien bullets
@@ -341,6 +344,8 @@ updateBossDie:
 	ldr r1,[r0]
 	cmp r1,#LEVELENDMODE_BOSSEXPLODE			@ if levelEnd=3, just wait for explosions to finish	
 	bne updateBossDieDone
+	cmp r1, #LEVELENDMODE_FADE_OUT
+	beq updateBossDieDone
 	
 	ldr r0,=explodeSpriteBossCount				@ use this as a little delay to let explosions settle
 	ldr r1,[r0]
@@ -352,6 +357,10 @@ updateBossDie:
 	b updateBossDieDone
 		
 updateBossDieEndOfLevel:
+
+	ldr r0, =levelEnd
+	ldr r1, =LEVELENDMODE_FADE_OUT
+	str r1, [r0]
 
 	ldr r0,=levelNum
 	ldr r1,[r0]
@@ -365,17 +374,29 @@ updateBossDieEndOfLevel:
 		mov r1,#0							
 		str r1,[r0]
 	
-		bl bigBossInit
+		bl fxFadeBlackInit
 		
-		ldmfd sp!, {r0-r2, pc}		
+		ldr r0, =fxFadeCallbackAddress
+		ldr r1, =bigBossInit
+		str r1, [r0]
+		
+		bl fxFadeOut
+		
+		b updateBossDieDone
 
 	BigBossComethNo:
-
-	bl showEndOfLevel
 	
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =showEndOfLevel
+	str r1, [r0]
+	
+	bl fxFadeOut
+		
 updateBossDieDone:
 	
-	ldmfd sp!, {r0-r2, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ------------------------------------
 	

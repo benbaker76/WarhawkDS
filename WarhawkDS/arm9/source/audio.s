@@ -51,6 +51,8 @@
 	.global playIdentShipExplode				@ for when a multi-sprite ship is destroyed
 	.global playKeyboardClickSound				@ for menu navigation/options
 	.global playBossExplode2Sound				@ used = Boss Explosion (not happy with it :( )
+	.global playEvilLaughSound
+
 stopSound:
 
 	stmfd sp!, {r0-r2, lr}
@@ -460,7 +462,6 @@ playKeyboardClickSound:
 	str r1, [r0]										@ Write the value
 
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-	
 
 	@ ---------------------------------------------
 	
@@ -473,17 +474,16 @@ playPowerupCollect:
 	bl DC_FlushRange
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
-	ldr r1, =powerupcollect_raw_end							@ Get the sample end
-	ldr r2, =powerupcollect_raw								@ Get the same start
+	ldr r1, =powerupcollect_raw_end						@ Get the sample end
+	ldr r2, =powerupcollect_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
-	ldr r1, =powerupcollect_raw								@ Get the sample address
+	ldr r1, =powerupcollect_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-	
 
 	@ ---------------------------------------------
 	
@@ -496,13 +496,13 @@ playpowerupLostSound:
 	bl DC_FlushRange
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
-	ldr r1, =poweruplost_raw_end							@ Get the sample end
-	ldr r2, =poweruplost_raw								@ Get the same start
+	ldr r1, =poweruplost_raw_end						@ Get the sample end
+	ldr r2, =poweruplost_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
-	ldr r1, =poweruplost_raw								@ Get the sample address
+	ldr r1, =poweruplost_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
@@ -518,8 +518,8 @@ playIdentShipExplode:
 	bl DC_FlushRange
 
 	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
-	ldr r1, =bigshipexplode_raw_end							@ Get the sample end
-	ldr r2, =bigshipexplode_raw								@ Get the same start
+	ldr r1, =bigshipexplode_raw_end						@ Get the sample end
+	ldr r2, =bigshipexplode_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
@@ -528,7 +528,30 @@ playIdentShipExplode:
 	str r1, [r0]										@ Write the value
 
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-		
+	
+	@ ---------------------------------------------
+	
+playEvilLaughSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_DATA(1)
+	ldr r1, =0x10
+	bl DC_FlushRange
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =evil_laugh_raw_end							@ Get the sample end
+	ldr r2, =evil_laugh_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =evil_laugh_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
 	.pool
 	.end

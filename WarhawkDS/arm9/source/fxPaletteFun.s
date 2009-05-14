@@ -39,7 +39,7 @@
 	
 fxPaletteFadeToRedOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -48,7 +48,7 @@ fxPaletteFadeToRedOff:
 	
 	bl fxPaletteRestore
 		
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
@@ -57,7 +57,7 @@ fxPaletteFadeToRedOff:
 	
 fxPaletteFadeToRed:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -78,7 +78,7 @@ fxPaletteFadeToRed:
 	mov r1, #0
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ---------------------------------------
 	
@@ -140,7 +140,7 @@ fxPaletteFadeToRedLoop:
 	
 fxPaletteBleach:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	@ well, it isnt, but i like the look???
 	
@@ -171,13 +171,13 @@ fxPaletteBleachLoop:
 	
 	bpl fxPaletteBleachLoop
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ---------------------------------------
 	
 fxPaletteInvert:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	@ well, it isnt, but i like the look???
 	
@@ -207,13 +207,13 @@ fxPaletteInvertLoop:
 	subs r2, #1
 	bpl fxPaletteInvertLoop
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 	
 fxPaletteRestore:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	bl DC_FlushAll
 
@@ -225,7 +225,7 @@ fxPaletteRestore:
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ---------------------------------------
 	

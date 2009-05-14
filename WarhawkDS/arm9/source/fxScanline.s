@@ -37,7 +37,7 @@
 
 fxScanlineOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -82,13 +82,13 @@ fxScanlineOn:
 	orr r1, #FX_SCANLINE
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ---------------------------------------
 	
 fxScanlineOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -100,13 +100,13 @@ fxScanlineOff:
 	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 
 fxScanlineVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =scanx
 	ldr r1, [r0]
@@ -119,13 +119,13 @@ fxScanlineVBlank:
 	blgt fxScanlineOff
 	str r2, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ---------------------------------------
 	
 fxScanlineHBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =REG_VCOUNT
 	ldrh r1, [r0]
@@ -168,7 +168,7 @@ fxScanlineShow:
 	
 fxScanlineDone:
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 
 	@ ---------------------------------------
 

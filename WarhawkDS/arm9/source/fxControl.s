@@ -36,7 +36,7 @@
 
 fxOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r0, [r0]
@@ -104,25 +104,31 @@ fxOff:
 	
 fxOffDone:
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
 fxVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0, lr}
 	
 	ldr r0, =fxMode
 	ldr r0, [r0]
 	
 	cmp r0, #0
 	beq fxVBlankDone
+	tst r0, #FX_STARFIELD
+	blne fxStarfieldVBlank
+	tst r0, #FX_STARFIELD_DOWN
+	blne fxStarfieldVBlank
+	tst r0, #FX_STARFIELD_MULTI
+	blne fxStarfieldMultiVBlank
+	tst r0, #FX_FIREWORKS
+	blne fxFireworksVBlank
+	tst r0, #FX_STARBURST
+	blne fxStarburstVBlank
 	tst r0, #FX_SINE_WOBBLE
 	blne fxSineWobbleVBlank
-	tst r0, #FX_FADE_IN
-	blne fxFadeInVBlank
-	tst r0, #FX_FADE_OUT
-	blne fxFadeOutVBlank
 	tst r0, #FX_MOSAIC_IN
 	blne fxMosaicInVBlank
 	tst r0, #FX_MOSAIC_OUT
@@ -153,27 +159,22 @@ fxVBlank:
 	blne fxTextScrollerVBlank
 	tst r0, #FX_VERTTEXT_SCROLLER
 	blne fxVertTextScrollerVBlank
-	tst r0, #FX_STARFIELD
-	blne fxStarfieldVBlank
 	tst r0, #FX_PALETTE_FADE_TO_RED
 	blne fxPaletteFadeToRedVBlank
-	tst r0, #FX_STARFIELD_DOWN
-	blne fxStarfieldVBlank
-	tst r0, #FX_STARFIELD_MULTI
-	blne fxStarfieldMultiVBlank
-	tst r0, #FX_FIREWORKS
-	blne fxFireworksVBlank
-	tst r0, #FX_STARBURST
-	blne fxStarburstVBlank
+	tst r0, #FX_FADE_IN
+	blne fxFadeInVBlank
+	tst r0, #FX_FADE_OUT
+	blne fxFadeOutVBlank
+	
 fxVBlankDone:
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0, pc}
 	
 	@ ------------------------------------
 	
 fxHBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0, lr}
 	
 	ldr r0, =fxMode
 	ldr r0, [r0]
@@ -189,7 +190,7 @@ fxHBlank:
 	
 fxHBlankDone:
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0, pc}
 	
 	@ ------------------------------------
 

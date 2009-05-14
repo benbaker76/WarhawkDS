@@ -408,11 +408,11 @@ updateTitleScreen:
 
 	mov r1, #BUTTON_START
 	bl keyWait
-	cmp r1,#1								@ 1 is returned if key pressed and released
+	cmp r1,#1									@ 1 is returned if key pressed and released
 	beq updateTitleScreenDone
 
-	bl stopTimer						@ Stop the timer
-	bl showGameContinueMenu				@ Start the game
+	bl stopTimer								@ Stop the timer
+	bl showGameContinueMenu						@ Start the game
 	
 updateTitleScreenDone:
 	

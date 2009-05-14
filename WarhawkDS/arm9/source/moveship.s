@@ -35,9 +35,9 @@
 
 moveShip:
 	stmfd sp!, {r0-r8, lr}
-	ldr r5,=playerDeath
+	ldr r5,=deathMode
 	ldr r5,[r5]					@ if in final death throws, player cannot move
-	cmp r5,#3
+	cmp r5,#DEATHMODE_MAIN_EXPLODE
 	bpl dircheck4
 	
 	ldr r5,=spriteObj			@ simple bit of animation code for the ship

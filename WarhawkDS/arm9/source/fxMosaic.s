@@ -37,7 +37,7 @@
 
 fxMosaicInit:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =REG_BG0CNT					@ BG 0 Register
 	ldr r1, [r0]
@@ -83,13 +83,13 @@ fxMosaicInit:
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxMosaicOff:
 	
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -136,13 +136,13 @@ fxMosaicOff:
 	bic r1, #BG_MOSAIC_ON				@ Turn on mosaic
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxMosaicIn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	bl fxMosaicInit
 	
@@ -151,13 +151,13 @@ fxMosaicIn:
 	orr r1, #FX_MOSAIC_IN
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxMosaicOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	bl fxMosaicInit
 	
@@ -166,11 +166,13 @@ fxMosaicOut:
 	orr r1, #FX_MOSAIC_OUT
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxMosaicInVBlank:
+
+	stmfd sp!, {r0-r4, lr}
 
 	ldr r0, =mosaicValue				@ Get our mosaicValue
 	ldr r1, [r0]
@@ -194,11 +196,13 @@ fxMosaicInVBlank:
 	bleq fxMosaicOff					@ Yes turn off effect
 	str r1, [r0]						@ Write pos back
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 	
 fxMosaicOutVBlank:
+
+	stmfd sp!, {r0-r4, lr}
 
 	ldr r0, =mosaicValue				@ Get our mosaicValue
 	ldr r1, [r0]
@@ -221,7 +225,7 @@ fxMosaicOutVBlank:
 	bleq fxMosaicOff					@ Yes turn off effect
 	str r1, [r0]						@ Write pos back
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 

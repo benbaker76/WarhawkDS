@@ -50,7 +50,7 @@
 
 fxCopperTextOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -83,13 +83,13 @@ fxCopperTextOn:
 	mov r1, #0
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 	@ ---------------------------------------
 	
 fxCopperTextOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -119,26 +119,26 @@ fxCopperTextOff:
 	
 	bl dmaTransfer
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 
 	@ ---------------------------------------
 	
 fxColorCycleTextOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
 	orr r1, #FX_COLOR_CYCLE_TEXT
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
 fxColorCycleTextOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -152,13 +152,13 @@ fxColorCycleTextOff:
 	strh r2, [r0, r3]
 	strh r2, [r1, r3]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 
 	@ ---------------------------------------
 	
 fxCopperTextVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	bl DC_FlushAll
 	
@@ -256,7 +256,7 @@ fxCopperTextVBlankContinueSub:
 	
 	bl dmaTransfer
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 
 	@ ---------------------------------------
 	

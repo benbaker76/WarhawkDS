@@ -36,7 +36,7 @@
 	.text
 	
 bigBossInit:
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r0-r4, lr}
 	@ need to init sprites starting at sprite 17 and up to 81 max
 	@ use bossX and bossY for the coords (top left)
 	@ use sprite image 30 throughout for now!
@@ -72,6 +72,9 @@ bigBossInit:
 	ldr r0,=gameMode
 	str r1,[r0]
 
+	bl fxOff
+	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl resetScrollRegisters						@ Reset the scroll registers
 	bl clearBG0									@ Clear bgs
 	bl clearBG1
@@ -89,21 +92,55 @@ bigBossInit:
 	mov r4,#128
 	lsl r4,#12
 	str r4,[r0]
+	
+	ldr r0, =getReadyText			@ Load out text pointer
+	ldr r1, =11						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =0						@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =getReadyText			@ Load out text pointer
+	ldr r1, =11						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =1						@ Draw on main screen
+	bl drawText
 
+	bl fxCopperTextOn							@ Turn on copper text fx
+	bl fxStarfieldDownOn						@ Turn on starfield
+
+	ldr r0, =5000								@ 5 seconds
+	ldr r1, =bigBossGo							@ Callback function address
+
+	bl startTimer
+
+	bl fxFadeIn
+
+	ldmfd sp!, {r0-r4, pc}
+
+	@------------------------------------
+	
+bigBossGo:
+
+	stmfd sp!, {r0-r4, lr}
+	
+	bl clearBG0
+	
+	bl fxCopperTextOff
+	bl playEvilLaughSound
+	
 	@ ok, init spritedata
 	
 	bl bigBossInitAllSpriteData					@ set all sprite data (draw will handle possition)
 	bl bigBossDraw
 
-	bl fxStarfieldDownOn						@ turn on the standard starfield
-	
 	ldr r0,=bigBossMode
-	mov r1,#1
+	mov r1,#BIGBOSSMODE_SCROLL_ON
 	str r1,[r0]									@ set bossmode to 1 = bring on from top
 												@ 2= move phase, 3=explode init
-	ldmfd sp!, {r0-r10, pc}
 
-@------------------------------------------------------
+	ldmfd sp!, {r0-r4, pc}
+
+	@------------------------------------
 
 bigBossInitAllSpriteData:
 	stmfd sp!, {r0-r10, lr}
@@ -263,7 +300,7 @@ updateBigBoss:
 
 	ldr r1,=bigBossMode
 	ldr r0,[r1]
-	cmp r0,#3
+	cmp r0,#BIGBOSSMODE_EXPLODE_INIT
 	bge bigBossNoScroll
 		bl scrollSBMain
 		bl scrollSBSub
@@ -328,7 +365,7 @@ bigBossDraw:
 	
 	ldr r7,=bigBossMode
 	ldr r7,[r7]
-	cmp r7,#3
+	cmp r7,#BIGBOSSMODE_EXPLODE_INIT
 	bne bigBossDrawerLoop
 	
 		bl getRandom				@ add a "Shake" on X for boss death
@@ -374,7 +411,7 @@ bigBossInitExplode:
 	str r1,[r0]
 
 	ldr r0,=bigBossMode
-	mov r1,#3								@ set bossmode to DEAD and scroll of screen quickly
+	mov r1,#BIGBOSSMODE_EXPLODE_INIT						@ set bossmode to DEAD and scroll of screen quickly
 	str r1,[r0]
 
 	ldmfd sp!, {r0-r10, pc}
@@ -391,7 +428,7 @@ bigBossMovement:
 
 	ldr r0,=bigBossMode
 	ldr r0,[r0]
-	cmp r0,#1																						@ PHASE=SCROLL ON
+	cmp r0,#BIGBOSSMODE_SCROLL_ON																		@ PHASE=SCROLL ON
 	bne bigBossMovementPhase2
 	
 	@ ok, we just need to bring it on and change bigBossMode to 2 when there!
@@ -421,7 +458,7 @@ bigBossMovement:
 	
 		bl playBossExplodeSound				@ play an explosion
 		ldr r0,=bigBossMode
-		mov r1,#2
+		mov r1,#BIGBOSSMODE_MOVE
 		str r1,[r0]									@ set to "ready to move"
 	
 	ldmfd sp!, {r0-r10, pc}
@@ -486,7 +523,7 @@ bigBossMovementPhase3:
 		ble bigbossDeathNo
 			
 			ldr r0,=bigBossMode
-			mov r1,#4
+			mov r1,#BIGBOSSMODE_NO_DEATH
 			str r1,[r0]
 
 		bigbossDeathNo:
@@ -512,7 +549,7 @@ bigBossMovementPhase4:
 		
 		@ play bigboss explode main explosion sound
 		ldr r0,=bigBossMode
-		mov r1,#5
+		mov r1,#BIGBOSSMODE_MAIN_EXPLODE
 		str r1,[r0]
 		
 	ldmfd sp!, {r0-r10, pc}	
@@ -591,7 +628,7 @@ sub r1,#2
 str r1,[r0]
 
 ldr r0,=bigBossMode
-mov r2,#6
+mov r2,#BIGBOSSMODE_ALL_DONE
 cmp r1,#384
 strle r2,[r0]
 ldrle r0,=bigBossExpHigh
@@ -601,7 +638,7 @@ strle r2,[r0]
 	ldmfd sp!, {r0-r10, pc}
 		
 bigBossMovementPhase6:
-	cmp r0,#6																			@ PHASE=WAIT A MO
+	cmp r0,#BIGBOSSMODE_ALL_DONE															@ PHASE=WAIT A MO
 	bne bigBossAllDone
 	
 	ldr r0,=bigBossExpHigh
@@ -611,7 +648,7 @@ bigBossMovementPhase6:
 	bpl bigBossToWait
 
 		ldr r0,=bigBossMode
-		mov r1,#7
+		mov r1,#BIGBOSSMODE_NO_MORE
 		str r1,[r0]
 	
 	bigBossToWait:
@@ -621,25 +658,25 @@ bigBossMovementPhase6:
 	ldmfd sp!, {r0-r10, pc}
 	
 bigBossAllDone:
-	cmp r0,#7																			@ PHASE=GO TO COMPLETION
+	cmp r0,#BIGBOSSMODE_NO_MORE															@ PHASE=GO TO COMPLETION
 	bne bigBossNoMorePhase
 
 	@ the boss if finished with!!!
 	@ all we need to do here is go to the completion code!
+	
+	ldr r0,=bigBossMode
+	ldr r1, =BIGBOSSMODE_FADE_OUT
+	str r1, [r0]
 
-		ldr r0, =hofsSF
-		mov r1, #32
-		str r1, [r0]
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =showLevelNext
+	str r1, [r0]
+	
+	bl fxFadeOut
 
-		ldr r0, =hofsSB
-		mov r1, #32
-		str r1, [r0]
-
-		bl resetScrollRegisters
-		bl fxStarfieldOff
-		bl showLevelNext				@ Must call showLevelNext instead so it will save mental mode options
-
-	bigBossNoMorePhase:
+bigBossNoMorePhase:
 
 	ldmfd sp!, {r0-r10, pc}
 

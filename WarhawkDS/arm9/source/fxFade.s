@@ -286,8 +286,9 @@ fxFadeInVBlank:
 	strh r6, [r2]						@ Write to SUB_BLEND_AB
 	
 	add r1, #1							@ Add 1 to fadeValue
+	and r1, #63
 	str r1, [r0]						@ Write fadeValue back
-	cmp r1, #65							@ Is our fadeValue at 65?
+	cmp r1, #0							@ Is our fadeValue at 0?
 	bleq fxFadeOff						@ Yes turn off effect
 	bleq fxFadeExecuteCallback			@ Execute callback
 	
@@ -323,15 +324,11 @@ fxFadeOutVBlank:
 	strh r6, [r2]						@ Write to SUB_BLEND_AB
 	
 	add r1, #1							@ Add 1 to fadeValue
+	and r1, #63
 	str r1, [r0]						@ Write fadeValue back
-@ CHEATING HERE!!!
-	cmp r1,#64
-	bleq fxStarfieldOff
-
-	cmp r1, #65							@ Is our fadeValue at 65?
-
+	cmp r1, #0							@ Is our fadeValue at 0?
 	bleq fxFadeOff						@ Yes turn off effect
-	beq fxFadeExecuteCallback			@ Execute callback
+	bleq fxFadeExecuteCallback			@ Execute callback
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -339,22 +336,23 @@ fxFadeOutVBlank:
 	
 fxFadeExecuteCallback:
 
-@	stmfd sp!, {r0, lr}
-	
-@	push {lr}
+	stmfd sp!, {r0, lr}
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r0, [r0]
 	cmp r0, #0
+	beq fxFadeExecuteCallbackReturn
 
-	ldrne lr, =fxFadeExecuteCallbackReturn
-	bxne r0
+	ldr lr, =fxFadeExecuteCallbackReturn
+	bx r0
 	
 fxFadeExecuteCallbackReturn:
 
-@	pop {lr}
-	
-	ldmfd sp!, {r0-r6, pc}
+	ldr r0, =fxFadeCallbackAddress
+	mov r1, #0
+	str r1, [r0]
+
+	ldmfd sp!, {r0, pc}
 	
 	@ ---------------------------------------
 

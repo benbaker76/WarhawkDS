@@ -77,7 +77,7 @@ showHiScoreEntry:
 	str r0, [r1]								@ Write hiscore index
 	
 	cmp r0, #-1									@ Is the hiscore index -1? (No hiscore entry)
-	bleq showHiScoreEntryTitleScreen			@ Yes then go back to the title screen
+	beq showHiScoreEntryTitleScreen				@ Yes then go back to the title screen
 	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_HISCORE_ENTRY				@ Set the gameMode to hiscore entry
@@ -212,7 +212,7 @@ showHiScoreEntry:
 	
 showHiScoreEntryTitleScreen:
 
-	bl showTitleScreen							@ Show titlescreen
+	bl showTitleScreen
 	
 showHiScoreEntryDone:
 	
@@ -287,11 +287,23 @@ hiScoreEntrySkip:
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value
 	tst r1, #BUTTON_A							@ Button A?
-	bleq saveHiScore							@ Yes, so save the hiscore
+	bne hiScoreEntryDone						@ Yes, so save the hiscore
+	
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =saveHiScore
+	str r1, [r0]
+	
+	bl fxFadeOut
+	
+hiScoreEntryDone:
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
+	
+
 	
 drawCursorSprite:
 
@@ -521,13 +533,7 @@ saveHiScore:
 	
 	bl DC_FlushAll								@ Flush cache
 	
-	@ldr r0, =hiScoreBuffer
-	@bl drawDebugString
-
-	bl showTitleScreen							@ Go back to titlescreen
-	
-	@ldr r0, =1234567
-	@bl showHiScoreEntry
+	bl showTitleScreen
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

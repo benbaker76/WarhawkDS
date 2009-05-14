@@ -35,32 +35,25 @@
 	
 	
 playerDeathCheck:
-	@ we use this to check with #playwerDeath to see what to do!
-	@ 0= player still active
-	@ 1= init player death
-	@ 2= player is exploding	(mid explode)
-	@ 3= Main explode in action	(main explode)
-	@ 4= delay
-	@ 5= go to gameover (set GAME_MODE)
-	
+
 	stmfd sp!, {r0-r6, lr}
 	
 	
-	ldr r0,=playerDeath
+	ldr r0,=deathMode
 	ldr r1,[r0]				@ r1=deathmode
 	
-	cmp r1,#0
+	cmp r1,#DEATHMODE_STILL_ACTIVE
 	bne playerDeathActive
 	ldmfd sp!, {r0-r6, pc}	
 
 playerDeathActive:										@ --- PHASE 1
-	cmp r1,#1				@ do we need to init the DEATH?
+	cmp r1,#DEATHMODE_DEATH_INIT						@ do we need to init the DEATH?
 	bne playerDeathMidExplode
 
-	mov r1,#2
+	mov r1,#DEATHMODE_MID_EXPLODE
 	str r1,[r0]				@ set mid explode to active (store in player death)
 	ldr r1,=220				@ 220 is a good length
-	ldr r0,=playerDeathDelay
+	ldr r0,=deathModeDelay
 	str r1,[r0]				@ set duration of mid explode
 	
 	ldr r0,=powerUp
@@ -75,7 +68,7 @@ playerDeathActive:										@ --- PHASE 1
 	ldmfd sp!, {r0-r6, pc}			
 	
 playerDeathMidExplode:									@ --- PHASE 2
-	cmp r1,#2
+	cmp r1,#DEATHMODE_MID_EXPLODE
 	bne playerDeathMainExplode
 	@ ok, this will generate explosions around the players ship while player has control
 	@ we must not allow firing, though flying over bases will explode them.
@@ -153,13 +146,13 @@ playerDeathMidExplode:									@ --- PHASE 2
 	bl detectShipAsFire
 	
 	midExplodeCountdown:
-	ldr r0,=playerDeathDelay
+	ldr r0,=deathModeDelay
 	ldr r1,[r0]
 	subs r1,#1
 	str r1,[r0]
 	bpl midExplodeCountdownNo
-		ldr r2,=playerDeath		@ time to init the MAIN explosion
-		mov r3,#3
+		ldr r2,=deathMode		@ time to init the MAIN explosion
+		mov r3,#DEATHMODE_MAIN_EXPLODE
 		str r3,[r2]
 		mov r3,#190				@ set delay for MAIN explosion
 		str r3,[r0]
@@ -186,7 +179,7 @@ playerDeathMainExplode:									@ --- PHASE 3
 	@ some need to shoot outwards?? hnmm... can i use fire code??
 	@ ie used directional fire to a random x,y coord? hmmmm....
 	@ this is pretty much the boss explode code.. with a few mods
-	cmp r1,#3
+	cmp r1,#DEATHMODE_MAIN_EXPLODE
 	bne playerDeathMainExplodeWait	
 	
 	mov r7,#126
@@ -252,13 +245,13 @@ playerDeathMainExplode:									@ --- PHASE 3
 	str r8,[r6,r0]
 	
 	mainExplodeCountdown:
-	ldr r0,=playerDeathDelay
+	ldr r0,=deathModeDelay
 	ldr r1,[r0]
 	subs r1,#1
 	str r1,[r0]
 	bpl mainExplodeCountdownNo
-		ldr r2,=playerDeath		@ time to init the MAIN explosion
-		mov r3,#4
+		ldr r2,=deathMode		@ time to init the MAIN explosion
+		mov r3,#DEATHMODE_DELAY
 		str r3,[r2]
 		mov r3,#150				@ set delay for explode WAIT
 		str r3,[r0]
@@ -272,10 +265,10 @@ playerDeathMainExplode:									@ --- PHASE 3
 	
 playerDeathMainExplodeWait:								@ --- PHASE 4
 	@ this is a little delay to wait for the explosions to all finish
-	cmp r1,#4
+	cmp r1,#DEATHMODE_DELAY
 	bne playerIsAllDead
 
-	ldr r0,=playerDeathDelay
+	ldr r0,=deathModeDelay
 	ldr r1,[r0]
 	subs r1,#1
 	str r1,[r0]
@@ -283,8 +276,8 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 		mov r3,#180
 		str r3,[r0]
 
-		ldr r0,=playerDeath		@ set to TOTALLY finished
-		mov r3,#5
+		ldr r0,=deathMode		@ set to TOTALLY finished
+		mov r3,#DEATHMODE_ALL_DONE
 		str r3,[r0]
 		
 		bl clearOAM
@@ -308,8 +301,11 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 	
 playerIsAllDead:										@ --- PHASE 5
 	@ ok, now we need to do whatever to stop the game and go to game over???
+	
+	cmp r1,#DEATHMODE_FADE_OUT
+	beq playerDeathDone
 
-	ldr r0,=playerDeathDelay
+	ldr r0,=deathModeDelay
 	ldr r3,[r0]
 	cmp r3,#0
 	beq playerIsToast
@@ -318,16 +314,34 @@ playerIsAllDead:										@ --- PHASE 5
 		ldmfd sp!, {r0-r6, pc}
 	playerIsToast:
 	
-	bl fxOff
-	bl fxFadeBlackInit
-	bl fxFadeMax
-
-	ldr r0, =score
-	bl byte2Int					@ why does this fail?
-	bl showHiScoreEntry
+	ldr r0, =deathMode
+	ldr r1, =DEATHMODE_FADE_OUT
+	str r1, [r0]
 	
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =playerDeathHiScoreEntry
+	str r1, [r0]
+	
+	bl fxFadeOut
+	
+playerDeathDone:
+
 	ldmfd sp!, {r0-r6, pc}
 
+	@---------------------------------
+	
+playerDeathHiScoreEntry:
+
+	stmfd sp!, {r0, lr}
+	
+	ldr r0, =score
+	bl byte2Int
+	bl showHiScoreEntry
+
+	ldmfd sp!, {r0, pc} 					@ restore registers and return
+	
 	@---------------------------------
 
 	.data

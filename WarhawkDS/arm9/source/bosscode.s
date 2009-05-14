@@ -37,9 +37,9 @@
 checkBossInit:
 	stmfd sp!, {r1-r2, lr}
 
-	ldr r0,=playerDeath
+	ldr r0,=deathMode
 	ldr r0,[r0]
-	cmp r0,#5
+	cmp r0,#DEATHMODE_ALL_DONE
 	bne bossInitActive
 		ldmfd sp!, {r1-r2, pc}
 	bossInitActive:
@@ -263,9 +263,9 @@ bossIsShot:
 		cmp r8,#LEVELENDMODE_BOSSDIE
 		beq heBeDead
 		
-		ldr r8,=playerDeath
+		ldr r8,=deathMode
 		ldr r8,[r8]				@ if player is dying, boss CANNOT die.. else a stray bullet
-		cmp r8,#0				@ could kill the boss and you would clear the level - DEAD ??
+		cmp r8,#DEATHMODE_STILL_ACTIVE			@ could kill the boss and you would clear the level - DEAD ??
 		bne heBeDead
 		
 				@ ok, now we need to see how many hits to kill

@@ -39,7 +39,7 @@
 
 fxTextScrollerOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -92,13 +92,13 @@ fxTextScrollerOn:
 	mov r1, #0
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 
 	@ ---------------------------------------
 	
 fxTextScrollerOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -118,7 +118,7 @@ fxTextScrollerOff:
 	mov r1, #0
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
@@ -167,7 +167,7 @@ fxTextScrollerVBlank:
 	
 fxVertTextScrollerOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -190,13 +190,13 @@ fxVertTextScrollerOn:
 	mov r1, #0
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
 fxVertTextScrollerOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -207,7 +207,7 @@ fxVertTextScrollerOff:
 	mov r1, #0
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	

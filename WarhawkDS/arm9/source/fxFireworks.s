@@ -44,7 +44,7 @@
 
 fxFireworksOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl initVideoStars
 	
@@ -94,13 +94,13 @@ createFireworksLoop:
 	orr r1, #FX_FIREWORKS
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 
 	@ ---------------------------------------
 
 fxFireworksOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl initVideoMain
 	
@@ -109,7 +109,7 @@ fxFireworksOff:
 	bic r1, #FX_FIREWORKS
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	

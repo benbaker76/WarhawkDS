@@ -39,7 +39,7 @@
 	
 initVideo:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =REG_POWERCNT
 	ldr r1, =POWER_ALL_2D			@ All power on
@@ -71,13 +71,13 @@ initVideo:
 	
 	bl initVideoMain
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
 	
 initVideoMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =REG_BG0CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG0_MAP_BASE) | BG_TILE_BASE(BG0_TILE_BASE) | BG_PRIORITY(BG0_PRIORITY))
@@ -107,13 +107,13 @@ initVideoMain:
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
 	
 initVideoBG1_16:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =REG_BG1CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG1_MAP_BASE) | BG_TILE_BASE(BG1_TILE_BASE) | BG_PRIORITY(BG1_PRIORITY))
@@ -122,13 +122,13 @@ initVideoBG1_16:
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG1_MAP_BASE_SUB) | BG_TILE_BASE(BG1_TILE_BASE_SUB) | BG_PRIORITY(BG1_PRIORITY))
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
 	
 initVideoStars:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =REG_BG2CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE) | BG_TILE_BASE(STAR_BG2_TILE_BASE) | BG_PRIORITY(BG2_PRIORITY))
@@ -144,7 +144,7 @@ initVideoStars:
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG3_MAP_BASE_SUB) | BG_TILE_BASE(STAR_BG3_TILE_BASE_SUB) | BG_PRIORITY(BG3_PRIORITY))
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
 
@@ -154,23 +154,24 @@ resetScrollRegisters:
 
 	@ Reset horizontal scroll registers
 	
-	ldr r0, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
-	ldr r1, =REG_BG1HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
-	ldr r2, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
-	ldr r3, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
-	ldr r4, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
-	ldr r5, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
-	ldr r7, =REG_BG0HOFS			@ Load our horizontal scroll register for BG3 on the main screen
-	ldr r8, =REG_BG0HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
-	mov r6, #0						@ Offset the horizontal scroll register by 32 pixels to centre the map
-	strh r6, [r0]					@ Write our offset value to REG_BG1HOFS
-	strh r6, [r1]					@ Write our offset value to REG_BG1HOFS_SUB
-	strh r6, [r2]					@ Write our offset value to REG_BG2HOFS
-	strh r6, [r3]					@ Write our offset value to REG_BG2HOFS_SUB
-	strh r6, [r4]					@ Write our offset value to REG_BG3HOFS
-	strh r6, [r5]					@ Write our offset value to REG_BG3HOFS_SUB
-	strh r6, [r7]					@ Write our offset value to REG_BG0HOFS
-	strh r6, [r8]					@ Write our offset value to REG_BG0HOFS_SUB
+	ldr r0, =REG_BG0HOFS			@ Load our horizontal scroll register for BG0 on the main screen
+	ldr r1, =REG_BG0HOFS_SUB		@ Load our horizontal scroll register for BG0 on the sub screen
+	ldr r2, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
+	ldr r3, =REG_BG1HOFS_SUB		@ Load our horizontal scroll register for BG1 on the sub screen
+	ldr r4, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
+	ldr r5, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
+	ldr r6, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
+	ldr r7, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
+
+	mov r8, #0						@ Offset the horizontal scroll register by 32 pixels to centre the map
+	strh r8, [r0]					@ Write our offset value to REG_BG0HOFS
+	strh r8, [r1]					@ Write our offset value to REG_BG0HOFS_SUB
+	strh r8, [r2]					@ Write our offset value to REG_BG1HOFS
+	strh r8, [r3]					@ Write our offset value to REG_BG1HOFS_SUB
+	strh r8, [r4]					@ Write our offset value to REG_BG2HOFS
+	strh r8, [r5]					@ Write our offset value to REG_BG2HOFS_SUB
+	strh r8, [r6]					@ Write our offset value to REG_BG3HOFS
+	strh r8, [r7]					@ Write our offset value to REG_BG3HOFS_SUB
 
 	@ Reset vertical scroll registers
 
@@ -198,11 +199,6 @@ resetScrollRegisters:
 
 	ldr r0, =REG_BG3VOFS_SUB		@ Load our vertical scroll register for BG3 on the sub screen
 	strh r1, [r0]
-	
-	
-	ldr r0, =horizDrift
-	mov r1, #0
-	str r1, [r0]
 	
 	ldmfd sp!, {r0-r8, pc}
 	

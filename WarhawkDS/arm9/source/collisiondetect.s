@@ -422,9 +422,9 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	stmfd sp!, {r0-r8, lr}
 	@ First we need to grab the X and Y of the bullet and cycle trough the aliens to find a hit
 	
-	ldr r1, =playerDeath		@ we use some sprites in death with bullet values
+	ldr r1, =deathMode			@ we use some sprites in death with bullet values
 	ldr r1,[r1]					@ so, we need to make sure this is not used to detect against
-	cmp r1,#3					@ aliens!
+	cmp r1,#DEATHMODE_MAIN_EXPLODE	@ aliens!
 	blt detectALNActive
 	
 		ldmfd sp!, {r0-r8, pc}
@@ -699,9 +699,9 @@ drawShard:
 alienCollideCheck:
 	stmfd sp!, {r0-r8, lr}
 	
-			ldr r5,=playerDeath		@ if you are in major explode, no detection with ship
+			ldr r5,=deathMode		@ if you are in major explode, no detection with ship
 			ldr r5,[r5]
-			cmp r5,#3
+			cmp r5,#DEATHMODE_MAIN_EXPLODE
 			bpl noPlayer
 											@ r1 is offset to alien
 @			ldr r5,=levelEnd				@ if we have destroyed the BOSS
@@ -745,9 +745,9 @@ alienCollideCheck:
 			cmp r6,r4
 			bpl noPlayer
 				
-				ldr r10,=playerDeath
+				ldr r10,=deathMode
 				ldr r10,[r10]
-				cmp r10,#0
+				cmp r10,#DEATHMODE_STILL_ACTIVE
 				bne noDyingBlooms
 				
 				ldr r8,[r1]					@ load the ACTIVE value

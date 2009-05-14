@@ -42,7 +42,7 @@
 
 fxWipeInit:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -66,13 +66,13 @@ fxWipeInit:
 	mov r1, #0
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ---------------------------------------
 	
 fxWipeOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -89,13 +89,13 @@ fxWipeOff:
 	bic r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 
 fxWipeInLeft:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxWipeInit
 	
@@ -104,13 +104,13 @@ fxWipeInLeft:
 	orr r1, #FX_WIPE_IN_LEFT
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxWipeInRight:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxWipeInit
 	
@@ -119,13 +119,13 @@ fxWipeInRight:
 	orr r1, #FX_WIPE_IN_RIGHT
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxWipeOutUp:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxWipeInit
 	
@@ -134,13 +134,13 @@ fxWipeOutUp:
 	orr r1, #FX_WIPE_OUT_UP
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxWipeOutDown:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxWipeInit
 	
@@ -149,13 +149,13 @@ fxWipeOutDown:
 	orr r1, #FX_WIPE_OUT_DOWN
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxWipeInLeftVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 
 	ldr r0, =scroll							@ Get our scroll position
 	ldr r1, [r0]
@@ -218,14 +218,14 @@ fxWipeInLeftVBlank:
 	str r1, [r0]
 	str r3, [r2]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 
 	
 fxWipeInRightVBlank:						@ Right side wipe
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 
 	ldr r0, =scroll							@ Get our scroll position
 	ldr r1, [r0]
@@ -284,13 +284,13 @@ fxWipeInRightVBlank:						@ Right side wipe
 	str r1, [r0]
 	str r3, [r2]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ---------------------------------------
 	
 fxWipeOutUpVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 
 	ldr r0, =scroll							@ Get our scroll position
 	ldr r1, [r0]
@@ -353,13 +353,13 @@ fxWipeOutUpVBlank:
 	str r1, [r0]
 	str r3, [r2]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 	
 fxWipeOutDownVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 
 	ldr r0, =scroll							@ Get our scroll position
 	ldr r1, [r0]
@@ -418,7 +418,7 @@ fxWipeOutDownVBlank:
 	str r1, [r0]
 	str r3, [r2]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ---------------------------------------
 

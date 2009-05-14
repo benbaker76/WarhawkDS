@@ -38,7 +38,7 @@
 
 fxSpotlightInit:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -88,13 +88,13 @@ fxSpotlightInit:
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ---------------------------------------
 	
 fxSpotlightOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -127,13 +127,13 @@ fxSpotlightOff:
 	
 	bl dmaTransfer
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 
 fxSpotlightIn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxSpotlightInit
 	
@@ -142,13 +142,13 @@ fxSpotlightIn:
 	orr r1, #FX_SPOTLIGHT_IN
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
 fxSpotlightOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxSpotlightInit
 	
@@ -157,13 +157,13 @@ fxSpotlightOut:
 	orr r1, #FX_SPOTLIGHT_OUT
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
 fxSpotlightInVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	bl clearTable
 	
@@ -183,13 +183,13 @@ fxSpotlightInVBlank:
 	bleq fxSpotlightOff
 	str r1, [r0]							@ Write back radius
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 @ ---------------------------------------
 	
 fxSpotlightOutVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl clearTable
 
@@ -212,13 +212,13 @@ fxSpotlightOutVBlank:
 	bleq fxSpotlightOff
 	str r1, [r0]							@ Write back radius
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 
 	@ ---------------------------------------
 	
 clearTable:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	bl DC_FlushAll							@ Flush the cache for the dma copy
 
@@ -228,13 +228,13 @@ clearTable:
 	
 	bl dmaFillWords							@ Clear table
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ---------------------------------------
 
 dmaCircle:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	bl DC_FlushAll							@ Flush the cache for the dma copy
 	
@@ -256,7 +256,7 @@ dmaCircle:
 	
 	bl dmaTransfer
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 	

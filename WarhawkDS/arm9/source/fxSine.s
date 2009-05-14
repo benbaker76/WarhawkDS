@@ -35,7 +35,7 @@
 	
 fxSineWobbleOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode					@ lets set the sine wobble effect
 	ldr r1, [r0]
@@ -50,13 +50,13 @@ fxSineWobbleOn:
 	ldr r1, =0
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxSineWobbleOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =fxMode					@ lets unset the sine wobble effect
 	ldr r1, [r0]
@@ -79,7 +79,7 @@ fxSineWobbleOff:
 	
 	bl dmaTransfer
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------
 

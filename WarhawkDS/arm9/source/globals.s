@@ -169,9 +169,8 @@
 	.global spriteBurstDelay
 	.global spriteBurstDelayCount
 	.global spriteSpeedDelay
-	.global playerDeath
-	.global playerDeathDelay
-	.global playerMidDelay
+	.global deathMode
+	.global deathModeDelay
 	.global animEnergyPhase
 	.global animEnergyActive
 	.global animEnergyDelay
@@ -179,7 +178,9 @@
 	.global shipAnimDelay
 	.global firePower
 	
-shipAnimDelay:
+gameMode:
+	.word 0
+fxMode:
 	.word 0
 	
 cheatMode:
@@ -197,6 +198,9 @@ animEnergyActive:
 animEnergyDelay:
 	.word 0
 	
+shipAnimDelay:
+	.word 0
+	
 powerupLives:
 	.word 0
 delayPowerUp:
@@ -204,10 +208,6 @@ delayPowerUp:
 basesLeft:
 	.word 0
 basesShot:
-	.word 0
-gameMode:
-	.word 0
-fxMode:
 	.word 0
 
 bossSpreadAngle:
@@ -520,11 +520,9 @@ digits:
 	
 waveNumber:
 	.word 0
-playerDeath:
+deathMode:
 	.word 0
-playerDeathDelay:
-	.word 0
-playerMidDelay:
+deathModeDelay:
 	.word 0
 	
 	.pool

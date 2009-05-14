@@ -505,11 +505,7 @@ initEndOfGame:
 	bl drawText
 	
 	ldr r0, =3000								@ 3 seconds
-	
-	@ FADE DOES NOT WORK WHEN STARFIELD IS ENABLED!!! WHY???
-	
-	@ldr r1, =initGameOverFadeOut				@ Callback function address
-	ldr r1, =initGameOverEnd
+	ldr r1, =initGameOverFadeOut				@ Callback function address
 	
 	bl startTimer
 
@@ -541,7 +537,7 @@ initGameOverEnd:
 	bl clearWindow
 
 	ldr r0, =score
-	bl byte2Int									@ why does this fail?
+	bl byte2Int
 	bl showHiScoreEntry
 
 	ldmfd sp!, {r0, pc} 						@ restore registers and return

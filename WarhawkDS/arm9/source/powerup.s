@@ -35,7 +35,7 @@ checkPowerUp:
 	
 	ldr r0,=bigBossMode
 	ldr r1,[r0]
-	cmp r1,#0
+	cmp r1,#BIGBOSSMODE_NONE
 	beq powerUpMiss
 
 		ldmfd sp!, {r0-r6, pc}	
@@ -193,7 +193,7 @@ movePowerUp:
 	
 	ldr r0,=bigBossMode
 	ldr r1,[r0]
-	cmp r1,#0
+	cmp r1,#BIGBOSSMODE_NONE
 	beq movePowerUpActive
 	
 		ldr r0,=spriteY

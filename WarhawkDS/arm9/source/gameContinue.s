@@ -92,7 +92,13 @@ showGameContinueMenu:
 	
 showGameContinueMenuGameStart:
 
-	bl showGameStart
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =showGameStart
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 showGameContinueMenuDone:
 	

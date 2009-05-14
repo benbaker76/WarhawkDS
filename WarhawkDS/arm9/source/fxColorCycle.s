@@ -36,7 +36,7 @@
 
 fxColorCycleOn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -53,13 +53,13 @@ fxColorCycleOn:
 	ldr r1, =bgPaletteSub
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 	@ ---------------------------------------
 	
 fxColorCycleOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -76,13 +76,13 @@ fxColorCycleOff:
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 	@ ---------------------------------------
 
 fxColorCycleVBlank:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	bl DC_FlushAll
 	
@@ -109,7 +109,7 @@ fxColorCycleVBlank:
 	ldr r0, =BG_PALETTE_SUB
 	strh r4, [r0, r1]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r4, pc}
 
 	@ ---------------------------------------
 	

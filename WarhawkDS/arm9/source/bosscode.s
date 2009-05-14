@@ -40,7 +40,7 @@ checkBossInit:
 	ldr r0,=deathMode
 	ldr r0,[r0]
 	cmp r0,#DEATHMODE_ALL_DONE
-	bne bossInitActive
+	blt bossInitActive
 		ldmfd sp!, {r1-r2, pc}
 	bossInitActive:
 
@@ -603,8 +603,8 @@ bossExploder:
 	ldr r2,=levelEnd
 	ldr r2,[r2]
 	cmp r2,#LEVELENDMODE_BOSSEXPLODE
-	beq stillExplodingBoss
-
+	bge stillExplodingBoss
+	
 	beloop:
 	ldr r0,=explodeSpriteBoss
 	ldr r1,[r0]						@ r1=number of sprite to explode! (USED LATER ****)
@@ -714,6 +714,7 @@ bossExploder:
 	ldr r6,[r5]
 	cmp r6,#1						@ this is "HOW LONG FOR IT????" (tie this to Explosion sound)
 	ble stillExplodingBoss
+
 		ldr r6,=levelEnd
 		mov r8,#LEVELENDMODE_BOSSEXPLODE
 		str r8,[r6]

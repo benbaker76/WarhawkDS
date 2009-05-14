@@ -303,7 +303,7 @@ playerIsAllDead:										@ --- PHASE 5
 	@ ok, now we need to do whatever to stop the game and go to game over???
 	
 	cmp r1,#DEATHMODE_FADE_OUT
-	beq playerDeathDone
+	bge playerDeathDone
 
 	ldr r0,=deathModeDelay
 	ldr r3,[r0]

@@ -327,7 +327,7 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	ldr r0,=deathMode
 	ldr r0,[r0]
 	cmp r0,#DEATHMODE_ALL_DONE
-	bne moveAlienActive
+	blt moveAlienActive
 		ldmfd sp!, {r0-r10, pc}
 	moveAlienActive:
 

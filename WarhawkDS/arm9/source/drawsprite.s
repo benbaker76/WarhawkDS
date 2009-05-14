@@ -50,7 +50,7 @@ drawSprite:
 	ldr r0,=deathMode
 	ldr r0,[r0]
 	cmp r0,#DEATHMODE_ALL_DONE
-	bne drawSpriteActive
+	blt drawSpriteActive
 	ldmfd sp!, {pc}
 	drawSpriteActive:
 	

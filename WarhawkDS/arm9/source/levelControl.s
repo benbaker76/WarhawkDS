@@ -358,6 +358,14 @@ updateBossDie:
 		
 updateBossDieEndOfLevel:
 
+	str r1,[r0]
+
+@	ldr r2,=levelEnd
+@	mov r1,#LEVELENDMODE_BOSSEXPLODE
+@
+@	str r1,[r2]
+	
+
 	ldr r0, =levelEnd
 	ldr r1, =LEVELENDMODE_FADE_OUT
 	str r1, [r0]

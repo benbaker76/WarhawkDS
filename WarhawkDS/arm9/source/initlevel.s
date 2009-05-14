@@ -41,6 +41,7 @@ initLevel:
 	stmfd sp!, {r0-r6, lr}
 
 	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl clearSpriteData
 
 	mov r1,#0

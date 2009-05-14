@@ -42,6 +42,9 @@ showLoading:
 	ldr r1, =GAMEMODE_LOADING
 	str r1, [r0]
 	
+	bl fxFadeWhiteInit
+	bl fxFadeMax
+	
 	@ Write the palette
 
 	ldr r0, =TitleTopPal
@@ -80,11 +83,28 @@ showLoading:
 	bl dmaCopy
 	
 	ldr r0, =3000								@ 3 seconds
-	ldr r1, =timerDoneLoading					@ Callback function address
+	ldr r1, =showLoadingFadeOut					@ Callback function address
 	
 	bl startTimer
 	
 	bl fxColorCycleTextOn
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showLoadingFadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeWhiteInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =timerDoneLoading
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

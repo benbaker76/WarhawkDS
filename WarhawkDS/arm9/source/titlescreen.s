@@ -45,9 +45,10 @@ showTitleScreen:
 	str r1, [r0]
 	
 	bl fxOff
+	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream
-	bl fxFadeBlackInit
 	bl initCheat
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset the scroll registers
@@ -93,7 +94,7 @@ showTitleScreen:
 	ldr r0, =hofsSB
 	mov r1, #0
 	str r1, [r0]
-	
+		
 	@ Write the palette
 
 	ldr r0, =TitleTopPal
@@ -162,7 +163,7 @@ showTitleScreen:
 	
 	bl fxColorPulseOn
 	bl fxSpotlightIn	
-	bl fxFadeBlackIn
+	bl fxFadeIn
 
 	ldr r0, =1000								@ 1 seconds
 	ldr r1, =showTextScroller					@ Callback function address
@@ -182,16 +183,17 @@ showTextScroller:
 	stmfd sp!, {r0-r6, lr}
 	
 	bl fxFadeBG0Init
+	bl fxFadeMax
 	bl fxTextScrollerOn
 	bl fxCopperTextOn
 	bl drawCreditText
-	
-	bl fxFadeBG0In
 	
 	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showHiScoreText					@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -201,16 +203,17 @@ showHiScoreText:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeBG0SubInit
+	bl fxFadeBG0Init
+	bl fxFadeMax
 	bl clearBG0Sub								@ Clear BG0 (Sub screen)
 	bl drawHiScoreText							@ Draw the hiscore text
-	
-	bl fxFadeBG0SubIn
 	
 	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showCreditsText					@ Callback function address
 	
 	bl startTimer								@ Start the timer
+	
+	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -220,16 +223,16 @@ showCreditsText:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeBG0SubInit
+	bl fxFadeBG0Init
 	bl clearBG0Sub								@ Clear BG0 (Sub screen)
 	bl drawCreditText
-	
-	bl fxFadeBG0SubIn
 	
 	ldr r0, =15000								@ 15 seconds
 	ldr r1, =showHiScoreText					@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

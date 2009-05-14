@@ -297,10 +297,11 @@ dmaWait:
 	mov r1, #12
 	mul r1, r0
 	ldr r2, =DMA_CR(0)
+	add r2, r1
 
 dmaWaitLoop:
 
-	ldr r3, [r2, r1]					@ read the value
+	ldr r3, [r2]						@ read the value
 	tst r3, #DMA_BUSY					@ test busy bit
 	bne dmaWaitLoop						@ set so loop
 	

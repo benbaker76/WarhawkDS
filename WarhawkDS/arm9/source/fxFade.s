@@ -33,17 +33,15 @@
 	.global fxFadeWhiteInit
 	.global fxFadeBG0Init
 	.global fxFadeBG0SubInit
+	.global fxFadeBG0SubBG1SubInit
+	.global fxFadeMin
+	.global fxFadeMax
 	.global fxFadeOff
-	.global fxFadeBlackIn
-	.global fxFadeBlackOut
-	.global fxFadeWhiteIn
-	.global fxFadeWhiteOut
-	.global fxFadeBG0In
-	.global fxFadeBG0Out
-	.global fxFadeBG0SubIn
-	.global fxFadeBG0SubOut
+	.global fxFadeIn
+	.global fxFadeOut
 	.global fxFadeInVBlank
 	.global fxFadeOutVBlank
+	.global fxFadeCallbackAddress
 	
 fxFadeBlackInit:
 
@@ -57,15 +55,11 @@ fxFadeBlackInit:
 	ldr r1, =(BLEND_FADE_BLACK | BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_SRC_BG2 | BLEND_SRC_BG3 | BLEND_SRC_SPRITE)
 	str r1, [r0]
 	
-	ldr r0, =BLEND_Y					@ Blend register
-	ldr r1, =16							@ Set to black
-	strh r1, [r0]						@ Write to BLEND_Y
-	
-	ldr r0, =SUB_BLEND_Y				@ Blend register
-	ldr r1, =16							@ Set to black
-	strh r1, [r0]						@ Write to BLEND_Y
-	
 	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
@@ -85,15 +79,11 @@ fxFadeWhiteInit:
 	ldr r1, =(BLEND_FADE_WHITE | BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_SRC_BG2 | BLEND_SRC_BG3 | BLEND_SRC_SPRITE)
 	str r1, [r0]
 	
-	ldr r0, =BLEND_Y					@ Blend register
-	ldr r1, =16							@ Set to black
-	strh r1, [r0]						@ Write to BLEND_Y
-	
-	ldr r0, =SUB_BLEND_Y				@ Blend register
-	ldr r1, =16							@ Set to black
-	strh r1, [r0]						@ Write to BLEND_Y
-	
 	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
@@ -113,15 +103,11 @@ fxFadeBG0Init:
 	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_DST_BG0 | BLEND_DST_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
 	str r1, [r0]
 	
-	ldr r0, =BLEND_AB					@ Blend register
-	ldr r1, =(0xF << 8)					@ Set to fade out
-	strh r1, [r0]						@ Write to BLEND_AB
-	
-	ldr r0, =SUB_BLEND_AB				@ Blend register
-	ldr r1, =(0xF << 8)					@ Set to fade out
-	strh r1, [r0]						@ Write to SUB_BLEND_AB
-	
 	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
@@ -141,13 +127,81 @@ fxFadeBG0SubInit:
 	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_DST_BG0 | BLEND_DST_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
 	str r1, [r0]
 	
-	ldr r0, =SUB_BLEND_AB				@ Blend register
-	ldr r1, =(0xF << 8)					@ Set to fade out
-	strh r1, [r0]						@ Write to SUB_BLEND_AB
+	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeBG0SubBG1SubInit:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =SUB_BLEND_CR
+	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_DST_BG0 | BLEND_DST_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
+	str r1, [r0]
 	
 	ldr r0, =fadeValue					@ Get our fadeValue
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeMin:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =BLEND_Y					@ Blend register
+	ldr r1, =0							@ Set to min
+	strh r1, [r0]						@ Write to BLEND_Y
+	
+	ldr r0, =SUB_BLEND_Y				@ Blend register
+	ldr r1, =0							@ Set to min
+	strh r1, [r0]						@ Write to BLEND_Y
+	
+	ldr r0, =BLEND_AB					@ Blend register
+	ldr r1, =0xF						@ Set to max
+	strh r1, [r0]						@ Write to BLEND_AB
+	
+	ldr r0, =SUB_BLEND_AB				@ Blend register
+	ldr r1, =0xF						@ Set to max
+	strh r1, [r0]						@ Write to SUB_BLEND_AB
+	
+	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeMax:
+
+	stmfd sp!, {r0-r6, lr}
+
+	ldr r0, =BLEND_Y					@ Blend register
+	ldr r1, =16							@ Set to max
+	strh r1, [r0]						@ Write to BLEND_Y
+	
+	ldr r0, =SUB_BLEND_Y				@ Blend register
+	ldr r1, =16							@ Set to max
+	strh r1, [r0]						@ Write to BLEND_Y
+	
+	ldr r0, =BLEND_AB					@ Blend register
+	ldr r1, =(0xF << 8)					@ Set to min
+	strh r1, [r0]						@ Write to BLEND_AB
+	
+	ldr r0, =SUB_BLEND_AB				@ Blend register
+	ldr r1, =(0xF << 8)					@ Set to min
+	strh r1, [r0]						@ Write to SUB_BLEND_AB
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -174,11 +228,11 @@ fxFadeOff:
 	
 	@ ---------------------------------------
 	
-fxFadeBlackIn:
+fxFadeIn:
 
 	stmfd sp!, {r0-r6, lr}
 
-	bl fxFadeBlackInit
+	bl fxFadeMax
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
@@ -189,11 +243,11 @@ fxFadeBlackIn:
 	
 	@ ---------------------------------------
 	
-fxFadeBlackOut:
+fxFadeOut:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeBlackInit
+	bl fxFadeMin
 	
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
@@ -201,99 +255,8 @@ fxFadeBlackOut:
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
-	
+
 	@ ---------------------------------------
-	
-fxFadeWhiteIn:
-
-	stmfd sp!, {r0-r6, lr}
-
-	bl fxFadeWhiteInit
-	
-	ldr r0, =fxMode					@ lets set the fade effect
-	ldr r1, [r0]
-	orr r1, #FX_FADE_IN
-	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ---------------------------------------
-	
-fxFadeWhiteOut:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	bl fxFadeWhiteInit
-	
-	ldr r0, =fxMode					@ lets set the fade effect
-	ldr r1, [r0]
-	orr r1, #FX_FADE_OUT
-	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ---------------------------------------
-	
-fxFadeBG0In:
-
-	stmfd sp!, {r0-r6, lr}
-
-	bl fxFadeBG0Init
-	
-	ldr r0, =fxMode					@ lets set the fade effect
-	ldr r1, [r0]
-	orr r1, #FX_FADE_IN
-	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ---------------------------------------
-	
-fxFadeBG0Out:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	bl fxFadeBG0Init
-	
-	ldr r0, =fxMode					@ lets set the fade effect
-	ldr r1, [r0]
-	orr r1, #FX_FADE_OUT
-	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ---------------------------------------
-	
-fxFadeBG0SubIn:
-
-	stmfd sp!, {r0-r6, lr}
-
-	bl fxFadeBG0SubInit
-	
-	ldr r0, =fxMode					@ lets set the fade effect
-	ldr r1, [r0]
-	orr r1, #FX_FADE_IN
-	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ---------------------------------------
-	
-fxFadeBG0SubOut:
-
-	stmfd sp!, {r0-r6, lr}
-	
-	bl fxFadeBG0SubInit
-	
-	ldr r0, =fxMode					@ lets set the fade effect
-	ldr r1, [r0]
-	orr r1, #FX_FADE_OUT
-	str r1, [r0]
-	
-	ldmfd sp!, {r0-r6, pc}
-	
-	@ ---------------------------------------
-
 
 fxFadeInVBlank:
 
@@ -322,14 +285,11 @@ fxFadeInVBlank:
 	orr r6, r5
 	strh r6, [r2]						@ Write to SUB_BLEND_AB
 	
-	ldr r2, =fxMode						@ Get fxMode address
-	ldr r3, [r2]						@ Get fxMode value
-	add r1, #1							@ Add 1 to pos
-	cmp r1, #65							@ Is our fadeValue at 64?
-	moveq r1, #0						@ Yes so reset pos
-	bleq fxFadeOff						@ Yes turn off effect
+	add r1, #1							@ Add 1 to fadeValue
 	str r1, [r0]						@ Write fadeValue back
-	str r3, [r2]						@ Write fxMode back
+	cmp r1, #65							@ Is our fadeValue at 65?
+	bleq fxFadeOff						@ Yes turn off effect
+	bleq fxFadeExecuteCallback			@ Execute callback
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -362,16 +322,34 @@ fxFadeOutVBlank:
 	orr r6, r4
 	strh r6, [r2]						@ Write to SUB_BLEND_AB
 	
-	ldr r2, =fxMode						@ Get fxMode address
-	ldr r3, [r2]						@ Get fxMode value
-	add r1, #1							@ Add 1 to pos
-	cmp r1, #65							@ Is our fadeValue at 64?
-	moveq r1, #0						@ Yes so reset pos
-	bleq fxFadeOff						@ Yes turn off effect
+	add r1, #1							@ Add 1 to fadeValue
 	str r1, [r0]						@ Write fadeValue back
-	str r3, [r2]						@ Write fxMode back
+	cmp r1, #65							@ Is our fadeValue at 65?
+	bleq fxFadeOff						@ Yes turn off effect
+	bleq fxFadeExecuteCallback			@ Execute callback
 	
 	ldmfd sp!, {r0-r6, pc}
+	
+	@ ---------------------------------------
+	
+fxFadeExecuteCallback:
+
+	stmfd sp!, {r0, lr}
+	
+	push {lr}
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r0, [r0]
+	cmp r0, #0
+
+	ldr lr, =fxFadeExecuteCallbackReturn
+	bxne r0
+	
+fxFadeExecuteCallbackReturn:
+
+	pop {lr}
+	
+	ldmfd sp!, {r0, pc}
 	
 	@ ---------------------------------------
 
@@ -379,6 +357,9 @@ fxFadeOutVBlank:
 	.align
 
 fadeValue:
+	.word 0
+	
+fxFadeCallbackAddress:
 	.word 0
 	
 	.pool

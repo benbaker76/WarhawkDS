@@ -408,8 +408,8 @@ updateFireworks:
 	
 clearFireworks:
 
-	stmfd sp!, {r0-r6, lr}
-	
+	stmfd sp!, {r0-r2, lr}
+
 	mov r0, #0
 	ldr r1, =BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
 	ldr r2, =(32 * 24 * 32)
@@ -417,7 +417,7 @@ clearFireworks:
 	ldr r1, =BG_TILE_RAM(STAR_BG2_TILE_BASE)
 	bl dmaFillWords
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ---------------------------------------
 

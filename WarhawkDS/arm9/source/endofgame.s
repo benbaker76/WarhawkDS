@@ -52,9 +52,10 @@ showEndOfGame:
 	str r1, [r0]								@ Store back gameMode
 
 	bl fxOff
+	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream
-	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
@@ -94,14 +95,6 @@ showEndOfGame:
 	str r1, [r0]
 	
 	ldr r0, =vblCounterH
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =hofsSF
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =hofsSB
 	mov r1, #0
 	str r1, [r0]
 	
@@ -220,7 +213,7 @@ showEndOfGameContinue:
 
 	bl startTimer
 
-	bl fxFadeBlackIn
+	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -372,8 +365,9 @@ initSmallShipFly:
 	mov r1, #0
 	str r1, [r0]
 	
-	bl initWindow
 	bl fxFadeBlackInit
+	bl fxFadeMax
+	bl initWindow
 	
 	ldr r0, =WIN_OUT						@ Make bg's appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
@@ -436,7 +430,7 @@ initSmallShipFly:
 	
 	bl startTimer
 	
-	bl fxFadeBlackIn
+	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -494,6 +488,7 @@ initEndOfGame:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl stopAudioStream
 	bl clearBG0
 	bl clearBG1
 	bl clearOAM
@@ -511,7 +506,11 @@ initEndOfGame:
 	bl drawText
 	
 	ldr r0, =3000								@ 3 seconds
-	ldr r1, =initGameOverEnd					@ Callback function address
+	
+	@ FADE DOES NOT WORK WHEN STARFIELD IS ENABLED!!! WHY???
+	
+	@ldr r1, =initGameOverFadeOut				@ Callback function address
+	ldr r1, =initGameOverEnd
 	
 	bl startTimer
 
@@ -519,9 +518,25 @@ initEndOfGame:
 	
 	@---------------------------------
 	
+initGameOverFadeOut:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initGameOverEnd
+	str r1, [r0]
+	
+	bl fxFadeOut
+
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
 initGameOverEnd:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0, lr}
 
 	bl clearWindow
 
@@ -529,7 +544,7 @@ initGameOverEnd:
 	bl byte2Int									@ why does this fail?
 	bl showHiScoreEntry
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0, pc} 						@ restore registers and return
 	
 	@---------------------------------
 	

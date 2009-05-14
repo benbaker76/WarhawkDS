@@ -72,9 +72,10 @@ showEndOfLevel:
 	str r3, [r2]
 	
 	bl fxOff
+	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream
-	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
@@ -275,12 +276,13 @@ showEndOfLevel:
 @	bl fxStarfieldOn							@ Turn on starfield
 @	bl fxStarfieldDownOn
 	bl fxStarfieldMultiOn
-	bl fxFadeBlackIn
 	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =calcBasesDestroyed					@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -536,13 +538,33 @@ calcEnergyRemaining:
 calcEnergyRemainingNext:
 
 	ldr r0, =4000								@ 2 seconds
-	ldr r1, =showLevelNext						@ Callback function address
+	
+	@ FADE DOES NOT WORK WHEN STARFIELD IS ENABLED!!! WHY???
+	
+	@ldr r1, =showEndOfLevelFadeOut				@ Callback function address
+	ldr r1, =showLevelNext
 	
 	bl startTimer
 	
 calcEnergyRemainingDone:
 	
 	ldmfd sp!, {r0-r8, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showEndOfLevelFadeOut:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =showLevelNext
+	str r1, [r0]
+	
+	bl fxFadeOut
+
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	

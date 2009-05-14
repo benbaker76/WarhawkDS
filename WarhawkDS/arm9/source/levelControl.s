@@ -109,6 +109,7 @@ showLevelStart:
 	bl stopSound
 	bl fxOff
 	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl initVideoMain
 	bl initMainTiles
 	bl initLevelScrollRegisters				@ Reset the scroll registers
@@ -137,7 +138,7 @@ showLevelStart:
 	@ Fade in
 	
 	@bl fxSpotlightIn
-	bl fxFadeBlackIn
+	bl fxFadeIn
 	bl fxMosaicIn
 	@bl fxScanline
 	@bl fxWipeInLeft

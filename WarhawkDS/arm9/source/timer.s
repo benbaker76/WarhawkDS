@@ -81,7 +81,7 @@ stopTimer:
 
 timerTimer2:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =timerElapsed
 	ldr r1, [r0]
@@ -107,7 +107,7 @@ timerReturn:
 	add r1, #1
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}								@ Return
+	ldmfd sp!, {r0-r2, pc}								@ Return
 	
 	@ ---------------------------------------------
 

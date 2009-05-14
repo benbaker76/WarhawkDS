@@ -46,6 +46,9 @@ showIntro1:
 	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
 	
+	bl fxFadeWhiteInit
+	bl fxFadeMax
+	
 	@ Write the palette
 
 	ldr r0, =ProteusPal
@@ -79,12 +82,28 @@ showIntro1:
 	ldr r2, =HeadsoftMapLen
 	bl dmaCopy
 	
-	bl fxFadeWhiteIn
-	
 	ldr r0, =4000								@ 4 seconds
-	ldr r1, =showIntro2							@ Callback function address
+	ldr r1, =showIntro1FadeOut					@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showIntro1FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeWhiteInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =showIntro2
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -97,6 +116,9 @@ showIntro2:
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
+	
+	bl fxFadeWhiteInit
+	bl fxFadeMax
 	
 	@ Write the palette
 
@@ -131,12 +153,28 @@ showIntro2:
 	ldr r2, =PPOTMapLen
 	bl dmaCopy
 	
-	bl fxFadeWhiteIn
-	
 	ldr r0, =4000								@ 4 seconds
-	ldr r1, =showIntro3							@ Callback function address
+	ldr r1, =showIntro2FadeOut					@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showIntro2FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeWhiteInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =showIntro3
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -149,6 +187,9 @@ showIntro3:
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
+	
+	bl fxFadeWhiteInit
+	bl fxFadeMax
 	
 	@ Write the palette
 
@@ -183,12 +224,28 @@ showIntro3:
 	ldr r2, =WebMapLen
 	bl dmaCopy
 	
-	bl fxFadeWhiteIn
-	
 	ldr r0, =4000								@ 4 seconds
-	ldr r1, =showLoading						@ Callback function address
+	ldr r1, =showIntro3FadeOut					@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+showIntro3FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeWhiteInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =showLoading
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	

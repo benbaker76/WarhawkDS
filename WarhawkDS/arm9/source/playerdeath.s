@@ -320,6 +320,7 @@ playerIsAllDead:										@ --- PHASE 5
 	
 	bl fxOff
 	bl fxFadeBlackInit
+	bl fxFadeMax
 
 	ldr r0, =score
 	bl byte2Int					@ why does this fail?

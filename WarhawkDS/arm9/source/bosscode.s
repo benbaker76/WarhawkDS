@@ -194,7 +194,7 @@ checkBossInit:
 			ldr r0,=bossMan
 			mov r1,#BOSSMODE_ATTACK
 			str r1,[r0]
-			bl fxFadeWhiteIn				@ need a FLASH to WHITE and back to NORMAL
+			bl fxFadeIn						@ need a FLASH to WHITE and back to NORMAL
 		bossStillScroll:
 		ldr r0,=bossY
 		ldr r1,[r0]

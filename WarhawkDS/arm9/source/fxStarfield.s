@@ -54,6 +54,11 @@ fxStarfieldOn:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_STARFIELD
+	str r1, [r0]
+	
 	bl initVideoStars
 	
 	@ Clear the tile data
@@ -82,11 +87,6 @@ fxStarfieldOnLoop:
 	mov r1,#256
 	str r1,[r0]
 	
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	orr r1, #FX_STARFIELD
-	str r1, [r0]
-	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
@@ -94,6 +94,11 @@ fxStarfieldOnLoop:
 fxStarburstOn:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_STARBURST
+	str r1, [r0]
 	
 	bl initVideoStars
 	
@@ -119,11 +124,6 @@ fxStarburstOnLoop:
 	ldr r1,=0x3fff	
 	bl randomStarburst									@ generate em!
 	bl moveStarburst									@ draw them
-
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	orr r1, #FX_STARBURST
-	str r1, [r0]
 	
 	ldmfd sp!, {r0-r6, pc}
 
@@ -132,6 +132,11 @@ fxStarburstOnLoop:
 fxStarfieldDownOn:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_STARFIELD_DOWN
+	str r1, [r0]
 	
 	bl initVideoStars
 	
@@ -162,11 +167,6 @@ fxStarfieldDownOnLoop:
 	mov r1,#128
 	str r1,[r0]
 	
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	orr r1, #FX_STARFIELD_DOWN
-	str r1, [r0]
-	
 	ldmfd sp!, {r0-r6, pc}
 	
 	
@@ -175,6 +175,11 @@ fxStarfieldDownOnLoop:
 fxStarfieldMultiOn:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	ldr r0, =fxMode
+	ldr r1, [r0]
+	orr r1, #FX_STARFIELD_MULTI
+	str r1, [r0]
 	
 	bl initVideoStars
 	
@@ -201,27 +206,22 @@ fxStarfieldMultiOnLoop:
 	bl randomStarsMulti									@ generate em!
 	bl moveStarsMulti									@ draw them
 	
-	ldr r0, =fxMode
-	ldr r1, [r0]
-	orr r1, #FX_STARFIELD_MULTI
-	str r1, [r0]
-	
 	ldmfd sp!, {r0-r6, pc}
 
 	@ ---------------------------------------
 
 fxStarfieldOff:
 
-	stmfd sp!, {r0-r6, lr}
-	
-	bl initVideoMain
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
 	bic r1, #(FX_STARFIELD | FX_STARFIELD_DOWN | FX_STARFIELD_MULTI | FX_STARBURST)
 	str r1, [r0]
+
+	bl initVideoMain
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 	
@@ -312,7 +312,7 @@ plotStarDual:
 
 clearStars:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	mov r0, #0
 	ldr r1, =BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
@@ -321,7 +321,7 @@ clearStars:
 	ldr r1, =BG_TILE_RAM(STAR_BG2_TILE_BASE)
 	bl dmaFillWords
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ---------------------------------------
 

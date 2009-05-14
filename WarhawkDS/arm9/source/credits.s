@@ -44,9 +44,10 @@ showCredits:
 	str r1, [r0]								@ Store back gameMode
 
 	bl fxOff
+	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream
-	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
@@ -100,7 +101,7 @@ showCredits:
 	mov r1, #1
 	str r1, [r0]
 
-	bl fxFadeBlackIn
+	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
@@ -110,6 +111,9 @@ initCredits01:
 
 	stmfd sp!, {r0-r6, lr}
 	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
+
 	@ Write the tile data
 	
 	ldr r0 ,=Credits01Tiles
@@ -126,16 +130,34 @@ initCredits01:
 	
 	@ Draw text
 	
-	ldr r0, =c64LoadingText							@ Load out text pointer
+	ldr r0, =c64LoadingText						@ Load out text pointer
 	ldr r1, =0									@ x pos
 	ldr r2, =22									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits02					@ Callback function address
+	ldr r1, =initCredits01FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits01FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits02
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -144,6 +166,9 @@ initCredits01:
 initCredits02:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -168,9 +193,27 @@ initCredits02:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits03					@ Callback function address
+	ldr r1, =initCredits02FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits02FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits03
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -179,6 +222,9 @@ initCredits02:
 initCredits03:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -203,9 +249,27 @@ initCredits03:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits04					@ Callback function address
+	ldr r1, =initCredits03FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits03FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits04
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -214,6 +278,9 @@ initCredits03:
 initCredits04:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -238,9 +305,27 @@ initCredits04:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits05					@ Callback function address
+	ldr r1, =initCredits04FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits04FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits05
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -249,6 +334,9 @@ initCredits04:
 initCredits05:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -273,9 +361,27 @@ initCredits05:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits06					@ Callback function address
+	ldr r1, =initCredits05FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits05FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits06
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -284,6 +390,9 @@ initCredits05:
 initCredits06:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -308,9 +417,27 @@ initCredits06:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits07					@ Callback function address
+	ldr r1, =initCredits06FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits06FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits07
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -319,6 +446,9 @@ initCredits06:
 initCredits07:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -343,9 +473,27 @@ initCredits07:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits08					@ Callback function address
+	ldr r1, =initCredits07FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits07FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits08
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -354,6 +502,9 @@ initCredits07:
 initCredits08:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -378,9 +529,27 @@ initCredits08:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits09					@ Callback function address
+	ldr r1, =initCredits08FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits08FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits09
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -389,6 +558,9 @@ initCredits08:
 initCredits09:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -413,9 +585,27 @@ initCredits09:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits10					@ Callback function address
+	ldr r1, =initCredits09FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits09FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits10
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -424,6 +614,9 @@ initCredits09:
 initCredits10:
 
 	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
 	
 	@ Write the tile data
 	
@@ -448,9 +641,27 @@ initCredits10:
 	bl drawText
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits01					@ Callback function address
+	ldr r1, =initCredits10FadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits10FadeOut:
+
+	stmfd sp!, {r0-r6, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits01
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 
@@ -466,7 +677,6 @@ updateCredits:
 	ldr r0, =REG_KEYINPUT						@ Read Key Input
 	ldr r1, [r0]
 	tst r1, #BUTTON_A							@ Start button pressed?
-	
 	bleq showTitleScreen
 	
 	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
@@ -475,6 +685,11 @@ updateCredits:
 	
 	.data
 	.align
+	
+	.align
+	
+blankText:
+	.asciz "                                "
 	
 	.align
 c64LoadingText:

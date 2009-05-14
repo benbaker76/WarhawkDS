@@ -84,9 +84,10 @@ showHiScoreEntry:
 	str r1, [r0]								@ Store back gameMode
 	
 	bl fxOff
+	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream
-	bl fxFadeBlackInit
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
@@ -198,7 +199,7 @@ showHiScoreEntry:
 	bl fxColorPulseOn							@ Turn on color pulse fx
 	bl fxCopperTextOn							@ Turn on copper text fx
 @	bl fxStarfieldOn							@ Tune on starfield
-	bl fxFadeBlackIn
+	bl fxFadeIn
 	bl fxFireworksOn
 	
 	ldr r0, =hiScoreIndex
@@ -489,6 +490,7 @@ saveHiScore:
 	
 	bl fxOff
 	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream							@ Turn off music
 	

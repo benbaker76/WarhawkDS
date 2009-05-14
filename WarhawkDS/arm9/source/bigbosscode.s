@@ -29,7 +29,7 @@
 	.global bigBossInitExplode
 	.global bigBossMode
 	
-	#define	bbOffset		68
+	#define	BIGBOSS_OFFSET		68
 
 	.arm
 	.align
@@ -136,42 +136,42 @@ bigBossInitAllSpriteData:
 
 	mov r0,#0				@ sprite number
 	bigBossInitLoop:
-		ldr r5,=spriteActive+bbOffset
+		ldr r5,=spriteActive+BIGBOSS_OFFSET
 		mov r6,#256
 		str r6,[r5, r0, lsl #2]			@ activate sprite
-		ldr r5,=spriteIdent+bbOffset
+		ldr r5,=spriteIdent+BIGBOSS_OFFSET
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
-		ldr r5,=spriteHits+bbOffset
+		ldr r5,=spriteHits+BIGBOSS_OFFSET
 		mov r6,#146
 		str r6,[r5, r0, lsl #2]			@ number of hits
 
 		ldr r6,[r8, r0, lsl #2]
-		ldr r5,=spriteObj+bbOffset
+		ldr r5,=spriteObj+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]			@ set the sprite image
 		
 		ldr r6,[r9, r0, lsl #2]
-		ldr r5,=spriteHFlip+bbOffset
+		ldr r5,=spriteHFlip+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
 
 		mov r6,#0							@ reset other data that may cock things up
-		ldr r5,=spriteFireType+bbOffset
+		ldr r5,=spriteFireType+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteFireDelay+bbOffset
+		ldr r5,=spriteFireDelay+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteFireMax+bbOffset
+		ldr r5,=spriteFireMax+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteBloom+bbOffset
+		ldr r5,=spriteBloom+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteFireSpeed+bbOffset
+		ldr r5,=spriteFireSpeed+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteBurstNum+bbOffset
+		ldr r5,=spriteBurstNum+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteBurstNumCount+bbOffset
+		ldr r5,=spriteBurstNumCount+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteBurstDelay+bbOffset
+		ldr r5,=spriteBurstDelay+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]
-		ldr r5,=spriteBurstDelayCount+bbOffset
+		ldr r5,=spriteBurstDelayCount+BIGBOSS_OFFSET
 		str r6,[r5, r0, lsl #2]		
 		add r0,#1
 		cmp r0,r2
@@ -185,17 +185,17 @@ bigBossInitAllSpriteData:
 	
 	@ set the "softspots", where you can shoot the big boss
 	
-		ldreq r5,=spriteActive+bbOffset+(52*4)
+		ldreq r5,=spriteActive+BIGBOSS_OFFSET+(52*4)
 		moveq r6,#512
 		streq r6,[r5]
-		ldreq r5,=spriteActive+bbOffset+(53*4)
+		ldreq r5,=spriteActive+BIGBOSS_OFFSET+(53*4)
 		moveq r6,#512
 		streq r6,[r5]
 	
-		ldrne r5,=spriteActive+bbOffset+(52*4)
+		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(52*4)
 		movne r6,#512
 		strne r6,[r5]
-		ldrne r5,=spriteActive+bbOffset+(53*4)
+		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(53*4)
 		movne r6,#512
 		strne r6,[r5]
 		
@@ -319,8 +319,8 @@ bigBossDraw:
 	ldreq r9,=bigBossSpritesY1	@ y table
 	ldrne r8,=bigBossSpritesX2	@ x table - boss 2
 	ldrne r9,=bigBossSpritesY2	@ y table
-	ldr r10,=spriteX+bbOffset	@ sprites X coords
-	ldr r11,=spriteY+bbOffset	@ sprites Y coords	
+	ldr r10,=spriteX+BIGBOSS_OFFSET	@ sprites X coords
+	ldr r11,=spriteY+BIGBOSS_OFFSET	@ sprites Y coords	
 	ldr r3,=bigBossSpriteNumber	@ number of sprites used in boss
 	ldr r3,[r3]
 	
@@ -359,7 +359,7 @@ bigBossInitExplode:
 @	mov r6,#64
 @	@ for now (until we have a proper DEATH) we just nulify the boss!
 @	bigBossActiveKill:
-@		ldr r5,=spriteActive+bbOffset
+@		ldr r5,=spriteActive+BIGBOSS_OFFSET
 @		str r6,[r5, r0, lsl #2]			@ make it something that has no detection value
 @		add r0,#1
 @		cmp r0,#64
@@ -637,7 +637,7 @@ bigBossAllDone:
 
 		bl resetScrollRegisters
 		bl fxStarfieldOff
-		bl showEndOfGame
+		bl showLevelNext				@ Must call showLevelNext instead so it will save mental mode options
 
 	bigBossNoMorePhase:
 
@@ -649,162 +649,162 @@ bigBossInitFire1:
 	stmfd sp!, {r0-r10, lr}
 @1
 	mov r1,#11
-	ldr r0,=spriteFireType+bbOffset+(42*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
 
 	mov r1,#40
-	ldr r0,=spriteFireDelay+bbOffset+(42*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(42*4)
-	str r1,[r0]
-
-	mov r1,#3
-	ldr r0,=spriteFireSpeed+bbOffset+(42*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
 
 	mov r1,#3
-	ldr r0,=spriteBurstNum+bbOffset+(42*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(42*4)
+
+	mov r1,#3
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(42*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]	
 	
 	mov r1,#3
-	ldr r0,=spriteBurstDelay+bbOffset+(42*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(42*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]	
 @2
 	mov r1,#11
-	ldr r0,=spriteFireType+bbOffset+(47*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
 
 	mov r1,#40
-	ldr r0,=spriteFireDelay+bbOffset+(47*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(47*4)
-	str r1,[r0]
-
-	mov r1,#3
-	ldr r0,=spriteFireSpeed+bbOffset+(47*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
 
 	mov r1,#3
-	ldr r0,=spriteBurstNum+bbOffset+(47*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(47*4)
+
+	mov r1,#3
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(47*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]	
 	
 	mov r1,#3
-	ldr r0,=spriteBurstDelay+bbOffset+(47*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(47*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]	
 @3
 	mov r1,#23
-	ldr r0,=spriteFireType+bbOffset+(52*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
 
 	mov r1,#120
-	ldr r0,=spriteFireDelay+bbOffset+(52*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(52*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(52*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
 
 	mov r1,#4
-	ldr r0,=spriteBurstNum+bbOffset+(52*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(52*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]	
 	
 	mov r1,#4
-	ldr r0,=spriteBurstDelay+bbOffset+(52*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(52*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]	
 
 @4
 	mov r1,#23
-	ldr r0,=spriteFireType+bbOffset+(53*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
 
 	mov r1,#120
-	ldr r0,=spriteFireDelay+bbOffset+(53*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(53*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(53*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
 
 	mov r1,#4
-	ldr r0,=spriteBurstNum+bbOffset+(53*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(53*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]	
 	
 	mov r1,#4
-	ldr r0,=spriteBurstDelay+bbOffset+(53*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(53*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]	
 	
 @5
 	mov r1,#10
-	ldr r0,=spriteFireType+bbOffset+(40*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
 
 	mov r1,#70
-	ldr r0,=spriteFireDelay+bbOffset+(40*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(40*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(40*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
 
 	mov r1,#0
-	ldr r0,=spriteBurstNum+bbOffset+(40*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(40*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]	
 	
 	mov r1,#0
-	ldr r0,=spriteBurstDelay+bbOffset+(40*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(40*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]	
 
 @6
 	mov r1,#10
-	ldr r0,=spriteFireType+bbOffset+(49*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 
 	mov r1,#70
-	ldr r0,=spriteFireDelay+bbOffset+(49*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(49*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(49*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 
 	mov r1,#0
-	ldr r0,=spriteBurstNum+bbOffset+(49*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(49*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]	
 	
 	mov r1,#0
-	ldr r0,=spriteBurstDelay+bbOffset+(49*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(49*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]	
 	ldmfd sp!, {r0-r10, pc}
 
@@ -814,162 +814,162 @@ bigBossInitFire2:
 	stmfd sp!, {r0-r10, lr}
 @1
 	mov r1,#11
-	ldr r0,=spriteFireType+bbOffset+(42*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
 
 	mov r1,#40
-	ldr r0,=spriteFireDelay+bbOffset+(42*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(42*4)
-	str r1,[r0]
-
-	mov r1,#3
-	ldr r0,=spriteFireSpeed+bbOffset+(42*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
 
 	mov r1,#3
-	ldr r0,=spriteBurstNum+bbOffset+(42*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(42*4)
+
+	mov r1,#3
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(42*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]	
 	
 	mov r1,#3
-	ldr r0,=spriteBurstDelay+bbOffset+(42*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(42*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(42*4)
 	str r1,[r0]	
 @2
 	mov r1,#11
-	ldr r0,=spriteFireType+bbOffset+(47*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
 
 	mov r1,#40
-	ldr r0,=spriteFireDelay+bbOffset+(47*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(47*4)
-	str r1,[r0]
-
-	mov r1,#3
-	ldr r0,=spriteFireSpeed+bbOffset+(47*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
 
 	mov r1,#3
-	ldr r0,=spriteBurstNum+bbOffset+(47*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(47*4)
+
+	mov r1,#3
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(47*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]	
 	
 	mov r1,#3
-	ldr r0,=spriteBurstDelay+bbOffset+(47*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(47*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(47*4)
 	str r1,[r0]	
 @3
 	mov r1,#23
-	ldr r0,=spriteFireType+bbOffset+(52*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
 
 	mov r1,#120
-	ldr r0,=spriteFireDelay+bbOffset+(52*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(52*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(52*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
 
 	mov r1,#4
-	ldr r0,=spriteBurstNum+bbOffset+(52*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(52*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]	
 	
 	mov r1,#4
-	ldr r0,=spriteBurstDelay+bbOffset+(52*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(52*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(52*4)
 	str r1,[r0]	
 
 @4
 	mov r1,#23
-	ldr r0,=spriteFireType+bbOffset+(53*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
 
 	mov r1,#120
-	ldr r0,=spriteFireDelay+bbOffset+(53*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(53*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(53*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
 
 	mov r1,#4
-	ldr r0,=spriteBurstNum+bbOffset+(53*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(53*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]	
 	
 	mov r1,#4
-	ldr r0,=spriteBurstDelay+bbOffset+(53*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(53*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(53*4)
 	str r1,[r0]	
 	
 @5
 	mov r1,#10
-	ldr r0,=spriteFireType+bbOffset+(40*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
 
 	mov r1,#70
-	ldr r0,=spriteFireDelay+bbOffset+(40*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(40*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(40*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
 
 	mov r1,#0
-	ldr r0,=spriteBurstNum+bbOffset+(40*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(40*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]	
 	
 	mov r1,#0
-	ldr r0,=spriteBurstDelay+bbOffset+(40*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(40*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(40*4)
 	str r1,[r0]	
 
 @6
 	mov r1,#10
-	ldr r0,=spriteFireType+bbOffset+(49*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 
 	mov r1,#70
-	ldr r0,=spriteFireDelay+bbOffset+(49*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+bbOffset+(49*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+bbOffset+(49*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 
 	mov r1,#0
-	ldr r0,=spriteBurstNum+bbOffset+(49*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+bbOffset+(49*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]	
 	
 	mov r1,#0
-	ldr r0,=spriteBurstDelay+bbOffset+(49*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+bbOffset+(49*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]	
 	
 	ldmfd sp!, {r0-r10, pc}

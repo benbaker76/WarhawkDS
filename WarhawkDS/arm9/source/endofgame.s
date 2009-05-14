@@ -488,7 +488,6 @@ initEndOfGame:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl stopAudioStream
 	bl clearBG0
 	bl clearBG1
 	bl clearOAM
@@ -538,6 +537,7 @@ initGameOverEnd:
 
 	stmfd sp!, {r0, lr}
 
+	bl stopAudioStream
 	bl clearWindow
 
 	ldr r0, =score

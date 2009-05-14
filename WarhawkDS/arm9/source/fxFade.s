@@ -45,7 +45,7 @@
 	
 fxFadeBlackInit:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =BLEND_CR
 	ldr r1, =(BLEND_FADE_BLACK | BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_SRC_BG2 | BLEND_SRC_BG3 | BLEND_SRC_SPRITE)
@@ -63,13 +63,13 @@ fxFadeBlackInit:
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeWhiteInit:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =BLEND_CR
 	ldr r1, =(BLEND_FADE_WHITE | BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_SRC_BG2 | BLEND_SRC_BG3 | BLEND_SRC_SPRITE)
@@ -87,13 +87,13 @@ fxFadeWhiteInit:
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeBG0Init:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =BLEND_CR
 	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_DST_BG0 | BLEND_DST_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
@@ -111,13 +111,13 @@ fxFadeBG0Init:
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeBG0SubInit:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =BLEND_CR
 	mov r1, #0
@@ -135,13 +135,13 @@ fxFadeBG0SubInit:
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeBG0SubBG1SubInit:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =SUB_BLEND_CR
 	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_DST_BG0 | BLEND_DST_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
@@ -155,13 +155,13 @@ fxFadeBG0SubBG1SubInit:
 	ldr r1, =0							@ Reset value
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeMin:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =BLEND_Y					@ Blend register
 	ldr r1, =0							@ Set to min
@@ -179,13 +179,13 @@ fxFadeMin:
 	ldr r1, =0xF						@ Set to max
 	strh r1, [r0]						@ Write to SUB_BLEND_AB
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeMax:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0, =BLEND_Y					@ Blend register
 	ldr r1, =16							@ Set to max
@@ -203,13 +203,13 @@ fxFadeMax:
 	ldr r1, =(0xF << 8)					@ Set to min
 	strh r1, [r0]						@ Write to SUB_BLEND_AB
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeOff:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -224,13 +224,13 @@ fxFadeOff:
 	mov r1, #0
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeIn:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	bl fxFadeMax
 	
@@ -239,13 +239,13 @@ fxFadeIn:
 	orr r1, #FX_FADE_IN
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 fxFadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeMin
 	
@@ -254,7 +254,7 @@ fxFadeOut:
 	orr r1, #FX_FADE_OUT
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ---------------------------------------
 

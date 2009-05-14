@@ -42,7 +42,7 @@ showLoading:
 	ldr r1, =GAMEMODE_LOADING
 	str r1, [r0]
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	bl fxFadeMax
 	
 	@ Write the palette
@@ -98,7 +98,7 @@ showLoadingFadeOut:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =timerDoneLoading

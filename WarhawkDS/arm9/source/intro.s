@@ -46,7 +46,7 @@ showIntro1:
 	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	bl fxFadeMax
 	
 	@ Write the palette
@@ -97,7 +97,7 @@ showIntro1FadeOut:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =showIntro2
@@ -117,7 +117,7 @@ showIntro2:
 	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	bl fxFadeMax
 	
 	@ Write the palette
@@ -168,7 +168,7 @@ showIntro2FadeOut:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =showIntro3
@@ -188,7 +188,7 @@ showIntro3:
 	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	bl fxFadeMax
 	
 	@ Write the palette
@@ -239,7 +239,7 @@ showIntro3FadeOut:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl fxFadeWhiteInit
+	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =showLoading

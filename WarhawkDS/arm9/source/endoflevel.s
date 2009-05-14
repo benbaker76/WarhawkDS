@@ -47,30 +47,6 @@ showEndOfLevel:
 	ldr r1, =GAMEMODE_ENDOFLEVEL				@ Set the gameMode to end of level
 	str r1, [r0]								@ Store back gameMode
 	
-	ldr r0, =levelCount
-	ldr r1, =levelNum
-	ldr r1, [r1]
-	str r1, [r0]
-	
-	ldr r0, =hofsSF
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =hofsSB
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =basesLeft
-	ldr r1, [r0]
-	ldr r2, =baseCount
-	ldr r3, [r2]
-	ldr r4, =levelNum
-	ldr r5, [r4]
-	cmp r1, #0
-	movne r3, #0
-	moveq r3, r5
-	str r3, [r2]
-	
 	bl fxOff
 	bl fxFadeBlackInit
 	bl fxFadeMax
@@ -84,6 +60,22 @@ showEndOfLevel:
 	bl clearBG3
 	
 	bl initStarData
+	
+	ldr r0, =levelCount
+	ldr r1, =levelNum
+	ldr r1, [r1]
+	str r1, [r0]
+	
+	ldr r0, =basesLeft
+	ldr r1, [r0]
+	ldr r2, =baseCount
+	ldr r3, [r2]
+	ldr r4, =levelNum
+	ldr r5, [r4]
+	cmp r1, #0
+	movne r3, #0
+	moveq r3, r5
+	str r3, [r2]
 	
 	@ Write the palette
 	

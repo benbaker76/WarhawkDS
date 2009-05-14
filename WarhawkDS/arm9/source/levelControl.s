@@ -106,10 +106,11 @@ showLevelStart:
 
 	stmfd sp!, {r0-r6, lr}
 	
-	bl stopSound
 	bl fxOff
 	bl fxFadeBlackInit
 	bl fxFadeMax
+	bl stopSound
+	bl stopAudioStream
 	bl initVideoMain
 	bl initMainTiles
 	bl initLevelScrollRegisters				@ Reset the scroll registers

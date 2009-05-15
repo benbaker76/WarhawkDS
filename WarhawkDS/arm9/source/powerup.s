@@ -182,7 +182,7 @@ powerupCollect:
 	ldr r1,=powerUp
 	str r0,[r1]
 	
-	mov r0,#652					@ set duration of powerup
+	mov r0,#720					@ set duration of powerup
 	ldr r1,=powerupLives
 	str r0,[r1]
 	

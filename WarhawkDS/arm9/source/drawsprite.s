@@ -82,7 +82,7 @@ drawSprite:
 		ldr r0,=spriteActive
 		ldr r2,[r0,r8, lsl #2]
 		cmp r2,#128						@ if it is a boss - dont kill it!!!
-		beq sprites_Done				@ we have to treat a boss differently
+		bge sprites_Done				@ we have to treat a boss differently
 		
 		sprites_Must_Kill:
 		cmp r1,#SCREEN_MAIN_WHITESPACE+32
@@ -548,19 +548,19 @@ drawSprite:
 		
 		@ just a bit of code to add a pulse to the little bullets!
 		@ does not really work well, but does not detract either!
-		ldr r0,=spriteObj
-		ldr r1,[r0,r8,lsl #2]
-		cmp r1,#27
-		bne drawSpriteNotBullet
-
-			ldr r0,=spriteBloom
-			ldr r1,[r0,r8,lsl #2]
-			cmp r1,#0
-			moveq r1,#15
-			subne r1,#1
-			str r1,[r0,r8,lsl #2]
-		
-		drawSpriteNotBullet:
+@		ldr r0,=spriteObj
+@		ldr r1,[r0,r8,lsl #2]
+@		cmp r1,#27
+@		bne drawSpriteNotBullet
+@
+@			ldr r0,=spriteBloom
+@			ldr r1,[r0,r8,lsl #2]
+@			cmp r1,#0
+@			moveq r1,#15
+@			subne r1,#1
+@			str r1,[r0,r8,lsl #2]
+@		
+@		drawSpriteNotBullet:
 	subs r8,#1
 	bpl SLoop
 

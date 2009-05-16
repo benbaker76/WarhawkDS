@@ -42,6 +42,8 @@ showLoading:
 	ldr r1, =GAMEMODE_LOADING
 	str r1, [r0]
 	
+	bl initVideoMain
+	
 	bl fxFadeBlackInit
 	bl fxFadeMax
 	

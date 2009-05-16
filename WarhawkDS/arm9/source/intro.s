@@ -28,8 +28,6 @@
 #include "sprite.h"
 #include "ipc.h"
 
-	#define FONT_COLOR_OFFSET	11
-
 	.arm
 	.align
 	.text
@@ -40,11 +38,13 @@
 
 showIntro1:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_INTRO
 	str r1, [r0]
+	
+	bl initVideoBG2_256
 	
 	bl fxFadeBlackInit
 	bl fxFadeMax
@@ -82,6 +82,30 @@ showIntro1:
 	ldr r2, =HeadsoftMapLen
 	bl dmaCopy
 	
+	@ Write the tile data
+	
+	ldr r0 ,=InfectuousTiles
+	ldr r1, =BG_TILE_RAM_SUB(BG2_TILE_BASE_SUB)
+	ldr r2, =InfectuousTilesLen
+	bl dmaCopy
+
+	ldr r0, =PPOTTiles
+	ldr r1, =BG_TILE_RAM(BG2_TILE_BASE)
+	ldr r2, =PPOTTilesLen
+	bl dmaCopy
+	
+	@ Write map
+	
+	ldr r0, =InfectuousMap
+	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)	@ destination
+	ldr r2, =InfectuousMapLen
+	bl dmaCopy
+
+	ldr r0, =PPOTMap
+	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)			@ destination
+	ldr r2, =PPOTMapLen
+	bl dmaCopy
+	
 	ldr r0, =4000								@ 4 seconds
 	ldr r1, =showIntro1FadeOut					@ Callback function address
 	
@@ -89,15 +113,16 @@ showIntro1:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showIntro1FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
-	bl fxFadeBlackInit
+	bl fxFadeBG1BG2Init
+	bl fxFadeMin
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =showIntro2
@@ -105,30 +130,14 @@ showIntro1FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showIntro2:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_INTRO
-	str r1, [r0]
-	
-	bl fxFadeBlackInit
-	bl fxFadeMax
-	
-	@ Write the palette
-
-	ldr r0, =ProteusPal
-	ldr r1, =BG_PALETTE
-	ldr r2, =ProteusPalLen
-	bl dmaCopy
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-
 	@ Write the tile data
 	
 	ldr r0 ,=InfectuousTiles
@@ -153,22 +162,45 @@ showIntro2:
 	ldr r2, =PPOTMapLen
 	bl dmaCopy
 	
+	@ Write the tile data
+	
+	ldr r0 ,=RetrobytesTiles
+	ldr r1, =BG_TILE_RAM_SUB(BG2_TILE_BASE_SUB)
+	ldr r2, =RetrobytesTilesLen
+	bl dmaCopy
+
+	ldr r0, =WebTiles
+	ldr r1, =BG_TILE_RAM(BG2_TILE_BASE)
+	ldr r2, =WebTilesLen
+	bl dmaCopy
+	
+	@ Write map
+	
+	ldr r0, =RetrobytesMap
+	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)	@ destination
+	ldr r2, =RetrobytesMapLen
+	bl dmaCopy
+
+	ldr r0, =WebMap
+	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)			@ destination
+	ldr r2, =WebMapLen
+	bl dmaCopy
+	
 	ldr r0, =4000								@ 4 seconds
 	ldr r1, =showIntro2FadeOut					@ Callback function address
 	
 	bl startTimer
 	
-	bl fxFadeIn
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showIntro2FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
-	bl fxFadeBlackInit
+	bl fxFadeBG1BG2Init
+	bl fxFadeMin
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =showIntro3
@@ -176,30 +208,14 @@ showIntro2FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showIntro3:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
-	ldr r0, =gameMode
-	ldr r1, =GAMEMODE_INTRO
-	str r1, [r0]
-	
-	bl fxFadeBlackInit
-	bl fxFadeMax
-	
-	@ Write the palette
-
-	ldr r0, =ProteusPal
-	ldr r1, =BG_PALETTE
-	ldr r2, =ProteusPalLen
-	bl dmaCopy
-	ldr r1, =BG_PALETTE_SUB
-	bl dmaCopy
-
 	@ Write the tile data
 	
 	ldr r0 ,=RetrobytesTiles
@@ -229,15 +245,13 @@ showIntro3:
 	
 	bl startTimer
 	
-	bl fxFadeIn
-	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showIntro3FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBlackInit
 	
@@ -247,13 +261,13 @@ showIntro3FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateIntro:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
@@ -267,7 +281,7 @@ updateIntro:
 	bleq stopTimer
 	bleq showTitleScreen
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	

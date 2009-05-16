@@ -34,6 +34,7 @@
 	.global initVideo
 	.global initVideoMain
 	.global initVideoBG1_16
+	.global initVideoBG2_256
 	.global initVideoStars
 	.global resetScrollRegisters
 	
@@ -120,6 +121,21 @@ initVideoBG1_16:
 	strh r1, [r0]
 	ldr r0, =REG_BG1CNT_SUB			@ Set sub screen BG0 format to be 64x64 tiles at base address
 	ldr r1, =(BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(BG1_MAP_BASE_SUB) | BG_TILE_BASE(BG1_TILE_BASE_SUB) | BG_PRIORITY(BG1_PRIORITY))
+	strh r1, [r0]
+	
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ------------------------------------
+	
+initVideoBG2_256:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =REG_BG2CNT				@ Set main screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_256 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE) | BG_TILE_BASE(BG2_TILE_BASE) | BG_PRIORITY(BG2_PRIORITY))
+	strh r1, [r0]
+	ldr r0, =REG_BG2CNT_SUB			@ Set sub screen BG0 format to be 64x64 tiles at base address
+	ldr r1, =(BG_COLOR_256 | BG_32x32 | BG_MAP_BASE(BG2_MAP_BASE_SUB) | BG_TILE_BASE(BG2_TILE_BASE_SUB) | BG_PRIORITY(BG2_PRIORITY))
 	strh r1, [r0]
 	
 	ldmfd sp!, {r0-r1, pc}

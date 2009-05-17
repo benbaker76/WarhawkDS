@@ -105,11 +105,11 @@ drawSprite:
 			str r1,[r0]
 			add r0,#512+512+512			@ skip x/y as this effects player explosion
 			mov r2,#0
-			spriteClearLoop:	
+			spriteClearLoop:			@ this clears all
 				str r1,[r0]
 				add r0,#512
 				add r2,#1
-				cmp r2,#25
+				cmp r2,#26
 			bne spriteClearLoop
 		
 			mov r1, #ATTR0_DISABLED			@ this should destroy the sprite

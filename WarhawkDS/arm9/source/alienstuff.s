@@ -329,7 +329,7 @@ initReversed:					@	We scan from start to finish here to find spare slots
 @---------------------------------------------------------------------------------	
 	
 moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
-	@ the data is only set to allow 32 aliens at any one time
+	@ the data is only set to allow 64 aliens at any one time
 	@ we will have to see how much time (raster) we have when detection is going
 	@ to see if we can add more
 	stmfd sp!, {r0-r10, lr}
@@ -882,9 +882,12 @@ aliensTracker:
 	
 	killTracker:
 	
-		mov r0,#SPRITE_Y_OFFS
-		mov r10,#SPRITE_KILL
-		str r10,[r1,r0]
+	@	mov r0,#SPRITE_Y_OFFS
+	@	mov r10,#SPRITE_KILL
+	@	str r10,[r1,r0]
+	mov r0,#0
+	str r0,[r1]
+
 
 	ldmfd sp!, {r0-r10, pc}
 	

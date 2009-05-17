@@ -163,13 +163,7 @@ showLevelBack:
 	moveq r1,#LEVEL_COUNT
 	str r1,[r0]
 
-	bl fxFadeBlackInit
-	
-	ldr r0, =fxFadeCallbackAddress
-	ldr r1, =initLevel
-	str r1, [r0]
-	
-	bl fxFadeOut
+	bl initLevel
 	
 	ldmfd sp!, {r0-r1, pc}
 

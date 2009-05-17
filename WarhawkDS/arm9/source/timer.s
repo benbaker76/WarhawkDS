@@ -40,7 +40,7 @@ startTimer:
 	@ r0 - timer count in milliseconds
 	@ r1 - callback function address
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	bl stopTimer
 	
@@ -62,20 +62,20 @@ startTimer:
 	ldr r1, =(TIMER_ENABLE | TIMER_IRQ_REQ | TIMER_DIV_1)
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}								@ Return
+	ldmfd sp!, {r0-r2, pc}								@ Return
 	
 	@ ---------------------------------------------
 
 stopTimer:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =TIMER2_CR
 	ldrh r1, [r0]
 	bic r1, #TIMER_ENABLE
 	strh r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}								@ Return
+	ldmfd sp!, {r0-r1, pc}								@ Return
 	
 	@ ---------------------------------------------
 

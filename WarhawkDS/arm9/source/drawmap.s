@@ -391,7 +391,7 @@ drawMapScreenSubDone:
 
 drawSFMapScreenMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =StarFrontMap			@ source
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)	@ destination
@@ -408,11 +408,13 @@ drawSFMapScreenMain:
 	
 	bl drawSFMapMain
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 		@ restore registers and return
 	
+	@--------------------------------------------------
+
 drawSFMapScreenSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =StarFrontMap			@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)	@ destination
@@ -431,13 +433,13 @@ drawSFMapScreenSub:
 	
 	bl drawSFMapSub
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
 
 drawSBMapScreenMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =StarBackMap			@ source
 	ldr r1, =BG_MAP_RAM(BG3_MAP_BASE)	@ destination
@@ -454,13 +456,13 @@ drawSBMapScreenMain:
 	
 	bl drawSBMapMain
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
 
 drawSBMapScreenSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 
 	ldr r0, =StarBackMap			@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG3_MAP_BASE_SUB)	@ destination
@@ -479,13 +481,13 @@ drawSBMapScreenSub:
 	
 	bl drawSBMapSub
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
 	
 drawSFMapMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =StarFrontMap			@ source
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)	@ destination
@@ -506,13 +508,13 @@ drawSFMapMain:
 	
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
 	
 drawSFMapSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =StarFrontMap			@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)	@ destination
@@ -535,13 +537,13 @@ drawSFMapSub:
 	
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
 
 drawSBMapMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =StarBackMap			@ source
 	ldr r1, =BG_MAP_RAM(BG3_MAP_BASE)	@ destination
@@ -562,13 +564,13 @@ drawSBMapMain:
 	
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
 
 drawSBMapSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 
 	ldr r0, =StarBackMap			@ source
 	ldr r1, =BG_MAP_RAM_SUB(BG3_MAP_BASE_SUB)	@ destination
@@ -591,7 +593,7 @@ drawSBMapSub:
 	
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 		@ restore registers and return
 	
 	@ -----------------------------------
 	

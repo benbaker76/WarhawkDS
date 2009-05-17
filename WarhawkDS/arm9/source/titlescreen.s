@@ -38,7 +38,7 @@
 
 showTitleScreen:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 
 	ldr r0, =gameMode							@ Set game mode
 	ldr r1, =GAMEMODE_TITLESCREEN
@@ -175,13 +175,13 @@ showTitleScreen:
 	mov r1,#1
 	str r1,[r0]									@ set button active (start)
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showTextScroller:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0Init
 	bl fxFadeMax
@@ -196,13 +196,13 @@ showTextScroller:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showHiScoreText:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0Init
 	bl fxFadeMax
@@ -216,13 +216,13 @@ showHiScoreText:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showCreditsText:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0Init
 	bl clearBG0Sub								@ Clear BG0 (Sub screen)
@@ -235,13 +235,13 @@ showCreditsText:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 drawCreditText:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 
 	ldr r0, =proteusDevelopmentsText			@ Load out text pointer
 	ldr r1, =3									@ x pos
@@ -303,7 +303,7 @@ drawCreditText:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 
@@ -395,7 +395,7 @@ updateStartSpritesLoop:
 
 updateTitleScreen:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	@ldr r0, =REG_KEYINPUT						@ Read Key Input
 	@ldr r1, [r0]
@@ -417,7 +417,7 @@ updateTitleScreen:
 	
 updateTitleScreenDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 

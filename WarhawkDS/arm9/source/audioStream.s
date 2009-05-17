@@ -134,7 +134,7 @@ stopAudioStream:
 
 playBuffer:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =IPC_SOUND_DATA(0)
 	ldr r1, =0x10
@@ -148,13 +148,13 @@ playBuffer:
 	ldr r1, =buffer										@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
-	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
+	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
 	
 	@ ---------------------------------------------
 	
 audioStreamTimer1:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 	
 	ldr r0, =buffer										@ Buffer address
 	ldr r1, =(BUFFER_SIZE / 2)							@ Read the buffer size
@@ -188,7 +188,7 @@ audioStreamTimer1:
 	add r1, r3											@ Add buffer size to bufferPos
 	str r1, [r0]										@ Write value back to bufferPos
 		
-	ldmfd sp!, {r0-r6, pc}								@ Return
+	ldmfd sp!, {r0-r5, pc}								@ Return
 	
 	@ ---------------------------------------------
 

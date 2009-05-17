@@ -38,7 +38,7 @@
 
 showIntro1:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_INTRO
@@ -113,7 +113,7 @@ showIntro1:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -136,7 +136,7 @@ showIntro1FadeOut:
 	
 showIntro2:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	@ Write the tile data
 	
@@ -191,7 +191,7 @@ showIntro2:
 	
 	bl startTimer
 	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -214,7 +214,7 @@ showIntro2FadeOut:
 	
 showIntro3:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	@ Write the tile data
 	
@@ -245,7 +245,7 @@ showIntro3:
 	
 	bl startTimer
 	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	

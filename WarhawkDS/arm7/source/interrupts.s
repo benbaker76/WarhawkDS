@@ -73,7 +73,7 @@ irqSetDone:
 
 irqInit:
 
-	stmfd sp!, {r0-r5, lr}
+	stmfd sp!, {r0-r4, lr}
 
 	ldr r0, =irqDummy					@ Dummy irq handler
 	mov r1, #0							@ Our mask
@@ -108,7 +108,7 @@ irqInitLoop:
 	mov r1, #1							@ 1
 	str r1, [r0]						@ Write it
 	
-	ldmfd sp!, {r0-r5, pc}
+	ldmfd sp!, {r0-r4, pc}
 	
 	@ ---------------------------------------------
 	
@@ -209,6 +209,8 @@ irqClearFound:
 	
 	ldmfd sp!, {r1-r5, pc}				@ Return
 	
+	@ ---------------------------------------------
+	
 irqDummy:
 
 	bx lr
@@ -221,9 +223,10 @@ irqDummy:
 	.section .itcm
 #endif
 	
+	.align
+	
 irqTable:
 	.space (MAX_INTERRUPTS * 8)			@ MAX_INTERRUPTS * (32 bit handler + 32 bit mask)
 
 	.pool
 	.end
-	

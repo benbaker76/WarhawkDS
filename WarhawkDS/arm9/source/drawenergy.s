@@ -35,7 +35,7 @@
 	
 drawAllEnergyBars:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 	
 	ldr r0, =energy								@ Read energy address
 	ldr r0, [r0]								@ Read energy value
@@ -104,7 +104,7 @@ drawAllEnergyBarsLoopY:
 	
 	bne drawAllEnergyBarsLoopX
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r5, pc}
 	
 	@ ---------- Draw a single energy bar ----------------
 	
@@ -114,7 +114,7 @@ drawEnergyBar:
 	@ r1 = y pos
 	@ r2 = Energy Level (0 Empty - 7 Full)
 
-	stmfd sp!, {r3-r6, lr}
+	stmfd sp!, {r3-r4, lr}
 	
 	mov r3, #7									@ Reverse the value
 	sub r2, r3, r2
@@ -131,7 +131,7 @@ drawEnergyBar:
 	add r4, #1									@ Next tile
 	strh r4, [r3]								@ Write the tile number to our 32x32 map and move along
 	
-	ldmfd sp!, {r3-r6, pc}
+	ldmfd sp!, {r3-r4, pc}
 
 	@ ---------- Flash final energy bar -----------------
 	

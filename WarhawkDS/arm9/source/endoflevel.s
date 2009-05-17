@@ -558,13 +558,13 @@ showEndOfLevelFadeOut:
 	
 updateEndOfLevel:
 
-	stmfd sp!, {r0, lr}
+	stmfd sp!, {lr}
 	
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
 	@bl updateLogoSprites
 	
-	ldmfd sp!, {r0, pc} 					@ restore registers and return
+	ldmfd sp!, {pc} 							@ restore registers and return
 	
 	@---------------------------------
 

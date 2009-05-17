@@ -36,7 +36,7 @@
 
 showLoading:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_LOADING
@@ -92,13 +92,13 @@ showLoading:
 	bl fxColorCycleTextOn
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showLoadingFadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBlackInit
 	
@@ -108,24 +108,24 @@ showLoadingFadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 timerDoneLoading:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {lr}
 	
 	bl fxColorCycleTextOff
 	bl showTitleScreen
 	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	ldmfd sp!, {pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateLoading:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
@@ -133,7 +133,7 @@ updateLoading:
 	bleq stopTimer
 	bleq showGameStart							@ Start the game
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 

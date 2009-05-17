@@ -38,7 +38,7 @@
 	
 initLevel:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r9, lr}
 	
 	bl fxFadeBlackInit
 	bl fxFadeMax
@@ -640,13 +640,13 @@ initLevel:
 	
 		bl showLevelStart
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r9, pc}
 
 	@ ------------------------------------
 
 initLevelSprites:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	mov r1, #1
 	ldr r0,=spriteActive
@@ -668,13 +668,13 @@ initLevelSprites:
 	
 	@ now we need to add special explosions!	
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ------------------------------------
 
 initLevelSpecialSprites:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r8, lr}
 	
 	@ Restore original Explosions
 	ldr r0, =ExplodeOriginalTiles
@@ -768,13 +768,13 @@ initLevelSpecialSprites:
 	noRings:	
 	bl playDinkDinkSound
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r8, pc}
 	
 	@ ------------------------------------
 
 initMainTiles:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	bl DC_FlushAll
 	
@@ -823,7 +823,7 @@ initMainTiles:
 	add r1, #(ScoreTilesLen + FontTilesLen)
 	bl dmaCopy
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ------------------------------------
 	
@@ -847,7 +847,6 @@ initLevelScrollRegisters:
 	strh r6, [r3]					@ Write our offset value to REG_BG2HOFS_SUB
 	strh r6, [r4]					@ Write our offset value to REG_BG3HOFS
 	strh r6, [r5]					@ Write our offset value to REG_BG3HOFS_SUB
-
 		
 	@ Our vertical scrolling routine
 
@@ -887,7 +886,7 @@ initLevelScrollRegisters:
 
 clearSpriteData:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl DC_FlushAll
 	
@@ -898,7 +897,7 @@ clearSpriteData:
 	sub r2, r3											@ sprite end - start = size
 	bl dmaFillWords	
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r3, pc}
 	
 	@ ------------------------------------
 

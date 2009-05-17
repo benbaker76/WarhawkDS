@@ -111,7 +111,7 @@ drawText:
 	@ r2 = y pos
 	@ r3 = 0 = Main, 1 = Sub
 
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r4-r5, lr} 
 	
 	ldr r4, =BG_MAP_RAM(BG0_MAP_BASE)	@ Pointer to main
 	ldr r5, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB) @ Pointer to sub
@@ -133,7 +133,7 @@ drawTextLoop:
 
 drawTextDone:
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r4-r5, pc}
 	
 	@ ---------------------------------------------
 	

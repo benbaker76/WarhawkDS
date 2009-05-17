@@ -35,7 +35,6 @@
 	.global showGameContinue
 	.global showGameStop
 	.global showGamePause
-	.global showGameContinue
 	.global checkGameContinue
 	.global checkGamePause
 	.global updateGameUnPause
@@ -46,7 +45,14 @@ showGameStart:
 	stmfd sp!, {lr}
 
 	bl initData									@ setup actual game data
-	bl initLevel								@ Start level
+
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initLevel
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {pc}
 	
@@ -57,7 +63,14 @@ showGameContinue:
 	stmfd sp!, {lr}
 
 	bl initDataGameContinue						@ setup actual game data
-	bl initLevel								@ Start level
+
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initLevel
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {pc}
 	
@@ -65,13 +78,13 @@ showGameContinue:
 	
 showGameStop:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =gameMode
 	ldr r1, =GAMEMODE_STOPPED
 	str r1, [r0]
 		
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ------------------------------------
 	

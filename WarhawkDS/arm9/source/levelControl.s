@@ -163,7 +163,13 @@ showLevelBack:
 	moveq r1,#LEVEL_COUNT
 	str r1,[r0]
 
-	bl initLevel
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initLevel
+	str r1, [r0]
+	
+	bl fxFadeOut
 	
 	ldmfd sp!, {r0-r1, pc}
 
@@ -200,7 +206,7 @@ showLevelNextEndOfGame:
 	
 	str r2, [r1]
 
-	bl writeOptions
+	bl writeOptions	
 	bl showEndOfGame
 	
 showLevelNextDone:

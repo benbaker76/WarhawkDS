@@ -361,7 +361,7 @@ fxFadeOutVBlank:
 	
 fxFadeExecuteCallback:
 
-	stmfd sp!, {r0, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r0, [r0]
@@ -377,7 +377,7 @@ fxFadeExecuteCallbackReturn:
 	mov r1, #0
 	str r1, [r0]
 
-	ldmfd sp!, {r0, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 

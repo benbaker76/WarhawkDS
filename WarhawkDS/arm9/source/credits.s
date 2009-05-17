@@ -37,7 +37,7 @@
 	
 showCredits:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_CREDITS					@ Set the gameMode to credits
@@ -103,13 +103,13 @@ showCredits:
 
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 initCredits01:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -143,13 +143,13 @@ initCredits01:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits01FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -159,13 +159,13 @@ initCredits01FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits02:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -199,13 +199,13 @@ initCredits02:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits02FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -215,13 +215,13 @@ initCredits02FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits03:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -255,13 +255,13 @@ initCredits03:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits03FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -271,13 +271,13 @@ initCredits03FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits04:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -311,13 +311,13 @@ initCredits04:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits04FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -327,13 +327,13 @@ initCredits04FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits05:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -367,13 +367,13 @@ initCredits05:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits05FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -383,13 +383,13 @@ initCredits05FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits06:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -423,13 +423,13 @@ initCredits06:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits06FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -439,13 +439,13 @@ initCredits06FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits07:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -479,13 +479,13 @@ initCredits07:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits07FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -495,13 +495,13 @@ initCredits07FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits08:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -535,13 +535,13 @@ initCredits08:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits08FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -551,13 +551,13 @@ initCredits08FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits09:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -591,13 +591,13 @@ initCredits09:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits09FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -607,13 +607,13 @@ initCredits09FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 
 initCredits10:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	bl fxFadeMax
@@ -647,13 +647,13 @@ initCredits10:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 initCredits10FadeOut:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl fxFadeBG0SubBG1SubInit
 	
@@ -663,13 +663,13 @@ initCredits10FadeOut:
 	
 	bl fxFadeOut
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 updateCredits:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl scrollSBMain
 	bl scrollSBSub
@@ -679,7 +679,7 @@ updateCredits:
 	tst r1, #BUTTON_A							@ Start button pressed?
 	bleq showTitleScreen
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 	

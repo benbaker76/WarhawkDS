@@ -163,14 +163,6 @@ cheatSequence:									@ in the current check - you must use different key for e
 	.align
 cheatKey:
 	.word 0
-	
-	.align
-cheatActiveText:
-	.asciz " CHEAT ACTIVE "
-
-	.align
-cheatInActiveText:
-	.asciz "CHEAT INACTIVE"
 
 	.pool
 	.end

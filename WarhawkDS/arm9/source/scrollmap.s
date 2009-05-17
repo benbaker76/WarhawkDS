@@ -46,7 +46,7 @@
 	
 scrollMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
 	ldr r1, [r0]
@@ -80,13 +80,13 @@ scrollMain:
 	sub r1, #1						@ lets go up one block (4 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
 		
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r1, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 
 scrollSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
 	ldr r1, [r0]
@@ -120,13 +120,13 @@ scrollSub:
 	sub r1, #1						@ lets go up one block (4 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
 		
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r2, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 
 scrollSFMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =pixelOffsetSFMain
 	ldr r1, [r0]
@@ -150,13 +150,13 @@ scrollSFMain:
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r2, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 
 scrollSFSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =pixelOffsetSFSub
 	ldr r1, [r0]
@@ -180,13 +180,13 @@ scrollSFSub:
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r2, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 	
 scrollSBMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =pixelOffsetSBMain
 	ldr r1, [r0]
@@ -210,13 +210,13 @@ scrollSBMain:
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r2, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 	
 scrollSBSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =pixelOffsetSBSub
 	ldr r1, [r0]
@@ -240,13 +240,13 @@ scrollSBSub:
 	strh r1, [r0]
 	strh r1, [r2]					@ write our scroll counter into REG_BG0VOFS main screen
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r2, pc} 		@ restore rgisters and return
 
 	@---------------------------------
 
 scrollSFMapMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =yposSFMain				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
@@ -259,13 +259,13 @@ scrollSFMapMain:
 	
 	bl drawSFMapMain
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r1, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 
 scrollSFMapSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =yposSFSub				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
@@ -278,13 +278,13 @@ scrollSFMapSub:
 	
 	bl drawSFMapSub
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r1, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 	
 scrollSBMapMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =yposSBMain				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
@@ -297,13 +297,13 @@ scrollSBMapMain:
 	
 	bl drawSBMapMain
 	
-	ldmfd sp!, {r0-r6, pc} 		@ restore rgisters and return
+	ldmfd sp!, {r0-r1, pc} 		@ restore rgisters and return
 	
 	@---------------------------------
 	
 scrollSBMapSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =yposSBSub				@ grab ypos memory adress
 	ldr r1, [r0]					@ r3 = ypos
@@ -318,13 +318,13 @@ scrollSBMapSub:
 	
 scrollDone:
 
-	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 		@ restore registers and return
 
 	@---------------------------------
 
 scrollStars:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0,=delaySF
 	ldr r1,[r0]						@ Delay Starfront for every other update
@@ -347,10 +347,10 @@ noScrollSB:
 	ldr r0,=delaySB
 	str r1,[r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 levelDrift:
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	ldr r0, =horizDrift
 	ldr r0, [r0]
 	ldr r1, =REG_BG1HOFS			@ Load our horizontal scroll register for BG1 on the main screen
@@ -368,10 +368,10 @@ levelDrift:
 	ldr r2, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
 	strh r0,[r1]
 	strh r0,[r2]
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 checkEndOfLevel:
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0,=levelEnd
 	ldr r1,[r0]
@@ -388,13 +388,13 @@ checkEndOfLevel:
 			@bl fxSineWobbleOn				@ Start our wobble effect (not any more :( SNIFF )
 	levelPlay:
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 
 	@---------------------------------
 
 scrollStarBack:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =delaySB						@ Delay Starback for every 2 updates
 	ldr r1, [r0]
@@ -409,13 +409,13 @@ noScrollStarBack:
 @	ldr r0, =delaySB
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	@---------------------------------
 
 scrollStarsHoriz:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 	
 	ldr r0, =delaySF
 	ldr r1, [r0]							@ Delay Starfront for every other update
@@ -456,12 +456,12 @@ noScrollSBHoriz:
 
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r5, pc}
 	
 	@---------------------------------
 scrollStarsHorizFast:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 	
 	ldr r0, =delaySB						@ Delay Starback for every 4 updates
 	ldr r1, [r0]
@@ -483,7 +483,7 @@ noScrollSBHorizFast:
 
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r5, pc}
 	
 	
 	.pool

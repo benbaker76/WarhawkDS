@@ -40,7 +40,7 @@
 
 clearBG0:
 
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r0-r2, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG0_MAP_BASE)
@@ -49,13 +49,13 @@ clearBG0:
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
 	bl dmaFillWords
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@---------------------------------
 	
 clearBG0Partial:								@ this stops the flicker when pause/unpause is repeated on the score etc
 
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r0-r2, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG0_MAP_BASE)
@@ -64,26 +64,26 @@ clearBG0Partial:								@ this stops the flicker when pause/unpause is repeated 
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
 	bl dmaFillWords
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@---------------------------------
 		
 clearBG0Sub:
 
-	stmfd sp!, {r0-r6, lr}	
+	stmfd sp!, {r0-r2, lr}	
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB)
 	ldr r2, =32*32*2
 	bl dmaFillWords
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@---------------------------------
 	
 clearBG1:
 
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r0-r2, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)
@@ -92,13 +92,13 @@ clearBG1:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)
 	bl dmaFillWords
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@---------------------------------
 	
 clearBG2:
 
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r0-r2, lr} 
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG2_MAP_BASE)
@@ -107,13 +107,13 @@ clearBG2:
 	ldr r1, =BG_MAP_RAM_SUB(BG2_MAP_BASE_SUB)
 	bl dmaFillWords
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@---------------------------------
 	
 clearBG3:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 
 	mov r0, #0
 	ldr r1, =BG_MAP_RAM(BG3_MAP_BASE)
@@ -122,7 +122,7 @@ clearBG3:
 	ldr r1, =BG_MAP_RAM_SUB(BG3_MAP_BASE_SUB)
 	bl dmaFillWords
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@---------------------------------
 

@@ -35,7 +35,7 @@
 	.global waitforNoVblank
 
 waitforVblank:
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r0-r1, lr} 
 
 	ldr r0, =REG_VCOUNT
 	
@@ -44,10 +44,10 @@ waitforVblankLoop:
 	cmp r1, #193						@ 193 is, of course, the first scanline of vblank
 	bne waitforVblankLoop				@ loop if r2 is not equal to (NE condition) 193
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 waitforNoVblank:
-	stmfd sp!, {r0-r6, lr} 
+	stmfd sp!, {r0-r1, lr} 
 	
 	ldr r0, =REG_VCOUNT
 
@@ -56,7 +56,7 @@ waitVBlankNoVblankLoop:
 	cmp r1, #255	
 	bmi waitVBlankNoVblankLoop			@ Changed from bne as it was often missed!
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 
 	.pool
 	.end

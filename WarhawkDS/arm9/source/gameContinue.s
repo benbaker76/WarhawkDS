@@ -45,7 +45,7 @@
 	
 showGameContinueMenu:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl getLevelNum
 	
@@ -92,23 +92,17 @@ showGameContinueMenu:
 	
 showGameContinueMenuGameStart:
 
-	bl fxFadeBlackInit
-	
-	ldr r0, =fxFadeCallbackAddress
-	ldr r1, =showGameStart
-	str r1, [r0]
-	
-	bl fxFadeOut
+	bl showGameStart
 	
 showGameContinueMenuDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateGameContinueMenu:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 		
 	bl readInput								@ read the input
 	
@@ -232,13 +226,13 @@ updateGameContinueMenuContinue:
 	
 updateGameContinueMenuDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r5, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 getLevelNum:
 
-	stmfd sp!, {r1-r6, lr}
+	stmfd sp!, {r1-r4, lr}
 
 	ldr r0, =optionGameModeCurrent
 	ldr r0, [r0]
@@ -260,13 +254,13 @@ getLevelNum:
 	str r2, [r1]
 	mov r0, r2
 	
-	ldmfd sp!, {r1-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r1-r4, pc} 					@ restore registers and return
 	
 	@---------------------------------
 
 setLevelNum:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 	
 	ldr r0, =optionGameModeCurrent
 	ldr r0, [r0]
@@ -288,13 +282,13 @@ setLevelNum:
 	str r3, [r2]
 	str r5, [r4]
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r5, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 drawGameContinueMenuText:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r11, lr}
 
 	ldr r0, =restartText
 	ldr r1, =8									@ x pos
@@ -333,13 +327,13 @@ drawGameContinueMenuText:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r11, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 drawArrowSprite:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =SPRITE_PALETTE_SUB
 	ldr r1, =pulseValue
@@ -366,7 +360,7 @@ drawArrowSprite:
 	mov r1, #ATTR2_PRIORITY(0)					@ Set sprite priority
 	strh r1, [r0]								@ Write Attrib 2
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	

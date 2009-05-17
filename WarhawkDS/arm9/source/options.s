@@ -72,21 +72,21 @@ readOptions:
 	
 	@ --------------- TEST VALUES START ----------------
 	
-	ldr r0, =optionGameModeCurrent
-	ldr r1, =OPTION_GAMEMODECURRENT_NORMAL
-	str r1, [r0]
+	@ldr r0, =optionGameModeCurrent
+	@ldr r1, =OPTION_GAMEMODECURRENT_NORMAL
+	@str r1, [r0]
 
-	ldr r0, =optionGameModeComplete
-	ldr r1, =OPTION_GAMEMODECOMPLETE_NORMAL
-	str r1, [r0]
+	@ldr r0, =optionGameModeComplete
+	@ldr r1, =OPTION_GAMEMODECOMPLETE_NORMAL
+	@str r1, [r0]
 	
-	ldr r0, =optionLevelNumNormal
-	ldr r1, =LEVEL_16
-	str r1, [r0]
+	@ldr r0, =optionLevelNumNormal
+	@ldr r1, =LEVEL_16
+	@str r1, [r0]
 	
-	ldr r0, =optionLevelNumMental
-	ldr r1, =LEVEL_4
-	str r1, [r0]
+	@ldr r0, =optionLevelNumMental
+	@ldr r1, =LEVEL_4
+	@str r1, [r0]
 	
 	@ --------------- TEST VALUES END ----------------
 	

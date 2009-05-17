@@ -313,11 +313,11 @@ showBossDie:
 	ldr r0,=explodeSpriteBossCount
 	mov r1,#0
 	str r1,[r0]
+
+	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!	
+	bl playBossExplode2Sound
 	
 	bl stopAudioStream
-
-	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!
-	bl playBossExplode2Sound
 	
 	ldmfd sp!, {r0-r1, pc}
 

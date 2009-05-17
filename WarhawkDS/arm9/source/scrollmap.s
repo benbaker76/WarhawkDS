@@ -51,7 +51,7 @@ scrollMain:
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
 	ldr r1, [r0]
 	cmp r1, #LEVELENDMODE_NONE
-	bne scrollDone					@ Yes then lets quit
+	bne scrollMainDone				@ Yes then lets quit
 	
 	ldr r0, =pixelOffsetMain
 	ldr r1, [r0]
@@ -79,6 +79,8 @@ scrollMain:
 	ldr r1, [r0]					@ r3 = ypos
 	sub r1, #1						@ lets go up one block (4 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
+	
+scrollMainDone:
 		
 	ldmfd sp!, {r0-r1, pc} 		@ restore rgisters and return
 	
@@ -91,7 +93,7 @@ scrollSub:
 	ldr r0, =levelEnd				@ Has our scroller reached end of level?
 	ldr r1, [r0]
 	cmp r1, #LEVELENDMODE_NONE
-	bne scrollDone					@ Yes then lets quit
+	bne scrollSubDone				@ Yes then lets quit
 	
 	ldr r0, =pixelOffsetSub
 	ldr r1, [r0]
@@ -119,6 +121,8 @@ scrollSub:
 	ldr r1, [r0]					@ r3 = ypos
 	sub r1, #1						@ lets go up one block (4 tiles) on the map
 	strh r1, [r0]					@ and put the value back for later
+	
+scrollSubDone:
 		
 	ldmfd sp!, {r0-r2, pc} 		@ restore rgisters and return
 	
@@ -315,8 +319,6 @@ scrollSBMapSub:
 	strh r1, [r0]					@ and put the value back for later
 	
 	bl drawSBMapSub
-	
-scrollDone:
 
 	ldmfd sp!, {r0-r1, pc} 		@ restore registers and return
 

@@ -87,8 +87,8 @@ showHiScoreEntry:
 	bl fxOff
 	bl fxFadeBlackInit
 	bl fxFadeMax
-	bl stopSound
-	bl stopAudioStream
+	@bl stopSound
+	@bl stopAudioStream
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's
@@ -96,21 +96,9 @@ showHiScoreEntry:
 	bl clearBG2
 	bl clearBG3
 
-	ldr r0, =horizDrift
-	mov r1, #0
-	str r1, [r0]
-	
 	bl initStarData
 	
 	ldr r0, =cursorPos							@ Reset cursorPos
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =hofsSF
-	mov r1, #0
-	str r1, [r0]
-	
-	ldr r0, =hofsSB
 	mov r1, #0
 	str r1, [r0]
 	
@@ -200,8 +188,8 @@ showHiScoreEntry:
 	bl fxColorPulseOn							@ Turn on color pulse fx
 	bl fxCopperTextOn							@ Turn on copper text fx
 @	bl fxStarfieldOn							@ Tune on starfield
-	bl fxFadeIn
 	bl fxFireworksOn
+	bl fxFadeIn
 	
 	ldr r0, =hiScoreIndex
 	ldr r1, =colorHilightSub					@ Load colorHilight address

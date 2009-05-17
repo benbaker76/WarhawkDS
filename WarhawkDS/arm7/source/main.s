@@ -36,26 +36,43 @@ interruptHandlerVBlank:
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #-1									@ Stop music value?
-	bleq stopMusic								@ Stop music
-	beq interruptHandlerVBlankDone
+	beq interruptHandlerStopMusic				@ Stop music
 	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
-	blne playMusic								@ If so lets play the sound
-	beq interruptHandlerVBlankDone
+	bne interruptHandlerPlayMusic				@ If so lets play the sound
 	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #-1									@ Stop sound value?
-	bleq stopSound								@ Stop sound
-	beq interruptHandlerVBlankDone
+	beq interruptHandlerStopSound				@ Stop sound
 	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
-	blne playSound								@ If so lets play the sound
-	beq interruptHandlerVBlankDone
+	bne interruptHandlerPlaySound				@ If so lets play the sound
+
+	b interruptHandlerVBlankDone
+
+interruptHandlerStopMusic:
+	
+	bl stopMusic
+	b interruptHandlerVBlankDone
+	
+interruptHandlerPlayMusic:
+	
+	bl playMusic
+	b interruptHandlerVBlankDone
+	
+interruptHandlerStopSound:
+	
+	bl stopSound
+	b interruptHandlerVBlankDone
+	
+interruptHandlerPlaySound:
+	
+	bl playSound
 	
 interruptHandlerVBlankDone:
 	
@@ -219,7 +236,7 @@ playSoundDone:
 	
 stopSound:
 
-	stmfd sp!, {r0-r3, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	mov r0, #15									@ Reset the counter
 	ldr r1, =SCHANNEL_CR(0)						@ This is the base address of the sound channel
@@ -236,7 +253,7 @@ stopSoundLoop:
 	mov r1, #0
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@ ------------------------------------
 	
@@ -244,7 +261,7 @@ getFreeChannel:
 
 	@ RetVal r0 = channel number (0 - 15)
 
-	stmfd sp!, {r1-r3, lr}
+	stmfd sp!, {r1-r2, lr}
 
 	mov r0, #15									@ Reset the counter
 	ldr r1, =SCHANNEL_CR(0)						@ This is the base address of the sound channel
@@ -261,7 +278,7 @@ getFreeChannelLoop:
 
 getFreeChannelFound:
 
-	ldmfd sp!, {r1-r3, pc}						@ restore registers and return
+	ldmfd sp!, {r1-r2, pc}						@ restore registers and return
 	
 	@ ------------------------------------
 

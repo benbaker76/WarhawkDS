@@ -108,10 +108,12 @@ bigBossInit:
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldDownOn						@ Turn on starfield
 
-	ldr r0, =5000								@ 5 seconds
+	ldr r0, =4000								@ 5 seconds
 	ldr r1, =bigBossGo							@ Callback function address
 
 	bl startTimer
+	
+	bl playAlertSound
 
 	bl fxFadeIn
 
@@ -126,7 +128,11 @@ bigBossGo:
 	bl clearBG0
 	
 	bl fxCopperTextOff
+	
 	bl playEvilLaughSound
+
+	ldr r0, =bossRawText						@ Read the path to the file
+	bl playAudioStream							@ Play the audio stream
 	
 	@ ok, init spritedata
 	

@@ -133,6 +133,7 @@
 	.global inGameRawText
 	.global titleRawText
 	.global ppotRawText
+	.global bossRawText
 	.global gameOverRawText
 	.global hiScoreRawText
 	.global endOfGameRawText
@@ -450,6 +451,10 @@ endOfGameRawText:
 	.align
 ppotRawText:
 	.asciz "/PPOT.raw"
+	
+	.align
+bossRawText:
+	.asciz "/Boss.raw"
 
 	.align
 

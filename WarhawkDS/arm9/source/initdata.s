@@ -42,7 +42,7 @@ initData:
 	ldr r0,=levelNum
 	mov r1,#LEVEL_1
 
-mov r1,#14
+mov r1,#16
 	str r1,[r0]
 	
 	ldr r0,=bossSpreadAngle

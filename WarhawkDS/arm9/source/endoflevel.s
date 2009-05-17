@@ -41,7 +41,7 @@
 	
 showEndOfLevel:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_ENDOFLEVEL				@ Set the gameMode to end of level
@@ -276,7 +276,7 @@ showEndOfLevel:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	

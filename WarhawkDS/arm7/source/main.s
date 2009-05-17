@@ -31,31 +31,35 @@
 	
 interruptHandlerVBlank:
 
-	stmfd sp!, {r0-r3, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #-1									@ Stop music value?
 	bleq stopMusic								@ Stop music
+	beq interruptHandlerVBlankDone
 	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
 	blne playMusic								@ If so lets play the sound
+	beq interruptHandlerVBlankDone
 	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #-1									@ Stop sound value?
 	bleq stopSound								@ Stop sound
+	beq interruptHandlerVBlankDone
 	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
 	blne playSound								@ If so lets play the sound
+	beq interruptHandlerVBlankDone
 	
 interruptHandlerVBlankDone:
 	
-	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@ ------------------------------------
 	
@@ -143,7 +147,7 @@ playMusic:
 	
 stopMusic:
 
-	stmfd sp!, {r0-r3, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =SCHANNEL_CR(0)
 	ldr r1, =SCHANNEL_CR(1)
@@ -155,7 +159,7 @@ stopMusic:
 	mov r1, #0
 	str r1, [r0]								@ Clear the value so it wont play again
 
-	ldmfd sp!, {r0-r3, pc} 					@ restore rgisters and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore rgisters and return
 	
 	@ ------------------------------------
 	
@@ -250,8 +254,9 @@ getFreeChannelLoop:
 	ldr r2, [r1, r0, lsl #4]					@ Add the offset (0x04000400 + ((n)<<4))
 	tst r2, #SCHANNEL_ENABLE					@ Is the sound channel enabled?
 	beq getFreeChannelFound						@ (if not equal = channel clear)
-	subs r0, #1									@ sub one from our counter
-	bpl getFreeChannelLoop						@ keep looking
+	sub r0, #1									@ sub one from our counter
+	cmp r0, #1
+	bne getFreeChannelLoop						@ keep looking
 	mov r0, #-1
 
 getFreeChannelFound:

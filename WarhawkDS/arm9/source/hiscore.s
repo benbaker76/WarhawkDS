@@ -49,7 +49,7 @@
 	
 readHiScore:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =hiScoreDatText						@ HiScore.dat filename
 	ldr r1, =hiScoreBuffer						@ Buffer
@@ -58,15 +58,16 @@ readHiScore:
 	
 	bl DC_FlushAll								@ Flush the cache
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 showHiScoreEntry:
 
-	@ r0 - hiscore value
-
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
+	
+	ldr r0, =score
+	bl byte2Int
 	
 	ldr r1, =hiScoreValue
 	str r0, [r1]
@@ -216,13 +217,13 @@ showHiScoreEntryTitleScreen:
 	
 showHiScoreEntryDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateHiScoreEntry:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 	
 	ldr r0, =nameBuffer							@ Load nameBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
@@ -299,7 +300,7 @@ hiScoreEntrySkip:
 	
 hiScoreEntryDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r5, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -307,7 +308,7 @@ hiScoreEntryDone:
 	
 drawCursorSprite:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =SPRITE_PALETTE_SUB
 	ldr r1, =pulseValue
@@ -336,13 +337,13 @@ drawCursorSprite:
 	mov r1, #ATTR2_PRIORITY(0)					@ Set sprite priority
 	strh r1, [r0]								@ Write Attrib 2
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 drawHiScoreText:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 
 	ldr r0, =hiScoreBuffer						@ Load hiScoreBuffer address
 	ldr r5, =0									@ Iterator
@@ -371,7 +372,7 @@ drawHiScoreTextLoop:
 	cmp r5, #HISCORE_ENTRY_COUNT				@ Have we drawn them all?
 	bne drawHiScoreTextLoop						@ No, so loop back
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r5, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -498,7 +499,7 @@ addHiScoreContinue:
 	
 saveHiScore:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl fxOff
 	bl fxFadeBlackInit
@@ -535,7 +536,7 @@ saveHiScore:
 	
 	bl showTitleScreen
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -544,7 +545,7 @@ int2Ascii:
 	@ r0 = value
 	@ r1 = pointer to buffer
 	
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r5, lr}
 	
 	mov r4, r1
 	add r4, #HISCORE_VALUE_SIZE-1
@@ -578,7 +579,7 @@ int2AsciiAddZerosLoop:
 
 int2AsciiDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r5, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -587,7 +588,7 @@ ascii2Int:
 	@ r0 = pointer to buffer
 	@ r0 = return value
 	
-	stmfd sp!, {r1-r6, lr}
+	stmfd sp!, {r1-r5, lr}
 	
 	add r0, #HISCORE_VALUE_SIZE-1
 	
@@ -610,7 +611,7 @@ ascii2IntLoop:
 	
 	mov r0, r1
 	
-	ldmfd sp!, {r1-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r1-r5, pc} 					@ restore registers and return
 	
 	@---------------------------------
 
@@ -619,7 +620,7 @@ byte2Int:
 	@ r0 = pointer to buffer
 	@ r0 = return value
 	
-	stmfd sp!, {r1-r6, lr}
+	stmfd sp!, {r1-r5, lr}
 	
 	add r0, #HISCORE_VALUE_SIZE-1
 	
@@ -641,7 +642,7 @@ byte2IntLoop:
 	
 	mov r0, r1
 	
-	ldmfd sp!, {r1-r6, pc}
+	ldmfd sp!, {r1-r5, pc}
 	
 	@---------------------------------
 	

@@ -45,7 +45,7 @@
 	
 showEndOfGame:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_ENDOFGAME					@ Set the gameMode to end of level
@@ -215,13 +215,13 @@ showEndOfGameContinue:
 
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 initWindow:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -281,13 +281,13 @@ initWindow:
 	ldr r1, =255
 	strb r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 clearWindow:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0, =REG_DISPCNT
 	ldr r1, [r0]
@@ -307,13 +307,13 @@ clearWindow:
 	ldr r1, =0
 	strh r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
 	
 initLargeShipFly:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_LARGESHIP_FLY
@@ -337,13 +337,13 @@ initLargeShipFly:
 	
 	bl startTimer
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 initSmallShipFly:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_SMALLSHIP_FLY
@@ -432,13 +432,13 @@ initSmallShipFly:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 initSmallShipLanded:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_SMALLSHIP_LANDED
@@ -451,13 +451,13 @@ initSmallShipLanded:
 	
 	bl startTimer
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 initMotherShipFly:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 
 	ldr r0, =endOfGameMode
 	ldr r1, =MODE_MOTHERSHIP_FLY
@@ -480,13 +480,13 @@ initMotherShipFly:
 	
 	bl startTimer
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 initEndOfGame:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl clearBG0
 	bl clearBG1
@@ -509,7 +509,7 @@ initEndOfGame:
 	
 	bl startTimer
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -520,7 +520,7 @@ initGameOverFadeOut:
 	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
-	ldr r1, =initGameOverEnd
+	ldr r1, =showHiScoreEntry
 	str r1, [r0]
 	
 	bl fxFadeOut
@@ -529,24 +529,9 @@ initGameOverFadeOut:
 	
 	@---------------------------------
 	
-initGameOverEnd:
-
-	stmfd sp!, {r0, lr}
-
-	bl stopAudioStream
-	bl clearWindow
-
-	ldr r0, =score
-	bl byte2Int
-	bl showHiScoreEntry
-
-	ldmfd sp!, {r0, pc} 						@ restore registers and return
-	
-	@---------------------------------
-	
 updateSpriteIndex:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =spriteCount
 	ldr r1, [r0]
@@ -567,13 +552,13 @@ updateSpriteIndex:
 	
 updateSpriteIndexDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateSpriteMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =OBJ_ATTRIBUTE0(0)					@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
@@ -604,13 +589,13 @@ updateSpriteMain:
 	orr r1, r2
 	strh r1, [r0]								@ Write Attrib 2
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateSpriteSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =OBJ_ATTRIBUTE0_SUB(0)				@ Attrib 0
 	ldr r1, =(ATTR0_COLOR_16 | ATTR0_SQUARE)	@ Attrib 0 settings
@@ -642,13 +627,13 @@ updateSpriteSub:
 	orr r1, r2
 	strh r1, [r0]								@ Write Attrib 2
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateWindow:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =yOffset
 	ldr r1, [r0]
@@ -683,13 +668,13 @@ updateWindow:
 	
 updateWindowDone:
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
 updateShipMoveMain:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	ldr r0, =REG_BG1HOFS
 	ldr r1, =COS_bin							@ Load COS address
@@ -745,13 +730,13 @@ starTurnDone:
 	ldr r3, =vOfs
 	str r2, [r3]
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 updateShipMoveSub:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =REG_BG1HOFS_SUB
 	ldr r1, =COS_bin							@ Load COS address
@@ -798,13 +783,13 @@ updateShipMoveSubDone:
 	
 	strh r2, [r0]								@ Write to attrib 0
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 updateLargeShip:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl scrollSBMain
 	bl scrollSBSub
@@ -812,13 +797,13 @@ updateLargeShip:
 	bl updateSpriteIndex
 	bl updateSpriteMain
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {pc} 						@ restore registers and return
 
 	@---------------------------------
 	
 updateLargeShipFly:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl scrollSBMain
 	bl scrollSBSub
@@ -829,13 +814,13 @@ updateLargeShipFly:
 	bl updateSpriteSub
 	bl updateWindow
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {pc} 						@ restore registers and return
 
 	@---------------------------------
 
 updateSmallShipFly:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl scrollSBMain
 	bl scrollSBSub
@@ -846,13 +831,13 @@ updateSmallShipFly:
 	bl updateSpriteSub
 	bl updateWindow
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {pc} 						@ restore registers and return
 
 	@---------------------------------
 	
 updateSmallShipLanded:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	bl scrollSBMain
 	bl scrollSBSub
@@ -869,13 +854,13 @@ updateSmallShipLanded:
 	movlt r1, #256
 	str r1, [r0]
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 updateMotherShipFly:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {lr}
 	
 	bl scrollSBMain
 	bl scrollSBSub
@@ -886,13 +871,13 @@ updateMotherShipFly:
 	bl updateSpriteSub
 	bl updateWindow
 
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {pc} 						@ restore registers and return
 
 	@---------------------------------
 	
 updateEndOfGame:
 
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r1, lr}
 	
 	ldr r0, =endOfGameMode
 	ldr r1, [r0]
@@ -918,7 +903,7 @@ updateEndOfGame:
 	add r1, #2
 	str r1, [r0]
 	
-	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 
 	@---------------------------------
 

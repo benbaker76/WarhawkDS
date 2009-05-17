@@ -321,7 +321,7 @@ playerIsAllDead:										@ --- PHASE 5
 	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
-	ldr r1, =playerDeathHiScoreEntry
+	ldr r1, =showHiScoreEntry
 	str r1, [r0]
 	
 	bl fxFadeOut
@@ -330,18 +330,6 @@ playerDeathDone:
 
 	ldmfd sp!, {r0-r6, pc}
 
-	@---------------------------------
-	
-playerDeathHiScoreEntry:
-
-	stmfd sp!, {r0, lr}
-	
-	ldr r0, =score
-	bl byte2Int
-	bl showHiScoreEntry
-
-	ldmfd sp!, {r0, pc} 					@ restore registers and return
-	
 	@---------------------------------
 
 	.data

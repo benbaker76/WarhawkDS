@@ -98,7 +98,9 @@ main:
 	
 	@ ----
 	
-	@ldr r0, =9000000
+	@ldr r0, =score
+	@ldr r1, =9
+	@str r1, [r0]
 	@bl showHiScoreEntry
 	
 	@ ----
@@ -125,7 +127,7 @@ main:
 
 	@ ----
 
-	@bl showEndOfGame
+	bl showEndOfGame
 
 	@ ----
 	
@@ -133,7 +135,7 @@ main:
 	
 	@ ----
 
-	bl showIntro1
+	@bl showIntro1
 
 	@ ------------------------------------
 	

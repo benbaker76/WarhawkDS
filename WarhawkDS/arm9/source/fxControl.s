@@ -117,6 +117,12 @@ fxVBlank:
 	
 	cmp r0, #0
 	beq fxVBlankDone
+	tst r0, #FX_SPOTLIGHT_IN
+	blne fxSpotlightInVBlank
+	tst r0, #FX_SPOTLIGHT_OUT
+	blne fxSpotlightOutVBlank
+	tst r0, #FX_COPPER_TEXT
+	blne fxCopperTextVBlank
 	tst r0, #FX_STARFIELD
 	blne fxStarfieldVBlank
 	tst r0, #FX_STARFIELD_DOWN
@@ -133,10 +139,6 @@ fxVBlank:
 	blne fxMosaicInVBlank
 	tst r0, #FX_MOSAIC_OUT
 	blne fxMosaicOutVBlank
-	tst r0, #FX_SPOTLIGHT_IN
-	blne fxSpotlightInVBlank
-	tst r0, #FX_SPOTLIGHT_OUT
-	blne fxSpotlightOutVBlank
 	tst r0, #FX_SCANLINE
 	blne fxScanlineVBlank
 	tst r0, #FX_WIPE_IN_LEFT
@@ -153,8 +155,6 @@ fxVBlank:
 	blne fxColorCycleVBlank
 	tst r0, #FX_COLOR_PULSE
 	blne fxColorPulseVBlank
-	tst r0, #FX_COPPER_TEXT
-	blne fxCopperTextVBlank
 	tst r0, #FX_TEXT_SCROLLER
 	blne fxTextScrollerVBlank
 	tst r0, #FX_VERTTEXT_SCROLLER

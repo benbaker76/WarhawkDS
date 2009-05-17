@@ -235,7 +235,7 @@ fxCopperTextVBlankContinueMain:
 	bl dmaFillHalfWords
 	
 fxCopperTextVBlankContinueSub:
-	
+
 	mov r0, #0								@ Dma channel
 	ldr r1, =colorBufferMain				@ Source
 	ldr r2, =BG_PALETTE						@ Dest

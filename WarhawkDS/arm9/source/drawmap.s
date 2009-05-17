@@ -237,8 +237,6 @@ drawMapMainLoop:
 drawMapMainDone:
 
 	bl checkCraterBlockMain
-	
-	cmp r1,r1
 
 	ldmfd sp!, {r0-r6, pc} 		@ restore registers and return
 	

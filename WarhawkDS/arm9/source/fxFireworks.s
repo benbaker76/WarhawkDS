@@ -313,10 +313,6 @@ updateFireworks:
 			str r0,[r8, r5]				@ store new X
 			str r1,[r9, r5]				@ store new Y
 			
-			@ ------------------ TEST ------------------
-			@b updateFireworksNoDraw		@ <--- UnComment this line and no crash on hardware. Wierd????
-			@ ------------------ TEST ------------------
-	
 			ldr r4,=fireworkColor
 			ldr r2,[r4, r5]				@ r2=firework colour
 

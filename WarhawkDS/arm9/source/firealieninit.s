@@ -46,7 +46,6 @@
 	.global initBananaShot
 	.global initTwinGableShot
 	.global initTrackExplodeShot
-
 @
 @	Every init in this code should also have a "move" function in firealienupdate.s
 @

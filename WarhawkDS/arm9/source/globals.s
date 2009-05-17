@@ -105,6 +105,7 @@
 	.global spriteInstruct
 	.global spriteHFlip
 	.global spriteVFlip
+	.global spriteExplodeType
 	.global vofsSubText
 	.global yposSubText
 	.global blockXText
@@ -509,7 +510,9 @@ spriteSpeedDelay:
 spriteHFlip:
 	.space 512
 spriteVFlip:
-	.space 512	
+	.space 512
+spriteExplodeType:
+	.space 512
 spriteInstruct:
 	.space 32768
 	

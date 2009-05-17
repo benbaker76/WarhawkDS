@@ -236,12 +236,22 @@ initReversed:					@	We scan from start to finish here to find spare slots
 	add r1,#4
 	ldr r0,=SPRITE_SPEED_X_OFFS
 	ldr r2,[r4,r1]
+	and r2,r6
 	str r2,[r3,r0]				@ store initial X speed
-	
+	ldr r2,[r4,r1]
+	lsr r2,#16
+	ldr r0,=SPRITE_EXPLODE_TYPE_OFFS
+	str r2,[r3,r0]				@ store explode type
+
 	add r1,#4
 	ldr r0,=SPRITE_SPEED_Y_OFFS
 	ldr r2,[r4,r1]
+	and r2,r6
 	str r2,[r3,r0]				@ store initial Y speed
+	ldr r2,[r4,r1]
+	lsr r2,#16
+	@ldr r0,=SPRITE_MISC_TYPE_OFFS
+	@str r2,[r3,r0]				@ store "unused" dat	
 
 	mov r2,#12
 	ldr r0,=SPRITE_SPEED_DELAY_X_OFFS

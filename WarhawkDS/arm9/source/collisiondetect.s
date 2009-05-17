@@ -620,7 +620,24 @@ meteorShot:
 	str r7,[r4,r8]
 	b multishotBloom
 	
-explodeSNoIdent:
+explodeSNoIdent:				@ this is to destroy a single alien
+	
+	ldr r6,=SPRITE_EXPLODE_TYPE_OFFS
+	ldr r6,[r4,r6]
+	cmp r6,#0
+	beq notExplodeAndFire
+		@ ok, we need to fire bullet type 14 at the aliens X/Y Coord (or a 5 shot 18)
+		push {r1,r3}	
+		mov r8,#SPRITE_FIRE_SPEED_OFFS
+		mov r1,#4
+		str r1,[r4,r8]
+		mov r1,r4
+		mov r3,r6
+		bl alienFireInit
+		pop {r1,r3}
+
+	notExplodeAndFire:
+	
 	mov r6,#4					@ set to explosion type
 	str r6,[r4]
 	mov r6,#6					@ set the frame to start
@@ -640,7 +657,7 @@ explodeSNoIdent:
 	bl playAlienExplodeSound
 	b dropCheck
 
-explodeSIdent:	
+explodeSIdent:					@ this is to explode an alien that is part of a bigger ship
 	bl explodeIdentAlien
 	ldr r8,=adder+7				@ add 184 to the score (dont ask why?)
 	mov r6,#4

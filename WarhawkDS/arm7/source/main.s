@@ -36,45 +36,22 @@ interruptHandlerVBlank:
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #-1									@ Stop music value?
-	beq interruptHandlerStopMusic				@ Stop music
+	bleq stopMusic								@ Stop music
 	
 	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
-	bne interruptHandlerPlayMusic				@ If so lets play the sound
+	blgt playMusic								@ If so lets play the sound
 	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #-1									@ Stop sound value?
-	beq interruptHandlerStopSound				@ Stop sound
+	bleq stopSound								@ Stop sound
 	
 	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
 	ldr r1, [r0]								@ Read the value
 	cmp r1, #0									@ Is there data there?
-	bne interruptHandlerPlaySound				@ If so lets play the sound
-
-	b interruptHandlerVBlankDone
-
-interruptHandlerStopMusic:
-	
-	bl stopMusic
-	b interruptHandlerVBlankDone
-	
-interruptHandlerPlayMusic:
-	
-	bl playMusic
-	b interruptHandlerVBlankDone
-	
-interruptHandlerStopSound:
-	
-	bl stopSound
-	b interruptHandlerVBlankDone
-	
-interruptHandlerPlaySound:
-	
-	bl playSound
-	
-interruptHandlerVBlankDone:
+	blgt playSound								@ If so lets play the sound
 	
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
 

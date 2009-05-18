@@ -314,10 +314,10 @@ showBossDie:
 	mov r1,#0
 	str r1,[r0]
 	
+	bl stopAudioStream
+	
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!	
 	bl playBossExplode2Sound
-	
-	bl stopAudioStream
 	
 	ldmfd sp!, {r0-r1, pc}
 

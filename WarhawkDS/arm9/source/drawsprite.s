@@ -36,9 +36,6 @@
 #define BUF_ATTRIBUTE2_SUB	(0x07000404)
 
 
-@ started looking at DS mode - ULP!!!
-
-
 	.arm
 	.align
 	.text
@@ -109,7 +106,7 @@ drawSprite:
 				str r1,[r0]
 				add r0,#512
 				add r2,#1
-				cmp r2,#26
+				cmp r2,#27
 			bne spriteClearLoop
 		
 			mov r1, #ATTR0_DISABLED			@ this should destroy the sprite

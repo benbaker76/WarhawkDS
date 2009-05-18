@@ -106,6 +106,12 @@
 	.global spriteHFlip
 	.global spriteVFlip
 	.global spriteExplodeType
+	.global spriteMiscType
+	.global spriteBurstNum
+	.global spriteBurstNumCount
+	.global spriteBurstDelay
+	.global spriteBurstDelayCount
+	.global spriteSpeedDelay
 	.global vofsSubText
 	.global yposSubText
 	.global blockXText
@@ -166,11 +172,6 @@
 	.global bossSpreadAngle
 	.global explodeSpriteBoss
 	.global explodeSpriteBossCount
-	.global spriteBurstNum
-	.global spriteBurstNumCount
-	.global spriteBurstDelay
-	.global spriteBurstDelayCount
-	.global spriteSpeedDelay
 	.global deathMode
 	.global deathModeDelay
 	.global animEnergyPhase
@@ -517,6 +518,8 @@ spriteHFlip:
 spriteVFlip:
 	.space 512
 spriteExplodeType:
+	.space 512
+spriteMiscType:
 	.space 512
 spriteInstruct:
 	.space 32768

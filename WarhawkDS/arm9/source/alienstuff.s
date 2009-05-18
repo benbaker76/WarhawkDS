@@ -250,8 +250,8 @@ initReversed:					@	We scan from start to finish here to find spare slots
 	str r2,[r3,r0]				@ store initial Y speed
 	ldr r2,[r4,r1]
 	lsr r2,#16
-	@ldr r0,=SPRITE_MISC_TYPE_OFFS
-	@str r2,[r3,r0]				@ store "unused" dat	
+	ldr r0,=SPRITE_MISC_TYPE_OFFS
+	str r2,[r3,r0]				@ store "unused" dat	
 
 	mov r2,#12
 	ldr r0,=SPRITE_SPEED_DELAY_X_OFFS

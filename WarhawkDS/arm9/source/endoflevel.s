@@ -265,8 +265,6 @@ showEndOfLevel:
 	bl playAudioStream							@ Play the audio stream
 
 	bl fxCopperTextOn							@ Turn on copper text fx
-@	bl fxStarfieldOn							@ Turn on starfield
-@	bl fxStarfieldDownOn
 	bl fxStarfieldMultiOn
 	
 	ldr r0, =2000								@ 2 seconds

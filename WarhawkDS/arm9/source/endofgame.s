@@ -205,6 +205,8 @@ showEndOfGameContinue:
 	bl playAudioStream							@ Play the audio stream
 
 	bl fxCopperTextOn							@ Turn on copper text fx
+	
+	mov r0,#1024
 	bl fxStarfieldDownOn						@ Turn on starfield
 	bl updateLargeShip
 	

@@ -106,6 +106,8 @@ bigBossInit:
 	bl drawText
 
 	bl fxCopperTextOn							@ Turn on copper text fx
+	
+	mov r0,#128
 	bl fxStarfieldDownOn						@ Turn on starfield
 
 	ldr r0, =4000								@ 5 seconds

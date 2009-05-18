@@ -53,6 +53,10 @@
 fxStarfieldOn:
 
 	stmfd sp!, {r0-r2, lr}
+
+	mov r0,#STAR_COUNT
+	ldr r1,=starAmount
+	str r0,[r1]
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -94,6 +98,10 @@ fxStarfieldOnLoop:
 fxStarburstOn:
 
 	stmfd sp!, {r0-r2, lr}
+
+	mov r0,#STAR_COUNT
+	ldr r1,=starAmount
+	str r0,[r1]
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -130,8 +138,11 @@ fxStarburstOnLoop:
 	@ ---------------------------------------
 
 fxStarfieldDownOn:
-
+	@ pass r0 as number of stars to plot
 	stmfd sp!, {r0-r2, lr}
+
+	ldr r1,=starAmount
+	str r0,[r1]
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -175,6 +186,10 @@ fxStarfieldDownOnLoop:
 fxStarfieldMultiOn:
 
 	stmfd sp!, {r0-r2, lr}
+
+	mov r0,#STAR_COUNT
+	ldr r1,=starAmount
+	str r0,[r1]
 	
 	ldr r0, =fxMode
 	ldr r1, [r0]
@@ -329,7 +344,8 @@ randomStarburst:
 	stmfd sp!, {r0-r11, lr}
 
 	@ r1 is passed for the max speed (0x3fff is a good starter)
-	mov r3, #STAR_COUNT
+	ldr r0,=starAmount
+	ldr r3,[r0]
 	sub r3,#1
 	ldr r4, =starXCoord32
 	ldr r5, =starYCoord
@@ -374,7 +390,8 @@ randomStarsMulti:
 
 	stmfd sp!, {r0-r10, lr}
 	@ r1 is passed for the max speed (0x3fff is a good starter)
-	mov r3, #STAR_COUNT
+	ldr r0,=starAmount
+	ldr r3,[r0]
 	sub r3,#1
 	ldr r4, =starXCoord32
 	ldr r5, =starYCoord
@@ -422,7 +439,8 @@ moveStarsMulti:
 	ldr r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
 	str r6,starSub										@ these 2 vars MUST remain local for speed
 	
-	mov r10, #STAR_COUNT								@ Set numstars
+	ldr r0,=starAmount
+	ldr r10,[r0]
 	sub r10,#1
 	ldr r4, =starSpeed
 	ldr r3, =starYCoord
@@ -528,7 +546,8 @@ moveStarburst:
 	ldr r6,=BG_TILE_RAM_SUB(STAR_BG2_TILE_BASE_SUB)
 	str r6,starSub										@ these 2 vars MUST remain local for speed
 	
-	mov r10, #STAR_COUNT								@ Set numstars
+	ldr r0,=starAmount
+	ldr r10,[r0]
 	sub r10,#1
 	ldr r4, =starSpeed
 	ldr r3, =starYCoord
@@ -676,7 +695,8 @@ starSub:
 	.data
 	.pool
 	.align
-
+starAmount:
+	.word 0
 starDirection:
 	.word 0
 starShade:

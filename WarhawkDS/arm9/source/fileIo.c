@@ -156,15 +156,12 @@ int initFileStream(char *fileName)
 
 int readFileStream(char *pBuffer, int size)
 { 
-	size_t result;
+	int result;
 	
 	if(pFileStream == NULL)
 		return 0;
 	
 	result = fread(pBuffer, 1, size, pFileStream);
-	
-	if(result != size)
-		return result;
 	
 	return result;
 }
@@ -182,6 +179,18 @@ int resetFileStream()
 		return 0;
 	
 	return 1;
+}
+
+int closeFileStream()
+{ 
+	if(pFileStream != NULL)
+	{
+		fclose(pFileStream);
+		
+		return 1;
+	}
+	
+	return 0;
 }
 
 int readFileSize(char *fileName)

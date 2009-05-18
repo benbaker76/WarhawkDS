@@ -89,6 +89,7 @@ showHiScoreEntry:
 	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream
+	bl initVideoMain
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
 	bl clearBG0									@ Clear bg's

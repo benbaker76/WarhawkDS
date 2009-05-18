@@ -29,6 +29,7 @@
 #include "ipc.h"
 #include "timers.h"
 
+	#define STOP_SOUND		-1
 	#define BUFFER_SIZE		4096
 	#define AUDIO_FREQ		32000
 
@@ -123,7 +124,7 @@ stopAudioStream:
 	bl DC_FlushRange
 	
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
-	mov r1, #-1											@ Get the sample address
+	mov r1, #STOP_SOUND									@ Get the sample address
 	str r1, [r0]
 	
 	bl swiWaitForVBlank

@@ -520,12 +520,25 @@ initGameOverFadeOut:
 	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
-	ldr r1, =showHiScoreEntry
+	ldr r1, =initGameOverFadeOutDone
 	str r1, [r0]
 	
 	bl fxFadeOut
 
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+initGameOverFadeOutDone:
+
+	stmfd sp!, {lr}
+	
+	bl clearBG1
+	bl clearOAM
+	bl clearWindow
+	bl showHiScoreEntry
+
+	ldmfd sp!, {pc} 					@ restore registers and return
 	
 	@---------------------------------
 	

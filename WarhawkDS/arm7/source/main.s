@@ -24,6 +24,9 @@
 #include "audio.h"
 #include "ipc.h"
 
+	#define STOP_SOUND			-1
+	#define NO_FREE_CHANNEL		-1
+
 	.arm
 	.align
 	.text
@@ -31,29 +34,54 @@
 	
 interruptHandlerVBlank:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r4, lr}
 	
-	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
-	ldr r1, [r0]								@ Read the value
-	cmp r1, #-1									@ Stop music value?
-	bleq stopMusic								@ Stop music
+	ldr r2, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
+	ldr r3, =IPC_SOUND_LEN(0)					@ Get a pointer to the sound data in IPC
+	ldr r0, [r2]								@ Read the value
+	ldr r1, [r3]								@ Read the value
+	mov r4, #0									@ Value to reset
+	str r4, [r2]								@ Clear the data
+	cmp r0, #STOP_SOUND							@ Stop Sound value?
+	beq interruptHandlerVBlankStopMusic			@ Stop Sound
+	cmp r0, #0									@ Is there data there?
+	bgt interruptHandlerVBlankPlayMusic			@ If so lets play the sound
 	
-	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
-	ldr r1, [r0]								@ Read the value
-	cmp r1, #0									@ Is there data there?
-	blgt playMusic								@ If so lets play the sound
+	ldr r2, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
+	ldr r3, =IPC_SOUND_LEN(1)					@ Get a pointer to the sound data in IPC
+	ldr r0, [r2]								@ Read the value
+	ldr r1, [r3]								@ Read the value
+	mov r4, #0									@ Value to reset
+	str r4, [r2]								@ Clear the data
+	cmp r0, #STOP_SOUND							@ Stop Sound value?
+	beq interruptHandlerVBlankStopSound			@ Stop Sound
+	cmp r0, #0									@ Is there data there?
+	bgt interruptHandlerVBlankPlaySound			@ If so lets play the sound
 	
-	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
-	ldr r1, [r0]								@ Read the value
-	cmp r1, #-1									@ Stop sound value?
-	bleq stopSound								@ Stop sound
+	b interruptHandlerVBlankDone
 	
-	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
-	ldr r1, [r0]								@ Read the value
-	cmp r1, #0									@ Is there data there?
-	blgt playSound								@ If so lets play the sound
+interruptHandlerVBlankStopMusic:
+
+	bl stopMusic
+	b interruptHandlerVBlankDone
 	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+interruptHandlerVBlankPlayMusic:
+
+	bl playMusic
+	b interruptHandlerVBlankDone
+
+interruptHandlerVBlankStopSound:
+
+	bl stopSound
+	b interruptHandlerVBlankDone
+	
+interruptHandlerVBlankPlaySound:
+
+	bl playSound
+	
+interruptHandlerVBlankDone:
+	
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 
 	@ ------------------------------------
 	
@@ -87,55 +115,41 @@ mainLoop:
 	
 playMusic:
 
-	stmfd sp!, {r0-r3, lr}
+	stmfd sp!, {r0-r4, lr}
 	
-	ldr r0, =SCHANNEL_CR(0)
-	ldr r1, =SCHANNEL_CR(1)
-	mov r2, #0
-	str r2, [r0]
-	str r2, [r1]
+	@ r0 - Data
+	@ r1 - Len
 	
-	ldr r0, =SCHANNEL_TIMER(0)
-	ldr r1, =SCHANNEL_TIMER(1)
-	ldr r2, =SOUND_FREQ(32000)					@ Frequency currently hard-coded to 32000 Hz
-	strh r2, [r0]
-	strh r2, [r1]
+	ldr r2, =SCHANNEL_TIMER(0)
+	ldr r3, =SCHANNEL_TIMER(1)
+	ldr r4, =SOUND_FREQ(32000)					@ Frequency currently hard-coded to 32000 Hz
+	strh r4, [r2]
+	strh r4, [r3]
 	
-	ldr r0, =SCHANNEL_SOURCE(0)					@ Channel source
-	ldr r1, =SCHANNEL_SOURCE(1)					@ Channel source
-	ldr r2, =IPC_SOUND_DATA(0)					@ Lets get first sound in IPC
-	ldr r3, [r2]								@ Read the value
-	str r3, [r0]								@ Write the value
-	str r3, [r1]								@ Write the value
+	ldr r2, =SCHANNEL_SOURCE(0)					@ Channel source
+	ldr r3, =SCHANNEL_SOURCE(1)					@ Channel source
+	str r0, [r2]								@ Write the value
+	str r0, [r3]								@ Write the value
 	
-	ldr r0, =SCHANNEL_LENGTH(0)
-	ldr r1, =SCHANNEL_LENGTH(1)
-	ldr r2, =IPC_SOUND_LEN(0)					@ Get the location of the sound length
-	ldr r3, [r2]								@ Read the value
-	and r3, #(~7)								@ Multiple of 4 bytes
-	and r3, #0x7FFFFFFF							@ And with 0x7FFFFFFF
-	lsr r3, #2									@ Right shift (LEN >> 2)
-	str r3, [r0]								@ Write the value
-	str r3, [r1]								@ Write the value
+	ldr r2, =SCHANNEL_LENGTH(0)
+	ldr r3, =SCHANNEL_LENGTH(1)
+	lsr r1, #2									@ Right shift (LEN >> 2)
+	str r1, [r2]								@ Write the value
+	str r1, [r3]								@ Write the value
 	
-	ldr r0, =SCHANNEL_REPEAT_POINT(0)
-	ldr r1, =SCHANNEL_REPEAT_POINT(1)
-	mov r2, #0
-	strh r2, [r0]
-	strh r2, [r1]
+	ldr r2, =SCHANNEL_REPEAT_POINT(0)
+	ldr r3, =SCHANNEL_REPEAT_POINT(1)
+	mov r4, #0
+	strh r4, [r2]
+	strh r4, [r3]
 	
-	ldr r0, =SCHANNEL_CR(0)
-	ldr r1, =SCHANNEL_CR(1)
-	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(0))
-	str r2, [r0]
-	ldr r2, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(127))
-	str r2, [r1]
-	
-	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
-	mov r1, #0
-	str r1, [r0]								@ Clear the value so it wont play again
+	ldr r2, =SCHANNEL_CR(0)
+	ldr r3, =SCHANNEL_CR(1)
+	ldr r4, =(SCHANNEL_ENABLE | SOUND_REPEAT | SOUND_VOL(127) | SOUND_PAN(64) | SOUND_8BIT)
+	str r4, [r2]
+	str r4, [r3]
 
-	ldmfd sp!, {r0-r3, pc} 					@ restore rgisters and return
+	ldmfd sp!, {r0-r4, pc} 					@ restore rgisters and return
 	
 	@ ------------------------------------
 	
@@ -148,10 +162,6 @@ stopMusic:
 	mov r2, #0
 	str r2, [r0]
 	str r2, [r1]
-	
-	ldr r0, =IPC_SOUND_DATA(0)					@ Get a pointer to the sound data in IPC
-	mov r1, #0
-	str r1, [r0]								@ Clear the value so it wont play again
 
 	ldmfd sp!, {r0-r2, pc} 					@ restore rgisters and return
 	
@@ -159,55 +169,42 @@ stopMusic:
 	
 playSound:
 
-	stmfd sp!, {r0-r3, lr}
+	stmfd sp!, {r0-r4, lr}
 	
-	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
-	ldr r1, [r0]								@ Read the value
-	cmp r1, #0									@ Is there data there?
-	beq playSoundDone							@ If not lets not play a sound
+	@ r0 - Data
+	@ r1 - Len
+	
+	mov r2, r0
 	
 	bl getFreeChannel
-	cmp r0, #-1
+	cmp r0, #NO_FREE_CHANNEL
 	beq playSoundDone
 
 	mov r3, r0, lsl #4
+	mov r0, r2
 	
-	ldr r0, =SCHANNEL_CR(0)
-	mov r1, #0
-	str r1, [r0, r3]
+	ldr r2, =SCHANNEL_TIMER(0)
+	ldr r4, =SOUND_FREQ(11025)					@ Frequency currently hard-coded to 11025 Hz
+	strh r4, [r2, r3]
 	
-	ldr r0, =SCHANNEL_TIMER(0)
-	ldr r1, =SOUND_FREQ(11025)					@ Frequency currently hard-coded to 11025 Hz
-	strh r1, [r0, r3]
+	ldr r2, =SCHANNEL_SOURCE(0)					@ Channel source
+	str r0, [r2, r3]							@ Write the value
 	
-	ldr r0, =SCHANNEL_SOURCE(0)					@ Channel source
-	ldr r1, =IPC_SOUND_DATA(1)					@ Lets get first sound in IPC
-	ldr r2, [r1]								@ Read the value
-	str r2, [r0, r3]							@ Write the value
+	ldr r2, =SCHANNEL_LENGTH(0)
+	lsr r1, #2									@ Right shift (LEN >> 2)
+	str r1, [r2, r3]							@ Write the value
 	
-	ldr r0, =SCHANNEL_LENGTH(0)
-	ldr r1, =IPC_SOUND_LEN(1)					@ Get the location of the sound length
-	ldr r2, [r1]								@ Read the value
-	and r2, #(~7)								@ Multiple of 4 bytes
-	and r2, #0x7FFFFFFF							@ And with 0x7FFFFFFF
-	lsr r2, #2									@ Right shift (LEN >> 2)
-	str r2, [r0, r3]							@ Write the value
+	ldr r2, =SCHANNEL_REPEAT_POINT(0)
+	mov r4, #0
+	strh r4, [r2, r3]
 	
-	ldr r0, =SCHANNEL_REPEAT_POINT(0)
-	mov r1, #0
-	strh r1, [r0, r3]
+	ldr r2, =SCHANNEL_CR(0)
+	ldr r4, =(SCHANNEL_ENABLE | SOUND_ONE_SHOT | SOUND_VOL(127) | SOUND_PAN(64) | SOUND_8BIT)
+	str r4, [r2, r3]
 	
-	ldr r0, =SCHANNEL_CR(0)
-	ldr r1, =(SCHANNEL_ENABLE | SOUND_ONE_SHOT | SOUND_VOL(127) | SOUND_PAN(64) | SOUND_8BIT)
-	str r1, [r0, r3]
-	
-playSoundDone:
-	
-	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
-	mov r1, #0
-	str r1, [r0]					
+playSoundDone:				
 
-	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 	
 	@ ------------------------------------
 	
@@ -225,10 +222,6 @@ stopSoundLoop:
 	sub r0, #1									@ sub one from our counter
 	cmp r0, #1
 	bne stopSoundLoop							@ back to our loop
-
-	ldr r0, =IPC_SOUND_DATA(1)					@ Get a pointer to the sound data in IPC
-	mov r1, #0
-	str r1, [r0]
 
 	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
@@ -251,7 +244,8 @@ getFreeChannelLoop:
 	sub r0, #1									@ sub one from our counter
 	cmp r0, #1
 	bne getFreeChannelLoop						@ keep looking
-	mov r0, #-1
+	
+	mov r0, #NO_FREE_CHANNEL
 
 getFreeChannelFound:
 

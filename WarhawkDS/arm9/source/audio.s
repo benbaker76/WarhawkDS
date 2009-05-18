@@ -25,6 +25,8 @@
 #include "dma.h"
 #include "ipc.h"
 
+	#define STOP_SOUND		-1
+
 	.arm
 	.align
 	.text
@@ -57,13 +59,13 @@
 stopSound:
 
 	stmfd sp!, {r0-r1, lr}
-
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
-	mov r1, #0											@ Zero
-	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)
+	ldr r1, =0x10
+	bl DC_FlushRange
 	
 	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
-	mov r1, #-1											@ Stop sound value
+	mov r1, #STOP_SOUND									@ Stop sound value
 	str r1, [r0]										@ Write the value
 	
 	ldmfd sp!, {r0-r1, pc} 							@ restore registers and return

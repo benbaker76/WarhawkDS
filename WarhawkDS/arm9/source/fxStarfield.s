@@ -281,51 +281,6 @@ fxStarfieldMultiVBlank:
 	
 	ldmfd sp!, {r0-r1, pc}
 	
-	@ ---------------------------------------
-	
-plotStarDual:
-
-	@ this now will never draw out of the 0-767 tiles allocated regardless of x/y
-	@-----------------------------------------------------
-	@ i have left this here for comparison, it is not used
-	@-----------------------------------------------------
-	stmfd sp!, {r0-r8, lr}
-
-	@ r0=x r1=y, r5=palette number to plot
-	@ r7=top tiles
-	@ r8=bottom tiles
-
-	cmp r1,#192
-	movpl r6,r8										@ bottom screen
-	movle r6,r7										@ top screen
-	subpl r1,#192
-	
-	mov r3, r1, lsr #3								@ r3 = y / 8
-	lsl r3, #5										@ mul by 32 (32 tiles per screen row)
-													@ r3= Y Tile number (0,32,64,96, etc)
-	mov r4, r0, lsr #3								@ r4 = x / 8
-	adds r3, r4										@ r3 = tile number to modify (0-767)
-	bmi noPlotStar									@ make sure we never plot out of range
-	cmp r3,#768
-	bge noPlotStar									@ make sure we never plot out of range
-	add r4, r6, r3, lsl #5							@ add to tile base, tile number * 32 bytes (for 16 col)
-	
-	@ r5=first word of required tile
-	
-	and r1, #0x7									@ take the low 3 bits (0-7) of y (each y is one word)
-	and r0, #0x7									@ take the low 3 bits (0-7) of x (each x is halfbyte)
-	add r4, r1, lsl #2								@ add y (0-7) to find which of the words to hit in the tile	
-	
-	@ r4= the word in the tile 0-7	(Y) / r0= nibble to adjust (0-7)	(X)
-
-	lsl r0, #2										@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	lsl r5, r0										@ shift the colour to the correct 4 bit space
-	ldr r3, [r4]									@ load word at tile pos
-	orr r3, r5										@ or our colour in (shifted x units)
-	str r3, [r4]									@ store it back
-	noPlotStar:	
-	ldmfd sp!, {r0-r8, pc}
-	
 	@ ---------------------------------------	
 
 clearStars:
@@ -372,14 +327,14 @@ randomStarburst:
 
 		bl getRandom									@ generate speed
 		and r8, r1	
-@		add r8, #255
-@lsr r8,#19
-add r8,#1024
+		add r8,#1024
 		str r8, [r6, r3, lsl #2] 						@ Store Speed
 	
 		bl getRandom									@ generate colours
 		and r8,#0x3
-		add r8,#10
+		add r8,#11
+		cmp r8,#14
+		movpl r8,#13		
 		strb r8,[r10, r3]
 
 		subs r3, #1	
@@ -423,7 +378,9 @@ starloopMulti:
 	
 	bl getRandom									@ generate colours
 	and r8,#0x3
-	add r8,#10
+	add r8,#11
+	cmp r8,#14
+	movpl r8,#13
 	strb r8,[r10, r3]
 
 	subs r3, #1	
@@ -493,8 +450,6 @@ moveStarsMultiLoop:
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
 	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
-
-
 
 	add r0,#0x1000									@ add 1 to x
 	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
@@ -573,31 +528,23 @@ moveStarburstLoop:
 	muls r9,r6,r7									@ mul cos by speed
 	adds r0,r9, asr #12								@ add to x
 
-bmi burstRegenerate
-cmp r0,#0xff000
-bge burstRegenerate
+	bmi burstRegenerate
+	cmp r0,#0xff000
+	bge burstRegenerate
 	
-@	ldr r9,=0xfffff									@ reset to 0.12-255.12 (this is 1 cycle quicker than compairs)
-@	ands r0,r9
 	str r0, [r2,r10, lsl #2]
 			
 	ldr r1, [r3, r10, lsl #2]						@ r1 now holds the Y coord of the star		MOVE Y
 	muls r9,r6,r8
 	adds r1,r9, asr #12								@ add to Y coord (signed)
-@	movmi r1,#0x180000								@ reset at boundries (shifted 12)
-@	cmppl r1,#0x180000
-@	movpl r1,#0
 
-bmi burstRegenerate
-cmp r1,#0x180000
-bge burstRegenerate
+	bmi burstRegenerate
+	cmp r1,#0x180000
+	bge burstRegenerate
 
 	str r1, [r3, r10, lsl #2]						@ store y 20.12
 	
 	ldrb r5,[r12,r10]								@ star colour
-@	mov r5,#11
-	
-	
 	
 	push {r3,r4}									@ just not ENOUGH registers :(
 	push {r1}										@ store y
@@ -713,3 +660,49 @@ starXCoord32:
 starDir:
 	.space STAR_COUNT*4
 	.end
+
+	@ ---------------------------------------
+	
+plotStarDual:
+
+	@ this now will never draw out of the 0-767 tiles allocated regardless of x/y
+	@-----------------------------------------------------
+	@ i have left this here for comparison, it is not used
+	@-----------------------------------------------------
+	stmfd sp!, {r0-r8, lr}
+
+	@ r0=x r1=y, r5=palette number to plot
+	@ r7=top tiles
+	@ r8=bottom tiles
+
+	cmp r1,#192
+	movpl r6,r8										@ bottom screen
+	movle r6,r7										@ top screen
+	subpl r1,#192
+	
+	mov r3, r1, lsr #3								@ r3 = y / 8
+	lsl r3, #5										@ mul by 32 (32 tiles per screen row)
+													@ r3= Y Tile number (0,32,64,96, etc)
+	mov r4, r0, lsr #3								@ r4 = x / 8
+	adds r3, r4										@ r3 = tile number to modify (0-767)
+	bmi noPlotStar									@ make sure we never plot out of range
+	cmp r3,#768
+	bge noPlotStar									@ make sure we never plot out of range
+	add r4, r6, r3, lsl #5							@ add to tile base, tile number * 32 bytes (for 16 col)
+	
+	@ r5=first word of required tile
+	
+	and r1, #0x7									@ take the low 3 bits (0-7) of y (each y is one word)
+	and r0, #0x7									@ take the low 3 bits (0-7) of x (each x is halfbyte)
+	add r4, r1, lsl #2								@ add y (0-7) to find which of the words to hit in the tile	
+	
+	@ r4= the word in the tile 0-7	(Y) / r0= nibble to adjust (0-7)	(X)
+
+	lsl r0, #2										@ times r0 (X) by 4 for nibbles (4 bits per colour)
+	lsl r5, r0										@ shift the colour to the correct 4 bit space
+	ldr r3, [r4]									@ load word at tile pos
+	orr r3, r5										@ or our colour in (shifted x units)
+	str r3, [r4]									@ store it back
+	noPlotStar:	
+	ldmfd sp!, {r0-r8, pc}
+	

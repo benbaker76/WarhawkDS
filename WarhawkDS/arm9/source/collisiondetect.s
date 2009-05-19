@@ -1120,26 +1120,26 @@ stmfd sp!, {r0-r10, lr}
 	add r2,r3						@ r2= player x
 				@ X checks
 
-	adds r0,#96						@ boundry
+	adds r0,#64						@ boundry
 	cmp r2,r0	
 	bpl noCyclone
-	adds r2,#192					@ boundry value * 2
+	adds r2,#128					@ boundry value * 2
 	cmp r2,r0
 	bmi noCyclone
-	subs r2,#192
+	subs r2,#128
 
 	ldr r6,=spriteY
 	ldr r7,[r6]						@ r7=player y
 	mov r8,#SPRITE_Y_OFFS
 	ldr r4,[r1,r8]					@ r8=Alien y
 				@ Y checks
-	adds r4,#96
+	adds r4,#64
 	cmp r7,r4
 	bpl noCyclone
-	adds r7,#192
+	adds r7,#128
 	cmp r7,r4
 	bmi noCyclone
-	subs r7,#192
+	subs r7,#128
 	@ ok, now in square bounds around cyclone
 	@ r2,[r5] = x r7,[r6] = y
 

@@ -752,7 +752,7 @@
 	add r1,r9						@ r9 is out calculate "distance travelled"
 	str r1,[r2,r0]					@ it is by no means accurate, but will do
 	
-	cmp r1,#300						@ duration of "life"
+	cmp r1,#400						@ duration of "life"
 	blt TExplodeDone
 	
 		@ ok, time to make it an explosion

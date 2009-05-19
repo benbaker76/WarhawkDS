@@ -1181,7 +1181,7 @@ cycloneRightPull:
 			movmi r8,#0
 			ldr r4,=horizDrift
 			strb r8,[r4]
-			ldmfd sp!, {r0-r10, pc}
+		@	ldmfd sp!, {r0-r10, pc}
 		CYleftmove:
 		ldr r8,[r6]
 		ldr r1,=pullCount
@@ -1211,7 +1211,7 @@ cycloneLeftPull:
 			movpl r8,#64
 			ldr r4,=horizDrift
 			strb r8,[r4]
-			ldmfd sp!, {r0-r10, pc}
+		@	ldmfd sp!, {r0-r10, pc}
 		CYRightmove:
 		ldr r8,[r6]
 		mov r4,#256

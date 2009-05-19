@@ -888,7 +888,11 @@ clearSpriteData:
 
 	stmfd sp!, {r0-r3, lr}
 	
-	bl DC_FlushAll
+	ldr r0, =spriteDataStart
+	ldr r1, =spriteDataEnd								@ Get the sprite data end
+	ldr r2, =spriteDataStart							@ Get the sprite data start
+	sub r1, r2											@ sprite end - start = size
+	bl DC_FlushRange
 	
 	mov r0, #0
 	ldr r1, =spriteDataStart

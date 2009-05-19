@@ -43,6 +43,11 @@
 showGameStart:
 
 	stmfd sp!, {lr}
+	
+	ldr r0, =fxFadeOutBusy
+	ldr r0, [r0]
+	cmp r0, #FADE_BUSY
+	beq showGameStartDone
 
 	bl initData									@ setup actual game data
 
@@ -54,6 +59,8 @@ showGameStart:
 	
 	bl fxFadeOut
 	
+showGameStartDone:
+	
 	ldmfd sp!, {pc}
 	
 	@ ------------------------------------
@@ -61,6 +68,11 @@ showGameStart:
 showGameContinue:
 
 	stmfd sp!, {lr}
+	
+	ldr r0, =fxFadeOutBusy
+	ldr r0, [r0]
+	cmp r0, #FADE_BUSY
+	beq showGameContinueDone
 
 	bl initDataGameContinue						@ setup actual game data
 
@@ -71,6 +83,8 @@ showGameContinue:
 	str r1, [r0]
 	
 	bl fxFadeOut
+	
+showGameContinueDone:
 	
 	ldmfd sp!, {pc}
 	

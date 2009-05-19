@@ -318,3 +318,8 @@
 
 #define OPTION_GAMEMODECOMPLETE_NORMAL		BIT(0)
 #define OPTION_GAMEMODECOMPLETE_MENTAL		BIT(1)
+
+@ Fade values
+
+#define FADE_NOT_BUSY				0
+#define FADE_BUSY					1

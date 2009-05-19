@@ -42,6 +42,8 @@
 	.global fxFadeOut
 	.global fxFadeInVBlank
 	.global fxFadeOutVBlank
+	.global fxFadeOutBusy
+	.global fxFadeOutBusy
 	.global fxFadeCallbackAddress
 	
 fxFadeBlackInit:
@@ -249,6 +251,10 @@ fxFadeOff:
 	mov r1, #0
 	str r1, [r0]
 	
+	ldr r0, =fxFadeOutBusy
+	ldr r1, =FADE_NOT_BUSY
+	str r1, [r0]
+	
 	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------
@@ -277,6 +283,10 @@ fxFadeOut:
 	ldr r0, =fxMode					@ lets set the fade effect
 	ldr r1, [r0]
 	orr r1, #FX_FADE_OUT
+	str r1, [r0]
+	
+	ldr r0, =fxFadeOutBusy
+	ldr r1, =FADE_BUSY
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r1, pc}
@@ -387,6 +397,9 @@ fxFadeExecuteCallbackReturn:
 fadeValue:
 	.word 0
 	
+fxFadeOutBusy:
+	.word 0
+
 fxFadeCallbackAddress:
 	.word 0
 	

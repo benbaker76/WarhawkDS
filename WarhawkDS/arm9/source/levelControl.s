@@ -162,7 +162,7 @@ showLevelBack:
 	cmp r1,#0
 	moveq r1,#LEVEL_COUNT
 	str r1,[r0]
-
+	
 	bl initLevel
 	
 	ldmfd sp!, {r0-r1, pc}
@@ -172,7 +172,7 @@ showLevelBack:
 showLevelNext:
 
 	stmfd sp!, {r0-r2, lr}
-
+	
 	ldr r0, =levelNum
 	ldr r1, [r0]
 	add r1, #1

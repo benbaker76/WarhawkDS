@@ -222,7 +222,7 @@ updateHiScoreEntry:
 	bl readInput
 	
 	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
-	bne hiScoreEntrySkip
+	bne updateHiScoreEntrySkip
 
 	ldr r4, =REG_KEYINPUT						@ Read key input register
 	ldr r5, [r4]								@ Read key input value
@@ -268,7 +268,7 @@ updateHiScoreEntry:
 	ldr r4, =3									@ Draw 3 characters
 	bl drawTextCount							@ Draw text
 
-hiScoreEntrySkip:
+updateHiScoreEntrySkip:
 	
 	bl drawCursorSprite							@ Draw the cursor sprite
 @	bl updateLogoSprites
@@ -277,7 +277,12 @@ hiScoreEntrySkip:
 	ldr r0, =REG_KEYINPUT						@ Read key input register
 	ldr r1, [r0]								@ Read key input value
 	tst r1, #BUTTON_A							@ Button A?
-	bne hiScoreEntryDone						@ Yes, so save the hiscore
+	bne updateHiScoreEntryDone					@ Yes, so save the hiscore
+	
+	ldr r0, =fxFadeOutBusy
+	ldr r0, [r0]
+	cmp r0, #FADE_BUSY
+	beq updateHiScoreEntryDone
 	
 	bl fxFadeBlackInit
 	
@@ -287,7 +292,7 @@ hiScoreEntrySkip:
 	
 	bl fxFadeOut
 	
-hiScoreEntryDone:
+updateHiScoreEntryDone:
 	
 	ldmfd sp!, {r0-r5, pc} 					@ restore registers and return
 	

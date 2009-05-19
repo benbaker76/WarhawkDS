@@ -88,7 +88,9 @@ bigBossInit:
 	
 	ldr r0,=bossX								@ set initial boss X/Y (20.12 format)
 	mov r3,#0									@ r3=x
+
 	str r3,[r0]
+
 	ldr r0,=bossY
 	mov r4,#384+16								@ r4=y
 	mov r4,#128
@@ -120,6 +122,10 @@ bigBossInit:
 	bl playAlertSound
 
 	bl fxFadeIn
+	
+@	ldr r0,=horizDrift
+@	mov r1,#0
+@	str r1,[r0]
 
 	ldmfd sp!, {r0-r4, pc}
 
@@ -157,7 +163,7 @@ bigBossInitAllSpriteData:
 
 	ldr r0, =optionGameModeCurrent
 	mov r1,#1									@ uncomment for level 32 boss
-@str r1,[r0]
+str r1,[r0]
 
 	ldr r10, [r0]
 
@@ -173,7 +179,7 @@ bigBossInitAllSpriteData:
 	ldr r1,=bigBossSpriteNumber
 	cmp r10,#0
 	moveq r2,#54
-	movne r2,#64
+	movne r2,#62
 	str r2,[r1]				@ set number of sprites used
 
 	ldreq r8,=bigBossSpriteTable1			@ load the image from our table!
@@ -239,10 +245,10 @@ bigBossInitAllSpriteData:
 		moveq r6,#512
 		streq r6,[r5]
 	
-		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(52*4)
+		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(60*4)
 		movne r6,#512
 		strne r6,[r5]
-		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(53*4)
+		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(61*4)
 		movne r6,#512
 		strne r6,[r5]
 		
@@ -399,16 +405,6 @@ bigBossDraw:
 	
 bigBossInitExplode:
 	stmfd sp!, {r0-r10, lr}
-	
-@	mov r0,#0				@ sprite number
-@	mov r6,#64
-@	@ for now (until we have a proper DEATH) we just nulify the boss!
-@	bigBossActiveKill:
-@		ldr r5,=spriteActive+BIGBOSS_OFFSET
-@		str r6,[r5, r0, lsl #2]			@ make it something that has no detection value
-@		add r0,#1
-@		cmp r0,#64
-@	bne bigBossActiveKill
 
 	ldr r8,=bossMan							@ this stops bullets and sprite detection
 	mov r6,#BOSSMODE_EXPLODE
@@ -450,7 +446,7 @@ bigBossMovement:
 	cmp r3,#0
 	
 	moveq r3,#384-16	@ distance normal
-	movne r3,#384+32	@ distance mental
+	movne r3,#384-16	@ distance mental (hmmm... Adjust)
 
 	cmp r1,r3
 	bpl bigBossMovementPhaseChange
@@ -1037,19 +1033,15 @@ bigBossSpriteTable1:				@ sprite images used in order 0-63
 .word 54,54
 .word 55,55
 bigBossSpriteTable2:				@ sprite images used in order 0-63 
-.word 29,30,31,31,30,29
-.word 32,33,34,35,36,37,37,36,35,34,33,32
-.word 33,33
-.word 34,35,36,37,38,39,39,38,37,36,35,34
-.word 40,41,42,43,43,42,41,40
-.word 44,45,46,46,45,44
-.word 47,47
-.word 48,48
-.word 49,49
-.word 50,51,51,50
-.word 52,53,53,52
-.word 54,54
+.word 29,30,30,29
+.word 31,32,33,34,34,33,32,31
+.word 35,36,37,37,36,35
+.word 38,39,40,41,42,43,43,42,41,40,39,38
+.word 44,45,46,47,48,49,49,48,47,46,45,44
+.word 50,51,52,53,54,54,53,52,51,50
 .word 55,56,56,55
+.word 57,58,58,57
+.word 59,59
 bigBossFlipTable1:
 .word 0,0,1,1
 .word 0,1
@@ -1060,18 +1052,15 @@ bigBossFlipTable1:
 .word 0,1
 .word 0,1
 bigBossFlipTable2:
-.word 0,0,0,1,1,1
-.word 0,0,0,0,0,0,1,1,1,1,1,1
-.word 0,1
-.word 0,0,0,0,0,0,1,1,1,1,1,1
+.word 0,0,1,1
 .word 0,0,0,0,1,1,1,1
 .word 0,0,0,1,1,1
-.word 0,1
-.word 0,1
+.word 0,0,0,0,0,0,1,1,1,1,1,1
+.word 0,0,0,0,0,0,1,1,1,1,1,1
+.word 0,0,0,0,0,1,1,1,1,1
 .word 0,0,1,1
 .word 0,0,1,1
 .word 0,1
-.word 0,0,1,1
 bigBossSpritesX1:					@ x offsets for sprites 0-63
 .word 128,160,192,224,160,192,0,32,64,96
 .word 160,192,256,288,320,352,0,32,64,96
@@ -1089,31 +1078,25 @@ bigBossSpritesY1:					@ y offsets for sprites 0-63
 .word 192,192,224,224,0,0,0,0,0,0
 .word 0,0,0,0
 bigBossSpritesX2:					@ x offsets for sprites 0-63
-.word 0,32,160,192,320,352
+.word 64,160,192,288
+.word 64,96,128,160,192,224,256,288
+.word 96,128,160,192,224,256
 .word 0,32,64,96,128,160,192,224,256,288,320,352
-.word 160,192
 .word 0,32,64,96,128,160,192,224,256,288,320,352
-.word 0,32,64,96,256,288,320,352
-.word 0,32,64,288,320,352
+.word 0,32,64,128,160,192,225,288,320,352
+.word 0,128,224,352
+.word 0,128,224,352
 .word 0,352
-.word 0,352
-.word 0,32,320,352
-.word 0,32,320,352
-.word 0,352
-.word 0,32,320,352
 bigBossSpritesY2:					@ y offsets for sprites 0-63
-.word 0,0,0,0,0,0
-.word 32,32,32,32,32,32,32,32,32,32,32,32
-.word 64,64
+.word 0,0,0,0
+.word 32,32,32,32,32,32,32,32
+.word 64,64,64,64,64,64
 .word 96,96,96,96,96,96,96,96,96,96,96,96
-.word 128,128,128,128,128,128,128,128
-.word 160,160,160,160,160,160
-.word 192,192
-.word 224,224
-.word 256,256,256,256
-.word 288,288,288,288
-.word 320,320
-.word 352,352,352,352
+.word 128,128,128,128,128,128,128,128,128,128,128,128
+.word 160,160,160,160,160,160,160,160,160,160
+.word 192,192,192,192
+.word 224,224,224,224
+.word 256,256
 
 bigBossMode:
 .word 0

@@ -109,7 +109,7 @@ bigBossInit:
 
 	bl fxCopperTextOn							@ Turn on copper text fx
 	
-	mov r0,#128
+	mov r0,#256
 	bl fxStarfieldDownOn						@ Turn on starfield
 
 	ldr r0, =4000								@ 5 seconds
@@ -295,8 +295,6 @@ killAllSpritesBoss:
 
 updateBigBoss:
 	stmfd sp!, {r0-r10, lr}
-
-	bl waitforNoVblank
 	
 	bl moveShip									@ check and move your ship
 	bl alienFireMove							@ check and move alien bullets

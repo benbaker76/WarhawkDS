@@ -141,6 +141,9 @@ fxStarfieldDownOn:
 	@ pass r0 as number of stars to plot
 	stmfd sp!, {r0-r2, lr}
 
+	mov r1,#STAR_COUNT
+	cmp r0,r1
+	movgt r0,r1
 	ldr r1,=starAmount
 	str r0,[r1]
 	

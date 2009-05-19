@@ -350,7 +350,6 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 		ldr r0,[r1,r7, lsl #2]
 		cmp r0,#0					@ r0 = spriteActive Value
 		beq noAlienMove
-
 		add r1,r7, lsl #2
 
 		cmp r0,#256
@@ -383,7 +382,10 @@ moveAliens:	@ OUR CODE TO MOVE OUR ACTIVE ALIENS
 	
 	cmp r0,#9					@ is it a dropship?
 	beq alienPassed				@ if so, do nothing (we will detect this seperate to allow crash-collecting)
-	
+
+	cmp r0,#14					@ is it a falling alien? If so, donot do any move code, drawsprite handles this, just detect collision
+	beq doDetect	
+
 	cmp r0,#1					@ if it is not a 1, it is not an alien
 	bne noAlienMove
 

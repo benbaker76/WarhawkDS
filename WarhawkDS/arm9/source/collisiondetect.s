@@ -573,6 +573,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			@ we use this do DESTROY an alien, but if it is a bigboss, we really want to use our code for that!
 			cmp r5,#512							@ is it a big boss??
 			beq bigBossDestroyedSkip
+			
 			mov r8,#SPRITE_IDENT_OFFS
 			ldr r8,[r4,r8]
 			cmp r8,#3
@@ -638,6 +639,13 @@ explodeSNoIdent:				@ this is to destroy a single alien
 
 	notExplodeAndFire:
 	
+			
+	@ check for our special type misc 2
+	mov r6,#SPRITE_MISC_TYPE_OFFS
+	ldr r6,[r4, r6]
+	cmp r6,#2							@ 2=drop on death (1=vortex)
+	beq initDroppingShip				@ ok, lets drop it!!! :)
+	
 	mov r6,#4					@ set to explosion type
 	str r6,[r4]
 	mov r6,#6					@ set the frame to start
@@ -671,9 +679,28 @@ explodeSIdent:					@ this is to explode an alien that is part of a bigger ship
 
 	bl addScore		
 	bl playAlienExplodeSound	@ HK - we really need a meatier explode here?
+	
+	b dropCheck	
 
+initDroppingShip:																									@ (())
+	@ ok, need to do a few things here,
+	@ first, init and explosion if possible
+	@ chamge spriteActive to 14, and hit points to 127
+	mov r0,#SPRITE_X_OFFS
+	ldr r0,[r4,r0]
+	mov r1,#SPRITE_Y_OFFS
+	ldr r1,[r4,r1]
+	bl generateExplosion
+	
+	
+	mov r6,#14
+	str r6,[r4]					@ set spriteActive
+	mov r8,#SPRITE_HIT_OFFS
+	mov r6,#127
+	str r6,[r4,r8]
+	
+	b detectNoAlien
 
-b dropCheck	
 	
 @--------------------------- Draw "shard" at alien coord r6,r7	
 drawShard:
@@ -720,17 +747,11 @@ alienCollideCheck:
 			ldr r5,[r5]
 			cmp r5,#DEATHMODE_MAIN_EXPLODE
 			bpl noPlayer
-											@ r1 is offset to alien
-@			ldr r5,=levelEnd				@ if we have destroyed the BOSS
-@			ldr r5,[r5]						@ no need for a detect with aliens
-@			cmp r5,#2
-@			beq noPlayer
-			
+	
 			ldr r5,=bossMan
 			ldr r5,[r5]
 			cmp r5,#3
 			bpl noPlayer
-			
 
 			ldr r5,=spriteX
 			ldr r3,[r5]						@ r3 is player x
@@ -761,7 +782,7 @@ alienCollideCheck:
 			add r4,#18
 			cmp r6,r4
 			bpl noPlayer
-				
+		
 				ldr r10,=deathMode
 				ldr r10,[r10]
 				cmp r10,#DEATHMODE_STILL_ACTIVE

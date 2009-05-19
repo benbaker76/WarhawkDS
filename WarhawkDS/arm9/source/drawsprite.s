@@ -40,6 +40,7 @@
 	.align
 	.text
 	.global drawSprite
+	.global generateExplosion
 
 drawSprite:
 	stmfd sp!, {lr}
@@ -177,11 +178,6 @@ drawSprite:
 		ldr r3,=spriteHFlip
 		ldr r3,[r3,r8, lsl #2]			@ load flip H
 		orr r2, r3, lsl #12
-		@------------------ Not needed at the moment (replicate in other sections)
-		@ldr r3,=spriteVFlip
-		@ldr r3,[r3,r8, lsl #2]			@ load flip H
-		@orr r2, r3, lsl #13
-		@------------------
 		strh r2,[r0]					@ and store back
 			@ Draw Attributes
 		ldr r0,=BUF_ATTRIBUTE2			@ load ref to attribute2
@@ -514,7 +510,7 @@ drawSprite:
 	
 		bigBossExplodeSLOW:
 		cmp r1,#13								@ -------------- big boss explode
-		bne noMoreStuff
+		bne fallingShip
 
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
@@ -540,28 +536,98 @@ drawSprite:
 				ldr r0,=spriteY
 				mov r1,#SPRITE_KILL
 				str r1,[r0,r8,lsl #2]
+
+		fallingShip:
+		cmp r1,#14								@ -------------- a falling alien
+		bne noMoreStuff
+
+			ldr r0,=spriteY						@ Load Y coord
+			ldr r1,[r0,r8,lsl #2]
+			add r1,#5
+			str r1,[r0,r8,lsl #2]
+			cmp r1,#768
+			bpl noMoreDroppings
+
+			mov r7,r8							@ use r1 as offset now, we need r8 for random
+			bl getRandom
+			and r8,#0xf
+			ldr r0,=spriteBloom
+			str r8,[r0, r7, lsl #2]
+			@ try and generate a random explosion
+			bl getRandom
+			and r8,#0xff
+			cmp r8,#32
+			bpl noFallingExplode
+
+				@ ok, we now need to pass X and Y coords to the explode code
+				@ use r0, r1 for X and Y
+				ldr r0,=spriteX						@ Load Y coord
+				ldr r0,[r0,r7,lsl #2]
+				ldr r8,=spriteY						@ Load Y coord
+				ldr r1,[r8,r7,lsl #2]
+
+				bl generateExplosion
+
+			noFallingExplode:
+			mov r8,r7								@ restore r8
+			b noMoreStuff
+			noMoreDroppings:
+			ldr r0,=spriteY
+			mov r1,#SPRITE_KILL
+			str r1,[r0,r8,lsl #2]
 				
 		noMoreStuff:
-		
-		@ just a bit of code to add a pulse to the little bullets!
-		@ does not really work well, but does not detract either!
-@		ldr r0,=spriteObj
-@		ldr r1,[r0,r8,lsl #2]
-@		cmp r1,#27
-@		bne drawSpriteNotBullet
-@
-@			ldr r0,=spriteBloom
-@			ldr r1,[r0,r8,lsl #2]
-@			cmp r1,#0
-@			moveq r1,#15
-@			subne r1,#1
-@			str r1,[r0,r8,lsl #2]
-@		
-@		drawSpriteNotBullet:
+
 	subs r8,#1
 	bpl SLoop
 
 	ldmfd sp!, {pc}
 	
+generateExplosion:
+	@ pass xxx as x and y of explosion
+	stmfd sp!, {r0-r8, lr}
+	mov r7,#111
+	ldr r6,=spriteActive+68
+	fxExplodeLoop:
+		ldr r3,[r6,r7,lsl #2]
+		cmp r3,#0
+		beq fxExploder
+		subs r7,#1
+		cmp r7,#64
+	bpl fxExplodeLoop
+	ldmfd sp!, {r0-r8, pc}	
+	
+	fxExploder:
+	add r6, r7, lsl #2
+	@ r6 is now the pointer to a free spot for an explosion
+	@ use _OFFS to address it
+	
+	mov r3,#4					@ set to a player explosion
+	str r3,[r6]					@ spriteActive set to 11
+	mov r3,#6
+	mov r7,#SPRITE_OBJ_OFFS
+	str r3,[r6,r7]				@ set the frame (start at 6)
+	mov r8,#4					
+	mov r7,#SPRITE_EXP_DELAY_OFFS
+	str r8,[r6,r7]				@ set the delay
+
+	mov r7,#SPRITE_X_OFFS
+	str r0,[r6,r7]				@ store explosion X
+
+	mov r7,#SPRITE_Y_OFFS
+	str r1,[r6,r7]				@ store explosion X	
+	
+	mov r7,#SPRITE_FIRE_TYPE_OFFS
+	mov r3,#0
+	str r3,[r6,r7]				@ we NEED to clear this :)
+	mov r7,#SPRITE_FIRE_SPEED_OFFS
+	mov r3,#0
+	str r3,[r6,r7]
+
+	bl playExplosionSound	
+	
+
+	
+	ldmfd sp!, {r0-r8, pc}	
 	.pool
 	.end

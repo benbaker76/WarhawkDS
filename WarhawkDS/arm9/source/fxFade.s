@@ -300,9 +300,9 @@ fxFadeInVBlank:
 	ldr r0, =fadeValue					@ Get our fadeValue
 	ldr r1, [r0]
 	
-	ldr r3, =16							@ Subtract from 15 to reverse value
-	sub r4, r3, r1, lsr #2				@ Divide by 4 to make value 0-15
-	mov r5, r1, lsr #2					@ Divide by 4 to make value 0-15
+	ldr r3, =16							@ Subtract from 16 to reverse value
+	sub r4, r3, r1						@ 16 - fadeValue to reverse
+	mov r5, r1							@ Put fadeValue in register
 	
 	ldr r2, =BLEND_Y					@ Blend register
 	strh r4, [r2]						@ Write to BLEND_Y
@@ -321,11 +321,10 @@ fxFadeInVBlank:
 	strh r6, [r2]						@ Write to SUB_BLEND_AB
 	
 	add r1, #1							@ Add 1 to fadeValue
-	and r1, #63
 	str r1, [r0]						@ Write fadeValue back
-	cmp r1, #0							@ Is our fadeValue at 0?
-	bleq fxFadeOff						@ Yes turn off effect
-	bleq fxFadeExecuteCallback			@ Execute callback
+	cmp r1, #16							@ Is our fadeValue greater than 16?
+	blgt fxFadeOff						@ Yes turn off effect
+	blgt fxFadeExecuteCallback			@ Execute callback
 	
 	ldmfd sp!, {r0-r6, pc}
 	
@@ -338,9 +337,9 @@ fxFadeOutVBlank:
 	ldr r0, =fadeValue					@ Get our fadeValue
 	ldr r1, [r0]
 	
-	ldr r3, =16							@ Subtract from 15 to reverse value
-	sub r4, r3, r1, lsr #2				@ Divide by 4 to make value 0-15
-	mov r5, r1, lsr #2					@ Divide by 4 to make value 0-15
+	ldr r3, =16							@ Subtract from 16 to reverse value
+	sub r4, r3, r1						@ 16 - fadeValue to reverse
+	mov r5, r1							@ Put fadeValue in register
 	
 	ldr r2, =BLEND_Y					@ Blend register
 	strh r5, [r2]						@ Write to BLEND_Y
@@ -359,11 +358,10 @@ fxFadeOutVBlank:
 	strh r6, [r2]						@ Write to SUB_BLEND_AB
 	
 	add r1, #1							@ Add 1 to fadeValue
-	and r1, #63
 	str r1, [r0]						@ Write fadeValue back
-	cmp r1, #0							@ Is our fadeValue at 0?
-	bleq fxFadeOff						@ Yes turn off effect
-	bleq fxFadeExecuteCallback			@ Execute callback
+	cmp r1, #16							@ Is our fadeValue greater than 16?
+	blgt fxFadeOff						@ Yes turn off effect
+	blgt fxFadeExecuteCallback			@ Execute callback
 	
 	ldmfd sp!, {r0-r6, pc}
 	

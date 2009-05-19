@@ -27,7 +27,7 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define STAR_COUNT					768
+	#define STAR_COUNT					1024
 	#define STAR_COLOR_OFFSET			11
 	#define STAR_COLOR_TRAIL_OFFSET_1	12
 	#define STAR_COLOR_TRAIL_OFFSET_2	13

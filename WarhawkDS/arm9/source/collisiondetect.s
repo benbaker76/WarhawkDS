@@ -1145,12 +1145,14 @@ stmfd sp!, {r0-r10, lr}
 
 		ldr r3,[r1,r9]				@ alien X
 		cmp r2,r3
-		addlt r2,#1
-		subgt r2,#1
-		ldr r3,=horizDrift
-		ldr r3,[r3]
-		subs r2,r3
-		str r2,[r5]
+		blgt cycloneRightPull
+		bllt cycloneLeftPull
+		@addlt r2,#1
+		@subgt r2,#1
+		@ldr r3,=horizDrift
+		@ldr r3,[r3]
+		@subs r2,r3
+		@str r2,[r5]
 		
 		ldr r3,[r1,r8]
 		cmp r7,r3
@@ -1164,7 +1166,72 @@ stmfd sp!, {r0-r10, lr}
 
 	noCyclone:
 
-ldmfd sp!, {r0-r10, pc}	
+ldmfd sp!, {r0-r10, pc}
+
+cycloneRightPull:
+	stmfd sp!, {r0-r10, lr}
+
+		ldr r6,=spriteX
+		ldr r8,=horizDrift
+		ldr r8, [r8]
+		cmp r8,#0
+		beq CYleftmove
+			subs r8,#1
+			cmp r8,#0
+			movmi r8,#0
+			ldr r4,=horizDrift
+			strb r8,[r4]
+			ldmfd sp!, {r0-r10, pc}
+		CYleftmove:
+		ldr r8,[r6]
+		ldr r1,=pullCount
+		ldr r2,[r1]
+		add r2,#1
+		cmp r2,#2
+		moveq r2,#0
+		str r2,[r1]
+
+		subs r8,r2
+		cmp r8,#64
+		movle r8,#64
+		str r8,[r6]
+	
+ldmfd sp!, {r0-r10, pc}
+
+cycloneLeftPull:
+	stmfd sp!, {r0-r10, lr}
+
+		ldr r6,=spriteX
+		ldr r8,=horizDrift
+		ldr r8, [r8]
+		cmp r8,#64
+		beq CYRightmove
+			adds r8,#1
+			cmp r8,#64
+			movpl r8,#64
+			ldr r4,=horizDrift
+			strb r8,[r4]
+			ldmfd sp!, {r0-r10, pc}
+		CYRightmove:
+		ldr r8,[r6]
+		mov r4,#256
+		add r4,#32
+		ldr r1,=pullCount
+		ldr r2,[r1]
+		add r2,#1
+		cmp r2,#2
+		moveq r2,#0
+		str r2,[r1]
+		adds r8,r2
+		cmp r8,r4
+		movpl r8,r4
+		str r8,[r6]
+	
+ldmfd sp!, {r0-r10, pc}
+
+pullCount:
+	.word 0
+
 
 	.pool
 	.end

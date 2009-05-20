@@ -146,7 +146,7 @@ bigBossGo:
 	
 	@ ok, init spritedata
 	
-	bl bigBossInitAllSpriteData					@ set all sprite data (draw will handle possition)
+	bl bigBossInitAllSpriteData					@ set all sprite data (draw will handle position)
 	bl bigBossDraw
 
 	ldr r0,=bigBossMode
@@ -186,8 +186,9 @@ str r1,[r0]
 	ldrne r8,=bigBossSpriteTable2			@ load the image from our table!
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
-
-	mov r0,#0				@ sprite number
+	moveq r7,#128							@ hits for normal and mental mode
+	movne r7,#100
+	mov r0,#0								@ sprite number
 	bigBossInitLoop:
 		ldr r5,=spriteActive+BIGBOSS_OFFSET
 		mov r6,#256
@@ -196,7 +197,7 @@ str r1,[r0]
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
 		ldr r5,=spriteHits+BIGBOSS_OFFSET
-		mov r6,#10
+		mov r6,r7
 		str r6,[r5, r0, lsl #2]			@ number of hits
 
 		ldr r6,[r8, r0, lsl #2]
@@ -237,21 +238,27 @@ str r1,[r0]
 	cmp r10,#0
 	
 	@ set the "softspots", where you can shoot the big boss
-	
+		@ normal
 		ldreq r5,=spriteActive+BIGBOSS_OFFSET+(52*4)
 		moveq r6,#512
 		streq r6,[r5]
 		ldreq r5,=spriteActive+BIGBOSS_OFFSET+(53*4)
 		moveq r6,#512
 		streq r6,[r5]
-	
+		@ manic
 		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(60*4)
 		movne r6,#512
 		strne r6,[r5]
 		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(61*4)
 		movne r6,#512
 		strne r6,[r5]
-		
+		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(57*4)
+		movne r6,#512
+		strne r6,[r5]
+		ldrne r5,=spriteActive+BIGBOSS_OFFSET+(58*4)
+		movne r6,#512
+		strne r6,[r5]	
+	
 	bne bigBossTiles2	
 		ldr r0, =Spritesboss1Tiles
 		ldr r2, =Spritesboss1TilesLen	
@@ -325,7 +332,10 @@ updateBigBoss:
 	bl checkLevelControl						@ check to see if we want to change level
 	bl playerDeathCheck							@ check and do DEATH stuff
 	bl useCheat									@ a call to restore health if cheat is active
-	bl checkGamePause							@ check if the game is paused	
+	ldr r0,=bigBossMode							@ if we are at "get ready" do not allow pause
+	ldr r0,[r0]
+	cmp r0,#0
+	blne checkGamePause							@ check if the game is paused	
 @	bl checkEndOfLevel							@ Set Flag for end-of-level
 @	bl drawDebugText							@ draw some numbers :)	
 	bl bigBossMovement							@ move big boss
@@ -609,6 +619,10 @@ bigBossMovementPhase5:
 			mov r2,#8
 			mov r8,#SPRITE_EXP_DELAY_OFFS
 			str r2,[r6,r8]
+			bl getRandom
+			and r8,#0x1								@ randomly flip the explosion
+			mov r2,#SPRITE_HORIZ_FLIP_OFFS
+			str r8,[r6,r2]
 
 			mov r8,#SPRITE_X_OFFS
 			str r10,[r6,r8]
@@ -863,164 +877,94 @@ bigBossInitFire1:
 	
 bigBossInitFire2:
 	stmfd sp!, {r0-r10, lr}
-@1
-	mov r1,#11
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(42*4)
+@1 outer wing left
+	mov r1,#17
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
 
-	mov r1,#40
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(42*4)
+	mov r1,#60
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(42*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
-
 	mov r1,#3
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(42*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
-
 	mov r1,#3
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(42*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(42*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]	
-	
-	mov r1,#3
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(42*4)
-	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(42*4)
-	str r1,[r0]	
-@2
-	mov r1,#11
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]
-
-	mov r1,#40
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]
-
-	mov r1,#3
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]
-
-	mov r1,#3
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]	
-	
-	mov r1,#3
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(47*4)
-	str r1,[r0]	
-@3
-	mov r1,#23
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(52*4)
-	str r1,[r0]
-
-	mov r1,#120
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(52*4)
-	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(52*4)
-	str r1,[r0]
-
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(52*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
-
-	mov r1,#4
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(52*4)
-	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(52*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]	
-	
-	mov r1,#4
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(52*4)
+@2 outer wing right
+	mov r1,#17
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(61*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(52*4)
+	mov r1,#60
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(61*4)
+	str r1,[r0]
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(61*4)
+	str r1,[r0]
+	mov r1,#3
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(61*4)
+	str r1,[r0]
+	mov r1,#3
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(61*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(61*4)
 	str r1,[r0]	
-
-@4
-	mov r1,#23
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(53*4)
-	str r1,[r0]
-
-	mov r1,#120
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(53*4)
-	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(53*4)
-	str r1,[r0]
-
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(53*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(61*4)
 	str r1,[r0]
-
-	mov r1,#4
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(53*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(61*4)
+	str r1,[r0]		
+@3	inner wing Left
+	mov r1,#15
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(57*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(53*4)
-	str r1,[r0]	
-	
-	mov r1,#4
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(53*4)
-	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(53*4)
-	str r1,[r0]	
-	
-@5
-	mov r1,#10
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(40*4)
-	str r1,[r0]
-
 	mov r1,#70
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(40*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(57*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(40*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(57*4)
 	str r1,[r0]
-
+	mov r1,#3
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(57*4)
+	str r1,[r0]
+	mov r1,#6
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(57*4)
+	str r1,[r0]
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(57*4)
+	str r1,[r0]	
 	mov r1,#2
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(40*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(57*4)
 	str r1,[r0]
-
-	mov r1,#0
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(40*4)
-	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(40*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(57*4)
 	str r1,[r0]	
-	
-	mov r1,#0
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(40*4)
+@4	inner wing right
+	mov r1,#16
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(40*4)
-	str r1,[r0]	
-
-@6
-	mov r1,#10
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(49*4)
-	str r1,[r0]
-
 	mov r1,#70
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(49*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(49*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]
-
-	mov r1,#2
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(49*4)
+	mov r1,#3
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]
-
-	mov r1,#0
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(49*4)
+	mov r1,#6
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(49*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]	
-	
-	mov r1,#0
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(49*4)
+	mov r1,#2
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(49*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(58*4)
 	str r1,[r0]	
 	
 	ldmfd sp!, {r0-r10, pc}
@@ -1093,7 +1037,7 @@ bigBossSpritesX2:					@ x offsets for sprites 0-63
 .word 96,128,160,192,224,256
 .word 0,32,64,96,128,160,192,224,256,288,320,352
 .word 0,32,64,96,128,160,192,224,256,288,320,352
-.word 0,32,64,128,160,192,225,288,320,352
+.word 0,32,64,128,160,192,224,288,320,352
 .word 0,128,224,352
 .word 0,128,224,352
 .word 0,352

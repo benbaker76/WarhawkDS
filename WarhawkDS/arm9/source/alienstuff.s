@@ -1286,7 +1286,11 @@ explodeIdentAlien:
 			ldr r2,=spriteBloom+68
 			bl getRandom
 			and r8,#0x2f
-			str r8,[r2,r7,lsl #2]	
+			str r8,[r2,r7,lsl #2]
+			bl getRandom
+			and r8,#0x1						@ randomly flip the explosion
+			ldr r2,=spriteHFlip+68
+			str r8,[r2,r7, lsl #2]	
 		
 			@ ok, now add another random explosion to it
 				mov r9,#63
@@ -1330,7 +1334,10 @@ explodeIdentAlien:
 			bl getRandom
 			and r8,#0x2f
 			str r8,[r2,r9,lsl #2]	
-			
+			bl getRandom
+			and r8,#0x1						@ randomly flip the explosion
+			ldr r2,=spriteHFlip+68
+			str r8,[r2,r9, lsl #2]				
 		fireIdentExplodeNot:
 		pop {r8}
 		fireIdentExplodeMissed:

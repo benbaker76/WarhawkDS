@@ -368,7 +368,7 @@ detectBGR:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 @-------------- The init EXPLOSION Code
 @ first find a blank explosion from 113-127
 initBaseExplode:
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r8, lr}
 	ldr r4,=spriteActive
 	mov r6,#127
 	expFindBase:
@@ -378,7 +378,7 @@ initBaseExplode:
 		sub r6,#1
 		cmp r6,#111
 	bne expFindBase
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r8, pc}
 		
 	startBaseExp:
 									@ r6 is our ref to the explosion sprite
@@ -413,8 +413,12 @@ initBaseExplode:
 	ldr r4,=spriteExplodeDelay
 	mov r2,#4						@ Set sprite delay for anim (once evey 4 updates seems to work nice)
 	str r2,[r4,r6, lsl #2]
+	bl getRandom
+	and r8,#0x1						@ randomly flip the explosion
+	ldr r4,=spriteHFlip
+	str r8,[r4,r6, lsl #2]
 
-	ldmfd sp!, {r0-r6, pc}			@ all done
+	ldmfd sp!, {r0-r8, pc}			@ all done
 	
 @-------------------------------------------------------------------	
 detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH AN ALIEN
@@ -654,7 +658,11 @@ explodeSNoIdent:				@ this is to destroy a single alien
 	mov r6,#4					@ set initial delay for explosion
 	mov r8,#SPRITE_EXP_DELAY_OFFS
 	str r6,[r4,r8]
-	
+	bl getRandom
+	and r8,#0x1					@ randomly flip the explosion
+	mov r9,#SPRITE_HORIZ_FLIP_OFFS
+	str r8,[r6,r9]
+
 	ldr r8,=adder+7				@ add 78 to the score
 	mov r6,#8
 	strb r6,[r8]
@@ -914,6 +922,12 @@ explodeNonIdent:
 		mov r6,#4					@ reset the explode delay
 		mov r8,#SPRITE_EXP_DELAY_OFFS
 		str r6,[r1,r8]
+	bl getRandom
+	and r8,#0x1					@ randomly flip the explosion
+	mov r9,#SPRITE_HORIZ_FLIP_OFFS
+	str r8,[r1,r9]
+
+
 			
 		@ add score
 		ldr r8,=adder+7				@ add 21 to the score (THAT IS ALL YOU GET FOR CRASHING)
@@ -941,8 +955,6 @@ explodeIdent:
 		bl playAlienExplodeSound	@ HK - we really need a meatier explode here?
 
 		b noPlayer
-		
-@ there is a bug from here on!!!
 		
 detectShipAsFire:		
 	stmfd sp!, {r0-r9, lr}
@@ -1076,7 +1088,7 @@ detectShipAsFire:
 @----------------- Draw a base explosion in ref to our players x/y
 	
 initBaseExplodePlayer:
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r9, lr}
 	ldr r4,=spriteActive
 	mov r6,#127
 	expFindBaseP:
@@ -1086,7 +1098,7 @@ initBaseExplodePlayer:
 		sub r6,#1
 		cmp r6,#111
 	bne expFindBaseP
-	ldmfd sp!, {r0-r6, pc}			@ return if we cannot find a spare sprite
+	ldmfd sp!, {r0-r9, pc}			@ return if we cannot find a spare sprite
 		
 	startBaseExpP:
 									@ r6 is our ref to the explosion sprite
@@ -1124,8 +1136,12 @@ initBaseExplodePlayer:
 	ldr r4,=spriteExplodeDelay
 	mov r2,#4						@ Set sprite delay for anim (once evey 4 updates seems to work nice)
 	str r2,[r4,r6, lsl #2]
+	bl getRandom
+	and r8,#0x1						@ randomly flip the explosion
+	ldr r9,=spriteHFlip
+	str r8,[r9,r6, lsl #2]
 
-	ldmfd sp!, {r0-r6, pc}			@ all done
+	ldmfd sp!, {r0-r9, pc}			@ all done
 
 @-------------------------------------
 	

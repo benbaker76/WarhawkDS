@@ -556,7 +556,7 @@ drawSprite:
 			@ try and generate a random explosion
 			bl getRandom
 			and r8,#0xff
-			cmp r8,#32
+			cmp r8,#24
 			bpl noFallingExplode
 
 				@ ok, we now need to pass X and Y coords to the explode code
@@ -616,6 +616,11 @@ generateExplosion:
 
 	mov r7,#SPRITE_Y_OFFS
 	str r1,[r6,r7]				@ store explosion X	
+
+	bl getRandom
+	and r8,#0x1					@ randomly flip the explosion
+	mov r7,#SPRITE_HORIZ_FLIP_OFFS
+	str r8,[r6,r7]
 	
 	mov r7,#SPRITE_FIRE_TYPE_OFFS
 	mov r3,#0

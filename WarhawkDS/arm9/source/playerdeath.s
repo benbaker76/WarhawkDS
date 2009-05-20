@@ -134,6 +134,10 @@ playerDeathMidExplode:									@ --- PHASE 2
 	and r8,#0x2f	
 	mov r0,#SPRITE_BLOOM_OFFS
 	str r8,[r6,r0]
+	bl getRandom
+	and r8,#0x1					@ randomly flip the explosion
+	mov r0,#SPRITE_HORIZ_FLIP_OFFS
+	str r8,[r6,r0]
 	
 	@ ok, we need sound? Hmmmm...
 	bl getRandom

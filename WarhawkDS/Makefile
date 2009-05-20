@@ -7,6 +7,16 @@ endif
 
 include $(DEVKITARM)/ds_rules
 
+#---------------------------------------------------------------------------------
+# Header variables
+#---------------------------------------------------------------------------------
+NAME		:=	Warhawk DS
+AUTHOR		:=	By Flash & HeadKaze
+VERSION		:=	www.retrobytesportal.com
+NITRODIR	:=	-d efsroot
+LOGO		:=	-o logo_wifi.bmp
+ICON		:=	-b logo.bmp
+
 export TARGET		:=	$(shell basename $(CURDIR))
 export TOPDIR		:=	$(CURDIR)
 
@@ -20,7 +30,7 @@ all: $(TARGET).nds
 
 #---------------------------------------------------------------------------------
 $(TARGET).nds	:	$(TARGET).arm7 $(TARGET).arm9
-	ndstool	-c $(TARGET).nds -7 $(TARGET).arm7 -9 $(TARGET).arm9 -d efsroot -b WarhawkDS.bmp "Warhawk DS;By Flash & HeadKaze;www.retrobytesportal.com"
+	ndstool -c $(TARGET).nds -9 $(TARGET).arm9 $(NITRODIR) $(LOGO) $(ICON) "$(NAME);$(AUTHOR);$(VERSION)"
 	efs $(TARGET).nds
 
 #---------------------------------------------------------------------------------

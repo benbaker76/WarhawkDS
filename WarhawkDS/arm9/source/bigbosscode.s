@@ -352,7 +352,7 @@ updateBigBoss:
 
 bigBossDraw:
 
-	stmfd sp!, {r0-r10, lr}
+	stmfd sp!, {r0-r11, lr}
 	
 	@ this will update the position of all sprites based on bossX and bossY
 	@ modify to use data tables for all offsets
@@ -382,11 +382,12 @@ bigBossDraw:
 	cmp r7,#BIGBOSSMODE_EXPLODE_INIT
 	bne bigBossDrawerLoop
 	
+		push {r8}	
 		bl getRandom				@ add a "Shake" on X for boss death
 		and r8,#0xf
 		subs r8,#7
 		adds r0,r8
-		ldr r8,=bigBossSpritesX1	@ x table
+		pop {r8}
 	
 	bigBossDrawerLoop:
 		ldr r6,[r8, r2, lsl #2]		@ r6= x offset
@@ -399,7 +400,7 @@ bigBossDraw:
 		cmp r2,r3
 	bne bigBossDrawerLoop
 
-	ldmfd sp!, {r0-r10, pc}
+	ldmfd sp!, {r0-r11, pc}
 	
 @------------------------------------------------------
 	

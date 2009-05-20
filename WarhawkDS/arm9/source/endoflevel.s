@@ -191,7 +191,7 @@ showEndOfLevel:
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
 
-			ldr r0, =levelCompletionSuckerText14			@ Load out text pointer
+			ldr r0, =levelCompletionSuckerText42			@ Load out text pointer
 			ldr r1, =2									@ x pos
 			ldr r2, =9									@ y pos
 			ldr r3, =0									@ Draw on sub screen
@@ -231,7 +231,88 @@ showEndOfLevel:
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
 	notLevel4:
+	cmp r4,#5
+	bne notLevel5
+			ldr r0, =levelCompletionSuckerText14		@ Load out text pointer
+			ldr r1, =3									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
 
+			ldr r0, =levelCompletionSuckerText15		@ Load out text pointer
+			ldr r1, =0									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel5:
+	cmp r4,#6
+	bne notLevel6
+			ldr r0, =levelCompletionSuckerText16		@ Load out text pointer
+			ldr r1, =3									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText17		@ Load out text pointer
+			ldr r1, =7									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel6:
+	cmp r4,#7
+	bne notLevel7
+			ldr r0, =levelCompletionSuckerText18			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =5									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText19			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =7									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+
+			ldr r0, =levelCompletionSuckerText20			@ Load out text pointer
+			ldr r1, =5									@ x pos
+			ldr r2, =9									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel7:
+	cmp r4,#8
+	bne notLevel8
+			ldr r0, =levelCompletionSuckerText21		@ Load out text pointer
+			ldr r1, =2									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText22		@ Load out text pointer
+			ldr r1, =11									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel8:
+	cmp r4,#9
+	bne notLevel9
+			ldr r0, =levelCompletionSuckerText23			@ Load out text pointer
+			ldr r1, =3									@ x pos
+			ldr r2, =5									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText24			@ Load out text pointer
+			ldr r1, =14									@ x pos
+			ldr r2, =7									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+
+			ldr r0, =levelCompletionSuckerText25			@ Load out text pointer
+			ldr r1, =8									@ x pos
+			ldr r2, =9									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel9:
 	cmp r4,#10
 	bne notLevel10
 			ldr r0, =levelCompletionSuckerText1			@ Load out text pointer
@@ -258,7 +339,113 @@ showEndOfLevel:
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
 	notLevel10:
+	cmp r4,#11
+	bne notLevel11
+			ldr r0, =levelCompletionSuckerText26		@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
 
+			ldr r0, =levelCompletionSuckerText27		@ Load out text pointer
+			ldr r1, =12									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel11:
+	cmp r4,#12
+	bne notLevel12
+			ldr r0, =levelCompletionSuckerText28			@ Load out text pointer
+			ldr r1, =2									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText29			@ Load out text pointer
+			ldr r1, =5									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel12:
+	cmp r4,#13
+	bne notLevel13
+			ldr r0, =levelCompletionSuckerText30			@ Load out text pointer
+			ldr r1, =0									@ x pos
+			ldr r2, =5									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText31			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =7									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText32			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =9									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText33			@ Load out text pointer
+			ldr r1, =8									@ x pos
+			ldr r2, =11									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel13:
+	cmp r4,#14
+	bne notLevel14
+			ldr r0, =levelCompletionSuckerText34			@ Load out text pointer
+			ldr r1, =2									@ x pos
+			ldr r2, =5									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText35			@ Load out text pointer
+			ldr r1, =5									@ x pos
+			ldr r2, =7									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText36			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =9									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText37			@ Load out text pointer
+			ldr r1, =7									@ x pos
+			ldr r2, =11									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel14:
+	cmp r4,#15
+	bne notLevel15
+			ldr r0, =levelCompletionSuckerText38			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =4									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText39			@ Load out text pointer
+			ldr r1, =3									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText40			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText41			@ Load out text pointer
+			ldr r1, =3									@ x pos
+			ldr r2, =12									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText	
+	notLevel15:
+	
 	bl drawEndOfLevelValues
 	
 	ldr r0, =hiScoreRawText						@ Read the path to the file
@@ -634,7 +821,7 @@ levelCompletionSuckerText7:
 levelCompletionSuckerText8:
 	.asCiz "IT MUST BE TOO EASY FOR YOU?"	@28	
 	.align
-levelCompletionSuckerText14:
+levelCompletionSuckerText42:
 	.asCiz "(NOW YOU EVEN GET POWERUPS!)"	@28	
 
 
@@ -654,5 +841,83 @@ levelCompletionSuckerText12:
 	.align
 levelCompletionSuckerText13:
 	.asCiz "A REST, MAYBE A LIE DOWN ALSO?"	@30	
+	
+	.align	@ LEV 5
+levelCompletionSuckerText14:
+	.asCiz "WOW! FIVE LEVELS COMPLETE,"	@26
+	.align
+levelCompletionSuckerText15:
+	.asCiz "GIVE YOURSELF A PAT ON THE BACK!"	@32	
+
+	.align 	@ LEV 6	
+levelCompletionSuckerText16:
+	.asCiz "YOUR DETERMINATION IS....."	@26	
+levelCompletionSuckerText17:
+	.asCiz "'AMUSING'"	@8	
+
+	.align 	@ LEV 7	
+levelCompletionSuckerText18:
+	.asCiz "WELL, WELL, LEVEL 7 COMPLETED,"	@30	
+levelCompletionSuckerText19:
+	.asCiz "THIS MUST BE TOO EASY FOR YOU?"	@30	
+levelCompletionSuckerText20:
+	.asCiz "TIME TO MAKE IT HARDER"	@22	
+
+	.align 	@ LEV 8	
+levelCompletionSuckerText21:
+	.asCiz "8 LEVELS AND STILL ONLY HALF"	@28	
+levelCompletionSuckerText22:
+	.asCiz "WAY THERE!"	@10	
+	
+	.align 	@ LEV 9
+levelCompletionSuckerText23:
+	.asCiz "I AM IMPRESSED BY YOUR...."	@26	
+levelCompletionSuckerText24:
+	.asCiz "ER!!"	@4	
+levelCompletionSuckerText25:
+	.asCiz "'PIG HEADEDNESS!'"	@16
+
+	.align 	@ LEV 11
+levelCompletionSuckerText26:
+	.asCiz "IT IS NICE TO SEE SOMEONE SO.."	@30	
+levelCompletionSuckerText27:
+	.asCiz "'TRYING'"	@8	
+
+	.align 	@ LEV 12
+levelCompletionSuckerText28:
+	.asCiz "TWELVE LEVELS THROWN ASUNDER"	@28	
+levelCompletionSuckerText29:
+	.asCiz "VERY IMPRESSIVE STUFF!"	@22	
+
+	.align 	@ LEV 13
+levelCompletionSuckerText30:
+	.asCiz "CONGRATULATIONS ON CLEARING '13'"	@32	
+levelCompletionSuckerText31:
+	.asCiz "SADLY, IT'S ABOUT TIME FOR YOU"	@30	
+levelCompletionSuckerText32:
+	.asCiz "TO BE GIVEN A FEW MORE TOYS TO"	@30	
+levelCompletionSuckerText33:
+	.asCiz "PLAY WITH......."	@16	
+
+	.align 	@ LEV 14
+levelCompletionSuckerText34:
+	.asCiz "YOU SOON CRACKED THAT LEVEL,"	@28	
+levelCompletionSuckerText35:
+	.asCiz "ALL I CAN SAY NOW IS.."	@22	
+levelCompletionSuckerText36:
+	.asCiz "FROM NOW ON, IT IS BEST TO...."	@30	
+levelCompletionSuckerText37:
+	.asCiz "'WATCH YOUR STEP!'"	@18
+
+	.align 	@ LEV 15
+levelCompletionSuckerText38:
+	.asCiz "WELL DONE FOR GETTING THIS FAR"	@30	
+levelCompletionSuckerText39:
+	.asCiz "YOU MUST FEEL LIKE A PRO!!"	@26	
+levelCompletionSuckerText40:
+	.asCiz "I MUST WARN YOU, I STILL HAVE,"	@30	
+levelCompletionSuckerText41:
+	.asCiz "'A COUPLE OF BIG SUPRISES'"	@26		
 	.pool
 	.end
+

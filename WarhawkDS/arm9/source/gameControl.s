@@ -115,16 +115,32 @@ checkGameContinue:
 	
 	cmp r1, r3
 	ble checkGameContinueDone
+
+	ldr r3, =LEVEL_2
+	cmp r1, r3
+	strge r3, [r2]
 	
 	ldr r3, =LEVEL_4
 	cmp r1, r3
 	strge r3, [r2]
 
+	ldr r3, =LEVEL_6
+	cmp r1, r3
+	strge r3, [r2]
+	
 	ldr r3, =LEVEL_8
+	cmp r1, r3
+	strge r3, [r2]
+
+	ldr r3, =LEVEL_10
 	cmp r1, r3
 	strge r3, [r2]
 	
 	ldr r3, =LEVEL_12
+	cmp r1, r3
+	strge r3, [r2]
+	
+	ldr r3, =LEVEL_14
 	cmp r1, r3
 	strge r3, [r2]
 	

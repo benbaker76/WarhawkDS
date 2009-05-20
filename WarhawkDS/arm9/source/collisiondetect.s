@@ -510,6 +510,12 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 				beq meteorShot
 
 				alienHitDeduct:
+				
+				mov r8,#SPRITE_MISC_TYPE_OFFS
+				ldr r6,[r4,r8]
+				cmp r6,#1					@ skip if Vortex
+				beq multishotBloom
+				
 				mov r8,#SPRITE_HIT_OFFS
 				ldr r6,[r4,r8]
 				subs r6,r7

@@ -87,8 +87,8 @@ bigBossInit:
 	bl initStarData
 	
 	ldr r0,=bossX								@ set initial boss X/Y (20.12 format)
-	mov r3,#0									@ r3=x
-
+	mov r3,#32								@ r3=x
+	lsl r3,#12
 	str r3,[r0]
 
 	ldr r0,=bossY
@@ -123,9 +123,9 @@ bigBossInit:
 
 	bl fxFadeIn
 	
-@	ldr r0,=horizDrift
-@	mov r1,#0
-@	str r1,[r0]
+	ldr r0,=horizDrift
+	mov r1,#32
+	str r1,[r0]
 
 	ldmfd sp!, {r0-r4, pc}
 
@@ -196,7 +196,7 @@ str r1,[r0]
 		mov r6,#32
 		str r6,[r5, r0, lsl #2]			@ set the ident (the code will handle this as a huge alien already)
 		ldr r5,=spriteHits+BIGBOSS_OFFSET
-		mov r6,#146
+		mov r6,#10
 		str r6,[r5, r0, lsl #2]			@ number of hits
 
 		ldr r6,[r8, r0, lsl #2]
@@ -414,6 +414,15 @@ bigBossInitExplode:
 	mov r1,#384
 	str r1,[r0]
 
+	ldr r0, =BossExplodeTiles				@ use our boss explosions
+	ldr r2, =BossExplodeTilesLen	
+	ldr r1, =SPRITE_GFX
+	add r1, #6*512
+	bl dmaCopy
+	ldr r1, =SPRITE_GFX_SUB
+	add r1, #6*512
+	bl dmaCopy
+
 	ldr r0,=bigBossMode
 	mov r1,#BIGBOSSMODE_EXPLODE_INIT						@ set bossmode to DEAD and scroll of screen quickly
 	str r1,[r0]
@@ -446,7 +455,7 @@ bigBossMovement:
 	cmp r3,#0
 	
 	moveq r3,#384-16	@ distance normal
-	movne r3,#384-16	@ distance mental (hmmm... Adjust)
+	movne r3,#384-32	@ distance mental
 
 	cmp r1,r3
 	bpl bigBossMovementPhaseChange

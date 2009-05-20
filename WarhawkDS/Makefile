@@ -14,7 +14,7 @@ NAME		:=	Warhawk DS
 AUTHOR		:=	By Flash & HeadKaze
 VERSION		:=	www.retrobytesportal.com
 NITRODIR	:=	-d efsroot
-LOGO		:=	-o logo_wifi.bmp
+LOGO		:=	
 ICON		:=	-b logo.bmp
 
 export TARGET		:=	$(shell basename $(CURDIR))

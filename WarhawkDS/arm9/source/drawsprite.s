@@ -556,7 +556,7 @@ drawSprite:
 			@ try and generate a random explosion
 			bl getRandom
 			and r8,#0xff
-			cmp r8,#24
+			cmp r8,#8
 			bpl noFallingExplode
 
 				@ ok, we now need to pass X and Y coords to the explode code

@@ -220,13 +220,12 @@ fxVertTextScrollerVBlank:
 	ldr r2, [r1]
 	add r0, r2, lsl #5
 	ldrb r2, [r0]
-	mov r3, #0
 	cmp r2, #0
-	streq r3, [r1]
+	streq r2, [r1]
 	
 	ldr r1, =ofsScroll
 	ldr r1, [r1]
-	tst r1, #(0x3F-1)
+	tst r1, #(0xF-1)
 	bne fxVertTextScrollerVBlankContinue
 	
 	ldr r1, =0									@ x pos
@@ -246,10 +245,18 @@ fxVertTextScrollerVBlankContinue:
 	ldr r3, [r2]
 	ldr r4, =scrollPos
 	ldr r5, [r4]
+
+	ldr r6, =ofsScrollDelay
+	ldr r7,[r6]
+	subs r7,#1
+	movmi r7,#1
+	str r7,[r6]
+	bpl fxVertTextScrollerVBlankContinueNot
 	add r1, #1
-	ldr r6, =0x3F
+	
+	ldr r6, =0xF
 	and r6, r1
-	tst r6, #0x3F
+	tst r6, #0xF
 	addeq r3, #1
 	tst r6, #0x7
 	addeq r5, #1
@@ -258,6 +265,8 @@ fxVertTextScrollerVBlankContinue:
 	str r5, [r4]
 	strh r1, [r6]
 	strh r1, [r0]
+
+fxVertTextScrollerVBlankContinueNot:
 	
 	ldmfd sp!, {r0-r6, pc}
 
@@ -275,33 +284,82 @@ scrollPos:
 ofsScroll:
 	.word 0
 	
+ofsScrollDelay:
+	.word 0
+	
 	.align
 hscrollText:
 	.asciz "WELCOME TO THE WARHAWK DS DEMO... THIS IS ONLY A DEMO... FULL GAME COMING SOON!                 "
 	
 	.align
 vscrollText:
-	.ascii "           WARHAWK DS           "
+	.ascii "         - WARHAWK DS -         "
 	.ascii "                                "
-	.ascii "        ASM PROGRAMMING         "
 	.ascii "                                "
-	.ascii "             FLASH              "
+	.ascii "                                "
+	.ascii "       -ASM  PROGRAMMING-       "
+	.ascii "                                "
+	.ascii "             FLASH!             "
 	.ascii "            HEADKAZE            "
 	.ascii "                                "
-	.ascii "            GRAPHICS            "
+	.ascii "                                "
+	.ascii "                                "	
+	.ascii "           -GRAPHICS-           "
 	.ascii "                                "
 	.ascii "              LOBO              "
-	.ascii "            BADTOAD             "
+	.ascii "          BIG  BADTOAD          "
 	.ascii "                                "
-	.ascii "              MUSIC             "
+	.ascii "                                "
+	.ascii "                                "	
+	.ascii "            -MUSIC-             "
 	.ascii "                                "
 	.ascii "       PRESS PLAY ON TAPE       "
-	.ascii "          SPACE FRACTAL         "
+	.ascii "         SPACE  FRACTAL         "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "-DEVELOPMENT ENVIRONMENT TWEAKS-"	
+	.ascii "                                "	
+	.ascii "            HEADKAZE            "	
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "         -WINE TASTING-         "
+	.ascii "                                "
+	.ascii "             FLASH!             "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "         -PLAY TESTING-         "
+	.ascii "                                "
+	.ascii "  LOBO, SPACEFRACTAL, SOKURAH,  "
+	.ascii "BAZ, JACK, ?????????????????????"
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "     -ORIGINAL C64 VERSION-     "
+	.ascii "                                "
+	.ascii "FLASH, BADTOAD, AND ANDREW BETTS"
+	.ascii " (THE ORDER IS VERY ACCIDENTAL) "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "WE WOULD LIKE TO PASS THANKS TO "
+	.ascii " A FEW PEOPLE THAT HAVE HELPED  "
+	.ascii "        US ALONG THE WAY        "
+	.ascii "                                "
+	.ascii "DEKUTREE, ELHOBBS, RUBEN, CEARN,"
+	.ascii "ANYONE ELSE HEADKAZE????????????"
 	.ascii "                                "
 	.ascii "                                "
 	.ascii "                                "
 	.ascii "                                "
 	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "	
 	.ascii "\0"
 	
 	.pool

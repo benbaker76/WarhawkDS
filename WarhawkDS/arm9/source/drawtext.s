@@ -153,7 +153,6 @@ drawTextCount:
 	moveq r5, r6					@ Yes so store subscreen pointer
 	add r5, r1, lsl #1				@ Add x position
 	add r5, r2, lsl #6				@ Add y multiplied by 64
-	subs r4, #1
 
 drawTextCountLoop:
 
@@ -165,7 +164,7 @@ drawTextCountLoop:
 	orr r6, #(15 << 12)				@ Orr in the palette number (n << 12)
 	strh r6, [r5], #2				@ Write the tile number to our 32x32 map and move along
 	subs r4, #1
-	bpl drawTextCountLoop
+	bne drawTextCountLoop
 
 drawTextCountDone:
 	

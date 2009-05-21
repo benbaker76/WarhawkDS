@@ -706,6 +706,7 @@ initDroppingShip:																									@ (())
 	ldr r1,[r4,r1]
 	bl generateExplosion
 	
+	bl playAlienScreamSound
 	
 	mov r6,#14
 	str r6,[r4]					@ set spriteActive

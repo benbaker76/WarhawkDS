@@ -66,7 +66,7 @@ bossInitLev:
 	@15
 	.word 3,10,2,35,0,2,73,277			@ LURCHER TEST!
 	@16
-	.word 2,2,8,2,1,0,143,207
+	.word 2,2,8,25,1,0,143,207			@ fairly easy on PURPOSE
 
 	.align
 bossFireLev:

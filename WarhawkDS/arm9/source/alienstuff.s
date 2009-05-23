@@ -1009,6 +1009,8 @@ initHunterMine:
 		movge r1,#22
 		cmp r7,#10
 		movge r1,#18
+		cmp r7,#16
+		moveq r1,#10
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#0					@ R0 points to the sprite that will be used for the mine
@@ -1045,6 +1047,8 @@ initHunterMine:
 					movge r1,#3
 					cmp r7,#10
 					movge r1,#4
+					cmp r7,#16
+					moveq r1,#2
 					str r1,[r3,r0]
 					
 					mov r0,#SPRITE_OBJ_OFFS
@@ -1060,6 +1064,18 @@ initHunterMine:
 					mov r0,#SPRITE_FIRE_TYPE_OFFS
 					mov r1,#0				@ set it to never fire (for now)
 					str r1,[r3,r0]
+					
+			@		ldr r0,=levelNum
+			@		ldr r0,[r0]
+			@		cmp r0,#16
+			@		moveq r0,#SPRITE_EXPLODE_TYPE_OFFS
+			@		moveq r1,#3
+			@		streq r1,[r3,r0]
+			@		moveq r0,#SPRITE_FIRE_SPEED_OFFS
+			@		moveq r1,#5
+			@		streq r1,[r3,r0]
+
+
 
 	initNothing:
 	initHunterMineFail:

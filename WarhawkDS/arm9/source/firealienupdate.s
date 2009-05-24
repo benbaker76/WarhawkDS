@@ -686,7 +686,7 @@
 	teq r9,#0						@ check the sign of r9
 	rsbmi r9,r9,#0					@ make it positive
 
-	cmp r3,#8
+	cmp r3,#12
 	bne TExpXno
 		@ now we need to update X speed based on X coord to Player X
 		cmp r7,r0						@ is alien X > player X
@@ -722,7 +722,7 @@
 	rsbmi r10,r10,#0				@ make it positive
 	add r9,r10
 	
-	cmp r3,#8
+	cmp r3,#12
 	bne TExpYno
 		mov r3,#0
 		str r3,[r2,r1]					@ reset the delay

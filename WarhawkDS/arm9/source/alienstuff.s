@@ -487,7 +487,7 @@ bossFireCheckThing:
 				str r9,[r1,r0]			@ and reset the counter
 				fireAlienShotNow:
 										@ r10= y coord of alien (we grabbed this earlier)
-				cmp r10,#384-48			@ Make sure alien is at least NEARLY on screen before firing
+				cmp r10,#384-96			@ Make sure alien is at least NEARLY on screen before firing
 				bmi doDetect			@ if no, just forget it
 				bl alienFireInit		@ time to fire, r3=fire type, r1=offset to alien
 				

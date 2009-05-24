@@ -163,7 +163,7 @@ bigBossInitAllSpriteData:
 
 	ldr r0, =optionGameModeCurrent
 	mov r1,#1									@ uncomment for level 32 boss
-str r1,[r0]
+@str r1,[r0]
 
 	ldr r10, [r0]
 
@@ -186,8 +186,8 @@ str r1,[r0]
 	ldrne r8,=bigBossSpriteTable2			@ load the image from our table!
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
-	moveq r7,#128							@ hits for normal and mental mode
-	movne r7,#100
+	moveq r7,#160							@ hits for normal and mental mode
+	movne r7,#140
 	mov r0,#0								@ sprite number
 	bigBossInitLoop:
 		ldr r5,=spriteActive+BIGBOSS_OFFSET

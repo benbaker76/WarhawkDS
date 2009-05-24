@@ -269,6 +269,12 @@ bossIsShot:
 		bne heBeDead
 		
 				@ ok, now we need to see how many hits to kill
+				
+		ldr r8,=bossMan
+		ldr r8,[r8]
+		cmp r8,#BOSSMODE_GET_READY		
+		beq bossIsOK		
+				
 		ldr r8,=bossHits
 		ldr r6,[r8]
 		subs r6,r7

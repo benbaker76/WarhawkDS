@@ -156,7 +156,7 @@ dropShipShot:						@------------ We have shot a drop ship!!
 	mov r1,#29
 	mov r0,#SPRITE_OBJ_OFFS
 	str r1,[r3,r0]
-	mov r1,#8					@ powerup takes 4 shots to destroy
+	mov r1,#17					@ powerup takes 18 shots to destroy
 	mov r0,#SPRITE_HIT_OFFS		@ set its hit points to 2
 	str r1,[r3,r0]	
 	

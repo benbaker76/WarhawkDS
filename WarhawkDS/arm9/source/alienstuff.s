@@ -183,7 +183,7 @@ initReversed:					@	We scan from start to finish here to find spare slots
 			spaceIsExplosion:
 			ldr r2,=spriteObj+68
 			ldr r2,[r2,r0, lsl #2]
-			cmp r2,#8				@ r2 = explosion frame (7-14)
+			cmp r2,#6				@ r2 = explosion frame (7-14)
 			bgt foundSpace
 			cmp r2,#0
 			beq foundSpace

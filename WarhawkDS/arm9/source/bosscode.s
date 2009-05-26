@@ -303,6 +303,7 @@ bossIsShot:
 			mov r6,r1			@ just test with bullet x (comment out to use alien x)
 			mov r8,#SPRITE_Y_OFFS
 			ldr r7,[r4,r8]
+			sub r7,#12
 			bl drawShard
 					
 			@ add score

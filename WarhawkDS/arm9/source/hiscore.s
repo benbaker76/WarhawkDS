@@ -29,7 +29,7 @@
 #include "ipc.h"
 
 	#define HISCORE_VALUE_SIZE		8	
-	#define HISCORE_NAME_SIZE		3
+	#define HISCORE_NAME_SIZE		5
 	#define HISCORE_CRLF_SIZE		2
 	#define HISCORE_ENTRY_COUNT		10
 	#define HISCORE_ENTRY_SIZE		(HISCORE_VALUE_SIZE + HISCORE_NAME_SIZE + HISCORE_CRLF_SIZE)
@@ -92,7 +92,7 @@ showHiScoreEntry:
 	bl initVideoMain
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
-	bl clearBG0									@ Clear bg's
+	bl clearBG0									@ Clear bgs
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
@@ -111,6 +111,10 @@ showHiScoreEntry:
 	ldr r0, =nameAAA							@ Load "AAA" address
 	ldr r1, =nameBuffer							@ Load nameBuffer
 	ldrb r3, [r0], #1							@ Copy "AAA" to nameBuffer
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
 	strb r3, [r1], #1
 	ldrb r3, [r0], #1
 	strb r3, [r1], #1
@@ -238,7 +242,7 @@ updateHiScoreEntry:
 	cmp r3, #90									@ If > 90 set to 90
 	movgt r3, #90
 	
-	ldr r0, =nameBuffer					@ Load nameBuffer
+	ldr r0, =nameBuffer							@ Load nameBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
 	ldr r2, [r1]								@ Load cursorPos value
 	strb r3, [r0, r2]							@ Write back ASCII character
@@ -254,18 +258,18 @@ updateHiScoreEntry:
 	
 	cmp r2, #0									@ Cursor in pos 0?
 	movlt r2, #0								@ Cursor pos < 0 then make it 0
-	cmp r2, #2									@ Cursor pos 2?
-	movgt r2, #2								@ Cursor pos > 2 then make it 2
+	cmp r2, #4									@ Cursor pos 2?
+	movgt r2, #4								@ Cursor pos > 2 then make it 2
 	
 	str r2, [r1]								@ Write back to cursorPos
 	
-	ldr r0, =nameBuffer					@ buffer
-	ldr r1, =19									@ x
+	ldr r0, =nameBuffer							@ buffer
+	ldr r1, =18									@ x
 	ldr r2, =hiScoreIndex						@ y
 	ldr r2, [r2]								@ read hiscoreIndex value
 	add r2, #10									@ Add 10 to it
 	ldr r3, =1									@ sub=1 main=0
-	ldr r4, =3									@ Draw 3 characters
+	ldr r4, =HISCORE_NAME_SIZE					@ Draw characters
 	bl drawTextCount							@ Draw text
 
 updateHiScoreEntrySkip:
@@ -298,8 +302,6 @@ updateHiScoreEntryDone:
 	
 	@---------------------------------
 	
-
-	
 drawCursorSprite:
 
 	stmfd sp!, {r0-r2, lr}
@@ -321,7 +323,7 @@ drawCursorSprite:
 	
 	ldr r0, =OBJ_ATTRIBUTE1_SUB(0)				@ Attrib 1
 	ldr r1, =(ATTR1_SIZE_16)					@ Attrib 1 settings
-	orr r1, #(19 * 8 - 2)						@ Orr in the x pos (19 * 8 pixels)
+	orr r1, #(18 * 8 - 2)						@ Orr in the x pos (19 * 8 pixels)
 	ldr r2, =cursorPos							@ Load the cursorPos address
 	ldr r2, [r2]								@ Load the cursorPos value
 	add r1, r2, lsl #3							@ Add the cursorPos * 8
@@ -344,7 +346,7 @@ drawHiScoreText:
 	
 drawHiScoreTextLoop:
 
-	ldr r1, =10									@ x pos
+	ldr r1, =9									@ x pos
 	ldr r2, =10									@ y pos
 	add r2, r5									@ Add Iterator
 	ldr r3, =1									@ Draw on sub screen
@@ -353,7 +355,7 @@ drawHiScoreTextLoop:
 	
 	add r0, #HISCORE_VALUE_SIZE
 	
-	ldr r1, =19									@ x pos
+	ldr r1, =18									@ x pos
 	ldr r2, =10									@ y pos
 	add r2, r5									@ Add Iterator
 	ldr r3, =1									@ Draw on sub screen
@@ -400,7 +402,7 @@ getHiScoreIndexContinue:
 	add r1, #HISCORE_ENTRY_SIZE					@ Contine to next hiscore entry
 	
 	add r3, #1									@ Add 1 to iterator
-	cmp r3, #HISCORE_ENTRY_COUNT				@ Have we checked all hiscore's?
+	cmp r3, #HISCORE_ENTRY_COUNT				@ Have we checked all hiscorEs?
 	bne getHiScoreIndexLoop						@ Continue on
 	
 getHiScoreIndexDone:
@@ -414,7 +416,6 @@ getHiScoreIndexDone:
 addHiScore:
 
 	stmfd sp!, {r0-r7, lr}
-	
 	@ r0 = score value
 	
 	mov r5, r0									@ Move score
@@ -428,8 +429,12 @@ addHiScore:
 	strb r3, [r6], #1
 	ldrb r3, [r1], #1
 	strb r3, [r6], #1
+	ldrb r3, [r1], #1
+	strb r3, [r6], #1
+	ldrb r3, [r1], #1
+	strb r3, [r6], #1
 	
-	sub r6, #3
+	sub r6, #5
 
 	ldr r1, =hiScoreBuffer						@ Load hiScoreBuffer
 	mov r4, #0									@ Reset iterator
@@ -458,10 +463,18 @@ addHiScoreLoop:
 	strb r3, [r7], #1
 	ldrb r3, [r1], #1
 	strb r3, [r7], #1
+	ldrb r3, [r1], #1
+	strb r3, [r7], #1
+	ldrb r3, [r1], #1
+	strb r3, [r7], #1
 	
-	sub r1, #3
-	sub r7, #3
+	sub r1, #5
+	sub r7, #5
 	
+	ldrb r3, [r6], #1
+	strb r3, [r1], #1
+	ldrb r3, [r6], #1
+	strb r3, [r1], #1
 	ldrb r3, [r6], #1
 	strb r3, [r1], #1
 	ldrb r3, [r6], #1
@@ -469,7 +482,7 @@ addHiScoreLoop:
 	ldrb r3, [r6], #1
 	strb r3, [r1], #(1 + HISCORE_CRLF_SIZE)
 	
-	sub r6, #3
+	sub r6, #5
 	
 	ldrb r3, [r7], #1
 	strb r3, [r6], #1
@@ -477,9 +490,13 @@ addHiScoreLoop:
 	strb r3, [r6], #1
 	ldrb r3, [r7], #1
 	strb r3, [r6], #1
+	ldrb r3, [r7], #1
+	strb r3, [r6], #1
+	ldrb r3, [r7], #1
+	strb r3, [r6], #1
 	
-	sub r6, #3
-	sub r7, #3
+	sub r6, #5
+	sub r7, #5
 	
 addHiScoreContinue:
 	
@@ -515,6 +532,10 @@ saveHiScore:
 	add r1, r2
 	
 	ldrb r3, [r0], #1							@ Write name to hiscore
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
+	strb r3, [r1], #1
+	ldrb r3, [r0], #1
 	strb r3, [r1], #1
 	ldrb r3, [r0], #1
 	strb r3, [r1], #1
@@ -662,7 +683,7 @@ nameBuffer:
 
 	.align
 nameAAA:
-	.asciz "AAA"
+	.asciz "AAAAA"
 	
 	.align
 hiScoreDatText:

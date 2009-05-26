@@ -119,6 +119,7 @@
 	.global tileNumText
 	.global getReadyText
 	.global pausedText
+	.global pausedOptionText
 	.global levelText
 	.global irqTable
 	.global digits
@@ -140,6 +141,7 @@
 	.global titleRawText
 	.global ppotRawText
 	.global bossRawText
+	.global warningText
 	.global gameOverRawText
 	.global hiScoreRawText
 	.global endOfGameRawText
@@ -380,7 +382,12 @@ getReadyText:
 	.align
 pausedText:
 	.asciz "PAUSED"
-	
+	.align
+pausedOptionText:
+	.asciz "PRESS 'SELECT' TO QUIT"
+	.align
+warningText:
+	.asciz "- WARNING! -"
 	.align
 levelText:
 	.asciz "LEVEL"

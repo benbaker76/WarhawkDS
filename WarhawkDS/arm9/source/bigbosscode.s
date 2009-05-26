@@ -97,14 +97,14 @@ bigBossInit:
 	lsl r4,#12
 	str r4,[r0]
 	
-	ldr r0, =getReadyText			@ Load out text pointer
-	ldr r1, =11						@ x pos
+	ldr r0, =warningText			@ Load out text pointer
+	ldr r1, =10						@ x pos
 	ldr r2, =10						@ y pos
 	ldr r3, =0						@ Draw on sub screen
 	bl drawText
 	
-	ldr r0, =getReadyText			@ Load out text pointer
-	ldr r1, =11						@ x pos
+	ldr r0, =warningText			@ Load out text pointer
+	ldr r1, =10						@ x pos
 	ldr r2, =10						@ y pos
 	ldr r3, =1						@ Draw on main screen
 	bl drawText
@@ -186,8 +186,8 @@ bigBossInitAllSpriteData:
 	ldrne r8,=bigBossSpriteTable2			@ load the image from our table!
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
-	moveq r7,#160							@ hits for normal and mental mode
-	movne r7,#140
+	moveq r7,#210							@ hits for normal and mental mode
+	movne r7,#160
 	mov r0,#0								@ sprite number
 	bigBossInitLoop:
 		ldr r5,=spriteActive+BIGBOSS_OFFSET

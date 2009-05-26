@@ -181,16 +181,22 @@ showGamePause:
 	ldr r1, =GAMEMODE_PAUSED
 	str r1, [r0]
 	
-	ldr r0, =pausedText				@ Load out text pointer
-	ldr r1, =13						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =0						@ Draw on sub screen
-	bl drawText
+@	ldr r0, =pausedText				@ Load out text pointer
+@	ldr r1, =13						@ x pos
+@	ldr r2, =10						@ y pos
+@	ldr r3, =0						@ Draw on sub screen
+@	bl drawText
 	
 	ldr r0, =pausedText				@ Load out text pointer
 	ldr r1, =13						@ x pos
 	ldr r2, =10						@ y pos
 	ldr r3, =1						@ Draw on main screen
+	bl drawText
+
+	ldr r0, =pausedOptionText				@ Load out text pointer
+	ldr r1, =5						@ x pos
+	ldr r2, =10						@ y pos
+	ldr r3, =0						@ Draw on main screen
 	bl drawText
 	
 	bl fxCopperTextOn
@@ -227,6 +233,13 @@ updateGameUnPause:								@ SORRY about messing with this HK!! :)
 		str r1,[r0]								@ tell the code we are waiting for release to continue
 
 	updateGameUnPauseWait:	
+
+	ldr r2, =REG_KEYINPUT						@ Read key input register
+	ldr r3, [r2]								@ Read key value
+	tst r3,#BUTTON_SELECT
+	
+	beq showGameUnPauseQuit
+
 	ldmfd sp!, {r0-r2, pc}
 
 showGameUnPause:
@@ -241,12 +254,17 @@ showGameUnPause:
 		ldr r0, =gameMode
 		ldr r2, =gameModeBackup
 		ldr r1,[r2]
-@		ldr r1, =GAMEMODE_RUNNING
 		str r1, [r0]
 		bl fxCopperTextOff
 		bl clearBG0Partial
 
 	showGameUnPauseWait:
+	ldmfd sp!, {r0-r2, pc}
+	
+showGameUnPauseQuit:
+
+	bl showTitleScreen
+
 	ldmfd sp!, {r0-r2, pc}
 		
 	@ ------------------------------------

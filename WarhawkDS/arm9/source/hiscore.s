@@ -108,9 +108,9 @@ showHiScoreEntry:
 	
 	bl addHiScore								@ Add the hiscore
 	
-	ldr r0, =nameAAA							@ Load "AAA" address
+	ldr r0, =nameAAAAA							@ Load "AAAAA" address
 	ldr r1, =nameBuffer							@ Load nameBuffer
-	ldrb r3, [r0], #1							@ Copy "AAA" to nameBuffer
+	ldrb r3, [r0], #1							@ Copy "AAAAA" to nameBuffer
 	strb r3, [r1], #1
 	ldrb r3, [r0], #1
 	strb r3, [r1], #1
@@ -420,10 +420,10 @@ addHiScore:
 	
 	mov r5, r0									@ Move score
 	
-	ldr r1, =nameAAA							@ Load "AAA" address
+	ldr r1, =nameAAAAA							@ Load "AAAAA" address
 	ldr r6, =nameBufferTemp						@ Load nameBuffer
 	ldr r7, =nameBuffer							@ Load nameBuffer address
-	ldrb r3, [r1], #1							@ Copy "AAA" to nameBuffer
+	ldrb r3, [r1], #1							@ Copy "AAAAA" to nameBuffer
 	strb r3, [r6], #1
 	ldrb r3, [r1], #1
 	strb r3, [r6], #1
@@ -434,7 +434,7 @@ addHiScore:
 	ldrb r3, [r1], #1
 	strb r3, [r6], #1
 	
-	sub r6, #5
+	sub r6, #HISCORE_NAME_SIZE
 
 	ldr r1, =hiScoreBuffer						@ Load hiScoreBuffer
 	mov r4, #0									@ Reset iterator
@@ -468,8 +468,8 @@ addHiScoreLoop:
 	ldrb r3, [r1], #1
 	strb r3, [r7], #1
 	
-	sub r1, #5
-	sub r7, #5
+	sub r1, #HISCORE_NAME_SIZE
+	sub r7, #HISCORE_NAME_SIZE
 	
 	ldrb r3, [r6], #1
 	strb r3, [r1], #1
@@ -482,7 +482,7 @@ addHiScoreLoop:
 	ldrb r3, [r6], #1
 	strb r3, [r1], #(1 + HISCORE_CRLF_SIZE)
 	
-	sub r6, #5
+	sub r6, #HISCORE_NAME_SIZE
 	
 	ldrb r3, [r7], #1
 	strb r3, [r6], #1
@@ -495,8 +495,8 @@ addHiScoreLoop:
 	ldrb r3, [r7], #1
 	strb r3, [r6], #1
 	
-	sub r6, #5
-	sub r7, #5
+	sub r6, #HISCORE_NAME_SIZE
+	sub r7, #HISCORE_NAME_SIZE
 	
 addHiScoreContinue:
 	
@@ -675,14 +675,14 @@ hiScoreIndex:
 	
 	.align
 nameBufferTemp:
-	.asciz "   "
+	.asciz "     "
 
 	.align
 nameBuffer:
-	.asciz "   "
+	.asciz "     "
 
 	.align
-nameAAA:
+nameAAAAA:
 	.asciz "AAAAA"
 	
 	.align

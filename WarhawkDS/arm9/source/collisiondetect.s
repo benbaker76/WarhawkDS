@@ -583,7 +583,8 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 			@ we use this do DESTROY an alien, but if it is a bigboss, we really want to use our code for that!
 			cmp r5,#512							@ is it a big boss??
 			beq bigBossDestroyedSkip
-			
+			cmp r5,#2						@ if this is a meteor, give player a little energy
+			bleq addEnergy
 			mov r8,#SPRITE_IDENT_OFFS
 			ldr r8,[r4,r8]
 			cmp r8,#3
@@ -619,15 +620,15 @@ meteorShot:
 	
 	@ so, on a standard shot, we need to move the mine back a bit
 	@ so, we need to grab the speed and use that..
-	
-	mov r5,#SPRITE_SPEED_Y_OFFS
-	ldr r5,[r4,r5]
-	lsl r5,#1
-	add r5,#4
+
+	mov r6,#SPRITE_SPEED_Y_OFFS
+	ldr r6,[r4,r6]
+	lsl r6,#1
+	add r6,#4
 
 	mov r8,#SPRITE_Y_OFFS
 	ldr r7,[r4,r8]
-	subs r7,r5
+	subs r7,r6
 	str r7,[r4,r8]
 	b multishotBloom
 	
@@ -1272,6 +1273,19 @@ cycloneLeftPull:
 		str r8,[r6]
 	
 ldmfd sp!, {r0-r10, pc}
+
+addEnergy:
+	@ add energy to player
+	stmfd sp!, {r0-r1, lr}
+	ldr r0,=energy
+	ldr r1,[r0]
+	add r1,#20
+	cmp r1,#72
+	movge r1,#72
+	str r1,[r0]
+	bl drawAllEnergyBars
+	bl playPowerupCollect
+ldmfd sp!, {r0-r1, pc}
 
 pullCount:
 	.word 0

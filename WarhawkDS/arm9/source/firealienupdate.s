@@ -247,8 +247,8 @@
 			mov r6,#SPRITE_SPEED_Y_OFFS
 			ldr r7,[r2,r6]
 			add r7,#1					@ add 1 to y speed
-			cmp r7,#16					@ if >, keep the same
-			moveq r7,#16
+			cmp r7,#8					@ if >, keep the same
+			moveq r7,#8
 			str r7,[r2,r6]				@ store speed back
 		accShotUpdate:
 			mov r6,#SPRITE_SPEED_Y_OFFS

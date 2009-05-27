@@ -39,7 +39,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 	stmfd sp!, {r0-r6, lr}
 	
 	ldr r1,=deathMode		@ if player is dying - firing is not allowed
-	ldr r1,[r1]
+	ldr r1,[r1]				@ should it be allowed??
 	cmp r1,#DEATHMODE_STILL_ACTIVE
 	beq fireAllowed
 		ldmfd sp!, {r0-r6, pc}
@@ -51,7 +51,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 	beq fireDown
 	@ FIRE RELEASED
 		@ ** we need to read "firePress" and see if it >0
-		@ ** if so, fire bullet, else if >50 fire power shot
+		@ ** if so, fire bullet, else if >31 fire power shot
 		ldr r0,=firePress
 		ldr r8,[r0]			@ r8= fire pressed duration
 		mov r2,#0
@@ -79,7 +79,6 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			cmp r1,#255
 			moveq r1,#255			@ but not to go too high
 			str r1,[r0]
-			
 			cmp r1,#1				@ this bit enables a fire on press and release
 			beq initFire			@ of the fire button, better?? or TOO MUCH?
 			
@@ -101,15 +100,14 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 
 	initFire:
 		@ Ok, now we need to see about initialising a bullet!!
-		@ These are stored in our sprite table from position 1-4 (4 bullets)
+		@ These are stored in our sprite table from position 1-15 (16 bullets)
 		@ First thing is to see if we can fire a bullet.
 		ldr r0,=powerUp
 		ldr r0, [r0]
 		cmp r0,#1
 		moveq r0,#15				@ if powered up, we can allow 16 bullets
 		movne r0,#7					@ if not, just the 8
-		ldr r1, =spriteActive
-		add r1, #4					@ add 4 bytes as stored in words
+		ldr r1, =spriteActive+4
 		isbulletPossible:
 			ldr r2,[r1,r0, lsl #2]	@ Multiplied by 4 as in words
 			cmp r2,#0
@@ -124,8 +122,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		@ the bullet code will take care of the rest
 		@ r8 tells us if normal or POWER (1)
 	
-		ldr r1,=spriteActive
-		add r1,#4
+		ldr r1,=spriteActive+4
 		mov r2,#1
 		str r2,[r1,r0, lsl #2]		@ sprite is now active
 		
@@ -134,8 +131,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		ldr r4,=horizDrift			@ we need to add our horizontal-
 		ldr r4,[r4]					@ drift to the bullets X coord
 		add r2,r4
-		ldr r1,=spriteX				@ store it in bullets x
-		add r1, #4
+		ldr r1,=spriteX+4			@ store it in bullets x
 		str r2,[r1,r0, lsl #2]		@ done!		
 	
 		cmp r8,#31					@ This is the "HOLD" period needed for the shot!
@@ -146,13 +142,11 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			add r2,#6					@ Move it down a little
 			ldr r1,=spriteY+4			@ store the result in bullets y
 			str r2,[r1,r0, lsl #2]		@ done
-			ldr r1, =spriteSpeedY
-			add r1,#4
+			ldr r1, =spriteSpeedY+4
 			mov r2,#8					@ set the bullets speed!
 			str r2,[r1,r0, lsl #2]	
 			mov r2,#4					@ set r2 to our bullet image
-			ldr r1, =spriteObj
-			add r1, #4
+			ldr r1, =spriteObj+4
 			str r2,[r1,r0, lsl #2]		@ done
 			
 			bl playAlienExplodeScreamSound			@ CHANGE THIS BIG TIME!!!
@@ -164,8 +158,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			add r2,#6					@ Move it down a little
 			ldr r1,=spriteY+4			@ store the result in bullets y
 			str r2,[r1,r0, lsl #2]
-			ldr r1, =spriteSpeedY
-			add r1,#4
+			ldr r1, =spriteSpeedY+4
 			ldr r4,=powerUp
 			ldr r4,[r4]
 			cmp r4,#1
@@ -173,15 +166,11 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			movne r2,#6					@ normal speed
 			str r2,[r1,r0, lsl #2]
 			mov r2,#3					@ set r2 to our bullet image
-			ldr r1, =spriteObj
-			add r1, #4
+			ldr r1, =spriteObj+4
 			str r2,[r1,r0, lsl #2]		@ done
 
 			bl playBlasterSound
 		
-		@ bullet should now be ready to go!!!
-		@ We can add the bullet movement code here, OR do it seperate
-		@ along with the colision checks??? Hmmmm
 	ldmfd sp!, {r0-r6, pc}
 	
 moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
@@ -196,12 +185,10 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 			@ so, lets move it, all we need to do is sub
 			@ bullets speed from Ypos and check for off screen
 
-			ldr r3,=spriteY
-			add r3,#4
+			ldr r3,=spriteY+4
 			ldr r4,[r3,r0, lsl #2]
 
-			ldr r5, =spriteSpeedY		@ Let us load r6 with the bullets speed
-			add r5, #4
+			ldr r5, =spriteSpeedY+4		@ Let us load r6 with the bullets speed
 			ldr r6,[r5,r0, lsl #2]		@ this can be used for a power shot
 				
 			subs r4,r6					@ using r6 as a speed
@@ -233,4 +220,3 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 	
 	.pool
 	.end
-

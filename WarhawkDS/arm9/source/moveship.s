@@ -65,7 +65,6 @@ moveShip:
 	cmp r7, #1					@ a 1 signals a power up
 	moveq r7,#5					@ if so, move 5 pixels per refresh
 	movne r7,#3					@ if not, move our standard 3
-
 								@ r7 now holds our ship speed
 	ldr r2,[r1]					@ R2 is the input (except X and Y handled by ARM7)
 	tst r2,#BUTTON_UP			@ UP (and with value to isolate direction)
@@ -73,8 +72,8 @@ moveShip:
 	@ Up code
 		ldr r8,[r5]
 		subs r8,r7
-		cmp r8,#384+8
-		movmi r8,#384+8
+		cmp r8,#392
+		movmi r8,#392
 		str r8,[r5]
 		b dircheck2
 	dircheck1:
@@ -130,19 +129,15 @@ moveShip:
 			strb r8,[r4]
 			
 			ldr r8,[r6]
-			mov r4,#256
-			add r4,#32
 			adds r8,r7,lsr #1
-			cmp r8,r4
-			movge r8,r4
+			cmp r8,#288
+			movge r8,#288
 			b dircheck3pass
 		rightmove:
 		ldr r8,[r6]
-		mov r4,#256
-		add r4,#32		
 		adds r8,r7
-		cmp r8,r4			@ 256-sprite width
-		movge r8,r4
+		cmp r8,#288			@ 256-sprite width
+		movge r8,#288
 		dircheck3pass:
 		str r8,[r6]
 	dircheck4:

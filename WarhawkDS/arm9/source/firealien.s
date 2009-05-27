@@ -133,8 +133,6 @@ alienFireInit:
 		blne playLaserShotSound
 		mov r2,#255	
 	@ etc!
-
-
 	alienFireInitDone:
 	ldmfd sp!, {r0-r10, pc}
 
@@ -189,7 +187,6 @@ alienFireMove:
 					bleq moveTrackExplodeShot
 
 				@ ETC
-	
 				@ and from here we need to check if the bullet is on our ship
 				@ and if so, deplete energy, mainloop will act on a 0 and kill us!
 				
@@ -250,9 +247,7 @@ alienFireMove:
 						mov r6,#SPRITE_BLOOM_OFFS	@ if it is obj 26
 						mov r7,#16					@ flash it, and do not destroy
 						str r7,[r2,r6]
-				
-					@ THIS BIT SHOULD JUST KILL THE BULLET???
-				
+
 					b testSkip
 					killAlienBullet:
 					mov r6,#SPRITE_Y_OFFS	@ put bullet X off screen, only works if kill bullet

@@ -182,6 +182,7 @@
 	.global cheatMode
 	.global shipAnimDelay
 	.global firePower
+	.global trackDelay
 	
 gameMode:
 	.word 0
@@ -541,6 +542,8 @@ waveNumber:
 deathMode:
 	.word 0
 deathModeDelay:
+	.word 0
+trackDelay:
 	.word 0
 	
 	.pool

@@ -526,7 +526,7 @@ bossFire:
 	
 @---------------- HERE WE NEED TO "FIRE" A HUNTER!
 initBossHunter:
-	ldr r4,[r2]					@ grab speed/type
+@	ldr r4,[r2]					@ grab speed/type
 	lsr r4,#16					@ shunt them down :)
 	
 	cmp r4,#SPRITE_TYPE_HUNTER	@ if speed is set also, we need to randomly grab a number
@@ -546,15 +546,15 @@ initBossHunter:
 	ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 	mov r0,#0					@ R0 points to the sprite that will be used for the mine
 		findBossHunterLoop:
-		ldr r4,[r3,r0, lsl #2]
-		cmp r4,#0
+		ldr r1,[r3,r0, lsl #2]
+		cmp r1,#0
 		beq foundBossHunter
 			adds r0,#1
 			cmp r0,#64
 		bne findBossHunterLoop
 		b bossFireDone
 		foundBossHunter:
-			add r3,r0, lsl #2		@ r3 is now offset to mine sprite
+			add r3,r0, lsl #2		@ r3 is now offset to hunter sprite
 			mov r1,#3
 			str r1,[r3]				@ activate as activeSprite 3
 			mov r0,#SPRITE_X_OFFS

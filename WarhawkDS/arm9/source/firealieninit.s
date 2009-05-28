@@ -952,6 +952,9 @@
 			mov r0,#SPRITE_FIRE_SPEED_OFFS
 			ldr r5,[r1,r0]			@ copy the bullet speed
 			str r5,[r2,r0]			@ paste it in our bullet speed (this is for X and Y max speed)			
+			mov r0,#SPRITE_SPEED_Y_OFFS	
+			str r5,[r2,r0]			@ set Y speed to max speed initially
+
 			mov r6,#0
 			mov r0,#SPRITE_SPEED_X_OFFS	
 			str r6,[r2,r0]			@ set X speed to 0 initially
@@ -961,8 +964,7 @@
 			str r6,[r2,r0]			@ set Y delay to 0
 			mov r0,#SPRITE_ANGLE_OFFS
 			str r6,[r2,r0]			@ we will use this to count when to explode it
-			mov r0,#SPRITE_SPEED_Y_OFFS	
-			str r5,[r2,r0]			@ set Y speed to 0 initially
+
 		
 			mov r0,#SPRITE_OBJ_OFFS		
 			mov r6,#27				@ pick object 27

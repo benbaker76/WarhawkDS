@@ -662,6 +662,7 @@
 @
 @ "MOVE" - "Track Explode shot 23"		@ tracks for a bit and then explodes
 	moveTrackExplodeShot:
+	@ I ""MUST"" RECODE THIS - IT IS SHIT!!! (Using 12.20 fixed somehow)
 	stmfd sp!, {r0-r10, lr}
 	@ First, do X, check the delay and update speeds if delay at fixed value.
 	ldr r0,=spriteX
@@ -697,6 +698,7 @@
 			movpl r5,r6
 			b TExpXno
 		TExpXLeft:
+		blt TExpXno
 			subs r5,#1
 			rsb r6,r6,#0
 			cmp r5,r6

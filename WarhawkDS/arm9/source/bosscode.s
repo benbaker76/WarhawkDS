@@ -44,12 +44,9 @@ checkBossInit:
 		ldmfd sp!, {r1-r2, pc}
 	bossInitActive:
 
-	@ this uses yposSub to tell when we should display the BOSS
-	@ Perhaps levelend will tell us when to move him???
-	@ not sure?
 	@ we will use bossMan as a flag to say that he is HERE!!!
 	@ 0= no (but check scroll)
-	@ 1=yes, but not ready to move (so move with scroller)
+	@ 1=yes, but not ready to attack (so move with scroller)
 	@ 2=attack time (scroller stopped so off we go)
 	@ 3=boss is DEAD = EXPLODE
 	@ 4=EXPLODE done, end level!!

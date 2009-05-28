@@ -126,6 +126,10 @@ bigBossInit:
 	ldr r0,=horizDrift
 	mov r1,#32
 	str r1,[r0]
+	
+	ldr r0,=energy
+	mov r1,#72
+	str r1,[r0]
 
 	ldmfd sp!, {r0-r4, pc}
 

@@ -33,6 +33,7 @@
 	.text
 	
 	.global getRandom
+	.global seed
 
 	@ call and r8 returns value
 

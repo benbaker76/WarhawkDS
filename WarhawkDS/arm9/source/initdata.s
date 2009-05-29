@@ -65,6 +65,13 @@ mov r1,#7
 	str r1,[r0],#4
 	str r1,[r0]
 
+	ldr r0,=seed
+	ldr r1,=0x545
+	str r1,[r0],#4
+	str r1,[r0],#4
+	str r1,[r0],#4
+	str r1,[r0],#4
+
 	ldmfd sp!, {r0-r1, pc}
 	
 	@ ---------------------------------------

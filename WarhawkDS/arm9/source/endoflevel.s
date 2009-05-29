@@ -33,7 +33,7 @@
 	#define LEVEL_COMPLETION_BONUS_VALUE	5000
 	#define ENERGY_UNIT_VALUE				10
 
-	#define LAVEY_ANIM_TIMER				8
+	#define LAVEY_ANIM_TIMER				6
 
 	.arm
 	.align
@@ -43,7 +43,7 @@
 	
 showEndOfLevel:
 
-	stmfd sp!, {r0-r4, lr}
+	stmfd sp!, {r0-r12, lr}
 	
 	ldr r0, =gameMode							@ Get gameMode address
 	ldr r1, =GAMEMODE_ENDOFLEVEL				@ Set the gameMode to end of level
@@ -154,6 +154,7 @@ showEndOfLevel:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 
+	mov r12,#0
 
 	ldr r4,=levelCount
 	ldr r4,[r4]
@@ -170,6 +171,7 @@ showEndOfLevel:
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#30
 	notLevel1:
 	cmp r4,#2
 	bne notLevel2
@@ -190,6 +192,7 @@ showEndOfLevel:
 			ldr r2, =9									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#60
 	notLevel2:
 	cmp r4,#3
 	bne notLevel3
@@ -204,6 +207,7 @@ showEndOfLevel:
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#30
 	notLevel3:
 	cmp r4,#4
 	bne notLevel4
@@ -224,6 +228,7 @@ showEndOfLevel:
 			ldr r2, =9									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#60
 	notLevel4:
 	cmp r4,#5
 	bne notLevel5
@@ -238,6 +243,7 @@ showEndOfLevel:
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#30
 	notLevel5:
 	cmp r4,#6
 	bne notLevel6
@@ -252,6 +258,7 @@ showEndOfLevel:
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#25
 	notLevel6:
 	cmp r4,#7
 	bne notLevel7
@@ -272,6 +279,7 @@ showEndOfLevel:
 			ldr r2, =9									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#35
 	notLevel7:
 	cmp r4,#8
 	bne notLevel8
@@ -286,6 +294,7 @@ showEndOfLevel:
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#20
 	notLevel8:
 	cmp r4,#9
 	bne notLevel9
@@ -306,6 +315,7 @@ showEndOfLevel:
 			ldr r2, =9									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#25
 	notLevel9:
 	cmp r4,#10
 	bne notLevel10
@@ -332,6 +342,7 @@ showEndOfLevel:
 			ldr r2, =12									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#70
 	notLevel10:
 	cmp r4,#11
 	bne notLevel11
@@ -346,6 +357,7 @@ showEndOfLevel:
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#20
 	notLevel11:
 	cmp r4,#12
 	bne notLevel12
@@ -360,6 +372,7 @@ showEndOfLevel:
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#22
 	notLevel12:
 	cmp r4,#13
 	bne notLevel13
@@ -386,6 +399,7 @@ showEndOfLevel:
 			ldr r2, =11									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#52
 	notLevel13:
 	cmp r4,#14
 	bne notLevel14
@@ -412,6 +426,7 @@ showEndOfLevel:
 			ldr r2, =11									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#60
 	notLevel14:
 	cmp r4,#15
 	bne notLevel15
@@ -438,7 +453,16 @@ showEndOfLevel:
 			ldr r2, =12									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	
+			mov r12,#70
 	notLevel15:
+	
+	ldr r0,=LaVeyTalk
+	str r12,[r0]
+	
+	mov r0,#180
+	sub r0,r12
+	ldr r1,=LaVeyWait
+	str r0,[r1]	
 	
 	bl drawEndOfLevelValues
 	
@@ -448,6 +472,9 @@ showEndOfLevel:
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldMultiOn
 	
+	bl drawLaVey1
+	
+	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =calcBasesDestroyed					@ Callback function address
 	
@@ -455,7 +482,7 @@ showEndOfLevel:
 	
 	bl fxFadeIn
 	
-	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r12, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -538,8 +565,15 @@ updateLaVey:
 	bne updateLaVeyDone
 	
 	bl getRandom
-	ldr r4,=0x3
-	and r8, r4
+	and r8, #0x3
+
+	ldr r4,=LaVeyTalk
+	ldr r1,[r4]
+	subs r1,#1
+	movmi r1,#0
+	str r1,[r4]
+	cmp r1,#0
+	moveq r8,#0
 	
 	cmp r8, #0
 	bleq drawLaVey1
@@ -549,6 +583,7 @@ updateLaVey:
 	bleq drawLaVey2
 	cmp r8, #3
 	bleq drawLaVey3
+	
 	
 updateLaVeyDone:
 	
@@ -834,19 +869,33 @@ showEndOfLevelFadeOut:
 	
 updateEndOfLevel:
 
-	stmfd sp!, {lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
-	bl updateLaVey
+	
+	ldr r0, =LaVeyWait
+	ldr r1,[r0]
+	subs r1,#1
+	movmi r1,#0
+	str r1,[r0]
+	cmp r1,#0
+	bleq updateLaVey
+	
+	@bl updateLaVey
 	@bl updateLogoSprites
 	
-	ldmfd sp!, {pc} 							@ restore registers and return
+	ldmfd sp!, {r0-r4, pc}						@ restore registers and return
 	
 	@---------------------------------
 
 	.data
 	.align
+
+LaVeyWait:
+	.word 0
+LaVeyTalk:
+	.word 0
 	
 baseCount:
 	.word 0
@@ -900,14 +949,14 @@ levelCompletionSuckerText3:
 	.asCiz "SADLY, THINGS GET FAR WORSE!"
 	.align
 levelCompletionSuckerText4:
-	.asCiz "OH, NEARLY FORGOT, 'GOOD LUCK'"
+	.asCiz "OH, NEARLY FORGOT, 'GOOD LUCK'"	@ 27 syl
 
 	.align	
 levelCompletionSuckerText5:
 	.asCiz "SO, YOU CLEARED LEVEL 1?"
 	.align
 levelCompletionSuckerText6:
-	.asCiz "ALL I CAN SAY IS 'WHOOPEE'"
+	.asCiz "ALL I CAN SAY IS 'WHOOPEE'"	@ 14 syl
 
 	.align	
 levelCompletionSuckerText7:

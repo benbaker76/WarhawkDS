@@ -33,6 +33,8 @@
 	#define LEVEL_COMPLETION_BONUS_VALUE	5000
 	#define ENERGY_UNIT_VALUE				10
 
+	#define LAVEY_ANIM_TIMER				8
+
 	.arm
 	.align
 	.text
@@ -60,6 +62,10 @@ showEndOfLevel:
 	bl clearBG3
 	
 	bl initStarData
+	
+	ldr r0, =laVeyCount
+	mov r1, #0
+	str r1, [r0]
 	
 	ldr r0, =levelCount
 	ldr r1, =levelNum
@@ -89,19 +95,7 @@ showEndOfLevel:
 	bl dmaCopy
 	strh r3, [r1]
 
-	@ Write the tile data
-	
-	ldr r0 ,=AntonLaVeyTiles
-	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =AntonLaVeyTilesLen
-	bl dmaCopy
-
-	@ Write map
-	
-	ldr r0, =AntonLaVeyMap
-	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =AntonLaVeyMapLen
-	bl dmaCopy
+	bl drawLaVey1
 	
 	bl clearOAM									@ Reset all sprites
 	
@@ -465,6 +459,101 @@ showEndOfLevel:
 	
 	@---------------------------------
 	
+drawLaVey1:
+
+	stmfd sp!, {r0-r2, lr}
+
+	@ Write the tile data
+	
+	ldr r0 ,=AntonLaVey1Tiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =AntonLaVey1TilesLen
+	bl dmaCopy
+
+	@ Write map
+	
+	ldr r0, =AntonLaVey1Map
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =AntonLaVey1MapLen
+	bl dmaCopy
+	
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+drawLaVey2:
+
+	stmfd sp!, {r0-r2, lr}
+
+	@ Write the tile data
+	
+	ldr r0 ,=AntonLaVey2Tiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =AntonLaVey2TilesLen
+	bl dmaCopy
+
+	@ Write map
+	
+	ldr r0, =AntonLaVey2Map
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =AntonLaVey2MapLen
+	bl dmaCopy
+	
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+drawLaVey3:
+
+	stmfd sp!, {r0-r2, lr}
+
+	@ Write the tile data
+	
+	ldr r0 ,=AntonLaVey3Tiles
+	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+	ldr r2, =AntonLaVey3TilesLen
+	bl dmaCopy
+
+	@ Write map
+	
+	ldr r0, =AntonLaVey3Map
+	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
+	ldr r2, =AntonLaVey3MapLen
+	bl dmaCopy
+	
+	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
+updateLaVey:
+
+	stmfd sp!, {r0-r4, lr}
+	
+	ldr r0, =laVeyCount
+	ldr r1, [r0]
+	add r1, #1
+	cmp r1, #LAVEY_ANIM_TIMER
+	moveq r1, #0
+	str r1, [r0]
+	bne updateLaVeyDone
+	
+	bl getRandom
+	ldr r4,=0x3
+	and r8, r4
+	
+	cmp r8, #0
+	bleq drawLaVey1
+	cmp r8, #1
+	bleq drawLaVey2
+	cmp r8, #2
+	bleq drawLaVey3
+	
+updateLaVeyDone:
+	
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
+	
+	@---------------------------------
+	
 drawEndOfLevelValues:
 
 	stmfd sp!, {r0-r11, lr}
@@ -747,6 +836,7 @@ updateEndOfLevel:
 	
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
+	bl updateLaVey
 	@bl updateLogoSprites
 	
 	ldmfd sp!, {pc} 							@ restore registers and return
@@ -761,7 +851,10 @@ baseCount:
 	
 levelCount:
 	.word 0
-	
+
+laVeyCount:
+	.word 0
+		
 	.align
 wellDoneText:
 	.asciz "WELL DONE!"

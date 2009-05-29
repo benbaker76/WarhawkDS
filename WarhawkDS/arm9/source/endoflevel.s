@@ -544,8 +544,10 @@ updateLaVey:
 	cmp r8, #0
 	bleq drawLaVey1
 	cmp r8, #1
-	bleq drawLaVey2
+	bleq drawLaVey1
 	cmp r8, #2
+	bleq drawLaVey2
+	cmp r8, #3
 	bleq drawLaVey3
 	
 updateLaVeyDone:

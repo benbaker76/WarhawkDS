@@ -111,7 +111,7 @@ bigBossInit:
 
 	bl fxCopperTextOn							@ Turn on copper text fx
 	
-	mov r0,#256
+	mov r0,#256									@ number of stars
 	bl fxStarfieldDownOn						@ Turn on starfield
 
 	ldr r0, =4000								@ 5 seconds
@@ -130,7 +130,15 @@ bigBossInit:
 	ldr r0,=energy
 	mov r1,#72
 	str r1,[r0]
-
+	
+	ldr r0,=bigBossXphase
+	mov r1,#128
+	str r1,[r0]
+	
+	ldr r0,=bigBossYphase
+	mov r1,#48
+	str r1,[r0]
+	
 	ldmfd sp!, {r0-r4, pc}
 
 	@------------------------------------
@@ -149,7 +157,8 @@ bigBossGo:
 	bl playAudioStream							@ Play the audio stream
 	
 	@ ok, init spritedata
-	
+
+	bl killAllSpritesBoss						@ this SHOULD kill everyother sprite except you and bullets	
 	bl bigBossInitAllSpriteData					@ set all sprite data (draw will handle position)
 	bl bigBossDraw
 
@@ -190,8 +199,8 @@ bigBossInitAllSpriteData:
 	ldrne r8,=bigBossSpriteTable2			@ load the image from our table!
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
-	moveq r7,#210							@ hits for normal and mental mode
-	movne r7,#160
+	moveq r7,#272							@ hits for normal and mental mode
+	movne r7,#190
 	mov r0,#0								@ sprite number
 	bigBossInitLoop:
 		ldr r5,=spriteActive+BIGBOSS_OFFSET
@@ -340,9 +349,15 @@ updateBigBoss:
 	ldr r0,[r0]
 	cmp r0,#0
 	blne checkGamePause							@ check if the game is paused	
-@	bl checkEndOfLevel							@ Set Flag for end-of-level
 @	bl drawDebugText							@ draw some numbers :)	
 	bl bigBossMovement							@ move big boss
+
+	ldr r5,=spriteHits+BIGBOSS_OFFSET			@ just to check the hits
+	ldr r10,[r5]								@ should we have an engerybar for the boss???
+	mov r8,#2						
+	mov r9,#0						
+	mov r11, #3						
+	bl drawDigits					
 
 	ldr r0, =horizDrift
 	ldr r0, [r0]
@@ -469,8 +484,8 @@ bigBossMovement:
 	ldr r3,[r3]
 	cmp r3,#0
 	
-	moveq r3,#384-16	@ distance normal
-	movne r3,#384-32	@ distance mental
+	moveq r3,#384		@ distance normal
+	movne r3,#384		@ distance mental
 
 	cmp r1,r3
 	bpl bigBossMovementPhaseChange
@@ -507,22 +522,28 @@ bigBossMovementPhase2:
 	str r4,[r3]
 	lsl r4,#1
 	ldrsh r5,[r2,r4]
-	lsl r5,#1
+	
+	lsl r5,#1					@ adjust movement on Y
 	adds r1,r5
 	str r1,[r0]
 
 	ldr r0,=bossY
-	ldr r1,[r0]					@ r1= x coord (20.12)	
+	ldr r1,[r0]					@ r1= y coord (20.12)	
 	ldr r2,=COS_bin
 	ldr r3,=bigBossYphase
-	ldr r4,[r3]					@ r4= x phase
+	ldr r4,[r3]					@ r4= y phase
 	add r4,#1
 	cmp r4,#512
 	movge r4,#0
 	str r4,[r3]
 	lsl r4,#1
 	ldrsh r5,[r2,r4]
-@	lsl r5,#1
+
+	ldr r10,=optionGameModeCurrent
+	ldr r10,[r10]	
+	cmp r10,#0
+	asreq r5,#1
+
 	adds r1,r5
 	str r1,[r0]
 

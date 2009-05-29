@@ -536,7 +536,7 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 					beq alienNoIdent
 						@ ok, for this ident, we need to flash all matching
 						@ r6=hits, copy to all idented aliens
-						mov r7,#63
+						mov r7,#111
 						ldr r9,=spriteIdent+68
 						fireBloomLoop:
 							ldr r3,[r9,r7,lsl #2]

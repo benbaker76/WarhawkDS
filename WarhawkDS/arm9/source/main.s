@@ -105,9 +105,9 @@ main:
 	
 	@ ----
 
-	ldr r0, =levelNum
-	mov r1, #1
-	str r1, [r0]
+	@ldr r0, =levelNum
+	@mov r1, #1
+	@str r1, [r0]
 	
 	@ldr r0, =basesLeft
 	@mov r1, #0
@@ -123,7 +123,7 @@ main:
 	
 	@ ----
 
-	bl showEndOfLevel
+	@bl showEndOfLevel
 
 	@ ----
 
@@ -135,7 +135,7 @@ main:
 	
 	@ ----
 
-	@bl showIntro1
+	bl showIntro1
 
 	@ ------------------------------------
 	

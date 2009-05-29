@@ -42,16 +42,16 @@ initData:
 	ldr r0,=levelNum
 	mov r1,#LEVEL_1
 
-mov r1,#7
+@mov r1,#16
 	str r1,[r0]
 	
 	ldr r0,=bossSpreadAngle
 	mov r1,#0
 	str r1,[r0]
 	
-	ldr r0,=cheatMode
-	mov r1,#1
-	str r1,[r0]
+@	ldr r0,=cheatMode
+@	mov r1,#1
+@	str r1,[r0]
 	
 	ldr r0,=powerUp
 	str r1,[r0]				@ set to one for autofire (on the original this carries on)
@@ -69,8 +69,7 @@ mov r1,#7
 	ldr r1,=0x545
 	str r1,[r0],#4
 	str r1,[r0],#4
-	str r1,[r0],#4
-	str r1,[r0],#4
+
 
 	ldmfd sp!, {r0-r1, pc}
 	
@@ -96,6 +95,11 @@ initDataGameContinue:
 	mov r1,#0				@ just to make sure we always get a highscore
 	str r1,[r0],#4
 	str r1,[r0]
+
+	ldr r0,=seed
+	ldr r1,=0x545
+	str r1,[r0],#4
+	str r1,[r0],#4
 
 	ldmfd sp!, {r0-r1, pc}
 	

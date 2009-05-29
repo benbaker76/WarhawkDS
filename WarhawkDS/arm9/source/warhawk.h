@@ -37,6 +37,7 @@
 #include "../build/LargeShip.h"
 #include "../build/WarShip.h"
 #include "../build/Moonscape.h"
+#include "../build/AntonLaVey.h"
 #include "../build/Orbscape.h"
 #include "../build/Credits01.h"
 #include "../build/Credits02.h"

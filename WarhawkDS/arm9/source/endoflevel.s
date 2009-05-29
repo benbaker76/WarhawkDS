@@ -91,16 +91,16 @@ showEndOfLevel:
 
 	@ Write the tile data
 	
-	ldr r0 ,=OrbscapeTiles
+	ldr r0 ,=AntonLaVeyTiles
 	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =OrbscapeTilesLen
+	ldr r2, =AntonLaVeyTilesLen
 	bl dmaCopy
 
 	@ Write map
 	
-	ldr r0, =OrbscapeMap
+	ldr r0, =AntonLaVeyMap
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =OrbscapeMapLen
+	ldr r2, =AntonLaVeyMapLen
 	bl dmaCopy
 	
 	bl clearOAM									@ Reset all sprites

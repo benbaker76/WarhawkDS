@@ -368,7 +368,9 @@ bossAttack:
 	ldr r0,=bossHits
 	ldr r0,[r0]
 	cmp r0,#0
-	blge bigBossDrawEnergy	
+	blge bigBossDrawEnergy
+	movmi r0,#0
+	blmi bigBossDrawEnergy	
 
 	ldmfd sp!, {r0-r8, pc}
 
@@ -609,6 +611,9 @@ bossExploder:
 	stmfd sp!, {lr}
 	@ sprites 17-127 can be used
 	@ if active is not 0 or 128, take the x,y from it and explode it anyway!!
+
+	mov r0,#0
+	bl bigBossDrawEnergy	
 
 	ldr r2,=levelEnd
 	ldr r2,[r2]

@@ -709,5 +709,9 @@ highInstruct2:
 hiScoreBuffer:
 	.incbin "../../efsroot/HiScore.dat"
 	
+	.align
+hiscoreString:
+	.ascii " ABCDEFGHIJKLMNOPQRSTUVWXYZ.,01234567890?()!*-=+#@;:"	@ 51 CHARS
+	
 	.pool
 	.end

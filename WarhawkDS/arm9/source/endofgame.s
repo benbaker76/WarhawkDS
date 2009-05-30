@@ -288,6 +288,30 @@ initWindow:
 	
 	@---------------------------------
 	
+resetWindow:
+
+	stmfd sp!, {r0-r1, lr}
+
+	ldr r0, =WIN0_Y0							@ Top pos
+	ldr r1, =0
+	strb r1, [r0]
+	
+	ldr r0, =WIN0_Y1							@ Bottom pos
+	ldr r1, =192
+	strb r1, [r0]
+	
+	ldr r0, =SUB_WIN0_Y0						@ Top pos
+	ldr r1, =0
+	strb r1, [r0]
+	
+	ldr r0, =SUB_WIN0_Y1						@ Bottom pos
+	ldr r1, =192
+	strb r1, [r0]
+
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ---------------------------------------
+	
 clearWindow:
 
 	stmfd sp!, {r0-r1, lr}
@@ -375,8 +399,6 @@ initSmallShipFly:
 	mov r1, #0
 	str r1, [r0]
 	
-	@bl initWindow
-	
 	ldr r0, =WIN_OUT						@ Make bg's appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
 	strh r1, [r0]
@@ -386,23 +408,7 @@ initSmallShipFly:
 	strh r1, [r0]
 	
 	bl clearBG1
-	
-	ldr r0, =WIN0_Y0							@ Top pos
-	ldr r1, =0
-	strb r1, [r0]
-	
-	ldr r0, =WIN0_Y1							@ Bottom pos
-	ldr r1, =192
-	strb r1, [r0]
-	
-	ldr r0, =SUB_WIN0_Y0						@ Top pos
-	ldr r1, =0
-	strb r1, [r0]
-	
-	ldr r0, =SUB_WIN0_Y1						@ Bottom pos
-	ldr r1, =192
-	strb r1, [r0]
-	
+	bl resetWindow
 	bl updateSmallShipFly
 	
 	@ Clear Sprites
@@ -488,8 +494,6 @@ initMotherShipFly:
 	ldr r1, =MODE_MOTHERSHIP_FLY
 	str r1, [r0]
 	
-	@bl initWindow
-	
 	ldr r0, =WIN_OUT						@ Make bg's appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
 	strh r1, [r0]
@@ -498,22 +502,7 @@ initMotherShipFly:
 	ldr r1, =(WIN0_BG0 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
 	strh r1, [r0]
 	
-	ldr r0, =WIN0_Y0							@ Top pos
-	ldr r1, =0
-	strb r1, [r0]
-	
-	ldr r0, =WIN0_Y1							@ Bottom pos
-	ldr r1, =192
-	strb r1, [r0]
-	
-	ldr r0, =SUB_WIN0_Y0						@ Top pos
-	ldr r1, =0
-	strb r1, [r0]
-	
-	ldr r0, =SUB_WIN0_Y1						@ Bottom pos
-	ldr r1, =192
-	strb r1, [r0]
-	
+	bl resetWindow
 	bl updateMotherShipFly
 	
 	ldr r0, =3000								@ 1 seconds

@@ -67,7 +67,7 @@ systemSleep:
 	ldr r0, =REG_IE
 	ldr r2, [r0]
 	
-	@push {r2}
+	push {r2}
 	
 	mov r0, #0
 	mov r1, #0x400
@@ -77,7 +77,7 @@ systemSleep:
 	bl readPowerManagement
 	mov r3, r0
 	
-	@push {r3}
+	push {r3}
 	
 	ldr r0, =PM_CONTROL_REG
 	ldr r1, =PM_LED_CONTROL(1)
@@ -92,9 +92,9 @@ systemSleep:
 	ldr r0, =838000
 	bl swiDelay
 	
-	@pop {r3}
+	pop {r3}
 	
-	@pop {r2}
+	pop {r2}
 	
 	ldr r0, =REG_IE
 	str r2, [r0]

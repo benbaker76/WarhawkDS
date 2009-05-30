@@ -58,12 +58,12 @@ writePowerManagementLoop1:
 	tst r3, #SPI_BUSY
 	bne writePowerManagementLoop1
 	
-	ldr r2, =REG_SPIDATA
-	strh r0, [r2]
-	
 	ldr r2, =REG_SPICNT
 	ldr r3, =(SPI_ENABLE | SPI_BAUD_1MHZ | SPI_BYTE_MODE | SPI_CONTINUOUS | SPI_DEVICE_POWER)
 	strh r3, [r2]
+	
+	ldr r2, =REG_SPIDATA
+	strh r0, [r2]
 	
 	ldr r2, =REG_SPICNT
 
@@ -73,12 +73,12 @@ writePowerManagementLoop2:
 	tst r3, #SPI_BUSY
 	bne writePowerManagementLoop2
 	
-	ldr r2, =REG_SPIDATA
-	strh r1, [r2]
-	
 	ldr r2, =REG_SPICNT
 	ldr r3, =(SPI_ENABLE | SPI_BAUD_1MHZ | SPI_BYTE_MODE | SPI_DEVICE_POWER)
 	strh r3, [r2]
+	
+	ldr r2, =REG_SPIDATA
+	strh r1, [r2]
 	
 	ldr r2, =REG_SPICNT
 	

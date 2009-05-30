@@ -169,6 +169,8 @@ mainLoop:
 	bleq updateHiScoreEntry
 	cmp r1, #GAMEMODE_ENDOFGAME
 	bleq updateEndOfGame
+	cmp r1, #GAMEMODE_BIGBOSS_LAVEY
+	bleq updateBigBossLaVey
 	cmp r1, #GAMEMODE_BIGBOSS
 	bleq updateBigBoss
 	cmp r1, #GAMEMODE_CREDITS

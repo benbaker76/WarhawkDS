@@ -25,6 +25,7 @@
 #include "background.h"
 
 	.global bigBossInit
+	.global updateBigBossLaVey
 	.global updateBigBoss
 	.global bigBossInitExplode
 	.global bigBossMode
@@ -68,7 +69,7 @@ bigBossInit:
 	@
 	@------------------------------------
 	
-	mov r1,#GAMEMODE_BIGBOSS					@ set gamemode to switch to bigboss battle
+	mov r1,#GAMEMODE_BIGBOSS_LAVEY				@ set gamemode to switch to bigboss battle
 	ldr r0,=gameMode
 	str r1,[r0]
 
@@ -97,24 +98,27 @@ bigBossInit:
 	lsl r4,#12
 	str r4,[r0]
 	
-	ldr r0, =warningText			@ Load out text pointer
-	ldr r1, =10						@ x pos
+	ldr r0, =nowYouMustText			@ Load out text pointer
+	ldr r1, =9						@ x pos
 	ldr r2, =10						@ y pos
-	ldr r3, =0						@ Draw on sub screen
+	ldr r3, =1						@ Draw on sub screen
 	bl drawText
 	
-	ldr r0, =warningText			@ Load out text pointer
-	ldr r1, =10						@ x pos
-	ldr r2, =10						@ y pos
-	ldr r3, =1						@ Draw on main screen
+	ldr r0, =defeatMeText			@ Load out text pointer
+	ldr r1, =11						@ x pos
+	ldr r2, =6						@ y pos
+	ldr r3, =0						@ Draw on main screen
 	bl drawText
+	
+	mov r0, #30
+	bl initLaVey
 
 	bl fxCopperTextOn							@ Turn on copper text fx
 	
 	mov r0,#256									@ number of stars
 	bl fxStarfieldDownOn						@ Turn on starfield
 
-	ldr r0, =4000								@ 5 seconds
+	ldr r0, =6000								@ 5 seconds
 	ldr r1, =bigBossGo							@ Callback function address
 
 	bl startTimer
@@ -147,7 +151,12 @@ bigBossGo:
 
 	stmfd sp!, {r0-r4, lr}
 	
+	mov r1,#GAMEMODE_BIGBOSS					@ set gamemode to switch to bigboss battle
+	ldr r0,=gameMode
+	str r1,[r0]
+	
 	bl clearBG0
+	bl clearBG1
 	
 	bl fxCopperTextOff
 	
@@ -317,6 +326,22 @@ killAllSpritesBoss:
 	bne killAllSpritesBossLoop
 
 	ldmfd sp!, {r0-r10, pc}
+@------------------------------------------------------
+
+updateBigBossLaVey:
+
+	stmfd sp!, {r0-r10, lr}
+	
+	bl updateLaVey								@ update LaVey
+	bl moveShip									@ check and move your ship
+	bl alienFireMove							@ check and move alien bullets
+	bl fireCheck								@ check for your wish to shoot!
+	bl scrollSBMain
+	bl scrollSBSub
+	bl drawSprite								@ drawsprites and do update bloom effect
+	
+	ldmfd sp!, {r0-r10, pc}
+
 @------------------------------------------------------
 
 updateBigBoss:

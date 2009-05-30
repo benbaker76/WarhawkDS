@@ -33,8 +33,6 @@
 	#define LEVEL_COMPLETION_BONUS_VALUE	5000
 	#define ENERGY_UNIT_VALUE				10
 
-	#define LAVEY_ANIM_TIMER				6
-
 	.arm
 	.align
 	.text
@@ -63,10 +61,6 @@ showEndOfLevel:
 	
 	bl initStarData
 	
-	ldr r0, =laVeyCount
-	mov r1, #0
-	str r1, [r0]
-	
 	ldr r0, =levelCount
 	ldr r1, =levelNum
 	ldr r1, [r1]
@@ -94,8 +88,6 @@ showEndOfLevel:
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
 	strh r3, [r1]
-
-	bl drawLaVey1
 	
 	bl clearOAM									@ Reset all sprites
 	
@@ -456,13 +448,8 @@ showEndOfLevel:
 			mov r12,#70
 	notLevel15:
 	
-	ldr r0,=LaVeyTalk
-	str r12,[r0]
-	
-	mov r0,#180
-	sub r0,r12
-	ldr r1,=LaVeyWait
-	str r0,[r1]	
+	mov r0, r12
+	bl initLaVey
 	
 	bl drawEndOfLevelValues
 	
@@ -472,9 +459,6 @@ showEndOfLevel:
 	bl fxCopperTextOn							@ Turn on copper text fx
 	bl fxStarfieldMultiOn
 	
-	bl drawLaVey1
-	
-	
 	ldr r0, =2000								@ 2 seconds
 	ldr r1, =calcBasesDestroyed					@ Callback function address
 	
@@ -483,111 +467,6 @@ showEndOfLevel:
 	bl fxFadeIn
 	
 	ldmfd sp!, {r0-r12, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-drawLaVey1:
-
-	stmfd sp!, {r0-r2, lr}
-
-	@ Write the tile data
-	
-	ldr r0 ,=AntonLaVey1Tiles
-	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =AntonLaVey1TilesLen
-	bl dmaCopy
-
-	@ Write map
-	
-	ldr r0, =AntonLaVey1Map
-	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =AntonLaVey1MapLen
-	bl dmaCopy
-	
-	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-drawLaVey2:
-
-	stmfd sp!, {r0-r2, lr}
-
-	@ Write the tile data
-	
-	ldr r0 ,=AntonLaVey2Tiles
-	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =AntonLaVey2TilesLen
-	bl dmaCopy
-
-	@ Write map
-	
-	ldr r0, =AntonLaVey2Map
-	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =AntonLaVey2MapLen
-	bl dmaCopy
-	
-	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-drawLaVey3:
-
-	stmfd sp!, {r0-r2, lr}
-
-	@ Write the tile data
-	
-	ldr r0 ,=AntonLaVey3Tiles
-	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =AntonLaVey3TilesLen
-	bl dmaCopy
-
-	@ Write map
-	
-	ldr r0, =AntonLaVey3Map
-	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =AntonLaVey3MapLen
-	bl dmaCopy
-	
-	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-updateLaVey:
-
-	stmfd sp!, {r0-r4, lr}
-	
-	ldr r0, =laVeyCount
-	ldr r1, [r0]
-	add r1, #1
-	cmp r1, #LAVEY_ANIM_TIMER
-	moveq r1, #0
-	str r1, [r0]
-	bne updateLaVeyDone
-	
-	bl getRandom
-	and r8, #0x3
-
-	ldr r4,=LaVeyTalk
-	ldr r1,[r4]
-	subs r1,#1
-	movmi r1,#0
-	str r1,[r4]
-	cmp r1,#0
-	moveq r8,#0
-	
-	cmp r8, #0
-	bleq drawLaVey1
-	cmp r8, #1
-	bleq drawLaVey1
-	cmp r8, #2
-	bleq drawLaVey2
-	cmp r8, #3
-	bleq drawLaVey3
-	
-	
-updateLaVeyDone:
-	
-	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -869,43 +748,26 @@ showEndOfLevelFadeOut:
 	
 updateEndOfLevel:
 
-	stmfd sp!, {r0-r4, lr}
+	stmfd sp!, {lr}
 	
 	bl drawScore								@ update the score with any changes
 	bl drawAllEnergyBars						@ Draw the energy bars
-	
-	ldr r0, =LaVeyWait
-	ldr r1,[r0]
-	subs r1,#1
-	movmi r1,#0
-	str r1,[r0]
-	cmp r1,#0
-	bleq updateLaVey
-	
-	@bl updateLaVey
+	bl updateLaVey
 	@bl updateLogoSprites
 	
-	ldmfd sp!, {r0-r4, pc}						@ restore registers and return
+	ldmfd sp!, {pc}								@ restore registers and return
 	
 	@---------------------------------
 
 	.data
 	.align
 
-LaVeyWait:
-	.word 0
-LaVeyTalk:
-	.word 0
-	
 baseCount:
 	.word 0
 	
 levelCount:
 	.word 0
 
-laVeyCount:
-	.word 0
-		
 	.align
 wellDoneText:
 	.asciz "WELL DONE!"

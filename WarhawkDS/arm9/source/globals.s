@@ -141,7 +141,8 @@
 	.global titleRawText
 	.global ppotRawText
 	.global bossRawText
-	.global warningText
+	.global nowYouMustText
+	.global defeatMeText
 	.global gameOverRawText
 	.global hiScoreRawText
 	.global endOfGameRawText
@@ -387,8 +388,11 @@ pausedText:
 pausedOptionText:
 	.asciz "PRESS 'SELECT' TO QUIT"
 	.align
-warningText:
-	.asciz "- WARNING! -"
+nowYouMustText:
+	.asciz "NOW YOU MUST..."
+	.align
+defeatMeText:
+	.asciz "DEFEAT ME!"
 	.align
 levelText:
 	.asciz "LEVEL"

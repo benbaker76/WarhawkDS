@@ -36,6 +36,7 @@
 	#define MODE_SMALLSHIP_FLY		2
 	#define MODE_SMALLSHIP_LANDED	3
 	#define MODE_MOTHERSHIP_FLY		4
+	#define MODE_MOTHERSHIP_LEFT	5
 
 	.arm
 	.align
@@ -321,8 +322,10 @@ initLargeShipFly:
 	ldr r1, =MODE_LARGESHIP_FLY
 	str r1, [r0]
 	
+	bl fxCopperTextOff
 	bl clearBG0
-	bl updateLargeShipFly
+	
+	bl DC_FlushAll
 	
 	ldr r0, =LargeShipTiles
 	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
@@ -333,6 +336,8 @@ initLargeShipFly:
 	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
 	ldr r2, =LargeShipMapLen
 	bl dmaCopy
+	
+	bl updateLargeShipFly
 	
 	ldr r0, =6000								@ 5 seconds
 	ldr r1, =initSmallShipFly					@ Callback function address
@@ -351,6 +356,9 @@ initSmallShipFly:
 	ldr r1, =MODE_SMALLSHIP_FLY
 	str r1, [r0]
 	
+	bl fxFadeBlackInit
+	bl fxFadeMax
+	
 	ldr r0, =spriteIndex
 	mov r1, #0
 	str r1, [r0]
@@ -367,9 +375,7 @@ initSmallShipFly:
 	mov r1, #0
 	str r1, [r0]
 	
-	bl fxFadeBlackInit
-	bl fxFadeMax
-	bl initWindow
+	@bl initWindow
 	
 	ldr r0, =WIN_OUT						@ Make bg's appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
@@ -380,6 +386,23 @@ initSmallShipFly:
 	strh r1, [r0]
 	
 	bl clearBG1
+	
+	ldr r0, =WIN0_Y0							@ Top pos
+	ldr r1, =0
+	strb r1, [r0]
+	
+	ldr r0, =WIN0_Y1							@ Bottom pos
+	ldr r1, =192
+	strb r1, [r0]
+	
+	ldr r0, =SUB_WIN0_Y0						@ Top pos
+	ldr r1, =0
+	strb r1, [r0]
+	
+	ldr r0, =SUB_WIN0_Y1						@ Bottom pos
+	ldr r1, =192
+	strb r1, [r0]
+	
 	bl updateSmallShipFly
 	
 	@ Clear Sprites
@@ -475,6 +498,22 @@ initMotherShipFly:
 	ldr r1, =(WIN0_BG0 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
 	strh r1, [r0]
 	
+	ldr r0, =WIN0_Y0							@ Top pos
+	ldr r1, =0
+	strb r1, [r0]
+	
+	ldr r0, =WIN0_Y1							@ Bottom pos
+	ldr r1, =192
+	strb r1, [r0]
+	
+	ldr r0, =SUB_WIN0_Y0						@ Top pos
+	ldr r1, =0
+	strb r1, [r0]
+	
+	ldr r0, =SUB_WIN0_Y1						@ Bottom pos
+	ldr r1, =192
+	strb r1, [r0]
+	
 	bl updateMotherShipFly
 	
 	ldr r0, =3000								@ 1 seconds
@@ -490,9 +529,14 @@ initEndOfGame:
 
 	stmfd sp!, {r0-r3, lr}
 	
+	ldr r0, =endOfGameMode
+	ldr r1, =MODE_MOTHERSHIP_LEFT
+	str r1, [r0]
+	
 	bl clearBG0
 	bl clearBG1
 	bl clearOAM
+	bl clearWindow
 
 	ldr r0, =gameOverText						@ Load out text pointer
 	ldr r1, =11									@ x pos
@@ -510,6 +554,8 @@ initEndOfGame:
 	ldr r1, =initGameOverFadeOut				@ Callback function address
 	
 	bl startTimer
+	
+	bl fxCopperTextOn
 
 	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 	
@@ -522,25 +568,12 @@ initGameOverFadeOut:
 	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
-	ldr r1, =initGameOverFadeOutDone
+	ldr r1, =showHiScoreEntry
 	str r1, [r0]
 	
 	bl fxFadeOut
 
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
-	
-	@---------------------------------
-	
-initGameOverFadeOutDone:
-
-	stmfd sp!, {lr}
-	
-	bl clearBG1
-	bl clearOAM
-	bl clearWindow
-	bl showHiScoreEntry
-
-	ldmfd sp!, {pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -890,6 +923,19 @@ updateMotherShipFly:
 
 	@---------------------------------
 	
+updateMotherShipLeft:
+
+	stmfd sp!, {lr}
+	
+	bl scrollSBMain
+	bl scrollSBSub
+	bl updateShipMoveMain
+	bl updateShipMoveSub
+
+	ldmfd sp!, {pc} 						@ restore registers and return
+
+	@---------------------------------
+	
 updateEndOfGame:
 
 	stmfd sp!, {r0-r1, lr}
@@ -907,6 +953,8 @@ updateEndOfGame:
 	bleq updateSmallShipLanded
 	cmp r1, #MODE_MOTHERSHIP_FLY
 	bleq updateMotherShipFly
+	cmp r1, #MODE_MOTHERSHIP_LEFT
+	bleq updateMotherShipLeft
 	
 	ldr r0, =vblCounterH
 	ldr r1, [r0]

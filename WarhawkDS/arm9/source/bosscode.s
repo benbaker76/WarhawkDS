@@ -313,6 +313,7 @@ bossIsShot:
 			bl addScore	
 			bl playShipArmourHit1Sound
 		heBeDead:
+	
 	ldmfd sp!, {r0-r8, pc}
 
 @------------------ KILL THE BOSS
@@ -363,7 +364,12 @@ bossAttack:
 	bllt bossFire				@ do our fire checks, and shoot if needed
 	
 	bl bossDraw					@ redraw our boss
-	
+		
+	ldr r0,=bossHits
+	ldr r0,[r0]
+	cmp r0,#0
+	blge bigBossDrawEnergy	
+
 	ldmfd sp!, {r0-r8, pc}
 
 @------------ OUR BOSSES FIRE CODE COMES IN HERE

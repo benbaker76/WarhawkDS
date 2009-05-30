@@ -62,6 +62,8 @@ bossInitStandard:
 	ldr r0,[r1]
 	ldr r2,=bossHits				@ set hits to kill
 	str r0,[r2]
+	
+	bl DrawEnergyShifter
 
 	add r1,#4
 	ldr r0,[r1]
@@ -120,6 +122,8 @@ bossInitTracker:
 	ldr r2,=bossHits				@ set hits to kill
 	str r0,[r2]
 
+	bl DrawEnergyShifter
+
 	add r1,#4
 	ldr r0,[r1]
 	ldr r2,=bossFireMode			@ store mode, 0=normal/1=twin fire
@@ -169,6 +173,8 @@ bossInitLurcher:
 	ldr r0,[r1]
 	ldr r2,=bossHits				@ set hits to kill
 	str r0,[r2]
+
+	bl DrawEnergyShifter
 
 	add r1,#4
 	ldr r0,[r1]
@@ -230,6 +236,8 @@ bossInitCrane:
 	ldr r2,=bossHits				@ set hits to kill
 	str r0,[r2]
 
+	bl DrawEnergyShifter
+
 	add r1,#4
 	ldr r0,[r1]
 	ldr r2,=bossFireMode			@ store mode, 0=normal/1=twin fire
@@ -286,6 +294,8 @@ bossInitSine:
 	ldr r0,[r1]
 	ldr r2,=bossHits				@ set hits to kill
 	str r0,[r2]
+
+	bl DrawEnergyShifter
 
 	add r1,#4
 	ldr r0,[r1]

@@ -76,9 +76,9 @@ initStarData:
 	mov r1, #0
 	str r1, [r0]
 	
-	ldr r0, =horizDrift
-	mov r1, #0
-	str r1, [r0]
+@	ldr r0, =horizDrift
+@	mov r1, #0
+@	str r1, [r0]
 
 	@ Write the tile data
 	

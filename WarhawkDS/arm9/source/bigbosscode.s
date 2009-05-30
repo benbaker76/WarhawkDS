@@ -29,6 +29,9 @@
 	.global updateBigBoss
 	.global bigBossInitExplode
 	.global bigBossMode
+	.global bigBossDrawEnergy
+	.global BBEnergyShift
+	.global DrawEnergyShifter
 	
 	#define	BIGBOSS_OFFSET		68
 
@@ -81,14 +84,14 @@ bigBossInit:
 	bl resetScrollRegisters						@ Reset the scroll registers
 	bl clearBG0									@ Clear bgs
 	bl clearBG1
-	bl clearBG2
-	bl clearBG3
+@	bl clearBG2
+@	bl clearBG3
 	
 	bl killAllSpritesBoss						@ this SHOULD kill everyother sprite except you and bullets
 	bl initStarData
 	
 	ldr r0,=bossX								@ set initial boss X/Y (20.12 format)
-	mov r3,#32								@ r3=x
+	mov r3,#32									@ r3=x
 	lsl r3,#12
 	str r3,[r0]
 
@@ -109,7 +112,7 @@ bigBossInit:
 	ldr r2, =6						@ y pos
 	ldr r3, =0						@ Draw on main screen
 	bl drawText
-	
+
 	mov r0, #30
 	bl initLaVey
 
@@ -127,10 +130,6 @@ bigBossInit:
 
 	bl fxFadeIn
 	
-	ldr r0,=horizDrift
-	mov r1,#32
-	str r1,[r0]
-	
 	ldr r0,=energy
 	mov r1,#72
 	str r1,[r0]
@@ -142,6 +141,10 @@ bigBossInit:
 	ldr r0,=bigBossYphase
 	mov r1,#48
 	str r1,[r0]
+	
+@	ldr r0,=BBEnergyShift
+@	mov r1,#0
+@	str r1,[r0]
 	
 	ldmfd sp!, {r0-r4, pc}
 
@@ -161,6 +164,7 @@ bigBossGo:
 	bl fxCopperTextOff
 	
 	bl playEvilLaughSound
+	
 
 	ldr r0, =bossRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
@@ -175,6 +179,10 @@ bigBossGo:
 	mov r1,#BIGBOSSMODE_SCROLL_ON
 	str r1,[r0]									@ set bossmode to 1 = bring on from top
 												@ 2= move phase, 3=explode init
+	ldr r0,=spriteHits+BIGBOSS_OFFSET
+	ldr r0,[r0]									@ r0=energy of boss	
+	bl DrawEnergyShifter						@ set the mul value
+	bl bigBossDrawEnergy
 
 	ldmfd sp!, {r0-r4, pc}
 
@@ -208,8 +216,8 @@ bigBossInitAllSpriteData:
 	ldrne r8,=bigBossSpriteTable2			@ load the image from our table!
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
-	moveq r7,#272							@ hits for normal and mental mode
-	movne r7,#190
+	moveq r7,#240							@ hits for normal and mental mode (240 is good)
+	movne r7,#200
 	mov r0,#0								@ sprite number
 	bigBossInitLoop:
 		ldr r5,=spriteActive+BIGBOSS_OFFSET
@@ -334,11 +342,25 @@ updateBigBossLaVey:
 	
 	bl updateLaVey								@ update LaVey
 	bl moveShip									@ check and move your ship
+	bl moveBullets
 	bl alienFireMove							@ check and move alien bullets
-	bl fireCheck								@ check for your wish to shoot!
+@	bl fireCheck								@ put a hold to shooting while he talks
 	bl scrollSBMain
 	bl scrollSBSub
 	bl drawSprite								@ drawsprites and do update bloom effect
+	
+	ldr r0, =horizDrift				@ use this so we only drift bg2 and bg3
+	ldr r0, [r0]
+	lsr r0,#1
+	ldr r1, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
+	ldr r2, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
+	strh r0,[r1]
+	strh r0,[r2]
+	lsr r0,#1
+	ldr r1, =REG_BG3HOFS			@ Load our horizontal scroll register for BG3 on the main screen
+	ldr r2, =REG_BG3HOFS_SUB		@ Load our horizontal scroll register for BG3 on the sub screen
+	strh r0,[r1]
+	strh r0,[r2]
 	
 	ldmfd sp!, {r0-r10, pc}
 
@@ -377,15 +399,13 @@ updateBigBoss:
 @	bl drawDebugText							@ draw some numbers :)	
 	bl bigBossMovement							@ move big boss
 
-	ldr r5,=spriteHits+BIGBOSS_OFFSET			@ just to check the hits
-	ldr r10,[r5]								@ should we have an engerybar for the boss???
-	mov r8,#2						
-	mov r9,#0						
-	mov r11, #3						
-	bl drawDigits					
+	ldr r0,=spriteHits+BIGBOSS_OFFSET
+	ldr r0,[r0]									@ r0=energy of boss	
+	bl bigBossDrawEnergy
 
 	ldr r0, =horizDrift
 	ldr r0, [r0]
+	lsr r0,#1
 	ldr r1, =REG_BG2HOFS			@ Load our horizontal scroll register for BG2 on the main screen
 	ldr r2, =REG_BG2HOFS_SUB		@ Load our horizontal scroll register for BG2 on the sub screen
 	strh r0,[r1]
@@ -509,7 +529,7 @@ bigBossMovement:
 	ldr r3,[r3]
 	cmp r3,#0
 	
-	moveq r3,#384		@ distance normal
+	moveq r3,#372		@ distance normal
 	movne r3,#384		@ distance mental
 
 	cmp r1,r3
@@ -1021,10 +1041,82 @@ bigBossInitFire2:
 
 @------------------------------------------------------
 
+bigBossDrawEnergy:
+
+	stmfd sp!, {r0-r11, lr}
+	
+	@ just pass r0 as a value from 0-240 to draw energy
+	
+	ldr r1,=BBEnergyShift
+	ldr r1,[r1]
+	mul r0,r1
+	
+	mov r1,#1									@ r1=x coord to plot bar
+	ldr r3, =BG_MAP_RAM_SUB(BG0_MAP_BASE_SUB) 	@ r3=location of draw area
+	mov r4,#173
+	strh r4,[r3]								@ draw left end	
+	mov r5,r3
+	add r5,#62
+	add r4,#1
+	strh r4,[r5]								@ draw right end
+	add r3,#2									@ move across 1 char
+	
+	cmp r0,#82									@ if energy is less than this, make different colour bar
+	movle r6,#10
+	movgt r6,#0
+	
+	BBEnergyLoop:
+		cmp r0,#8
+		blt BBEnergyEmpty
+			@ ok, draw a full bar at X
+			sub r0,#8
+			mov r5,#172
+			add r5,r6
+			strh r5, [r3]			
+			b BBEnergyNext
+		BBEnergyEmpty:
+		cmp r0,#0
+		bne BBEnergyLittle
+			@ draw empty bar
+			mov r5,#164
+			strh r5, [r3]
+			b BBEnergyNext
+		BBEnergyLittle:
+			@ draw partial bar
+			add r0,#164
+			add r0,r6
+			strh r0, [r3]
+			mov r0,#0
+		BBEnergyNext:
+		add r3,#2
+		add r1,#1
+		cmp r1,#31
+	bne BBEnergyLoop
+	ldmfd sp!, {r0-r11, pc}
+
+
+DrawEnergyShifter:
+	@ pass r0 as a value that you want for energy
+	@ this will set the shifter so it fills as much of the bar as possible
+	stmfd sp!, {r0-r11, lr}
+	
+	mov r1,r0
+	lsl r1,#12
+	mov r0,#240
+	lsl r0,#12
+
+	bl divf32
+	
+	ldr r1,=BBEnergyShift
+	lsr r0,#12
+	str r0,[r1]
+	
+	ldmfd sp!, {r0-r11, pc}
+
 
 @ this is a list of the sprites assigned to the boss.
-@ 7*9 = 63 sprites (is this ok?)
-.pool
+@ up to 62 sprites per big boss
+	.pool
 	.align
 
 bigBossSpriteTable1:				@ sprite images used in order 0-63 
@@ -1116,6 +1208,7 @@ bigBossExpHigh:
 .word 0
 bigBossSpriteNumber:
 .word 0
-
+BBEnergyShift:
+.word 0
 .pool
 .end

@@ -167,7 +167,7 @@ updateLaVey:
 	bleq drawLaVey3
 	
 updateLaVeyDone:
-	
+
 	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
 	
 	@---------------------------------

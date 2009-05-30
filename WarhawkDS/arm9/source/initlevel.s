@@ -822,6 +822,15 @@ initMainTiles:
 	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
 	add r1, #(ScoreTilesLen + FontTilesLen)
 	bl dmaCopy
+
+	ldr r0, =BBEnergyTiles
+	ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+	add r1, #(ScoreTilesLen + FontTilesLen + EnergyTilesLen)
+	ldr r2, =BBEnergyTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
+	add r1, #(ScoreTilesLen + FontTilesLen + EnergyTilesLen)
+	bl dmaCopy
 	
 	ldmfd sp!, {r0-r2, pc}
 	

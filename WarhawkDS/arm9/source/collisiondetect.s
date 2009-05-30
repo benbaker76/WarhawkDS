@@ -668,7 +668,7 @@ explodeSNoIdent:				@ this is to destroy a single alien
 	bl getRandom
 	and r8,#0x1					@ randomly flip the explosion
 	mov r9,#SPRITE_HORIZ_FLIP_OFFS
-	str r8,[r6,r9]
+	str r8,[r4,r9]
 
 	ldr r8,=adder+7				@ add 78 to the score
 	mov r6,#8

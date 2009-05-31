@@ -299,6 +299,8 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 		ldr r3, =0									@ Draw on main screen
 		bl drawText
 
+	bl killAllSpritesBoss
+
 	mainExplodeCountWait:	
 	
 	ldmfd sp!, {r0-r6, pc}

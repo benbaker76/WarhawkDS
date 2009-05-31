@@ -426,10 +426,14 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	stmfd sp!, {r0-r8, lr}
 	@ First we need to grab the X and Y of the bullet and cycle trough the aliens to find a hit
 	
+@	ldr r1, =deathMode			@ we use some sprites in death with bullet values
+@	ldr r1,[r1]					@ so, we need to make sure this is not used to detect against
+@	cmp r1,#DEATHMODE_MAIN_EXPLODE	@ aliens!
+@	blt detectALNActive
 	ldr r1, =deathMode			@ we use some sprites in death with bullet values
 	ldr r1,[r1]					@ so, we need to make sure this is not used to detect against
-	cmp r1,#DEATHMODE_MAIN_EXPLODE	@ aliens!
-	blt detectALNActive
+	cmp r1,#0
+	beq detectALNActive
 	
 		ldmfd sp!, {r0-r8, pc}
 		
@@ -757,7 +761,7 @@ drawShard:
 
 
 alienCollideCheck:
-	stmfd sp!, {r0-r8, lr}
+	stmfd sp!, {r0-r9, lr}
 	
 			ldr r5,=deathMode		@ if you are in major explode, no detection with ship
 			ldr r5,[r5]
@@ -867,8 +871,7 @@ alienCollideCheck:
 						cmp r10,#0
 						bne acNoDestroy
 					playerDyingBlooms:
-					
-					
+					mov r9,r8
 						@ ok, for this ident, we need to flash all matching
 						@ and decrement the hits and store the value in ALL idents
 						@ r7=hits left
@@ -883,7 +886,8 @@ alienCollideCheck:
 								mov r3,#16
 								str r3,[r2,r8,lsl #2]	@ make it FLASH	
 								ldr r2,=spriteHits+68
-								str r7,[r2,r8,lsl #2]
+								cmp r9,#256
+								strlt r7,[r2,r8,lsl #2]
 							alienBloomNot:
 							subs r8,#1
 						bpl alienBloomLoop
@@ -918,7 +922,7 @@ alienCollideCheck:
 			cmp r6,#1
 			bleq alienCyclone
 			
-	ldmfd sp!, {r0-r8, pc}
+	ldmfd sp!, {r0-r9, pc}
 	
 explodeNonIdent:
 		mov r6,#4					@ set alien to an explosion

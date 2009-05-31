@@ -32,6 +32,7 @@
 	.global bigBossDrawEnergy
 	.global BBEnergyShift
 	.global DrawEnergyShifter
+	.global killAllSpritesBoss
 	
 	#define	BIGBOSS_OFFSET		68
 
@@ -109,9 +110,13 @@ bigBossInit:
 	
 	ldr r0, =defeatMeText			@ Load out text pointer
 	ldr r1, =11						@ x pos
-	ldr r2, =6						@ y pos
-	ldr r3, =0						@ Draw on main screen
+	ldr r2, =12						@ y pos
+	ldr r3, =1						@ Draw on main screen
 	bl drawText
+
+@	ldr r1,=spriteActive
+@	mov r0,#0
+@	str r0,[r1]						@ turn off ship
 
 	mov r0, #30
 	bl initLaVey
@@ -141,11 +146,7 @@ bigBossInit:
 	ldr r0,=bigBossYphase
 	mov r1,#48
 	str r1,[r0]
-	
-@	ldr r0,=BBEnergyShift
-@	mov r1,#0
-@	str r1,[r0]
-	
+
 	ldmfd sp!, {r0-r4, pc}
 
 	@------------------------------------
@@ -164,7 +165,10 @@ bigBossGo:
 	bl fxCopperTextOff
 	
 	bl playEvilLaughSound
-	
+
+@	ldr r1,=spriteActive
+@	mov r0,#1
+@	str r0,[r1]						@ turn on ship	
 
 	ldr r0, =bossRawText						@ Read the path to the file
 	bl playAudioStream							@ Play the audio stream
@@ -960,7 +964,7 @@ bigBossInitFire2:
 	mov r1,#3
 	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
-	mov r1,#3
+	mov r1,#5
 	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(60*4)
 	str r1,[r0]
 	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(60*4)
@@ -982,7 +986,7 @@ bigBossInitFire2:
 	mov r1,#3
 	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(61*4)
 	str r1,[r0]
-	mov r1,#3
+	mov r1,#5
 	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(61*4)
 	str r1,[r0]
 	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(61*4)
@@ -994,47 +998,47 @@ bigBossInitFire2:
 	str r1,[r0]		
 @3	inner wing Left
 	mov r1,#15
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]
 	mov r1,#70
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]
 	mov r1,#3
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]
 	mov r1,#6
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]	
 	mov r1,#2
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(57*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(44*4)
 	str r1,[r0]	
 @4	inner wing right
 	mov r1,#16
-	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteFireType+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 	mov r1,#70
-	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteFireDelay+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteFireMax+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 	mov r1,#3
-	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteFireSpeed+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
 	mov r1,#6
-	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteBurstNum+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteBurstNumCount+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]	
 	mov r1,#2
-	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteBurstDelay+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]
-	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(58*4)
+	ldr r0,=spriteBurstDelayCount+BIGBOSS_OFFSET+(49*4)
 	str r1,[r0]	
 	
 	ldmfd sp!, {r0-r10, pc}
@@ -1047,7 +1051,7 @@ bigBossDrawEnergy:
 	
 	@ just pass r0 as a value from 0-240 to draw energy
 	
-	ldr r1,=BBEnergyShift
+	ldr r1,=BBEnergyShift						@ our multiplyer to try and fill as much as the bar as possible
 	ldr r1,[r1]
 	mul r0,r1
 	
@@ -1062,7 +1066,7 @@ bigBossDrawEnergy:
 	add r3,#2									@ move across 1 char
 	
 	cmp r0,#82									@ if energy is less than this, make different colour bar
-	movle r6,#10
+	movle r6,#10								@ add 10 to tile base
 	movgt r6,#0
 	
 	BBEnergyLoop:

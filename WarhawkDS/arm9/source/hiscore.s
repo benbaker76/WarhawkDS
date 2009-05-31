@@ -216,36 +216,42 @@ showHiScoreEntryDone:
 	
 updateHiScoreEntry:
 
-	stmfd sp!, {r0-r5, lr}
+	stmfd sp!, {r0-r6, lr}
 	
 	ldr r0, =nameBuffer							@ Load nameBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
-	ldr r2, [r1]								@ Load cursorPos value
-	ldrb r3, [r0, r2]							@ Load the ASCII character
+	ldr r2, =hiScoreTable						@ Load hiScoreTable address
+	ldr r3, [r1]								@ Load cursorPos value
+	ldrb r4, [r0, r3]							@ Load the ASCII character
+	sub r4, #32									@ Subtract 32
+	ldrb r4, [r2, r4]							@ Convert to offset
 	
 	bl readInput
 	
 	cmp r0, #1									@ if it is 1, keep pressed (from no-key pressed)
 	bne updateHiScoreEntrySkip
 
-	ldr r4, =REG_KEYINPUT						@ Read key input register
-	ldr r5, [r4]								@ Read key input value
-	tst r5, #BUTTON_UP							@ Button up?
-	addeq r3, #1								@ Move ASCII character up
+	ldr r5, =REG_KEYINPUT						@ Read key input register
+	ldr r6, [r5]								@ Read key input value
+	tst r6, #BUTTON_UP							@ Button up?
+	addeq r4, #1								@ Move ASCII character up
 	bleq playKeyboardClickSound
-	tst r5, #BUTTON_DOWN						@ Button down?
-	subeq r3, #1								@ Move ASCII character down
+	tst r6, #BUTTON_DOWN						@ Button down?
+	subeq r4, #1								@ Move ASCII character down
 	bleq playKeyboardClickSound
 	
-	cmp r3, #32									@ ASCII character 32 - 90
-	movlt r3, #32								@ if < 32 set to 32
-	cmp r3, #90									@ If > 90 set to 90
-	movgt r3, #90
+	cmp r4, #0									@ ASCII character 0 - 50
+	movlt r4, #0								@ if < 0 set to 0
+	cmp r4, #50									@ If > 50 set to 50
+	movgt r4, #50
+	
+	ldr r5, =hiScoreChars						@ Convert offset to ascii
+	ldrb r4, [r5, r4]							@ Load ASCII character
 	
 	ldr r0, =nameBuffer							@ Load nameBuffer
 	ldr r1, =cursorPos							@ Load cursorPos address
 	ldr r2, [r1]								@ Load cursorPos value
-	strb r3, [r0, r2]							@ Write back ASCII character
+	strb r4, [r0, r2]							@ Write back ASCII character
 	
 	ldr r4, =REG_KEYINPUT						@ Read key input register
 	ldr r5, [r4]								@ Read key input value
@@ -258,8 +264,8 @@ updateHiScoreEntry:
 	
 	cmp r2, #0									@ Cursor in pos 0?
 	movlt r2, #0								@ Cursor pos < 0 then make it 0
-	cmp r2, #4									@ Cursor pos 2?
-	movgt r2, #4								@ Cursor pos > 2 then make it 2
+	cmp r2, #HISCORE_NAME_SIZE-1				@ Cursor pos HISCORE_NAME_SIZE-1?
+	movgt r2, #HISCORE_NAME_SIZE-1				@ Cursor pos > HISCORE_NAME_SIZE-1 then make it HISCORE_NAME_SIZE-1
 	
 	str r2, [r1]								@ Write back to cursorPos
 	
@@ -298,7 +304,7 @@ updateHiScoreEntrySkip:
 	
 updateHiScoreEntryDone:
 	
-	ldmfd sp!, {r0-r5, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r6, pc} 					@ restore registers and return
 	
 	@---------------------------------
 	
@@ -710,8 +716,19 @@ hiScoreBuffer:
 	.incbin "../../efsroot/HiScore.dat"
 	
 	.align
-hiscoreString:
-	.ascii " ABCDEFGHIJKLMNOPQRSTUVWXYZ.,01234567890?()!*-=+#@;:"	@ 51 CHARS
+hiScoreChars:
+	.ascii " ABCDEFGHIJKLMNOPQRSTUVWXYZ.,0123456789?()!*-=+#@;:"	@ 50 CHARS
+	
+	.align
+hiScoreTable:
+	.byte 0x00,0x2a,0x00,0x2f,0x00,0x00,0x00,0x00
+	.byte 0x28,0x29,0x2b,0x2e,0x1c,0x2c,0x1b,0x00
+	.byte 0x1d,0x1e,0x1f,0x20,0x21,0x22,0x23,0x24
+	.byte 0x25,0x26,0x32,0x31,0x00,0x2d,0x00,0x27
+	.byte 0x30,0x01,0x02,0x03,0x04,0x05,0x06,0x07
+	.byte 0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f
+	.byte 0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17
+	.byte 0x18,0x19,0x1a,0x00,0x00,0x00,0x00,0x00
 	
 	.pool
 	.end

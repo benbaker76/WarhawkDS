@@ -135,7 +135,10 @@ updateLaVey:
 	subs r1,#1
 	movmi r1,#0
 	str r1,[r0]
-	cmp r1,#1
+	ldr r0, =gameMode
+	ldr r3,[r0]
+	cmp r3,#GAMEMODE_BIGBOSS_LAVEY
+	cmpeq r1,#1
 	bleq playDefeatSound		@ use this to init "now you must destroy me!" sample (If we ever make one LOL)
 	cmp r1,#0
 	bne updateLaVeyDone

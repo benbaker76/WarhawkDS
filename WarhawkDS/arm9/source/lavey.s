@@ -136,7 +136,7 @@ updateLaVey:
 	movmi r1,#0
 	str r1,[r0]
 	cmp r1,#1
-	@bleq PlayLaVeySound		@ use this to init "now you must destroy me!" sample (If we ever make one LOL)
+	bleq playDefeatSound		@ use this to init "now you must destroy me!" sample (If we ever make one LOL)
 	cmp r1,#0
 	bne updateLaVeyDone
 

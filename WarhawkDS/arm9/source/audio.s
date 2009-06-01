@@ -56,6 +56,7 @@
 	.global playEvilLaughSound					@ used = Big boss apearance
 	.global playAlertSound
 	.global playAlienScreamSound				@ used = Misc 2 aliens
+	.global playDefeatSound						@ Anton
 stopSound:
 
 	stmfd sp!, {r0-r1, lr}
@@ -69,6 +70,30 @@ stopSound:
 	str r1, [r0]										@ Write the value
 	
 	ldmfd sp!, {r0-r1, pc} 							@ restore registers and return
+
+	
+	@ ---------------------------------------------
+
+playDefeatSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_DATA(1)
+	ldr r1, =0x10
+	bl DC_FlushRange
+
+	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r1, =LaVeyDefeat_raw_end							@ Get the sample end
+	ldr r2, =LaVeyDefeat_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r1, =LaVeyDefeat_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
 	
 	@ ---------------------------------------------
 

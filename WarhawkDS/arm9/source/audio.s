@@ -35,28 +35,28 @@
 	.global playBlasterSound					@ Used = Normal Fire
 	.global playExplosionSound					@ used = player death & base explode
 	.global playAlienExplodeSound				@ used = alien explode (need better for big aliens)
-	.global playAlienExplodeScreamSound			@ used = powershot, mineshot explode, player death
+	.global playAlienExplodeScreamSound			@ used = (powershot), mineshot explode, player death
+@	.blobal playPowerShotSound					@*For when a powershot if fired 
 	.global playElecShotSound					@ used = alien fire
 	.global playLaserShotSound					@ used = alien fire
 	.global playShipArmourHit1Sound				@ used = boss shot, player/alien collision
-	.global playShipArmourHit2Sound				@ not used (using for powerup collect for now)
-	.global playClassicSound					@ not used
 	.global playCrashBuzSound					@ used = alien fire
 	.global playDinkDinkSound					@ used = cheatmode and level start
-	.global playHitWallSound					@ not used
 	.global playLowSound						@ used = alien fire
 	.global playSteelSound						@ used = eol counter, alien/player collide, alien fire
 	.global playBossExplodeSound				@ used = Player explode
 	.global playFireworksSound					@ used = fireworks
-	.global playPowerupCollect					@ for powerup collection
-	.global playpowerupLostSound				@ powerup runs out
-	.global playIdentShipExplode				@ for when a multi-sprite ship is destroyed
-	.global playKeyboardClickSound				@ for menu navigation/options
-	.global playBossExplode2Sound				@ used = Boss Explosion (not happy with it :( )
+	.global playPowerupCollect					@*used = for powerup collection
+	.global playpowerupLostSound				@*used = powerup runs out
+	.global playIdentShipExplode				@*used = for when a multi-sprite ship is destroyed
+	.global playKeyboardClickSound				@ used = for menu navigation/options
+	.global playBossExplode2Sound				@*used = Boss Explosion (not happy with it :( )
 	.global playEvilLaughSound					@ used = Big boss apearance
-	.global playAlertSound
-	.global playAlienScreamSound				@ used = Misc 2 aliens
-	.global playDefeatSound						@ Anton
+	.global playAlertSound						@ used = big boss attack
+	.global playAlienScreamSound				@ used = "Misc 2" aliens
+	.global playDefeatSound						@ used = Anton talks
+	
+	@ ones with "*" i feel need to be redone/improved
 stopSound:
 
 	stmfd sp!, {r0-r1, lr}
@@ -251,50 +251,6 @@ playShipArmourHit1Sound:
 	
 	@ ---------------------------------------------
 	
-playShipArmourHit2Sound:
-
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =IPC_SOUND_DATA(1)
-	ldr r1, =0x10
-	bl DC_FlushRange
-
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
-	ldr r1, =ship_armour_hit2_raw_end					@ Get the sample end
-	ldr r2, =ship_armour_hit2_raw						@ Get the same start
-	sub r1, r2											@ Sample end - start = size
-	str r1, [r0]										@ Write the sample size
-	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
-	ldr r1, =ship_armour_hit2_raw						@ Get the sample address
-	str r1, [r0]										@ Write the value
-	
-	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-	
-	@ ---------------------------------------------
-	
-playClassicSound:
-
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =IPC_SOUND_DATA(1)
-	ldr r1, =0x10
-	bl DC_FlushRange
-
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
-	ldr r1, =classic_raw_end							@ Get the sample end
-	ldr r2, =classic_raw								@ Get the same start
-	sub r1, r2											@ Sample end - start = size
-	str r1, [r0]										@ Write the sample size
-	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
-	ldr r1, =classic_raw								@ Get the sample address
-	str r1, [r0]										@ Write the value
-
-	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-	
-	@ ---------------------------------------------
-
 playCrashBuzSound:
 
 	stmfd sp!, {r0-r2, lr}
@@ -339,28 +295,6 @@ playDinkDinkSound:
 	
 	@ ---------------------------------------------
 
-playHitWallSound:
-
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =IPC_SOUND_DATA(1)
-	ldr r1, =0x10
-	bl DC_FlushRange
-
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
-	ldr r1, =hitwall_raw_end							@ Get the sample end
-	ldr r2, =hitwall_raw								@ Get the same start
-	sub r1, r2											@ Sample end - start = size
-	str r1, [r0]										@ Write the sample size
-	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
-	ldr r1, =hitwall_raw								@ Get the sample address
-	str r1, [r0]										@ Write the value
-	
-	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-	
-	@ ---------------------------------------------
-	
 playLowSound:
 
 	stmfd sp!, {r0-r2, lr}

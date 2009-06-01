@@ -149,8 +149,8 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			ldr r1, =spriteObj+4
 			str r2,[r1,r0, lsl #2]		@ done
 			
-			bl playAlienExplodeScreamSound			@ CHANGE THIS BIG TIME!!!
-	ldmfd sp!, {r0-r6, pc}
+			bl playPowershotSound		@ Why does this not sound??
+			ldmfd sp!, {r0-r6, pc}
 
 		fireNormal:					@ "NORMALSHOT"
 			ldr r3,=spriteY

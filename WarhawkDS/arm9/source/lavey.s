@@ -131,16 +131,20 @@ updateLaVey:
 	stmfd sp!, {r0-r2, lr}
 	
 	ldr r0, =laVeyWait
-	ldr r1,[r0]
-	subs r1,#1
-	movmi r1,#0
-	str r1,[r0]
+	ldr r1, [r0]
+	subs r1, #1
+	movmi r1, #0
+	str r1, [r0]
+
 	ldr r0, =gameMode
-	ldr r3,[r0]
-	cmp r3,#GAMEMODE_BIGBOSS_LAVEY
-	cmpeq r1,#1
-	bleq playDefeatSound		@ use this to init "now you must destroy me!" sample (If we ever make one LOL)
-	cmp r1,#0
+	ldr r2, [r0]
+	cmp r2, #GAMEMODE_BIGBOSS_LAVEY
+	cmpeq r1, #1
+	bleq playDefeatSound
+
+	ldr r0, =laVeyWait
+	ldr r1, [r0]
+	cmp r1,# 0
 	bne updateLaVeyDone
 
 	ldr r0, =laVeyCount

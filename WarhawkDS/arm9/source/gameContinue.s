@@ -38,10 +38,71 @@
 	.arm
 	.align
 	.text
+	.global showGameContinue
+	.global checkGameContinue
 	.global showGameContinueMenu
 	.global updateGameContinueMenu
 	.global getLevelNum
 	.global setLevelNum
+
+showGameContinue:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =fxFadeOutBusy
+	ldr r0, [r0]
+	cmp r0, #FADE_BUSY
+	beq showGameContinueDone
+
+	bl initDataGameContinue						@ setup actual game data
+
+	bl fxFadeBlackInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initLevel
+	str r1, [r0]
+	
+	bl fxFadeOut
+	
+showGameContinueDone:
+	
+	ldmfd sp!, {r0-r1, pc}
+	
+	@ ------------------------------------
+	
+checkGameContinue:
+
+	stmfd sp!, {r0-r3, lr}
+	
+	bl getLevelNum
+	
+	ldr r0, =levelNum
+	ldr r1, [r0]
+	ldr r2, =optionLevelNum
+	ldr r3, [r2]
+	
+	cmp r1, r3
+	ble checkGameContinueDone
+	
+	ldr r3, =LEVEL_2
+	
+checkGameContinueLoop:
+
+	cmp r1, r3
+	strge r3, [r2]
+	
+	add r3, #1
+	cmp r3, #LEVEL_16
+	ble checkGameContinueLoop
+	
+	bl writeOptions
+	bl setLevelNum
+	
+checkGameContinueDone:
+	
+	ldmfd sp!, {r0-r3, pc}
+
+	@ ------------------------------------
 	
 showGameContinueMenu:
 

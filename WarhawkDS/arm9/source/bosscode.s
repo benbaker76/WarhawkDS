@@ -193,6 +193,9 @@ checkBossInit:
 			str r1,[r0]
 			bl fxFadeWhiteInit
 			bl fxFadeIn						@ need a FLASH to WHITE and back to NORMAL
+			
+			ldr r0, =bossRawText						@ Read the path to the file
+			bl playAudioStream							@ Play the audio stream
 		bossStillScroll:
 		ldr r0,=bossY
 		ldr r1,[r0]

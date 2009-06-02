@@ -389,8 +389,8 @@ checkEndOfLevel:
 			
 			bl stopAudioStream
 			
-			ldr r0, =bossRawText						@ Read the path to the file
-			bl playAudioStream							@ Play the audio stream
+			@ldr r0, =bossRawText						@ Read the path to the file
+			@bl playAudioStream							@ Play the audio stream
 			
 			@bl fxSineWobbleOn				@ Start our wobble effect (not any more :( SNIFF )
 	levelPlay:

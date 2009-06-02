@@ -81,7 +81,7 @@ bigBossInit:
 	bl fxFadeBlackInit
 	bl fxFadeMax
 	bl stopSound
-	bl stopAudioStream
+	@bl stopAudioStream
 	bl resetScrollRegisters						@ Reset the scroll registers
 	bl clearBG0									@ Clear bgs
 	bl clearBG1
@@ -113,10 +113,6 @@ bigBossInit:
 	ldr r2, =12						@ y pos
 	ldr r3, =1						@ Draw on main screen
 	bl drawText
-
-@	ldr r1,=spriteActive
-@	mov r0,#0
-@	str r0,[r1]						@ turn off ship
 
 	mov r0, #30
 	bl initLaVey
@@ -155,23 +151,37 @@ bigBossGo:
 
 	stmfd sp!, {r0-r4, lr}
 	
+	bl fxFadeBlackInit
+	bl fxFadeMin
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =bigBossFadeDone
+	str r1, [r0]
+	
+	bl fxFadeOut
+				
+	bl playEvilLaughSound
+
+	ldmfd sp!, {r0-r4, pc}
+
+	@------------------------------------
+	
+bigBossFadeDone:
+
+	stmfd sp!, {r0-r4, lr}
+	
 	mov r1,#GAMEMODE_BIGBOSS					@ set gamemode to switch to bigboss battle
 	ldr r0,=gameMode
 	str r1,[r0]
 	
+	bl fxCopperTextOff
+	bl fxFadeBlackInit
+	bl fxFadeMax
 	bl clearBG0
 	bl clearBG1
-	
-	bl fxCopperTextOff
-	
-	bl playEvilLaughSound
 
-@	ldr r1,=spriteActive
-@	mov r0,#1
-@	str r0,[r1]						@ turn on ship	
-
-	ldr r0, =bossRawText						@ Read the path to the file
-	bl playAudioStream							@ Play the audio stream
+	@ldr r0, =bossRawText						@ Read the path to the file
+	@bl playAudioStream							@ Play the audio stream
 	
 	@ ok, init spritedata
 
@@ -187,6 +197,8 @@ bigBossGo:
 	ldr r0,[r0]									@ r0=energy of boss	
 	bl DrawEnergyShifter						@ set the mul value
 	bl bigBossDrawEnergy
+	
+	bl fxFadeIn
 
 	ldmfd sp!, {r0-r4, pc}
 

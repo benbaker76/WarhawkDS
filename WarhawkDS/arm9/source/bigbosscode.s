@@ -232,7 +232,7 @@ bigBossInitAllSpriteData:
 	ldrne r8,=bigBossSpriteTable2			@ load the image from our table!
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
-	moveq r7,#240							@ hits for normal and mental mode (240 is good)
+	moveq r7,#200							@ hits for normal and mental mode (240 is good)
 	movne r7,#200
 	mov r0,#0								@ sprite number
 	bigBossInitLoop:

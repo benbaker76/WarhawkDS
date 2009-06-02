@@ -142,8 +142,6 @@ updateLaVey:
 	cmpeq r1, #1
 	bleq playDefeatSound
 
-	ldr r0, =laVeyWait
-	ldr r1, [r0]
 	cmp r1,# 0
 	bne updateLaVeyDone
 

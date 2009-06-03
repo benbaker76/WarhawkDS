@@ -44,35 +44,13 @@ bigBossInit:
 	stmfd sp!, {r0-r4, lr}
 	@ need to init sprites starting at sprite 17 and up to 81 max
 	@ use bossX and bossY for the coords (top left)
-	@ use sprite image 30 throughout for now!
 	@ we will use sriteActive value of 256 to signal big boss and 512 for the "hit zone"
 	@ the only downside is that we can only spare 35 sprite images!!
-	
-	@----------------------------------
-	@ SO, AND I NEED YOUR INPUT HERE!!!!
-	@ the size it is now, we can also release powerups
-	@ or another row of 7 and no powerup but a bigger ship! More impressive?? We could make "powerup" perminant for this
-	@ boss fight, so powerup collection is not needed...
-	@ also, should we give player full hitpoints at the start of the battle??
-	@ Ps - bigger works for me :)
-	@ also - should we add animation to parts of it? I think it would really help to show that we are a great team... and
-	@ it is easy to do, could look cool?
-	@----------------------------------
-	
 	@ one good thing or 2...
 	@ drawsprite and standard collision handles everything here with this
 	@ also, it was so so easy to integrate!! :)
 	@ and, I REALLY love your idea for adding this!!! :) <chuckle>
-	
-	@-----------------------------------
-	@
-	@ another thing.... when you die... we will have to do something else,
-	@ there are not ANY sprites free of a higher priority to enable explosions ABOVE the ship?
-	@ so, what can we do?
-	@ fade the ship out and release the sprites? help!!!
-	@
-	@------------------------------------
-	
+
 	mov r1,#GAMEMODE_BIGBOSS_LAVEY				@ set gamemode to switch to bigboss battle
 	ldr r0,=gameMode
 	str r1,[r0]
@@ -85,11 +63,14 @@ bigBossInit:
 	bl resetScrollRegisters						@ Reset the scroll registers
 	bl clearBG0									@ Clear bgs
 	bl clearBG1
-@	bl clearBG2
-@	bl clearBG3
+	bl clearBG2
+	bl clearBG3
 	
 	bl killAllSpritesBoss						@ this SHOULD kill everyother sprite except you and bullets
 	bl initStarData
+
+	mov r0,#256									@ number of stars
+	bl fxStarfieldDownOn						@ Turn on starfield
 	
 	ldr r0,=bossX								@ set initial boss X/Y (20.12 format)
 	mov r3,#32									@ r3=x
@@ -119,9 +100,6 @@ bigBossInit:
 
 	bl fxCopperTextOn							@ Turn on copper text fx
 	
-	mov r0,#256									@ number of stars
-	bl fxStarfieldDownOn						@ Turn on starfield
-
 	ldr r0, =6000								@ 5 seconds
 	ldr r1, =bigBossGo							@ Callback function address
 
@@ -162,6 +140,9 @@ bigBossGo:
 				
 	bl playEvilLaughSound
 
+@	mov r0,#256									@ number of stars
+@	bl fxStarfieldDownOn						@ Turn on starfield (works ok here?)
+
 	ldmfd sp!, {r0-r4, pc}
 
 	@------------------------------------
@@ -197,6 +178,9 @@ bigBossFadeDone:
 	ldr r0,[r0]									@ r0=energy of boss	
 	bl DrawEnergyShifter						@ set the mul value
 	bl bigBossDrawEnergy
+
+@	mov r0,#256									@ number of stars
+@	bl fxStarfieldDownOn						@ Turn on starfield (cocks up here also)
 	
 	bl fxFadeIn
 
@@ -232,7 +216,7 @@ bigBossInitAllSpriteData:
 	ldrne r8,=bigBossSpriteTable2			@ load the image from our table!
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
-	moveq r7,#200							@ hits for normal and mental mode (240 is good)
+	moveq r7,#180							@ hits for normal and mental mode (240 is good)
 	movne r7,#200
 	mov r0,#0								@ sprite number
 	bigBossInitLoop:

@@ -644,6 +644,50 @@ initLevel:
 
 	@ ------------------------------------
 
+levelHunters:				@ set the hunters based on the current level
+	stmfd sp!, {r0-r9, lr}
+	
+	ldr r0,=levelNum
+	ldr r3,[r0]
+	
+	@set r4= which bank of hunters to use
+	
+	mov r4,#0
+	
+	cmp r3,#2
+	moveq r4,#2
+	cmp r3,#4
+	moveq r4,#1
+	cmp r3,#5
+	moveq r4,#5
+	cmp r3,#6
+	moveq r4,#4
+	cmp r3,#11
+	moveq r4,#6
+	cmp r3,#16
+	moveq r4,#3
+	
+	@ now mul r4 by 4 (4 sprites per hunter bank) and then by 512 for each sprite?? I think
+	
+	lsl r4,#2	@ mul 4
+	lsl r4,#9	@ mul 512
+	
+	@ r4= start sprite to copy
+	
+	ldr r0,=HuntersTiles
+	add r0,r4	
+	ldr r1, =SPRITE_GFX_SUB
+	add r1,#30*512
+	ldr r2, =512*4			@ 4 sprites to copy
+	bl dmaCopy	
+	ldr r1, =SPRITE_GFX
+	add r1,#30*512
+	ldr r2, =512*4			@ 4 sprites to copy
+	bl dmaCopy	
+
+	
+	ldmfd sp!, {r0-r9, pc}
+
 initLevelSprites:
 
 	stmfd sp!, {r0-r1, lr}
@@ -665,7 +709,9 @@ initLevelSprites:
 	str r1,[r0]				@ our ships initial Y coord
 	
 	bl initLevelSpecialSprites
-	
+
+	bl levelHunters	
+
 	@ now we need to add special explosions!	
 	
 	ldmfd sp!, {r0-r1, pc}

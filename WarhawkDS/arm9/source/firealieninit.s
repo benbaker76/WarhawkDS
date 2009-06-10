@@ -844,8 +844,6 @@
 @ "INIT" - "Twin Gable shot 21+22" (2 or 3 bullets that spread out)
 	initTwinGableShot:
 	stmfd sp!, {r3, lr}
-	
-		@ This is a downward shot that tracks to your X coord
 
 		bl findAlienFire			@ look for a "BLANK" bullet, this "needs" to be called for each init!
 		cmp r2,#255					@ 255=not found

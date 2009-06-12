@@ -41,15 +41,18 @@ initData:
 
 	ldr r0,=levelNum
 	mov r1,#LEVEL_1
-
-@mov r1,#15
+@mov r1,#15								@ uncomment for set level
 	str r1,[r0]
 	
 	ldr r0,=bossSpreadAngle
 	mov r1,#0
 	str r1,[r0]
 	
-@	ldr r0,=cheatMode
+	ldr r0, =optionGameModeCurrent		@ uncomment for mental mode!
+	mov r1,#1
+	str r1,[r0]
+	
+@	ldr r0,=cheatMode					@ uncomment for auto cheat
 @	mov r1,#1
 @	str r1,[r0]
 	

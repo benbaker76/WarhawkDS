@@ -46,6 +46,10 @@ checkPowerUp:
 	ldr r0,[r0]
 	cmp r0,#3
 	bpl powerAvailable
+	ldr r1,=optionGameModeCurrent
+	ldr r1,[r1]
+	cmp r1,#1
+	beq powerAvailable
 		ldmfd sp!, {r0-r6, pc}
 	powerAvailable:
 	ldr r0,=powerUp

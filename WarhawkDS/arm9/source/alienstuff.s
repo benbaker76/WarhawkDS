@@ -48,7 +48,11 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 
 	waveInitPossible:
 
-	ldr r2,=alienLevel
+	ldr r10, =optionGameModeCurrent
+	ldr r10,[r10]
+	cmp r10,#0
+	ldreq r2,=alienLevel
+	ldrne r2,=alienLevelM
 	ldr r4,=levelNum				@ we need to modify alienLevel based on game level
 	ldr r4,[r4]						@ r4=current level
 	sub r4,#1
@@ -109,7 +113,9 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 		@ from here on in, we know that it is a normal attack
 		@ now we need to make r2 the index to the start of attack wave r7
 		@ r4 = ident, 0 is none!!
-		ldr r2,=alienWave
+		cmp r10,#0
+		ldreq r2,=alienWave
+		ldrne r2,=alienWaveM
 		add r2, r7, lsl #7				@ add r2=r7*128 (each wave is 32 words)
 		mov r3,#0						@ counter to get the data an init them
 		initWaveAliens:					@ we need to pass r1 to initAliens to start them
@@ -131,8 +137,9 @@ initAlien:	@ ----------------This code will find a blank alien sprite and assign
 	mov r9,r1, lsr #16			@ r9 is now an offset for the x plane....
 	ldr r8,=0xFFFF
 	and r1,r8
-	
-	ldr r4,=alienDescript		@ r4=LOCATION OF ALIEN DESCRIPTION
+	cmp r10,#0
+	ldreq r4,=alienDescript		@ r4=LOCATION OF ALIEN DESCRIPTION
+	ldrne r4,=alienDescriptM	@ r4=LOCATION OF ALIEN DESCRIPTION (Mental)
 	add r4,r1, lsl #7			@ add it to aliendescrip so we know where to grab from
 								@ now er need to find a blank alien
 	ldr r3,=spriteActive+68		@ IS +68 CORRECT, SOMEHOW AN ALIEN IS BECOMING A BULLET??

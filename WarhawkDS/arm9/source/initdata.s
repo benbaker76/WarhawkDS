@@ -41,7 +41,7 @@ initData:
 
 	ldr r0,=levelNum
 	mov r1,#LEVEL_1
-@mov r1,#5								@ uncomment for set level
+@mov r1,#15								@ uncomment for set level
 	str r1,[r0]
 	
 	ldr r0,=bossSpreadAngle

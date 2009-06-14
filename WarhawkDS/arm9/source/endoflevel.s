@@ -246,7 +246,7 @@ showEndOfLevel:
 			bl drawText
 
 			ldr r0, =levelCompletionSuckerText17		@ Load out text pointer
-			ldr r1, =7									@ x pos
+			ldr r1, =12									@ x pos
 			ldr r2, =8									@ y pos
 			ldr r3, =0									@ Draw on sub screen
 			bl drawText	

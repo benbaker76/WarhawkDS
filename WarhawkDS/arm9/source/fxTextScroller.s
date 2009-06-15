@@ -51,12 +51,12 @@ fxTextScrollerOn:
 	orr r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 	
-	ldr r2, =WIN_IN							@ Make bg's appear inside the window
+	ldr r2, =WIN_IN							@ Make bgs appear inside the window
 	ldr r3, [r2]
 	orr r3, #(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r3, [r2]
 	
-	ldr r2, =WIN_OUT						@ Make bg's appear inside the window
+	ldr r2, =WIN_OUT						@ Make bgs appear inside the window
 	mov r3, #(WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r3, [r2]
 	
@@ -382,6 +382,27 @@ vscrollText:
 	.ascii "JOAT, DEKUTREE, ELHOBBS, RUBEN, "
 	.ascii "SIMONB, DARKCLOUD...            "
 	.ascii " ... AND EVERYONE ON GBADEV.ORG "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii " FOR THOSE OF YOU STILL READING "
+	.ascii "THERE IS A NICE SIMPLE CHEATMODE"
+	.ascii "                                "
+	.ascii "WHILE ON THE TITLE SCREEN PRESS,"
+	.ascii "                                "
+	.ascii "   UP, DOWN, UP, LEFT, RIGHT!   "
+	.ascii "                                "
+	.ascii "    (KEEP IT A SECRET - LOL)    "
+	.ascii "                                "
+	.ascii "                                "
+	.ascii "                                "
 	.ascii "                                "
 	.ascii "                                "
 	.ascii "                                "

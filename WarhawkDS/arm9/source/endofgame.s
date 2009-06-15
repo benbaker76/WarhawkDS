@@ -59,7 +59,7 @@ showEndOfGame:
 	bl stopAudioStream
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset scroll registers
-	bl clearBG0									@ Clear bg's
+	bl clearBG0									@ Clear bgs
 	bl clearBG1
 	bl clearBG2
 	bl clearBG3
@@ -236,19 +236,19 @@ initWindow:
 	orr r1, #DISPLAY_WIN0_ON
 	str r1, [r0]
 	
-	ldr r0, =WIN_IN								@ Make bg's appear inside the window
+	ldr r0, =WIN_IN								@ Make bgs appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r1, [r0]
 	
-	ldr r0, =SUB_WIN_IN							@ Make bg's appear inside the window
+	ldr r0, =SUB_WIN_IN							@ Make bgs appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG1 | WIN0_BG2 | WIN0_BG3 | WIN0_SPRITES | WIN0_BLENDS)
 	strh r1, [r0]
 	
-	ldr r0, =WIN_OUT							@ Make bg's appear inside the window
+	ldr r0, =WIN_OUT							@ Make bgs appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
 	strh r1, [r0]
 	
-	ldr r0, =SUB_WIN_OUT						@ Make bg's appear inside the window
+	ldr r0, =SUB_WIN_OUT						@ Make bgs appear inside the window
 	ldr r1, =(WIN0_BG0 | WIN0_BG2 | WIN0_BG3 | WIN0_BLENDS)
 	strh r1, [r0]
 	

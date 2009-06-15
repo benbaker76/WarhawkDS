@@ -241,8 +241,8 @@ updateHiScoreEntry:
 	bleq playKeyboardClickSound
 	
 	cmp r4, #0									@ ASCII character 0 - 50
-	movlt r4, #50								@ if < 0 set to 0
-	cmpgt r4, #50									@ If > 50 set to 50
+	movmi r4, #50								@ if < 0 set to 0
+	cmpgt r4, #50								@ If > 50 set to 50
 	movgt r4, #0
 	
 	ldr r5, =hiScoreChars						@ Convert offset to ascii

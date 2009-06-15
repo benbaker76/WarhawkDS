@@ -152,7 +152,7 @@ bossHunterMovement:
 	@ r0=Players Y coord / r1=Boss Y coord
 	ldr r0,=spriteY
 	ldr r0,[r0]
-	sub r0,#48
+	sub r0,#64
 	ldr r8,=bossY
 	ldr r1,[r8]				@ we will use this later (r8)
 	add r1,#32
@@ -349,7 +349,7 @@ bossCraneMovement:
 	@ r0=Players Y coord / r1=Boss Y coord
 	ldr r0,=spriteY
 	ldr r0,[r0]
-	sub r0,#48
+	sub r0,#64
 	ldr r8,=bossY
 	ldr r1,[r8]				@ we will use this later (r8)
 	add r1,#32

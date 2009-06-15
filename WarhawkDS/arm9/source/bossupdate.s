@@ -152,6 +152,7 @@ bossHunterMovement:
 	@ r0=Players Y coord / r1=Boss Y coord
 	ldr r0,=spriteY
 	ldr r0,[r0]
+	sub r0,#48
 	ldr r8,=bossY
 	ldr r1,[r8]				@ we will use this later (r8)
 	add r1,#32
@@ -169,7 +170,7 @@ bossHunterMovement:
 		
 	cmp r0,r1
 	bgt bossHunterDown
-		@ move hunter left!
+		@ move hunter up!
 		ldr r2,=bossYSpeed
 		ldrsb r3,[r2]
 		subs r3,#1
@@ -181,7 +182,7 @@ bossHunterMovement:
 		str r3,[r2]			@ store new speed back
 		b bossHunterYDone
 	bossHunterDown:
-		@ move hunter left!
+		@ move hunter down!
 		ldr r2,=bossYSpeed
 		ldrsb r3,[r2]
 		add r3,#1
@@ -348,6 +349,7 @@ bossCraneMovement:
 	@ r0=Players Y coord / r1=Boss Y coord
 	ldr r0,=spriteY
 	ldr r0,[r0]
+	sub r0,#48
 	ldr r8,=bossY
 	ldr r1,[r8]				@ we will use this later (r8)
 	add r1,#32

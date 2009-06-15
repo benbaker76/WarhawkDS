@@ -177,6 +177,7 @@ drawSprite:
 		orr r2,r1						@ orr result with the attribute
 		ldr r3,=spriteHFlip
 		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		strh r2,[r0]
 		orr r2, r3, lsl #12
 		strh r2,[r0]					@ and store back
 			@ Draw Attributes
@@ -222,6 +223,7 @@ drawSprite:
 		orr r2,r1
 		ldr r3,=spriteHFlip
 		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		strh r2,[r0]
 		orr r2, r3, lsl #12
 		strh r2,[r0]
 			@ Draw Attributes
@@ -275,6 +277,7 @@ drawSprite:
 		orr r2,r1
 		ldr r3,=spriteHFlip
 		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		strh r2,[r0]
 		orr r2, r3, lsl #12
 		strh r2,[r0]
 			@ Draw Attributes
@@ -327,6 +330,7 @@ drawSprite:
 		orr r2,r1					@ Stick the Coord and Data together
 		ldr r3,=spriteHFlip
 		ldr r3,[r3,r8, lsl #2]			@ load flip H
+		strh r2,[r0]
 		orr r2, r3, lsl #12
 		strh r2,[r0]				@ and store them!
 			@ Draw Attributes

@@ -192,9 +192,6 @@ bigBossInitAllSpriteData:
 	stmfd sp!, {r0-r10, lr}
 
 	ldr r0, =optionGameModeCurrent
-	mov r1,#1									@ uncomment for level 32 boss
-@str r1,[r0]
-
 	ldr r10, [r0]
 
 	ldr r0, =BossBulletsTiles				@ we need a slightly different bullet - LOBO!!! he he

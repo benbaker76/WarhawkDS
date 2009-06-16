@@ -42,6 +42,15 @@ checkPowerUp:
 	
 	powerUpMiss:
 	
+	ldr r0, =optionGameModeCurrent
+	ldr r0,[r0]
+	cmp r0,#0
+	beq normalPowerups			
+		ldr r1,=powerUp					@ keep powerup for mental mode
+		str r0,[r1]
+		ldmfd sp!, {r0-r6, pc}	
+	
+	normalPowerups:
 	ldr r0,=levelNum
 	ldr r0,[r0]
 	cmp r0,#3

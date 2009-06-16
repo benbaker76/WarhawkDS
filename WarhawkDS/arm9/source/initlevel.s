@@ -559,21 +559,32 @@ initLevel:
 	cmp r8,#LEVEL_16
 	bne levelDone
 							@ Set level 16
-		ldr r0,=Level16Map
+		
+		ldr r10, =optionGameModeCurrent
+		ldr r10,[r10]
+		cmp r10,#0
+		
+		ldreq r0,=Level16Map
+		ldrne r0,=Level32Map
+				
 		ldr r1,=levelMap
 		str r0,[r1]
 
-		ldr r0,=Level16Tiles
+		ldreq r0,=Level16Tiles
+		ldrne r0,=Level32Tiles
 		ldr r1,=levelTiles
 		str r0,[r1]
 		
-		ldr r0,=Level16TilesLen
+		ldreq r0,=Level16TilesLen
+		ldrne r0,=Level32TilesLen
 		ldr r1,=levelTilesLen
 		str r0,[r1]
 		
-		ldr r9,=colMap16
+		ldreq r9,=colMap16
+		ldrne r9,=colMap32
 
-		ldr r0,=Level16Pal
+		ldreq r0,=Level16Pal
+		ldrne r0,=Level32Pal
 		ldr r1,=levelPal
 		str r0,[r1]
 		
@@ -780,8 +791,15 @@ initLevelSpecialSprites:
 	ldreq r0, =SpritesLev15Tiles
 	ldreq r2, =SpritesLev15TilesLen
 	cmp r8,#16
-	ldreq r0, =SpritesLev16Tiles
-	ldreq r2, =SpritesLev16TilesLen	
+	bne not16th
+		ldr r10, =optionGameModeCurrent
+		ldr r10,[r10]
+		cmp r10,#0
+		ldreq r0, =SpritesLev16Tiles
+		ldreq r2, =SpritesLev16TilesLen	
+		ldrne r0, =SpritesLev32Tiles
+		ldrne r2, =SpritesLev32TilesLen	
+	not16th:
 	ldr r1, =SPRITE_GFX
 	add r1, #21504
 	bl dmaCopy

@@ -95,6 +95,13 @@ checkBossInit:
 		ldr r0, =BossShipsTiles
 		ldr r1,=levelNum		@ 1-16
 		ldr r1,[r1]
+		ldr r3, =optionGameModeCurrent
+		ldr r3,[r3]
+		cmp r3,#0
+		beq not32Boss
+			cmp r1,#16
+			addeq r1,#1
+		not32Boss:
 		sub r1,#1				@ now 0-15
 		mov r2,#9
 		mul r1,r2				@ *9 sprites per boss (level*9)*512

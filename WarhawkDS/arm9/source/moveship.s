@@ -136,7 +136,7 @@ moveShip:
 		rightmove:
 		ldr r8,[r6]
 		adds r8,r7
-		cmp r8,#288			@ 256-sprite width
+		cmp r8,#288			@ 256+sprite width
 		movge r8,#288
 		dircheck3pass:
 		str r8,[r6]
@@ -146,4 +146,3 @@ moveShip:
 	
 	.pool
 	.end
-

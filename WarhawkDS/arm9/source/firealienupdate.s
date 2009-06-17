@@ -451,10 +451,9 @@
 		str r5,[r2,r6]				@ and return safely :)
 		bgt noDirectX				@ act on our SUBS earlier
 			mov r7,#SPRITE_TRACK_X_OFFS
-			@ ------------------------ THER IS SOMETHING IN THESE 3 LINES THAT CAUSES SLIGHT DRIFT!!???
-			ldr r10,[r2,r7]		@ load our backup stepping in r10
+			ldr r10,[r2,r7]			@ load our backup stepping in r10
 			add r10,r9				@ add the fractional from earlier
-			str r10,[r2,r6]		@ and store this for our next delay
+			str r10,[r2,r6]			@ and store this for our next delay
 			directXUpdate:
 			mov r6,#SPRITE_X_OFFS
 			ldr r5,[r2,r6]			@ r5=Xcoord
@@ -482,10 +481,9 @@
 		str r5,[r2,r6]				@ and return safely :)
 		bgt noDirectY				@ act on our SUBS earlier
 			mov r7,#SPRITE_TRACK_Y_OFFS
-			@ ------------------------ THER IS SOMETHING IN THESE 3 LINES THAT CAUSES SLIGHT DRIFT!!???
-			ldr r10,[r2,r7]		@ load our backup stepping in r10
+			ldr r10,[r2,r7]			@ load our backup stepping in r10
 			add r10,r9				@ add the fractional from earlier
-			str r10,[r2,r6]		@ and store this for our next delay	
+			str r10,[r2,r6]			@ and store this for our next delay	
 		DirectYUpdate:
 			mov r6,#SPRITE_Y_OFFS	@
 			ldr r5,[r2,r6]			@ r5=ycoord
@@ -606,7 +604,6 @@
 			bmi killBanana
 			cmp r1,#384
 			bpl killBanana
-			
 			
 			mov r6,#SPRITE_Y_OFFS
 			ldr r0,[r2,r6]
@@ -782,10 +779,7 @@
 		blt TExplodeNotYet
 			mov r1,#SPRITE_KILL
 			str r1,[r2,r0]
-		
-		
-		
-		
+	
 	TExplodeNotYet:
 
 	ldmfd sp!, {r0-r10, pc}	

@@ -89,12 +89,10 @@ checkPowerUp:
 		ldmfd sp!, {r0-r6, pc}	
 	powerInit:
 	@ ok, now we need to generate a Drop ship!!!
-	@ shall we use a base explosion for this?
 
 	mov r6,#63						@ 64 aliens! (63-0)
 	findDropLoop:
 
-		@ calculate r1 to be the alien sprite pointer to use
 		ldr r4,=spriteActive+68		@ add 68 (17*4) for start of aliens
 	
 		ldr r5,[r4,r6, lsl #2]
@@ -121,7 +119,6 @@ checkPowerUp:
 		and r8,#255
 		add r8,#80
 		
-
 		ldr r4,=spriteX+68
 		str r8,[r4,r6, lsl #2]			@ store r1 as X, calculated above
 
@@ -154,7 +151,6 @@ dropShipShot:						@------------ We have shot a drop ship!!
 		beq foundPower
 		subs r0,#1
 	bpl findPowerLoop
-	@ WHAT will i do if there is no space???????????????? (ie, during mine storm)
 	ldmfd sp!, {r0-r6, pc}	@ No space for the alien, so lets exit!	
 	
 	foundPower:

@@ -180,8 +180,7 @@ playerDeathMainExplode:									@ --- PHASE 3
 	@ no aliens are moved and the scrolling must also stop?
 	@ no boss can be generated, or moved
 	@ ok, now we want lots of explosions from spritex,y
-	@ some need to shoot outwards?? hnmm... can i use fire code??
-	@ ie used directional fire to a random x,y coord? hmmmm....
+	@ some need to shoot outwards? I used alien fire code!
 	@ this is pretty much the boss explode code.. with a few mods
 	cmp r1,#DEATHMODE_MAIN_EXPLODE
 	bne playerDeathMainExplodeWait	
@@ -261,10 +260,6 @@ playerDeathMainExplode:									@ --- PHASE 3
 		str r3,[r0]
 	mainExplodeCountdownNo:
 
-											@ This is still causing the occational sound corruption!
-											@ Commenting out for now
-	@cmp r1,#170							@ overlap the explosion sounds slightly
-		@bleq playBossExplodeSound		@ we will use this for now!!
 	ldmfd sp!, {r0-r6, pc}
 	
 playerDeathMainExplodeWait:								@ --- PHASE 4
@@ -306,7 +301,7 @@ playerDeathMainExplodeWait:								@ --- PHASE 4
 	ldmfd sp!, {r0-r6, pc}
 	
 playerIsAllDead:										@ --- PHASE 5
-	@ ok, now we need to do whatever to stop the game and go to game over???
+	@ ok, now we need to stop the game and go to game over
 	
 	cmp r1,#DEATHMODE_FADE_OUT
 	bge playerDeathDone

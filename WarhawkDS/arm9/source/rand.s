@@ -46,8 +46,8 @@ getRandom:
 	tst     r9, r9, lsr #1				@ to bit into carry
 	movs    r2, r8, rrx					@ 33-bit rotate right
 	adc     r9, r9, r9					@ carry into LSB of r2
-	eor     r2, r2, r8, lsl #12		@ concenate the 38 bit value
-	eor     r8, r2, r2, lsr #20		@ de-concentate
+	eor     r2, r2, r8, lsl #12			@ concenate the 38 bit value
+	eor     r8, r2, r2, lsr #20			@ de-concentate
 	stmia   ip, {r8, r9}
 	
 	ldmfd sp!, {r0-r7,r9-r12, pc}

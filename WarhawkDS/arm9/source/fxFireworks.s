@@ -179,18 +179,17 @@ generateFireworks:
 		str r1,[r4,r12]
 	
 		bl getRandom
-		and r8,r5					@ reduce to 0-511
+		and r8,r5				@ reduce to 0-511
 		str r8,[r6,r12]			@ store angle
 		
 		bl getRandom
-		and r8,r10					@ make 0.xxx-7.xxx (20.12)
-	@	add r8,#64
+		and r8,r10				@ make 0.xxx-7.xxx (20.12)
 		str r8,[r7,r12]			@ store speed
 		
 		mov r8,#0
 		str r8,[r9,r12]			@ store gravity
 
-		str r3,[r11,r12]			@ store color value
+		str r3,[r11,r12]		@ store color value
 		
 		add r12,#4
 		subs r2,#1
@@ -290,24 +289,24 @@ updateFireworks:
 		@ ok, first grab the X and y and update them with speed and cos/sin
 		
 			mov r5, r7, lsl #2
-			ldr r6,[r10, r5]				@ r6 = speed (keep r6 for y calcs)
+			ldr r6,[r10, r5]			@ r6 = speed (keep r6 for y calcs)
 			ldr r3,=fireworkAngle
 			ldr r3,[r3, r5]				@ r3 = angle (keep r3 for y calcs)
 			lsl r3, #1
 
 			ldr r0,[r8, r5]				@ r0 = X coord
-			ldrsh r4, [r11,r3]				@ r4 = cosine	( from amgle)
-			muls r4,r6						@ r4 = cosine * speed
-			adds r0,r4, asr #12				@ add cosine result to x coord	
+			ldrsh r4, [r11,r3]			@ r4 = cosine	( from amgle)
+			muls r4,r6					@ r4 = cosine * speed
+			adds r0,r4, asr #12			@ add cosine result to x coord	
 			ldr r1,[r9, r5]				@ r1 = Y coord
-			ldrsh r4, [r12,r3]				@ r4 = sine	
-			muls r4,r6						@ r4 = sine * speed
-			adds r1,r4, asr #12				@ add sine result to x coord	
+			ldrsh r4, [r12,r3]			@ r4 = sine	
+			muls r4,r6					@ r4 = sine * speed
+			adds r1,r4, asr #12			@ add sine result to x coord	
 	
-			ldr r3,=fireworkGravity			@ update gravity	
+			ldr r3,=fireworkGravity		@ update gravity	
 			ldr r4,[r3, r5]				@ for a good effect, a slower speed generated
-			add r1,r4						@ should result in a quicker gravity
-			add r4,#64						@ but this will do for now
+			add r1,r4					@ should result in a quicker gravity
+			add r4,#64					@ but this will do for now
 			str r4,[r3, r5]				@ store gravity back
 		
 			str r0,[r8, r5]				@ store new X
@@ -453,8 +452,10 @@ fireworkPalette:
 
 	@ ---------------------------------------
 
-	@ plot code (condensed)
-
+	TILE PLOT CODE (condensed)
+	
+	This is a slightly faster version of the plot code as used in starfields
+	
 	r1=y (20.12)
 	r0=x (20.12)
 	r2=palette number

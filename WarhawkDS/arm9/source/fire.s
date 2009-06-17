@@ -206,11 +206,10 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 
 			cmp r4,#384
 			bmi bulletDead
+
+			bl detectALN				@ detect agains aliens
 			bl detectBGL				@ check if we have hit a base!!! 	(Left Gun)
 			bl detectBGR 				@									(Right Gun)
-	
-			@ now detect against aliens
-			bl detectALN
 			
 		bulletDead:
 		subs r0,#1

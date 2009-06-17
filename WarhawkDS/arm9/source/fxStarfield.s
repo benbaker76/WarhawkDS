@@ -183,7 +183,6 @@ fxStarfieldDownOnLoop:
 	
 	ldmfd sp!, {r0-r2, pc}
 	
-	
 	@ ---------------------------------------
 
 fxStarfieldMultiOn:
@@ -448,9 +447,8 @@ moveStarsMultiLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
-
 	add r0,#0x1000									@ add 1 to x
 	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
 	lsl r9, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
@@ -460,7 +458,7 @@ moveStarsMultiLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
 	pop {r1}										@ restore y and recalulate screen base
 	add r1,#0x1000									@ add 1 to y
@@ -476,7 +474,7 @@ moveStarsMultiLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
 	sub r0,#0x1000									@ take 1 off x
 	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
@@ -487,7 +485,7 @@ moveStarsMultiLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
 	pop {r3,r4}										@ restore registers
 	subs r10, #1									@ count down the number of starSpeed
@@ -520,7 +518,6 @@ moveStarburstLoop:
 	ldrsh r7, [r7,r0]								@ r7= 16bit signed cos
 	ldr r8,=SIN_bin
 	ldrsh r8, [r8,r0]								@ r8= 16bit signed sin
-
 
 	ldr r6, [r4, r10, lsl #2] 						@ R6 now holds the speed of the star
 
@@ -560,11 +557,8 @@ moveStarburstLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
-
-
-
 	add r0,#0x1000									@ add 1 to x
 	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
 	lsl r9, #5										@ mul by 32 (32 tiles per screen row) (r9=tile, 0,32,64...)
@@ -574,7 +568,7 @@ moveStarburstLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
 	pop {r1}										@ restore y and recalulate screen base
 	add r1,#0x1000									@ add 1 to y
@@ -590,7 +584,7 @@ moveStarburstLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
 	sub r0,#0x1000									@ take 1 off x
 	mov r9, r1, lsr #15								@ r9 = y / 8 (THESE COMMENTS DO NOT REALLY MATCH NOW)
@@ -601,7 +595,7 @@ moveStarburstLoop:
 	ldr r4, [r3, r9, lsr #10]						@ load word at tile pos
 	and r11,r0, #0x7000								@ take the low 3 bits (0-7) of x (each x is halfbyte)
 	lsr r11, #10									@ times r0 (X) by 4 for nibbles (4 bits per colour)
-	orr r4, r5, lsl r11							@ or our colour in (shifted x units)
+	orr r4, r5, lsl r11								@ or our colour in (shifted x units)
 	str r4, [r3, r9, lsr #10]						@ store it back
 	pop {r3,r4}										@ restore registers
 

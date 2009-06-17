@@ -43,6 +43,10 @@ showCredits:
 	ldr r1, =GAMEMODE_CREDITS					@ Set the gameMode to credits
 	str r1, [r0]								@ Store back gameMode
 
+	ldr r0, =keyWaitCredits
+	mov r1,#0
+	str r1,[r0]
+
 	bl fxOff
 	bl fxFadeBlackInit
 	bl fxFadeMax
@@ -87,7 +91,7 @@ showCredits:
 	bl fxSineWobbleOn
 	
 	ldr r0, =5000								@ 5 seconds
-	ldr r1, =initCredits01					@ Callback function address
+	ldr r1, =initCredits01						@ Callback function address
 
 	bl startTimer
 	
@@ -668,22 +672,39 @@ initCredits10FadeOut:
 	
 updateCredits:
 
-	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r3, lr}
 	
 	bl scrollSBMain
 	bl scrollSBSub
 	
-	ldr r0, =REG_KEYINPUT						@ Read Key Input
-	ldr r1, [r0]
-	tst r1, #BUTTON_A							@ Start button pressed?
-	bleq showTitleScreen
+	ldr r3,=keyWaitCredits
+	ldr r2,[r3]
+	cmp r2,#0
+	bne updateCreditsRelease
+		ldr r0, =REG_KEYINPUT						@ Read Key Input
+		ldr r1, [r0]
+		tst r1, #BUTTON_A							@ Start button pressed?
+		bne creditRelease
+		mov r2,#1
+		str r2,[r3]
+		b creditRelease
+	updateCreditsRelease:
+		ldr r0, =REG_KEYINPUT						@ Read Key Input
+		ldr r1, [r0]
+		tst r1, #BUTTON_A							@ Start button pressed?
 	
-	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+		blne showHiScoreEntry
+	
+	creditRelease:
+	
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
 
 	@---------------------------------
 	
 	.data
 	.align
+keyWaitCredits:
+	.word 0
 	
 	.align
 	

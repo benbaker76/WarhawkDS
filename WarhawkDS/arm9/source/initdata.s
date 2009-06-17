@@ -48,9 +48,9 @@ initData:
 	mov r1,#0
 	str r1,[r0]
 	
-@	ldr r0, =optionGameModeCurrent		@ uncomment for mental mode!
-@	mov r1,#1
-@	str r1,[r0]
+	ldr r0, =optionGameModeCurrent		@ uncomment for mental mode!
+	mov r1,#1
+	str r1,[r0]
 	
 @	ldr r0,=cheatMode					@ uncomment for auto cheat
 @	mov r1,#1
@@ -64,7 +64,7 @@ initData:
 	@ NEED TO RESET SCORE HERE (see, was already noted HK :) )
 	
 	ldr r0,=score			@ reset (zero) score
-	mov r1,#0				@ just to make sure we always get a highscore
+	mov r1,#1				@ just to make sure we always get a highscore
 	str r1,[r0],#4
 	str r1,[r0]
 

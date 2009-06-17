@@ -131,11 +131,11 @@ main:
 
 	@ ----
 	
-	@bl showCredits
+	bl showCredits
 	
 	@ ----
 
-	bl showIntro1
+	@bl showIntro1
 
 	@ ------------------------------------
 	

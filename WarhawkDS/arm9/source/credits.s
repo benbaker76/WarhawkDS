@@ -692,7 +692,7 @@ updateCredits:
 		ldr r0, =REG_KEYINPUT						@ Read Key Input
 		ldr r1, [r0]
 		tst r1, #BUTTON_A							@ Start button pressed?
-	
+		blne stopTimer								@ stop the framed pictures
 		blne showHiScoreEntry
 	
 	creditRelease:

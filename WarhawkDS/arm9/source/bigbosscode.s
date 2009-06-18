@@ -69,9 +69,6 @@ bigBossInit:
 	bl killAllSpritesBoss						@ this SHOULD kill everyother sprite except you and bullets
 	bl initStarData
 
-	mov r0,#256									@ number of stars
-	bl fxStarfieldDownOn						@ Turn on starfield
-	
 	ldr r0,=bossX								@ set initial boss X/Y (20.12 format)
 	mov r3,#32									@ r3=x
 	lsl r3,#12
@@ -108,6 +105,10 @@ bigBossInit:
 	bl playAlertSound
 
 	bl fxFadeIn
+
+@	Turn this off and it works, though we still get cocked up music in the normal boss battles????
+@	mov r0,#256									@ number of stars
+@	bl fxStarfieldDownOn						@ Turn on starfield
 	
 	ldr r0,=energy
 	mov r1,#72
@@ -179,11 +180,11 @@ bigBossFadeDone:
 	bl DrawEnergyShifter						@ set the mul value
 	bl bigBossDrawEnergy
 
+	bl fxFadeIn
+
 @	mov r0,#256									@ number of stars
 @	bl fxStarfieldDownOn						@ Turn on starfield (cocks up here also)
 	
-	bl fxFadeIn
-
 	ldmfd sp!, {r0-r4, pc}
 
 	@------------------------------------

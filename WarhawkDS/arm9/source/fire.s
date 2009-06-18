@@ -36,13 +36,13 @@
 	.global moveBullets
 
 fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r8, lr}
 	
 	ldr r1,=deathMode		@ if player is dying - firing is not allowed
 	ldr r1,[r1]				@ should it be allowed??
 	cmp r1,#DEATHMODE_STILL_ACTIVE
 	beq fireAllowed
-		ldmfd sp!, {r0-r6, pc}
+		ldmfd sp!, {r0-r8, pc}
 	fireAllowed:
 	
 	ldr r1,=REG_KEYINPUT
@@ -61,7 +61,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		cmp r8,#1
 		bpl initFire		@ Fire
 		notTimeToFire:
-		ldmfd sp!, {r0-r6, pc}
+		ldmfd sp!, {r0-r8, pc}
 	fireDown:
 	@ FIRE PRESSED
 		ldr r0,=fireTrap
@@ -83,7 +83,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			beq initFire			@ of the fire button, better?? or TOO MUCH?
 			
 		@ and exit!
-		ldmfd sp!, {r0-r6, pc}
+		ldmfd sp!, {r0-r8, pc}
 
 	initpowerUp:
 		@ this is a little bit of code for auto fire
@@ -96,7 +96,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		moveq r3,#0					@ if it is 8, zero the delay
 		str r3,[r4]					@ put the result back
 		beq initFire				@ ok, lets "fire one off"
-		ldmfd sp!, {r0-r6, pc}		@ but, if not - we are done!
+		ldmfd sp!, {r0-r8, pc}		@ but, if not - we are done!
 
 	initFire:
 		@ Ok, now we need to see about initialising a bullet!!
@@ -114,7 +114,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			beq bulletPossible
 			subs r0,#1
 		bpl isbulletPossible
-		ldmfd sp!, {r0-r6, pc}
+		ldmfd sp!, {r0-r8, pc}
 	bulletPossible:
 		@ GENERATE BULLET
 		@ ok, all we need to do now is set spriteActive for the bullet r0
@@ -135,8 +135,10 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		str r2,[r1,r0, lsl #2]		@ done!		
 	
 		cmp r8,#31					@ This is the "HOLD" period needed for the shot!
-		bmi fireNormal				@ "POWERSHOT"
+		ble fireNormal				@ "POWERSHOT"
 
+			bl playPowershotSound
+			
 			ldr r3,=spriteY
 			ldr r2,[r3]					@ our ships y coord
 			add r2,#6					@ Move it down a little
@@ -149,10 +151,12 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			ldr r1, =spriteObj+4
 			str r2,[r1,r0, lsl #2]		@ done
 			
-			bl playPowershotSound		@ Why does this not sound??
-			ldmfd sp!, {r0-r6, pc}
+			ldmfd sp!, {r0-r8, pc}
 
 		fireNormal:					@ "NORMALSHOT"
+		
+			bl playBlasterSound
+		
 			ldr r3,=spriteY
 			ldr r2,[r3]					@ our ships y coord
 			add r2,#6					@ Move it down a little
@@ -168,13 +172,11 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 			mov r2,#3					@ set r2 to our bullet image
 			ldr r1, =spriteObj+4
 			str r2,[r1,r0, lsl #2]		@ done
-
-			bl playBlasterSound
 		
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r8, pc}
 	
 moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
-	stmfd sp!, {r0-r6, lr}
+	stmfd sp!, {r0-r8, lr}
 	mov r0,#15
 	ldr r1, =spriteActive+4
 	activeBloop:
@@ -215,7 +217,7 @@ moveBullets:			@ OUR CODE TO MOVE THE ACTIVE BULLETS UP THE SCREEN
 		subs r0,#1
 		bpl activeBloop	
 	
-	ldmfd sp!, {r0-r6, pc}
+	ldmfd sp!, {r0-r8, pc}
 	
 	.pool
 	.end

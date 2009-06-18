@@ -34,9 +34,9 @@
 	.global stopSound
 	.global playBlasterSound					@ Used = Normal Fire
 	.global playExplosionSound					@ used = player death & base explode
-	.global playAlienExplodeSound				@ used = alien explode (need better for big aliens)
+	.global playAlienExplodeSound				@*used = alien explode (need better for big aliens)
 	.global playAlienExplodeScreamSound			@ used = (powershot), mineshot explode, player death
-	.global playPowershotSound					@ For when a powershot is fired 
+	.global playPowershotSound					@*used = For when a powershot is fired 
 	.global playElecShotSound					@ used = alien fire
 	.global playLaserShotSound					@ used = alien fire
 	.global playShipArmourHit1Sound				@ used = boss shot, player/alien collision

@@ -49,7 +49,7 @@ showTitleScreen:
 	bl fxFadeMax
 	bl stopSound
 	bl stopAudioStream
-	bl initVideo		@Main??
+	bl initVideoMain
 	bl initCheat
 	bl initMainTiles							@ Initialize main tiles
 	bl resetScrollRegisters						@ Reset the scroll registers

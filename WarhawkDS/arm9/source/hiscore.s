@@ -66,12 +66,6 @@ showHiScoreEntry:
 
 	stmfd sp!, {r0-r4, lr}
 
-	@ Turn off bg1 on sub screen
-	
-	ldr r0, =REG_DISPCNT_SUB		@ Sub screen to Mode 0 with BG0 active
-	ldr r1, =(MODE_0_2D | DISPLAY_SPR_ACTIVE | DISPLAY_SPR_1D_LAYOUT | DISPLAY_BG0_ACTIVE | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE)
-	str r1, [r0]
-	
 	ldr r0, =score
 	bl byte2Int
 	
@@ -144,7 +138,6 @@ showHiScoreEntry:
 	str r4,[r0]
 	cmp r4,#0
 	
-	
 	ldreq r0 ,=MoonscapeTiles
 	ldrne r0 ,=Moonscape2Tiles
 	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
@@ -159,6 +152,11 @@ showHiScoreEntry:
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
 	ldr r2, =MoonscapeMapLen
 	bl dmaCopy
+	
+	mov r0, #0
+	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+	ldr r2, =(32 * 24 * 32)
+	bl dmaFillWords
 
 	ldr r0, =FontPal
 	ldr r1, =BG_PALETTE

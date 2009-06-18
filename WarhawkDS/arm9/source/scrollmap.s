@@ -387,7 +387,7 @@ checkEndOfLevel:
 			mov r1, #LEVELENDMODE_BOSSATTACK
 			str r1, [r0]
 			
-			bl stopAudioStream
+			@bl stopAudioStream
 			
 			@ldr r0, =bossRawText						@ Read the path to the file
 			@bl playAudioStream							@ Play the audio stream

@@ -186,7 +186,7 @@ checkBossInit:
 			mov r1,#BOSSMODE_ATTACK
 			str r1,[r0]
 			bl fxFadeWhiteInit
-			bl fxFadeIn						@ need a FLASH to WHITE and back to NORMAL
+			bl fxFadeIn									@ need a FLASH to WHITE and back to NORMAL
 			
 			ldr r0, =bossRawText						@ Read the path to the file
 			bl playAudioStream							@ Play the audio stream

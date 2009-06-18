@@ -70,7 +70,7 @@ playAudioStream:
 
 	@ r0 = string pointer to music
 	
-	@bl stopAudioStream
+	bl stopAudioStream
 	
 	ldr r1, =backBuffer
 	mov r2, #0

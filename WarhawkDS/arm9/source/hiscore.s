@@ -65,6 +65,12 @@ readHiScore:
 showHiScoreEntry:
 
 	stmfd sp!, {r0-r4, lr}
+
+	@ Turn off bg1 on sub screen
+	
+	ldr r0, =REG_DISPCNT_SUB		@ Sub screen to Mode 0 with BG0 active
+	ldr r1, =(MODE_0_2D | DISPLAY_SPR_ACTIVE | DISPLAY_SPR_1D_LAYOUT | DISPLAY_BG0_ACTIVE | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE)
+	str r1, [r0]
 	
 	ldr r0, =score
 	bl byte2Int

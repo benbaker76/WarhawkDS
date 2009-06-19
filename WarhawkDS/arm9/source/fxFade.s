@@ -34,6 +34,7 @@
 	.global fxFadeBG0Init
 	.global fxFadeBG0SubInit
 	.global fxFadeBG0SubBG1SubInit
+	.global fxFadeBG1MainInit
 	.global fxFadeBG1BG2Init
 	.global fxFadeMin
 	.global fxFadeMax
@@ -148,6 +149,32 @@ fxFadeBG0SubBG1SubInit:
 	
 	ldr r0, =SUB_BLEND_CR
 	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_SRC_BG1 | BLEND_DST_BG0 | BLEND_DST_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
+	str r1, [r0]
+	
+	ldr r0, =fadeValue					@ Get our fadeValue
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =0							@ Reset value
+	str r1, [r0]
+	
+	ldmfd sp!, {r0-r1, pc}
+
+	@ ---------------------------------------
+	
+fxFadeBG1MainInit:
+
+	@ used for head!
+
+	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =BLEND_CR
+	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG1 | BLEND_DST_BG2 | BLEND_DST_BG3)
+	str r1, [r0]
+	
+	ldr r0, =SUB_BLEND_CR
+	ldr r1, =(BLEND_ALPHA | BLEND_SRC_BG0 | BLEND_DST_BG2 | BLEND_DST_BG3)
 	str r1, [r0]
 	
 	ldr r0, =fadeValue					@ Get our fadeValue

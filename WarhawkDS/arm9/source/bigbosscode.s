@@ -106,9 +106,8 @@ bigBossInit:
 
 	bl fxFadeIn
 
-@	Turn this off and it works, though we still get cocked up music in the normal boss battles????
-@	mov r0,#256									@ number of stars
-@	bl fxStarfieldDownOn						@ Turn on starfield
+	mov r0,#256									@ number of stars
+	bl fxStarfieldDownOn						@ Turn on starfield
 	
 	ldr r0,=energy
 	mov r1,#72
@@ -125,13 +124,13 @@ bigBossInit:
 	ldmfd sp!, {r0-r4, pc}
 
 	@------------------------------------
-	
+
 bigBossGo:
 
 	stmfd sp!, {r0-r4, lr}
 	
-	bl fxFadeBlackInit
-	bl fxFadeMin
+	bl fxFadeBG1MainInit
+	bl fxFadeMax
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =bigBossFadeDone
@@ -140,9 +139,6 @@ bigBossGo:
 	bl fxFadeOut
 				
 	bl playEvilLaughSound
-
-@	mov r0,#256									@ number of stars
-@	bl fxStarfieldDownOn						@ Turn on starfield (works ok here?)
 
 	ldmfd sp!, {r0-r4, pc}
 
@@ -157,8 +153,8 @@ bigBossFadeDone:
 	str r1,[r0]
 	
 	bl fxCopperTextOff
-	bl fxFadeBlackInit
-	bl fxFadeMax
+	@bl fxFadeBlackInit
+	@bl fxFadeMax
 	bl clearBG0
 	bl clearBG1
 
@@ -177,14 +173,14 @@ bigBossFadeDone:
 												@ 2= move phase, 3=explode init
 	ldr r0,=spriteHits+BIGBOSS_OFFSET
 	ldr r0,[r0]									@ r0=energy of boss	
+
+	bl fxFadeBG0Init
+
 	bl DrawEnergyShifter						@ set the mul value
 	bl bigBossDrawEnergy
 
-	bl fxFadeIn
+	bl fxFadeIn									@ fade in the energy and score
 
-@	mov r0,#256									@ number of stars
-@	bl fxStarfieldDownOn						@ Turn on starfield (cocks up here also)
-	
 	ldmfd sp!, {r0-r4, pc}
 
 	@------------------------------------

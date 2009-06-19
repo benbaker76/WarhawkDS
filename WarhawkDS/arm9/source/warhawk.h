@@ -51,6 +51,8 @@
 #include "../build/Credits08.h"
 #include "../build/Credits09.h"
 #include "../build/Credits10.h"
+#include "../build/Credits11.h"
+#include "../build/Credits12.h"
 #include "../build/LogoSprites.h"
 #include "../build/CheatSprites.h"
 #include "../build/StartSprites.h"

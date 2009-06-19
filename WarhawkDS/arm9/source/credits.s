@@ -661,6 +661,118 @@ initCredits10FadeOut:
 	bl fxFadeBG0SubBG1SubInit
 	
 	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits11
+	str r1, [r0]
+	
+	bl fxFadeOut
+	
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+
+	@---------------------------------
+
+initCredits11:
+
+	stmfd sp!, {r0-r3, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
+	
+	@ Write the tile data
+	
+	ldr r0 ,=Credits11Tiles
+	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+	ldr r2, =Credits11TilesLen
+	bl dmaCopy
+
+	@ Write map
+	
+	ldr r0, =Credits11Map
+	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
+	ldr r2, =Credits11MapLen
+	bl dmaCopy
+	
+	@ Draw text
+	
+	ldr r0, =pcTitleText							@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =5000								@ 5 seconds
+	ldr r1, =initCredits11FadeOut				@ Callback function address
+	
+	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits11FadeOut:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
+	ldr r1, =initCredits12
+	str r1, [r0]
+	
+	bl fxFadeOut
+	
+	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return
+
+	@---------------------------------
+
+initCredits12:
+
+	stmfd sp!, {r0-r3, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	bl fxFadeMax
+	
+	@ Write the tile data
+	
+	ldr r0 ,=Credits12Tiles
+	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+	ldr r2, =Credits12TilesLen
+	bl dmaCopy
+
+	@ Write map
+	
+	ldr r0, =Credits12Map
+	ldr r1, =BG_MAP_RAM_SUB(BG1_MAP_BASE_SUB)	@ destination
+	ldr r2, =Credits12MapLen
+	bl dmaCopy
+	
+	@ Draw text
+	
+	ldr r0, =pcGameText							@ Load out text pointer
+	ldr r1, =0									@ x pos
+	ldr r2, =22									@ y pos
+	ldr r3, =1									@ Draw on sub screen
+	bl drawText
+	
+	ldr r0, =5000								@ 5 seconds
+	ldr r1, =initCredits12FadeOut				@ Callback function address
+	
+	bl startTimer
+	
+	bl fxFadeIn
+	
+	ldmfd sp!, {r0-r3, pc} 					@ restore registers and return
+
+	@---------------------------------
+	
+initCredits12FadeOut:
+
+	stmfd sp!, {r0-r1, lr}
+	
+	bl fxFadeBG0SubBG1SubInit
+	
+	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =initCredits01
 	str r1, [r0]
 	
@@ -670,6 +782,9 @@ initCredits10FadeOut:
 
 	@---------------------------------
 	
+
+
+
 updateCredits:
 
 	stmfd sp!, {r0-r3, lr}
@@ -751,5 +866,12 @@ stTitleText:
 stGameText:
 	.asciz "        ST GAME SCREEN          "
 
+	.align
+pcTitleText:
+	.asciz "        PC TITLE SCREEN         "
+	
+	.align
+pcGameText:
+	.asciz "        PC GAME SCREEN          "
 	.pool
 	.end

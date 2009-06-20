@@ -231,7 +231,7 @@ movePowerUp:
 	str r2,[r1,r8,lsl #2]
 	cmp r2,#0
 	bne powerupXDone
-	mov r2,#10
+	mov r2,#6
 	str r2,[r1,r8,lsl #2]
 	
 	cmp r0,r4

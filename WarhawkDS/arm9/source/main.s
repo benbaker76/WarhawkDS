@@ -141,7 +141,7 @@ main:
 
 	bl showIntro1
 
-	@ ------------------------------------
+	@ ---------------------------------------------
 	
 mainLoop:
 
@@ -220,6 +220,8 @@ mainLoopDone:
 
 	b mainLoop									@ our main loop
 	
+	@ ---------------------------------------------
+	
 drawLoadingText:
 
 	stmfd sp!, {r0-r3, lr}
@@ -259,6 +261,8 @@ drawLoadingText:
 	bl drawText
 
 	ldmfd sp!, {r0-r3, pc}
+	
+	@ ---------------------------------------------
 
 	.pool
 	.end

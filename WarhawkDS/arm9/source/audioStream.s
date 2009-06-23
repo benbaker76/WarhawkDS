@@ -96,10 +96,8 @@ playAudioStream:
 	ldr r1, =(BUFFER_SIZE / 2)							@ Read the bufferSize address
 	
 	bl readFileStream									@ Read the next buffer of audio file
-	bl playBuffer
 	bl initAudioStream
-	
-	bl swiWaitForVBlank
+	bl playBuffer	
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 
@@ -127,7 +125,8 @@ stopAudioStream:
 	mov r1, #STOP_SOUND									@ Get the sample address
 	str r1, [r0]
 	
-	bl swiWaitForVBlank
+	ldr r0, =838000										@ Wait for ARM7 to "ketchup"
+	bl swiDelay
 	
 	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
 
@@ -149,6 +148,9 @@ playBuffer:
 	ldr r1, =buffer										@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
+	ldr r0, =838000										@ Wait for ARM7 to "ketchup"
+	bl swiDelay
+	
 	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
 	
 	@ ---------------------------------------------
@@ -157,7 +159,7 @@ audioStreamTimer1:
 
 	stmfd sp!, {r0-r5, lr}
 	
-	ldr r0, =REG_IME
+	ldr r0, =REG_IME									@ Turn off interrupts
 	mov r1, #0
 	str r1, [r0]
 	
@@ -193,7 +195,7 @@ audioStreamTimer1:
 	add r1, r3											@ Add buffer size to bufferPos
 	str r1, [r0]										@ Write value back to bufferPos
 	
-	ldr r0, =REG_IME
+	ldr r0, =REG_IME									@ Turn interrupts back on
 	mov r1, #1
 	str r1, [r0]
 		

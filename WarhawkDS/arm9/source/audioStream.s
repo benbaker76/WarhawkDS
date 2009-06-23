@@ -157,6 +157,10 @@ audioStreamTimer1:
 
 	stmfd sp!, {r0-r5, lr}
 	
+	ldr r0, =REG_IME
+	mov r1, #0
+	str r1, [r0]
+	
 	ldr r0, =buffer										@ Buffer address
 	ldr r1, =(BUFFER_SIZE / 2)							@ Read the buffer size
 	
@@ -188,6 +192,10 @@ audioStreamTimer1:
 	ldr r3, =(BUFFER_SIZE / 2)							@ Read the buffer size
 	add r1, r3											@ Add buffer size to bufferPos
 	str r1, [r0]										@ Write value back to bufferPos
+	
+	ldr r0, =REG_IME
+	mov r1, #1
+	str r1, [r0]
 		
 	ldmfd sp!, {r0-r5, pc}								@ Return
 	

@@ -80,11 +80,15 @@ main:
 	
 	bl initInterruptHandler						@ initialize the interrupt handler
 	
+	bl drawLoadingText
+	
 	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
 	mov r1, #0
 	bl EFS_Init
 	bl readOptions
 	bl readHiScore
+	
+	bl clearBG0
 	
 	@ ----
 	
@@ -215,6 +219,46 @@ gameLoop:
 mainLoopDone:
 
 	b mainLoop									@ our main loop
+	
+drawLoadingText:
+
+	stmfd sp!, {r0-r3, lr}
+
+	@ Font tiles
+	
+	ldr r0, =FontTiles
+	ldr r1, =BG_TILE_RAM(BG0_TILE_BASE)
+	add r1, #ScoreTilesLen
+	ldr r2, =FontTilesLen
+	bl dmaCopy
+	ldr r1, =BG_TILE_RAM_SUB(BG0_TILE_BASE_SUB)
+	add r1, #ScoreTilesLen
+	bl dmaCopy
+	
+	@ Write the palette
+
+	ldr r0, =BG_PALETTE
+	ldr r1, =BG_PALETTE_SUB
+	ldr r2, =COLOR_WHITE
+	ldr r3, =255 * 2
+	add r0, r3
+	add r1, r3
+	strh r2, [r0]
+	strh r2, [r1]
+	
+	ldr r0, =loadingText			@ Load out text pointer
+	ldr r1, =11						@ x pos
+	ldr r2, =11						@ y pos
+	ldr r3, =1						@ Draw on Sub screen
+	bl drawText
+	
+	ldr r0, =pleaseWaitText			@ Load out text pointer
+	ldr r1, =10						@ x pos
+	ldr r2, =11						@ y pos
+	ldr r3, =0						@ Draw on Sub screen
+	bl drawText
+
+	ldmfd sp!, {r0-r3, pc}
 
 	.pool
 	.end

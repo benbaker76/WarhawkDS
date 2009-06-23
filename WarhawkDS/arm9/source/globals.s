@@ -121,6 +121,8 @@
 	.global pausedText
 	.global pausedOptionText
 	.global levelText
+	.global loadingText
+	.global pleaseWaitText
 	.global irqTable
 	.global digits
 	.global moveBaseExplosion
@@ -381,21 +383,34 @@ energyLevel:
 	.align
 getReadyText:
 	.asciz "GET READY!"
+
 	.align
 pausedText:
 	.asciz "PAUSED"
+
 	.align
 pausedOptionText:
 	.asciz "PRESS 'SELECT' TO QUIT"
+
 	.align
 nowYouMustText:
 	.asciz "NOW YOU MUST..."
+
 	.align
 defeatMeText:
 	.asciz "DEFEAT ME!"
+	
 	.align
 levelText:
 	.asciz "LEVEL"
+
+	.align
+loadingText:
+	.asciz "LOADING..."
+	
+	.align
+pleaseWaitText:
+	.asciz "PLEASE WAIT"
 	
 	.align
 spriteXText:

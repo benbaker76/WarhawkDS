@@ -74,12 +74,12 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		moveq r8,#0
 		beq initpowerUp				@ if so, lets use it
 			ldr r0,=firePress		@ if not, we need to incrememnt "firepress"
-			ldr r1,[r0]
-			add r1,#1
-			cmp r1,#255
-			moveq r1,#255			@ but not to go too high
-			str r1,[r0]
-			cmp r1,#1				@ this bit enables a fire on press and release
+			ldr r8,[r0]
+			add r8,#1
+			cmp r8,#255
+			moveq r8,#255			@ but not to go too high
+			str r8,[r0]
+			cmp r8,#1				@ this bit enables a fire on press and release
 			beq initFire			@ of the fire button, better?? or TOO MUCH?
 			
 		@ and exit!
@@ -133,7 +133,7 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		add r2,r4
 		ldr r1,=spriteX+4			@ store it in bullets x
 		str r2,[r1,r0, lsl #2]		@ done!		
-	
+
 		cmp r8,#31					@ This is the "HOLD" period needed for the shot!
 		ble fireNormal				@ "POWERSHOT"
 

@@ -316,20 +316,6 @@ bossIsShot:
 	
 	ldmfd sp!, {r0-r8, pc}
 
-@------------------ KILL THE BOSS
-bossIsDead:
-	stmfd sp!, {r0-r8, lr}
-
-	ldr r1,=levelEnd
-	mov r0,#LEVELENDMODE_BOSSDIE
-	str r0,[r1]
-	
-	ldr r1,=bossMan
-	mov r0,#BOSSMODE_EXPLODE_DONE
-	str r0,[r1]
-
-	ldmfd sp!, {r0-r8, pc}
-
 @------------------ BOSS ATTACK CODE	
 bossAttack:
 	stmfd sp!, {r0-r8, lr}
@@ -605,6 +591,20 @@ initBossWave:
 	initBossAliensDone:
 	
 	b bossFireDone
+
+@------------------ KILL THE BOSS
+bossIsDead:
+	stmfd sp!, {r0-r8, lr}
+
+	ldr r1,=levelEnd
+	mov r0,#LEVELENDMODE_BOSSDIE
+	str r0,[r1]
+	
+	ldr r1,=bossMan
+	mov r0,#BOSSMODE_EXPLODE_DONE
+	str r0,[r1]
+
+	ldmfd sp!, {r0-r8, pc}
 	
 @----------------- THIS IS OUR RATHER FUN EXPLODE CODE
 bossExploder:

@@ -96,8 +96,10 @@ playAudioStream:
 	ldr r1, =(BUFFER_SIZE / 2)							@ Read the bufferSize address
 	
 	bl readFileStream									@ Read the next buffer of audio file
+	bl playBuffer
 	bl initAudioStream
-	bl playBuffer	
+	
+	bl swiWaitForVBlank
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
 
@@ -125,8 +127,7 @@ stopAudioStream:
 	mov r1, #STOP_SOUND									@ Get the sample address
 	str r1, [r0]
 	
-	ldr r0, =838000										@ Wait for ARM7 to "ketchup"
-	bl swiDelay
+	bl swiWaitForVBlank
 	
 	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
 
@@ -147,9 +148,6 @@ playBuffer:
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
 	ldr r1, =buffer										@ Get the sample address
 	str r1, [r0]										@ Write the value
-	
-	ldr r0, =838000										@ Wait for ARM7 to "ketchup"
-	bl swiDelay
 	
 	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
 	

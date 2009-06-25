@@ -126,6 +126,7 @@ checkBossInit:
 		mov r1,#113					@ r1 = sprite number
 		ldr r2,=spriteActive
 		mov r3,#128					@ spriteActive Value
+		mov r4,#0
 		bossSpriteLoop:
 			ldr r2,=spriteActive
 			str r3,[r2, r1, lsl #2]	@ activate the sprite
@@ -133,6 +134,8 @@ checkBossInit:
 			str r0,[r2, r1, lsl #2]	@ Store the sprites image
 			ldr r2,=spriteIdent
 			str r3,[r2, r1, lsl #2]	@ set the ident to 128 (so the unit flashes as one)
+			ldr r2,=spriteHFlip
+			str r4,[r2, r1, lsl #2]	@ make sure all flipping is off
 			
 			add r0,#1
 			add r1,#1

@@ -928,9 +928,9 @@ initHunterMine:
 		cmp r7,#4
 		movge r1,#12
 		cmp r7,#8
-		movge r1,#8
+		movge r1,#10
 		cmp r7,#10
-		movge r1,#6
+		movge r1,#9
 		str r1,[r0]
 			ldr r3,=spriteActive+68		@ ok, time to init a mine... We need to find a free space for it?
 			mov r0,#0					@ R0 points to the sprite that will be used for the mine
@@ -973,9 +973,17 @@ initHunterMine:
 					and r8,r1
 					cmp r8,#2
 					addle r8,#2
-					cmp r7,#10
-					addge r8,#1
-					str r8,[r3,r0]
+					@cmp r7,#10
+					@addge r8,#1
+					
+					cmp r7,#6
+					blt skipChange
+						cmp r8,#5
+						subgt r8,#2
+					
+					skipChange:
+					
+					str r8,[r3,r0]			@ Store Y Speed
 					
 					mov r0,#SPRITE_OBJ_OFFS
 					mov r1,#36

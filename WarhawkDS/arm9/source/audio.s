@@ -34,9 +34,9 @@
 	.global stopSound
 	.global playBlasterSound					@ Used = Normal Fire
 	.global playExplosionSound					@ used = player death & base explode
-	.global playAlienExplodeSound				@*used = alien explode (need better for big aliens)
+	.global playAlienExplodeSound				@ used = alien explode
 	.global playAlienExplodeScreamSound			@ used = (powershot), mineshot explode, player death
-	.global playPowershotSound					@*used = For when a powershot is fired 
+	.global playPowershotSound					@ used = For when a powershot is fired 
 	.global playElecShotSound					@ used = alien fire
 	.global playLaserShotSound					@ used = alien fire
 	.global playShipArmourHit1Sound				@ used = boss shot, player/alien collision
@@ -48,9 +48,9 @@
 	.global playFireworksSound					@ used = fireworks
 	.global playPowerupCollect					@*used = for powerup collection
 	.global playpowerupLostSound				@*used = powerup runs out
-	.global playIdentShipExplode				@*used = for when a multi-sprite ship is destroyed
+	.global playIdentShipExplode				@ used = for when a multi-sprite ship is destroyed
 	.global playKeyboardClickSound				@ used = for menu navigation/options
-	.global playBossExplode2Sound				@*used = Boss Explosion (not happy with it :( )
+	.global playBossExplode2Sound				@ used = Boss Explosion
 	.global playEvilLaughSound					@ used = Big boss apearance
 	.global playAlertSound						@ used = big boss attack
 	.global playAlienScreamSound				@ used = "Misc 2" aliens

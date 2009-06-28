@@ -697,7 +697,7 @@ explodeSIdent:					@ this is to explode an alien that is part of a bigger ship
 	strb r6,[r8]
 
 	bl addScore		
-	bl playAlienExplodeSound	@ HK - we really need a meatier explode here?
+	bl playIdentShipExplode	@ HK - we really need a meatier explode here?
 	
 	b dropCheck	
 
@@ -964,7 +964,7 @@ explodeIdent:
 		strb r6,[r8]
 
 		bl addScore		
-		bl playAlienExplodeSound	@ HK - we really need a meatier explode here?
+		bl playIdentShipExplode	@ HK - we really need a meatier explode here?
 
 		b noPlayer
 		

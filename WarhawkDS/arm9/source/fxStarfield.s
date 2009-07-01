@@ -27,7 +27,7 @@
 #include "interrupts.h"
 #include "windows.h"
 
-	#define STAR_COUNT					512
+	#define STAR_COUNT					1024
 	#define STAR_COLOR_OFFSET			11
 	#define STAR_COLOR_TRAIL_OFFSET_1	12
 	#define STAR_COLOR_TRAIL_OFFSET_2	13
@@ -100,7 +100,7 @@ fxStarburstOn:
 	stmfd sp!, {r0-r2, lr}
 
 	mov r0,#STAR_COUNT
-	mov r0,#1000
+	mov r0,#768											@ stars kill the wibble on the pics in hardware!! (sadly)
 	ldr r1,=starAmount
 	str r0,[r1]
 	

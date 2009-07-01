@@ -59,6 +59,8 @@ initAudioStream:
 	ldr r0, =TIMER1_CR
 	ldr r1, =(TIMER_ENABLE | TIMER_IRQ_REQ | TIMER_CASCADE)
 	strh r1, [r0]
+
+	bl swiWaitForVBlank
 	
 	ldmfd sp!, {r0-r1, pc}								@ Return
 	

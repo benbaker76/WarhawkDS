@@ -648,7 +648,9 @@ initLevel:
 		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
 		bl dmaCopy
 	
-		bl stopAudioStream
+		bl DC_FlushAll
+	
+@		bl stopAudioStream
 	
 		bl showLevelStart
 

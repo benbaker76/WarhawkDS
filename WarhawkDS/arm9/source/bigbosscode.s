@@ -55,11 +55,11 @@ bigBossInit:
 	ldr r0,=gameMode
 	str r1,[r0]
 
+	@bl stopSound
+	bl stopAudioStream
 	bl fxOff
 	bl fxFadeBlackInit
 	bl fxFadeMax
-	@bl stopSound
-	@bl stopAudioStream
 	bl resetScrollRegisters						@ Reset the scroll registers
 	bl clearBG0									@ Clear bgs
 	bl clearBG1
@@ -158,8 +158,8 @@ bigBossFadeDone:
 	bl clearBG0
 	bl clearBG1
 
-	@ldr r0, =bossRawText						@ Read the path to the file
-	@bl playAudioStream							@ Play the audio stream
+	ldr r0, =bossRawText						@ Read the path to the file
+	bl playAudioStream							@ Play the audio stream
 	
 	@ ok, init spritedata
 

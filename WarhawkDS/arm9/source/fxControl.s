@@ -123,6 +123,8 @@ fxVBlank:
 	blne fxSpotlightOutVBlank
 	tst r0, #FX_COPPER_TEXT
 	blne fxCopperTextVBlank
+	tst r0, #FX_SINE_WOBBLE
+	blne fxSineWobbleVBlank
 	tst r0, #FX_STARFIELD
 	blne fxStarfieldVBlank
 	tst r0, #FX_STARFIELD_DOWN
@@ -133,8 +135,6 @@ fxVBlank:
 	blne fxFireworksVBlank
 	tst r0, #FX_STARBURST
 	blne fxStarburstVBlank
-	tst r0, #FX_SINE_WOBBLE
-	blne fxSineWobbleVBlank
 	tst r0, #FX_MOSAIC_IN
 	blne fxMosaicInVBlank
 	tst r0, #FX_MOSAIC_OUT

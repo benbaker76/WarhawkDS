@@ -100,7 +100,6 @@ fxStarburstOn:
 	stmfd sp!, {r0-r2, lr}
 
 	mov r0,#STAR_COUNT
-	mov r0,#768											@ stars kill the wibble on the pics in hardware!! (sadly)
 	ldr r1,=starAmount
 	str r0,[r1]
 	

@@ -165,6 +165,7 @@ playerDeathMidExplode:									@ --- PHASE 2
 		str r3,[r1]			@ turn off players ship
 		bl fxPaletteFadeToRed
 		bl stopAudioStream	@ stop music here
+		bl stopSound		@ stop sound to make sure the explosion plays
 		@---- PLAY BIG PLAYER EXPLODE NOISE HERE
 		bl playBossExplodeSound		@ we will use this for now!!	
 		ldmfd sp!, {r0-r6, pc}	

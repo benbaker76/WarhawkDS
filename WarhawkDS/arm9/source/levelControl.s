@@ -314,8 +314,8 @@ showBossDie:
 	mov r1,#0
 	str r1,[r0]
 	
-	@bl stopAudioStream
-	
+	bl stopAudioStream
+	bl stopSound
 	@ PLAY A "LARGE" EXPLOSION SOUND HERE!!	
 	bl playBossExplode2Sound
 	

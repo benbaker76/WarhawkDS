@@ -119,10 +119,6 @@ stopAudioStream:
 	bic r1, #TIMER_ENABLE
 	strh r1, [r0]
 	
-	ldr r0, =IPC_SOUND_DATA(0)
-	ldr r1, =0x10
-	bl DC_FlushRange
-	
 	ldr r0, =IPC_SOUND_DATA(0)							@ Get the IPC sound data address
 	mov r1, #STOP_SOUND									@ Get the sample address
 	str r1, [r0]
@@ -136,10 +132,6 @@ stopAudioStream:
 playBuffer:
 
 	stmfd sp!, {r0-r1, lr}
-	
-	ldr r0, =IPC_SOUND_DATA(0)
-	ldr r1, =0x10
-	bl DC_FlushRange
 
 	ldr r0, =IPC_SOUND_LEN(0)							@ Get the IPC sound length address
 	ldr r1, =BUFFER_SIZE								@ buffer size

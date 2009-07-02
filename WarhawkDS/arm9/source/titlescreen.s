@@ -402,12 +402,6 @@ updateTitleScreen:
 	@tst r1, #BUTTON_A							@ Start button pressed?
 	@bleq showTitleScreen
 	
-	@ldr r0, =REG_KEYINPUT						@ Read Key Input
-	@ldr r1, [r0]
-	@tst r1, #BUTTON_A							@ Start button pressed?
-	@bleq stopAudioStream
-	@bleq playBossExplodeSound
-	
 	bl scrollStarsHoriz							@ Scroll stars
 	bl updateLogoSprites						@ Update logo sprites
 	bl updateStartSprites						@ Update start sprites

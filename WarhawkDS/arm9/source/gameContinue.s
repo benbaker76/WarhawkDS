@@ -376,13 +376,22 @@ drawGameContinueMenuText:
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 	
+	ldr r0, =lockedText
+	ldr r1, =optionGameModeComplete
+	ldr r1, [r1]
+	tst r1, #OPTION_GAMEMODECOMPLETE_NORMAL
+	beq drawGameContinueMenuTextContinue
+	
 	ldr r0, =optionGameModeCurrent
 	ldr r0, [r0]
 	ldr r1, =mentalText
 	ldr r2, =normalText
+	
 	cmp r0, #OPTION_GAMEMODECURRENT_MENTAL
 	moveq r0, r1
 	movne r0, r2
+
+drawGameContinueMenuTextContinue:
 	ldr r1, =19									@ x pos
 	ldr r2, =18									@ y pos
 	ldr r3, =1									@ Draw on sub screen
@@ -454,6 +463,10 @@ normalText:
 	.align
 mentalText:
 	.asciz "MENTAL"
+	
+	.align
+lockedText:
+	.asciz "LOCKED"
 	
 	.pool
 	.end

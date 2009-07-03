@@ -286,13 +286,13 @@ drawCreditText:
 	bl drawText
 	
 	ldr r0, =PPOTText							@ Load out text pointer
-	ldr r1, =7									@ x pos
+	ldr r1, =3									@ x pos
 	ldr r2, =18									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
 
 	ldr r0, =spaceFractalText					@ Load out text pointer
-	ldr r1, =10									@ x pos
+	ldr r1, =4									@ x pos
 	ldr r2, =19									@ y pos
 	ldr r3, =1									@ Draw on sub screen
 	bl drawText
@@ -457,11 +457,11 @@ musixText:
 	
 	.align
 PPOTText:
-	.asciz "PRESS PLAY ON TAPE"
+	.asciz "PRESS PLAY ON TAPE (TITLE)"
 	
 	.align
 spaceFractalText:
-	.asciz "SPACE FRACTAL"
+	.asciz "SPACE FRACTAL (IN GAME)"
 
 	.align
 aRetroBytesPortalProductionText:

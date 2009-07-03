@@ -360,7 +360,7 @@ vscrollText:
 	.ascii "                                "
 	.ascii "  LOBO, SPACEFRACTAL, SOKURAH,  "
 	.ascii "    BAZ, JACK, MARTYN CARROL    "
-	.ascii "   BIG  BADTOAD, MARK TAXIMAN   "
+	.ascii "  BIG  BADTOAD,  MARK NICHOLLS  "
 	.ascii "                                "
 	.ascii "                                "
 	.ascii "                                "

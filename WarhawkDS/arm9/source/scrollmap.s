@@ -431,7 +431,7 @@ scrollStarsHoriz:
 	
 	ldr r2, =hofsSF
 	ldrb r3, [r2]
-	add r3, #3
+	add r3, #4
 	ldr r4, =REG_BG2HOFS					@ Load our horizontal scroll register for BG1 on the main screen
 	ldr r5, =REG_BG2HOFS_SUB				@ Load our horizontal scroll register for BG1 on the sub screen
 	strb r3, [r2]

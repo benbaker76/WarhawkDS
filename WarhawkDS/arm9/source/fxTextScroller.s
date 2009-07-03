@@ -249,7 +249,7 @@ fxVertTextScrollerVBlankContinue:
 	ldr r6, =ofsScrollDelay
 	ldr r7,[r6]
 	subs r7,#1
-	movmi r7,#1
+	movmi r7,#2
 	str r7,[r6]
 	bpl fxVertTextScrollerVBlankContinueNot
 	add r1, #1

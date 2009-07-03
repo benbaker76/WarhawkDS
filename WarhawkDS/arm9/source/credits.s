@@ -46,7 +46,9 @@ showCredits:
 	ldr r0, =keyWaitCredits
 	mov r1,#0
 	str r1,[r0]
-
+	ldr r0, =creditStarDelay
+	str r1,[r0]
+	
 	bl fxOff
 	bl fxFadeBlackInit
 	bl fxFadeMax
@@ -789,8 +791,16 @@ updateCredits:
 
 	stmfd sp!, {r0-r3, lr}
 	
-	bl scrollSBMain
-	bl scrollSBSub
+	ldr r0,=creditStarDelay
+	ldr r1,[r0]
+	add r1,#1
+	cmp r1,#4
+	moveq r1,#0
+	str r1,[r0]
+	bne missCreditScroll
+		bl scrollSBMain
+		bl scrollSBSub
+	missCreditScroll:
 	
 	ldr r3,=keyWaitCredits
 	ldr r2,[r3]
@@ -819,6 +829,8 @@ updateCredits:
 	.data
 	.align
 keyWaitCredits:
+	.word 0
+creditStarDelay:
 	.word 0
 	
 	.align

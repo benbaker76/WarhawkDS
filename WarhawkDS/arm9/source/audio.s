@@ -25,6 +25,10 @@
 #include "dma.h"
 #include "ipc.h"
 
+	#define MUSIC_CHANNEL		0
+	#define SOUND_CHANNEL		1
+	#define FORCE_SOUND_CHANNEL	2
+
 	#define STOP_SOUND		-1
 
 	.arm
@@ -62,7 +66,7 @@ stopSound:
 
 	stmfd sp!, {r0-r1, lr}
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	mov r1, #STOP_SOUND									@ Stop sound value
 	str r1, [r0]										@ Write the value
 	
@@ -79,13 +83,13 @@ playDefeatSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =LaVeyDefeat_raw_end						@ Get the sample end
 	ldr r2, =LaVeyDefeat_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =LaVeyDefeat_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -102,13 +106,13 @@ playPowershotSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =powerShot_raw_end							@ Get the sample end
 	ldr r2, =powerShot_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =powerShot_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -124,13 +128,13 @@ playBlasterSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =blaster_raw_end							@ Get the sample end
 	ldr r2, =blaster_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =blaster_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -146,13 +150,13 @@ playExplosionSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(FORCE_SOUND_CHANNEL)			@ Get the IPC sound length address
 	ldr r1, =explosion_raw_end							@ Get the sample end
 	ldr r2, =explosion_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(FORCE_SOUND_CHANNEL)		@ Get the IPC sound data address
 	ldr r1, =explosion_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -168,13 +172,13 @@ playAlienExplodeSound:
 
 	stmfd sp!, {r0-r2, lr}
 
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =alien_explode_raw_end						@ Get the sample end
 	ldr r2, =alien_explode_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =alien_explode_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -190,13 +194,13 @@ playAlienExplodeScreamSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =alien_explode_scream_raw_end				@ Get the sample end
 	ldr r2, =alien_explode_scream_raw					@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =alien_explode_scream_raw					@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -212,13 +216,13 @@ playElecShotSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =elecshot_raw_end							@ Get the sample end
 	ldr r2, =elecshot_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =elecshot_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -234,13 +238,13 @@ playLaserShotSound:
 
 	stmfd sp!, {r0-r2, lr}
 
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =lasershot_raw_end							@ Get the sample end
 	ldr r2, =lasershot_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =lasershot_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -256,13 +260,13 @@ playShipArmourHit1Sound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =ship_armour_hit1_raw_end					@ Get the sample end
 	ldr r2, =ship_armour_hit1_raw						@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)							@ Get the IPC sound data address
 	ldr r1, =ship_armour_hit1_raw						@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -278,13 +282,13 @@ playCrashBuzSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =crashbuz_raw_end							@ Get the sample end
 	ldr r2, =crashbuz_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =crashbuz_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -300,13 +304,13 @@ playDinkDinkSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =dinkdink_raw_end							@ Get the sample end
 	ldr r2, =dinkdink_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =dinkdink_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -322,13 +326,13 @@ playLowSound:
 
 	stmfd sp!, {r0-r2, lr}
 
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =low_raw_end								@ Get the sample end
 	ldr r2, =low_raw									@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =low_raw									@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -344,13 +348,13 @@ playSteelSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =steel_raw_end								@ Get the sample end
 	ldr r2, =steel_raw									@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =steel_raw									@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -366,13 +370,13 @@ playBossExplodeSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(FORCE_SOUND_CHANNEL)			@ Get the IPC sound length address
 	ldr r1, =boss_explode_raw_end						@ Get the sample end
 	ldr r2, =boss_explode_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(FORCE_SOUND_CHANNEL)		@ Get the IPC sound data address
 	ldr r1, =boss_explode_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -388,13 +392,13 @@ playFireworksSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =fireworks_raw_end							@ Get the sample end
 	ldr r2, =fireworks_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =fireworks_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -410,13 +414,13 @@ playBossExplode2Sound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(FORCE_SOUND_CHANNEL)			@ Get the IPC sound length address
 	ldr r1, =boss_explode2_raw_end						@ Get the sample end
 	ldr r2, =boss_explode2_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(FORCE_SOUND_CHANNEL)		@ Get the IPC sound data address
 	ldr r1, =boss_explode2_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -432,13 +436,13 @@ playKeyboardClickSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =keyclick_raw_end							@ Get the sample end
 	ldr r2, =keyclick_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =keyclick_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -454,13 +458,13 @@ playPowerupCollect:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =powerupcollect_raw_end						@ Get the sample end
 	ldr r2, =powerupcollect_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =powerupcollect_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -476,13 +480,13 @@ playpowerupLostSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =poweruplost_raw_end						@ Get the sample end
 	ldr r2, =poweruplost_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =poweruplost_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -498,13 +502,13 @@ playIdentShipExplode:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =bigshipexplode_raw_end						@ Get the sample end
 	ldr r2, =bigshipexplode_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =bigshipexplode_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -520,13 +524,13 @@ playEvilLaughSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =evil_laugh_raw_end							@ Get the sample end
 	ldr r2, =evil_laugh_raw								@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =evil_laugh_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -542,13 +546,13 @@ playAlertSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =alert_raw_end								@ Get the sample end
 	ldr r2, =alert_raw									@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =alert_raw									@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
@@ -564,13 +568,13 @@ playAlienScreamSound:
 
 	stmfd sp!, {r0-r2, lr}
 	
-	ldr r0, =IPC_SOUND_LEN(1)							@ Get the IPC sound length address
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
 	ldr r1, =alien_scream_raw_end						@ Get the sample end
 	ldr r2, =alien_scream_raw							@ Get the same start
 	sub r1, r2											@ Sample end - start = size
 	str r1, [r0]										@ Write the sample size
 	
-	ldr r0, =IPC_SOUND_DATA(1)							@ Get the IPC sound data address
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =alien_scream_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	

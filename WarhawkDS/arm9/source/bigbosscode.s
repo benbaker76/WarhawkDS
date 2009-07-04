@@ -55,11 +55,11 @@ bigBossInit:
 	ldr r0,=gameMode
 	str r1,[r0]
 
-	@bl stopSound
-	bl stopAudioStream
 	bl fxOff
 	bl fxFadeBlackInit
 	bl fxFadeMax
+	bl stopSound
+	bl stopAudioStream
 	bl resetScrollRegisters						@ Reset the scroll registers
 	bl clearBG0									@ Clear bgs
 	bl clearBG1

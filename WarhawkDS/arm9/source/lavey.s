@@ -46,6 +46,10 @@ initLaVey:
 	mov r2, #0
 	str r2, [r1]
 	
+	mov r1,#0
+	ldr r2,=laVayTalkPoss
+	str r1,[r2]
+	
 	ldr r1, =laVeyTalk
 	str r0, [r1]
 	
@@ -53,6 +57,15 @@ initLaVey:
 	mov r2, #180
 	sub r2, r0
 	str r2, [r1]
+
+	ldr r0, =gameMode
+	ldr r1, [r0]
+	cmp r1, #GAMEMODE_BIGBOSS_LAVEY
+	ldrne r4,=laVeyTalk1
+	ldreq r4,=laVeyTalk2
+
+	ldr r2,=laVayChat
+	str r4,[r2]
 	
 	bl drawLaVey1
 	
@@ -128,7 +141,7 @@ drawLaVey3:
 	
 updateLaVey:
 
-	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r4, lr}
 	
 	ldr r0, =laVeyWait
 	ldr r1, [r0]
@@ -138,14 +151,12 @@ updateLaVey:
 	cmp r1, #1
 	bne noLaVeyChattering
 
-
 		ldr r0, =gameMode
 		ldr r2, [r0]
 		cmp r2, #GAMEMODE_BIGBOSS_LAVEY
 	
 		bleq playDefeatSound
 		blne playWellDoneMortalSound
-		
 		
 	noLaVeyChattering:
 	cmp r1,# 0
@@ -159,29 +170,32 @@ updateLaVey:
 	str r1, [r0]
 	bne updateLaVeyDone
 	
-	bl getRandom
-	and r8, #0x3
+		ldr r0,=laVayChat
+		ldr r4,[r0]
+	
+		ldr r2,=laVayTalkPoss		
+		ldr r1,[r2]							@ r1 = pos in speech	
 
-	ldr r2,=laVeyTalk
-	ldr r1,[r2]
-	subs r1,#1
-	movmi r1,#0
-	str r1,[r2]
-	cmp r1,#0
-	moveq r8,#0
+		ldr r0,[r4, r1, lsl #2]				@ r0 = lip value (hmmm wine!!)
 	
-	cmp r8, #0
-	bleq drawLaVey1
-	cmp r8, #1
-	bleq drawLaVey1
-	cmp r8, #2
-	bleq drawLaVey2
-	cmp r8, #3
-	bleq drawLaVey3
-	
+		cmp r0,#255
+		addne r1,#1
+		str r1,[r2]
+
+		cmp r0, #0
+		bleq drawLaVey1
+		cmp r0, #1
+		bleq drawLaVey1
+		cmp r0, #2
+		bleq drawLaVey2
+		cmp r0, #3
+		bleq drawLaVey3
+		cmp r0, #255
+		bleq drawLaVey1
+
 updateLaVeyDone:
 
-	ldmfd sp!, {r0-r2, pc} 					@ restore registers and return
+	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 	
 	@---------------------------------
 
@@ -195,6 +209,14 @@ laVeyWait:
 	.word 0
 
 laVeyTalk:
+	.word 0
+laVeyTalk1:									@ end of level	(well done mortal)
+	.word 1,1,2,3,2,1,2,1,1,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3,2,1,2,255
+laVeyTalk2:									@ big boss (now you must defeat me)
+	.word 0,255
+laVayTalkPoss:
+	.word 0
+laVayChat:
 	.word 0
 
 	.pool

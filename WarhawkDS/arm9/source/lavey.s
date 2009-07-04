@@ -135,19 +135,21 @@ updateLaVey:
 	subs r1, #1
 	movmi r1, #0
 	str r1, [r0]
-	
-	cmp r1, #0
-	beq updateLaVeyDone
 	cmp r1, #1
-	bne updateLaVeyContinue
+	bne noLaVeyChattering
+
+
+		ldr r0, =gameMode
+		ldr r2, [r0]
+		cmp r2, #GAMEMODE_BIGBOSS_LAVEY
 	
-	ldr r0, =gameMode
-	ldr r2, [r0]
-	cmp r2, #GAMEMODE_BIGBOSS_LAVEY
-	blne playWellDoneMortalSound
-	bleq playDefeatSound
-	
-updateLaVeyContinue:
+		bleq playDefeatSound
+		blne playWellDoneMortalSound
+		
+		
+	noLaVeyChattering:
+	cmp r1,# 0
+	bne updateLaVeyDone
 
 	ldr r0, =laVeyCount
 	ldr r1, [r0]

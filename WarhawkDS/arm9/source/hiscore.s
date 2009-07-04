@@ -155,7 +155,7 @@ showHiScoreEntry:
 	
 	mov r0, #0
 	ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
-	ldr r2, =(32 * 24 * 32)
+	ldr r2, =(32 * 24 * 2)
 	bl dmaFillWords
 
 	ldr r0, =FontPal

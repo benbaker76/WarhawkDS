@@ -48,11 +48,11 @@ interruptHandlerIPC:
 	ldr r1, [r4]								@ Read the value
 	mov r4, #0									@ Value to reset
 	cmp r0, #STOP_SOUND							@ Stop Sound value?
-	bleq stopSound								@ Stop Sound
 	streq r4, [r3]								@ Clear the data
+	bleq stopSound								@ Stop Sound
 	cmp r0, #0									@ Is there data there?
-	blgt playSound								@ If so lets play the sound
 	strgt r4, [r3]								@ Clear the data
+	blgt playSound								@ If so lets play the sound
 	
 	mov r2, #FORCE_SOUND_CHANNEL				@ Channel 2
 	ldr r3, =IPC_SOUND_DATA(FORCE_SOUND_CHANNEL)	@ Get a pointer to the sound data in IPC
@@ -61,8 +61,8 @@ interruptHandlerIPC:
 	ldr r1, [r4]								@ Read the value
 	mov r4, #0									@ Value to reset
 	cmp r0, #0									@ Is there data there?
-	blgt playSound								@ If so lets play the sound
 	strgt r4, [r3]								@ Clear the data
+	blgt playSound								@ If so lets play the sound
 	
 	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 
@@ -77,12 +77,12 @@ interruptHandlerVBlank:
 	ldr r0, [r2]								@ Read the value
 	ldr r1, [r3]								@ Read the value
 	mov r4, #0									@ Value to reset
-	cmp r0, #STOP_SOUND							@ Stop Sound value?
-	bleq stopMusic								@ Stop Sound
+	cmp r0, #STOP_SOUND							@ Stop Sound value
 	streq r4, [r2]								@ Clear the data
+	bleq stopMusic								@ Stop Sound
 	cmp r0, #0									@ Is there data there?
-	blgt playMusic								@ If so lets play the sound
 	strgt r4, [r2]								@ Clear the data
+	blgt playMusic								@ If so lets play the sound
 	
 	ldmfd sp!, {r0-r4, pc} 					@ restore registers and return
 

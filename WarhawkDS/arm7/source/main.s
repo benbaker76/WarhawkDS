@@ -169,6 +169,12 @@ stopMusic:
 
 	stmfd sp!, {r0-r2, lr}
 	
+	ldr r0, =IPC_SOUND_DATA(MUSIC_CHANNEL)		@ Get a pointer to the sound data in IPC
+	ldr r1, =IPC_SOUND_LEN(MUSIC_CHANNEL)		@ Get a pointer to the sound data in IPC
+	mov r2, #0
+	str r2, [r0]
+	str r2, [r1]
+	
 	ldr r0, =SCHANNEL_CR(0)
 	ldr r1, =SCHANNEL_CR(1)
 	mov r2, #0
@@ -230,6 +236,12 @@ playSoundDone:
 stopSound:
 
 	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)		@ Get a pointer to the sound data in IPC
+	ldr r1, =IPC_SOUND_LEN(SOUND_CHANNEL)		@ Get a pointer to the sound data in IPC
+	mov r2, #0
+	str r2, [r0]
+	str r2, [r1]
 	
 	mov r0, #15									@ Reset the counter
 	ldr r1, =SCHANNEL_CR(0)						@ This is the base address of the sound channel

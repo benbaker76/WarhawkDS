@@ -101,6 +101,9 @@ playAudioStream:
 	bl playBuffer
 	bl initAudioStream
 	
+	@ldr r0, =419000									@ Wait for ARM7 to "ketchup"
+	@bl swiDelay
+	
 	bl swiWaitForVBlank
 	
 	ldmfd sp!, {r0-r2, pc}								@ restore registers and return
@@ -110,6 +113,11 @@ playAudioStream:
 stopAudioStream:
 
 	stmfd sp!, {r0-r1, lr}
+	
+	ldr r0, =buffer
+	mov r1, #0
+	ldr r2, =BUFFER_SIZE
+	bl memset 
 	
 	ldr r0, =TIMER0_CR
 	ldrh r1, [r0]
@@ -124,6 +132,13 @@ stopAudioStream:
 	ldr r0, =IPC_SOUND_DATA(MUSIC_CHANNEL)				@ Get the IPC sound data address
 	mov r1, #STOP_SOUND									@ Get the sample address
 	str r1, [r0]
+	
+	@ldr r0, =REG_IPC_SYNC
+	@ldr r1, =IPC_SEND_SYNC(0)
+	@strh r1, [r0]
+	
+	@ldr r0, =419000									@ Wait for ARM7 to "ketchup"
+	@bl swiDelay
 	
 	bl swiWaitForVBlank
 	
@@ -142,6 +157,10 @@ playBuffer:
 	ldr r0, =IPC_SOUND_DATA(MUSIC_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =buffer										@ Get the sample address
 	str r1, [r0]										@ Write the value
+	
+	@ldr r0, =REG_IPC_SYNC
+	@ldr r1, =IPC_SEND_SYNC(0)
+	@strh r1, [r0]
 	
 	ldmfd sp!, {r0-r1, pc}								@ restore registers and return
 	

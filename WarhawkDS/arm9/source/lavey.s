@@ -135,15 +135,19 @@ updateLaVey:
 	subs r1, #1
 	movmi r1, #0
 	str r1, [r0]
-
+	
+	cmp r1, #0
+	beq updateLaVeyDone
+	cmp r1, #1
+	bne updateLaVeyContinue
+	
 	ldr r0, =gameMode
 	ldr r2, [r0]
 	cmp r2, #GAMEMODE_BIGBOSS_LAVEY
-	cmpeq r1, #1
+	blne playWellDoneMortalSound
 	bleq playDefeatSound
-
-	cmp r1,# 0
-	bne updateLaVeyDone
+	
+updateLaVeyContinue:
 
 	ldr r0, =laVeyCount
 	ldr r1, [r0]

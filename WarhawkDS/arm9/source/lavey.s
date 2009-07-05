@@ -59,8 +59,7 @@ initLaVey:
 	str r0, [r1]
 	
 	ldr r1, =laVeyWait
-	mov r2, #180
-	sub r2, r0
+	mov r2, #100
 	str r2, [r1]
 
 	ldr r0, =gameMode
@@ -177,7 +176,7 @@ updateLaVey:
 		ldr r0, =gameMode
 		ldr r2, [r0]
 		cmp r2, #GAMEMODE_BIGBOSS_LAVEY
-		bleq playNeverDefeatSound
+		bleq playDefeatMeSound
 		beq noLaVeyChattering
 			
 			ldr r0,=laVayPhrase
@@ -257,20 +256,20 @@ laVeyTalk:
 	.word 0
 laVeyTalk1:									@ big boss (now you must defeat me)
 	.word 0,255
-laVeyTalk2:									@ Well done
-	.word 1,1,2,3,2,1,2,1,1,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3,2,1,2,1,255
+laVeyTalk2:									@ Well done mortal
+	.word 1,1,2,2,2,1,2,1,1,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3,3,2,2,1,1,2,2,255
 laVeyTalk3:									@ laugh
-	.word 0,255
-laVeyTalk4:									@ never defeat
-	.word 0,255
-laVeyTalk5:									@ no time
-	.word 0,255
-laVeyTalk6:									@ try again
-	.word 0,255
-laVeyTalk7:									@ fed up
-	.word 0,255
-laVeyTalk8:									@ last warning
-	.word 0,255
+	.word 2,2,3,3,2,2,3,3,2,2,3,3,2,2,3,3,1,1,2,2,1,1,2,2,3,3,2,2,3,3,2,2,255
+laVeyTalk4:									@ youll never defeat me
+	.word 2,2,3,3,2,2,3,1,2,0,0,0,0,3,3,1,3,2,0,0,0,2,2,2,255
+laVeyTalk5:									@ i dont have time for this
+	.word 2,2,3,0,2,2,3,3,0,0,0,3,2,2,0,0,0,0,3,3,1,2,2,2,255
+laVeyTalk6:									@ try and try again
+	.word 2,2,3,3,0,0,0,0,0,0,0,0,0,0,3,2,0,0,0,2,2,3,3,0,3,2,2,255
+laVeyTalk7:									@ im getting a little fed up with you
+	.word 3,2,0,0,0,0,0,3,2,3,0,2,3,2,1,2,0,0,0,0,0,2,3,0,0,0,0,0,0,0,3,2,2,0,3,2,2,2,255
+laVeyTalk8:									@ this is your last warning
+	.word 3,2,0,0,0,0,0,0,2,2,0,0,0,3,2,1,2,0,0,0,0,0,0,0,3,3,2,1,2,2,2,2,255
 	
 laVayTalkPoss:
 	.word 0

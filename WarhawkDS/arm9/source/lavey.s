@@ -43,8 +43,8 @@ initLaVey:
 	
 	@ r0 - syllable value
 	
-	ldr r1,=laVayPhrase		@ use this to set the correct phrase for testing only!
-	mov r2,#0
+@	ldr r1,=laVayPhrase		@ use this to set the correct phrase for testing only!
+@	mov r2,#0
 @	str r2,[r1]
 	
 	ldr r1, =laVeyCount
@@ -255,7 +255,7 @@ laVeyWait:
 laVeyTalk:
 	.word 0
 laVeyTalk1:									@ big boss (now you must defeat me)
-	.word 0,255
+	.word 3,2,2,0,0,2,3,3,1,2,2,2,0,0,2,2,3,1,2,2,0,0,0,0,0,2,2,2,0,0,0,255
 laVeyTalk2:									@ Well done mortal
 	.word 1,1,2,2,2,1,2,1,1,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3,3,2,2,1,1,2,2,255
 laVeyTalk3:									@ laugh

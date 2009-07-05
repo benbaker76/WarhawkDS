@@ -41,7 +41,7 @@ initData:
 
 	ldr r0,=levelNum
 	mov r1,#LEVEL_1
-@mov r1,#13								@ uncomment for set level
+@mov r1,#16								@ uncomment for set level
 	str r1,[r0]
 	
 	ldr r0,=bossSpreadAngle
@@ -55,9 +55,9 @@ initData:
 @	mov r1,#1
 @	str r1,[r0]
 	
-	ldr r0,=cheatMode					@ uncomment for auto cheat
-	mov r1,#1
-	str r1,[r0]
+@	ldr r0,=cheatMode					@ uncomment for auto cheat
+@	mov r1,#1
+@	str r1,[r0]
 	
 	ldr r0,=powerUp
 	str r1,[r0]				@ set to one for autofire (on the original this carries on)

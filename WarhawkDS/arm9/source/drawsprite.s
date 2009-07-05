@@ -543,7 +543,7 @@ drawSprite:
 
 		fallingShip:
 		cmp r1,#14								@ -------------- a falling alien
-		bne noMoreStuff
+		bne bulletPulser
 
 			ldr r0,=spriteY						@ Load Y coord
 			ldr r1,[r0,r8,lsl #2]
@@ -579,7 +579,26 @@ drawSprite:
 			ldr r0,=spriteY
 			mov r1,#SPRITE_KILL
 			str r1,[r0,r8,lsl #2]
-				
+			b noMoreStuff
+			
+		bulletPulser:
+		cmp r1,#8
+		bne noMoreStuff
+		
+			ldr r0,=spriteObj
+			ldr r1,[r0,r8, lsl #2]
+			cmp r1,#27
+			bne noMoreStuff
+			
+			ldr r0,=spriteBloom
+			ldr r1,[r0,r8, lsl #2]
+			cmp r1,#0
+			bne noMoreStuff
+			mov r1,#12
+			str r1,[r0,r8, lsl #2]
+		
+		
+		
 		noMoreStuff:
 
 	subs r8,#1

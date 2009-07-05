@@ -48,6 +48,9 @@ initData:
 	mov r1,#0
 	str r1,[r0]
 	
+	ldr r0,=laVayPhrase
+	str r1,[r0]
+	
 @	ldr r0, =optionGameModeCurrent		@ uncomment for mental mode!
 @	mov r1,#1
 @	str r1,[r0]

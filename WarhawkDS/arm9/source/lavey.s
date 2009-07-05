@@ -35,6 +35,7 @@
 	.text
 	.global initLaVey
 	.global updateLaVey
+	.global laVayPhrase
 	
 initLaVey:
 
@@ -61,9 +62,27 @@ initLaVey:
 	ldr r0, =gameMode
 	ldr r1, [r0]
 	cmp r1, #GAMEMODE_BIGBOSS_LAVEY
-	ldrne r4,=laVeyTalk1
-	ldreq r4,=laVeyTalk2
+	ldreq r4,=laVeyTalk1
+	beq initLaVeySkip
+	
+		ldr r0,=laVayPhrase
+		ldr r1,[r0]	
+		cmp r1,#0
+		ldreq r4,=laVeyTalk2
+		cmp r1,#1
+		ldreq r4,=laVeyTalk3
+		cmp r1,#2
+		ldreq r4,=laVeyTalk4
+		cmp r1,#3
+		ldreq r4,=laVeyTalk5
+		cmp r1,#4
+		ldreq r4,=laVeyTalk6
+		cmp r1,#5
+		ldreq r4,=laVeyTalk7
+		cmp r1,#6
+		ldreq r4,=laVeyTalk8		
 
+	initLaVeySkip:
 	ldr r2,=laVayChat
 	str r4,[r2]
 	
@@ -154,15 +173,31 @@ updateLaVey:
 		ldr r0, =gameMode
 		ldr r2, [r0]
 		cmp r2, #GAMEMODE_BIGBOSS_LAVEY
-		bleq playDefeatSound
-		blne playWellDoneSound
-		@blne playLaughSound
-		@blne playNeverDefeatSound
-		@blne playNoTimeSound
-		@blne playTryAgainSound
-		@blne playDefeatMeSound
-		@blne playFedUpSound
-		@blne playLastWarningSound
+		bleq playNeverDefeatSound
+		beq noLaVeyChattering
+			
+			ldr r0,=laVayPhrase
+			ldr r1,[r0]
+			
+			cmp r1,#0
+			bleq playWellDoneSound
+			cmp r1,#1
+			bleq playLaughSound
+			cmp r1,#2
+			bleq playNeverDefeatSound
+			cmp r1,#3
+			bleq playNoTimeSound
+			cmp r1,#4
+			bleq playTryAgainSound
+			cmp r1,#5
+			bleq playFedUpSound
+			cmp r1,#6
+			bleq playLastWarningSound
+			
+			add r1,#1
+			cmp r1,#7
+			moveq r1,#0
+			str r1,[r0]
 		
 	noLaVeyChattering:
 	cmp r1,# 0
@@ -216,13 +251,28 @@ laVeyWait:
 
 laVeyTalk:
 	.word 0
-laVeyTalk1:									@ end of level	(well done mortal)
-	.word 1,1,2,3,2,1,2,1,1,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3,2,1,2,255
-laVeyTalk2:									@ big boss (now you must defeat me)
+laVeyTalk1:									@ big boss (now you must defeat me)
 	.word 0,255
+laVeyTalk2:									@ Well done
+	.word 1,1,2,3,2,1,2,1,1,3,3,0,0,0,0,0,0,0,0,0,0,0,0,3,2,1,2,1,255
+laVeyTalk3:									@ laugh
+	.word 0,255
+laVeyTalk4:									@ never defeat
+	.word 0,255
+laVeyTalk5:									@ no time
+	.word 0,255
+laVeyTalk6:									@ try again
+	.word 0,255
+laVeyTalk7:									@ fed up
+	.word 0,255
+laVeyTalk8:									@ last warning
+	.word 0,255
+	
 laVayTalkPoss:
 	.word 0
 laVayChat:
+	.word 0
+laVayPhrase:
 	.word 0
 
 	.pool

@@ -279,6 +279,11 @@ findAlienFire:
 		mov r2,#255					@ set to 255 to signal "NO SPACE FOR FIRE"
 		ldmfd sp!, {r0,r1,r3,r4,r5,pc}
 		findAlienFireDone:
+		
+		ldr r3,=spriteBloom
+		mov r5,#0
+		str r5,[r3,r4, lsl #2]
+		
 		add r2, r4, lsl #2			@ return r2 as pointer to bullet
 	ldmfd sp!, {r0,r1,r3,r4,r5,pc}
 

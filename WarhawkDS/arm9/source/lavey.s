@@ -156,6 +156,13 @@ updateLaVey:
 		cmp r2, #GAMEMODE_BIGBOSS_LAVEY
 		bleq playDefeatSound
 		blne playWellDoneSound
+		@blne playLaughSound
+		@blne playNeverDefeatSound
+		@blne playNoTimeSound
+		@blne playTryAgainSound
+		@blne playDefeatMeSound
+		@blne playFedUpSound
+		@blne playLastWarningSound
 		
 	noLaVeyChattering:
 	cmp r1,# 0

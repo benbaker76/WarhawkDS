@@ -60,6 +60,13 @@
 	.global playAlienScreamSound				@ used = "Misc 2" aliens
 	.global playDefeatSound						@ used = Anton talks
 	.global playWellDoneSound					@ user = End of Level
+	.global playLaughSound						@ user = End of Level
+	.global playNeverDefeatSound				@ user = End of Level
+	.global playNoTimeSound						@ user = End of Level
+	.global playTryAgainSound					@ user = End of Level
+	.global playDefeatMeSound					@ user = End of Level
+	.global playFedUpSound						@ user = End of Level
+	.global playLastWarningSound				@ user = End of Level
 	
 	@ ones with "*" i feel need to be redone/improved
 
@@ -600,6 +607,160 @@ playWellDoneSound:
 	
 	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =well_done_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playLaughSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =laugh_raw_end								@ Get the sample end
+	ldr r2, =laugh_raw									@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =laugh_raw									@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playNeverDefeatSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =never_defeat_raw_end						@ Get the sample end
+	ldr r2, =never_defeat_raw							@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =never_defeat_raw							@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playNoTimeSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =no_time_raw_end							@ Get the sample end
+	ldr r2, =no_time_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =no_time_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playTryAgainSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =try_again_raw_end							@ Get the sample end
+	ldr r2, =try_again_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =try_again_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playDefeatMeSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =defeat_me_raw_end							@ Get the sample end
+	ldr r2, =defeat_me_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =defeat_me_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playFedUpSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =fed_up_raw_end								@ Get the sample end
+	ldr r2, =fed_up_raw									@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =fed_up_raw									@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
+	
+playLastWarningSound:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =last_warning_raw_end						@ Get the sample end
+	ldr r2, =last_warning_raw							@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =last_warning_raw							@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
 	ldr r0, =REG_IPC_SYNC

@@ -23,87 +23,15 @@
 #include "system.h"
 #include "video.h"
 #include "background.h"
-#include "dma.h"
-#include "interrupts.h"
-#include "sprite.h"
-#include "ipc.h"
+
 
 	.arm
 	.align
 	.text
-	.global drawDebugText
 	.global drawText
 	.global drawTextCount
 	.global drawDigits
 	
-drawDebugText:
-
-	stmfd sp!, {r0-r10, lr}
-	
-	ldr r0, =spriteXText			@ Load out text pointer
-	ldr r1, =0						@ x pos
-	ldr r2, =0						@ y pos
-	ldr r3, =1						@ Draw on Sub screen
-	bl drawText
-	
-	ldr r10,=spriteX				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#0						@ y pos
-	mov r9,#3						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw
-	
-	
-	ldr r0, =spriteYText			@ Load out text pointer
-	ldr r1, =0						@ x pos
-	ldr r2, =2						@ y pos
-	ldr r3, =1						@ Draw on Sub screen
-	bl drawText
-		
-	ldr r10,=spriteY				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#2						@ y pos
-	mov r9,#3						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw
-
-	ldr r0, =vofsSubText			@ Load out text pointer
-	ldr r1, =0						@ x pos
-	ldr r2, =4						@ y pos
-	ldr r3, =1						@ Draw on Sub screen
-	bl drawText
-
-	ldr r10,=vofsSub				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#4						@ y pos
-	mov r9,#3						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw
-	
-	ldr r0, =yposSubText			@ Load out text pointer
-	ldr r1, =0						@ x pos
-	ldr r2, =6						@ y pos
-	ldr r3, =1						@ Draw on Sub screen
-	bl drawText
-	
-	ldr r10,=yposSub				@ Pointer to data
-	ldr r10,[r10]					@ Read value
-	mov r8,#6						@ y pos
-	mov r9,#4						@ Number of digits
-	mov r11, #9						@ x pos
-	bl drawDigits					@ Draw
-
-	ldr r10,=REG_VCOUNT				@ Pointer to data
-	ldrh r10,[r10]					@ Read value
-	mov r8,#20						@ y pos
-	mov r9,#3						@ Number of digits
-	mov r11, #0						@ x pos
-	bl drawDigits					@ Draw
-
-	ldmfd sp!, {r0-r10, pc}
-
-	@ ---------------------------------------------
-
 drawText:
 	
 	@ r0 = pointer to null terminated text

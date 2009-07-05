@@ -129,16 +129,28 @@ showHiScoreEntry:
 	bl clearOAM									@ Reset all sprites
 	
 	@ Write the tile data
-
-	ldr r0 ,=Moonscape2Tiles
+	
+	ldr r0,=moonPick
+	ldr r4,[r0]
+	add r4,#1
+	cmp r4,#2
+	moveq r4,#0
+	str r4,[r0]
+	cmp r4,#0
+	
+	ldreq r0 ,=MoonscapeTiles
+	ldrne r0 ,=Moonscape2Tiles
 	ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-	ldr r2, =Moonscape2TilesLen
+	ldreq r2, =MoonscapeTilesLen
+	ldrne r2, =MoonscapeTilesLen
 	bl dmaCopy
 
 	@ Write map
-	ldr r0, =Moonscape2Map
+	
+	ldreq r0, =MoonscapeMap
+	ldrne r0, =Moonscape2Map
 	ldr r1, =BG_MAP_RAM(BG1_MAP_BASE)			@ destination
-	ldr r2, =Moonscape2MapLen
+	ldr r2, =MoonscapeMapLen
 	bl dmaCopy
 	
 	mov r0, #0

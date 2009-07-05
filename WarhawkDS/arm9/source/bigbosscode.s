@@ -383,7 +383,7 @@ updateBigBoss:
 
 	bl drawSprite								@ drawsprites and do update bloom effect
 	bl checkGameOver							@ check if the game is over
-	bl checkLevelControl						@ check to see if we want to change level
+@	bl checkLevelControl						@ check to see if we want to change level
 	bl playerDeathCheck							@ check and do DEATH stuff
 	bl useCheat									@ a call to restore health if cheat is active
 	ldr r0,=bigBossMode							@ if we are at "get ready" do not allow pause

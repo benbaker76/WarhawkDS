@@ -154,9 +154,8 @@ updateLaVey:
 		ldr r0, =gameMode
 		ldr r2, [r0]
 		cmp r2, #GAMEMODE_BIGBOSS_LAVEY
-	
 		bleq playDefeatSound
-		blne playWellDoneMortalSound
+		blne playWellDoneSound
 		
 	noLaVeyChattering:
 	cmp r1,# 0

@@ -138,7 +138,7 @@ bigBossGo:
 	
 	bl fxFadeOut
 				
-	bl playEvilLaughSound
+	bl playLaughSound
 
 	ldmfd sp!, {r0-r4, pc}
 

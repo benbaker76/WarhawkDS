@@ -51,15 +51,13 @@
 	.global playBossExplodeSound				@ used = Player explode
 	.global playFireworksSound					@ used = fireworks
 	.global playPowerupCollect					@*used = for powerup collection
-	.global playpowerupLostSound				@*used = powerup runs out
 	.global playIdentShipExplode				@ used = for when a multi-sprite ship is destroyed
 	.global playKeyboardClickSound				@ used = for menu navigation/options
 	.global playBossExplode2Sound				@ used = Boss Explosion
-	.global playEvilLaughSound					@ used = Big boss apearance
 	.global playAlertSound						@ used = big boss attack
 	.global playAlienScreamSound				@ used = "Misc 2" aliens
 	.global playWellDoneSound					@ user = End of Level
-	.global playLaughSound						@ user = End of Level
+	.global playLaughSound						@ user = End of Level and big boss appear
 	.global playNeverDefeatSound				@ user = End of Level
 	.global playNoTimeSound						@ user = End of Level
 	.global playTryAgainSound					@ user = End of Level
@@ -460,28 +458,6 @@ playPowerupCollect:
 
 	@ ---------------------------------------------
 	
-playpowerupLostSound:
-
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
-	ldr r1, =poweruplost_raw_end						@ Get the sample end
-	ldr r2, =poweruplost_raw							@ Get the same start
-	sub r1, r2											@ Sample end - start = size
-	str r1, [r0]										@ Write the sample size
-	
-	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
-	ldr r1, =poweruplost_raw							@ Get the sample address
-	str r1, [r0]										@ Write the value
-	
-	ldr r0, =REG_IPC_SYNC
-	ldr r1, =IPC_SEND_SYNC(0)
-	strh r1, [r0] 
-
-	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-
-	@ ---------------------------------------------
-	
 playIdentShipExplode:
 
 	stmfd sp!, {r0-r2, lr}
@@ -494,28 +470,6 @@ playIdentShipExplode:
 	
 	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
 	ldr r1, =bigshipexplode_raw							@ Get the sample address
-	str r1, [r0]										@ Write the value
-	
-	ldr r0, =REG_IPC_SYNC
-	ldr r1, =IPC_SEND_SYNC(0)
-	strh r1, [r0] 
-
-	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
-	
-	@ ---------------------------------------------
-	
-playEvilLaughSound:
-
-	stmfd sp!, {r0-r2, lr}
-	
-	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
-	ldr r1, =evil_laugh_raw_end							@ Get the sample end
-	ldr r2, =evil_laugh_raw								@ Get the same start
-	sub r1, r2											@ Sample end - start = size
-	str r1, [r0]										@ Write the sample size
-	
-	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
-	ldr r1, =evil_laugh_raw								@ Get the sample address
 	str r1, [r0]										@ Write the value
 	
 	ldr r0, =REG_IPC_SYNC

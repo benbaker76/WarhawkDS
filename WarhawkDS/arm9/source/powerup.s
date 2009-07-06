@@ -75,8 +75,6 @@ checkPowerUp:
 			mov r1,#0
 			ldr r0,=powerUp
 			str r1,[r0]
-			
-			bl playpowerupLostSound		@ this is for when powerup RUNS out!!
 	
 	checkPowerDelay:
 	

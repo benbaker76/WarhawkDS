@@ -43,9 +43,9 @@ initLaVey:
 	
 	@ r0 - syllable value
 	
-@	ldr r1,=laVayPhrase		@ use this to set the correct phrase for testing only!
-@	mov r2,#0
-@	str r2,[r1]
+	@ldr r1,=laVayPhrase		@ use this to set the correct phrase for testing only!
+	@mov r2,#0
+	@str r2,[r1]
 	
 	ldr r1, =laVeyCount
 	mov r2, #0

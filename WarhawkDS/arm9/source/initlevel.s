@@ -638,15 +638,15 @@ initLevel:
 		strh r3, [r1]
 
 		@ Write the tile data to VRAM Level BG1
-
-		ldr r0,=levelTiles
-		ldr r0,[r0]
+		
+		ldr r0, =levelTiles
+		ldr r0, [r0]
 		ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-		ldr r2, =levelTilesLen
-		ldr r2, [r2]
-		bl dmaCopy
+		bl decompressToVRAM
+		ldr r0, =levelTiles
+		ldr r0, [r0]
 		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
-		bl dmaCopy
+		bl decompressToVRAM
 	
 		bl DC_FlushAll
 	

@@ -41,62 +41,62 @@
 	.global showBossDie
 	.global updateBossDie
 
-@checkLevelControl:
+checkLevelControl:
 
-@	stmfd sp!, {r0-r2, lr}
+	stmfd sp!, {r0-r2, lr}
 
-@	ldr r1,=REG_KEYINPUT
-@	ldr r2,[r1]
-@	tst r2,#BUTTON_L
-@	bleq showLevelBack
-@	beq checkLevelControlDone
-@	tst r2,#BUTTON_R
-@	bleq showLevelNext
-@	beq checkLevelControlDone				@ still skips to end of level!
-@	tst r2,#BUTTON_START
-@	bleq initLevel
-@	bne checkLevelControlDone
-@	tst r2,#BUTTON_SELECT
-@	bleq showBossJump
+	ldr r1,=REG_KEYINPUT
+	ldr r2,[r1]
+	tst r2,#BUTTON_L
+	bleq showLevelBack
+	beq checkLevelControlDone
+	tst r2,#BUTTON_R
+	bleq showLevelNext
+	beq checkLevelControlDone				@ still skips to end of level!
+	tst r2,#BUTTON_START
+	bleq initLevel
+	bne checkLevelControlDone
+	tst r2,#BUTTON_SELECT
+	bleq showBossJump
 	
-@	checkLevelControlDone:
+	checkLevelControlDone:
 	
-@	ldmfd sp!, {r0-r2, pc}
+	ldmfd sp!, {r0-r2, pc}
 	
 	@ ------------------------------------
 
-@showBossJump:
+showBossJump:
 
-@	stmfd sp!, {r0-r1, lr}
+	stmfd sp!, {r0-r1, lr}
 	
-@	ldr r0, =vofsMain
-@	ldr r1, =256+32
-@	str r1, [r0]
+	ldr r0, =vofsMain
+	ldr r1, =256+32
+	str r1, [r0]
 
-@	ldr r0, =vofsSub
-@	ldr r1, =256+32
-@	str r1, [r0]
+	ldr r0, =vofsSub
+	ldr r1, =256+32
+	str r1, [r0]
 	
-@	ldr r0, =yposMain
-@	ldr r1, =256+192
-@	str r1, [r0]
+	ldr r0, =yposMain
+	ldr r1, =256+192
+	str r1, [r0]
 
-@	ldr r0, =yposSub
-@	ldr r1, =256+192
-@	str r1, [r0]
+	ldr r0, =yposSub
+	ldr r1, =256+192
+	str r1, [r0]
 	
-@	ldr r0, =pixelOffsetMain
-@	mov r1, #0
-@	str r1, [r0]
+	ldr r0, =pixelOffsetMain
+	mov r1, #0
+	str r1, [r0]
 	
-@	ldr r0, =pixelOffsetSub
-@	mov r1, #0
-@	str r1, [r0]
+	ldr r0, =pixelOffsetSub
+	mov r1, #0
+	str r1, [r0]
 	
-@	bl drawMapScreenMain
-@	bl drawMapScreenSub
+	bl drawMapScreenMain
+	bl drawMapScreenSub
 	
-@	ldmfd sp!, {r0-r1, pc}
+	ldmfd sp!, {r0-r1, pc}
 	
 	@ ===========================================================
 	@ LEVEL START
@@ -152,20 +152,20 @@ showLevelStart:
 
 	@ ------------------------------------
 	
-@showLevelBack:
+showLevelBack:
 
-@	stmfd sp!, {r0-r1, lr}
-@	
-@	ldr r0,=levelNum
-@	ldr r1,[r0]
-@	sub r1,#1
-@	cmp r1,#0
-@	moveq r1,#LEVEL_COUNT
-@	str r1,[r0]
+	stmfd sp!, {r0-r1, lr}
 	
-@	bl initLevel
+	ldr r0,=levelNum
+	ldr r1,[r0]
+	sub r1,#1
+	cmp r1,#0
+	moveq r1,#LEVEL_COUNT
+	str r1,[r0]
 	
-@	ldmfd sp!, {r0-r1, pc}
+	bl initLevel
+	
+	ldmfd sp!, {r0-r1, pc}
 
 	@ ------------------------------------
 

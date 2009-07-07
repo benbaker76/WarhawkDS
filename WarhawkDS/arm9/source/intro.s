@@ -286,7 +286,7 @@ updateIntro:
 		cmp r2,#1
 		
 		bleq stopTimer
-		bleq showGameStart								@ Start the game
+		bleq showTitleScreen
 	
 	introSkipper2:
 	

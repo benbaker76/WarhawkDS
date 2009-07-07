@@ -131,6 +131,7 @@ bigBossGo:
 	
 	bl fxFadeBG1MainInit
 	bl fxFadeMax
+	bl stopSound
 	
 	ldr r0, =fxFadeCallbackAddress
 	ldr r1, =bigBossFadeDone
@@ -390,7 +391,6 @@ updateBigBoss:
 	ldr r0,[r0]
 	cmp r0,#0
 	blne checkGamePause							@ check if the game is paused	
-@	bl drawDebugText							@ draw some numbers :)	
 	bl bigBossMovement							@ move big boss
 
 	ldr r0,=spriteHits+BIGBOSS_OFFSET
@@ -495,6 +495,9 @@ bigBossInitExplode:
 	ldr r0,=bigBossMode
 	mov r1,#BIGBOSSMODE_EXPLODE_INIT						@ set bossmode to DEAD and scroll of screen quickly
 	str r1,[r0]
+
+	@bl playLaVeyScream										@ big scream sound????????????????
+	bl playLastWarningSound @ JUST A TEST!!! (though it seams to play really slow)
 
 	ldmfd sp!, {r0-r10, pc}
 

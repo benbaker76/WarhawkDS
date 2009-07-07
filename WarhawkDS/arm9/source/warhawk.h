@@ -36,6 +36,7 @@
 #include "../build/Congratulations.h"
 #include "../build/LargeShip.h"
 #include "../build/WarShip.h"
+#include "../build/Moonscape.h"
 #include "../build/Moonscape2.h"
 #include "../build/AntonLaVey1.h"
 #include "../build/AntonLaVey2.h"

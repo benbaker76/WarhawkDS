@@ -132,9 +132,6 @@ showLevelStart:
 	bl drawSBMapScreenSub
 	bl levelDrift
 	bl drawSprite
-	
-	ldr r0, =inGameRawText					@ Read the path to the file
-	bl playAudioStream						@ Play the audio stream
 		
 	@ Fade in
 	
@@ -145,6 +142,9 @@ showLevelStart:
 	@bl fxWipeInLeft
 	@bl fxCrossWipe
 	@bl fxSineWobbleOn
+
+	ldr r0, =inGameRawText					@ Read the path to the file
+	bl playAudioStream						@ Play the audio stream
 	
 	bl showGetReady
 

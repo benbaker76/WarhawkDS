@@ -39,10 +39,12 @@
 initLevel:
 
 	stmfd sp!, {r0-r9, lr}
-	
+		
 	bl fxFadeBlackInit
 	bl fxFadeMax
 	bl clearSpriteData
+
+	bl stopAudioStream
 
 	mov r1,#0
 	ldr r0,=levelEnd

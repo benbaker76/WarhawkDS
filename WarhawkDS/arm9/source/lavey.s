@@ -89,6 +89,8 @@ initLaVey:
 	ldr r2,=laVayChat
 	str r4,[r2]
 	
+	bl swiWaitForVBlank
+	
 	bl drawLaVey1
 	
 	ldmfd sp!, {r0-r1, pc} 					@ restore registers and return

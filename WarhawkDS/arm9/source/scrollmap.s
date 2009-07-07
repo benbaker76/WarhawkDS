@@ -388,10 +388,7 @@ checkEndOfLevel:
 			str r1, [r0]
 			
 			@bl stopAudioStream
-			
-			@ldr r0, =bossRawText						@ Read the path to the file
-			@bl playAudioStream							@ Play the audio stream
-			
+						
 			@bl fxSineWobbleOn				@ Start our wobble effect (not any more :( SNIFF )
 	levelPlay:
 	
@@ -413,7 +410,6 @@ scrollStarBack:
 
 noScrollStarBack:
 
-@	ldr r0, =delaySB
 	str r1, [r0]
 	
 	ldmfd sp!, {r0-r1, pc}
@@ -424,25 +420,16 @@ scrollStarsHoriz:
 
 	stmfd sp!, {r0-r5, lr}
 	
-@	ldr r0, =delaySF
-@	ldr r1, [r0]							@ Delay Starfront for every other update
-@	subs r1, #1
-@	bne noScrollSFHoriz
-	
 	ldr r2, =hofsSF
 	ldrb r3, [r2]
-	add r3, #4
+	add r3, #1
 	ldr r4, =REG_BG2HOFS					@ Load our horizontal scroll register for BG1 on the main screen
 	ldr r5, =REG_BG2HOFS_SUB				@ Load our horizontal scroll register for BG1 on the sub screen
 	strb r3, [r2]
 	strb r3, [r4]
 	strb r3, [r5]
-@	mov r1, #1
 
 noScrollSFHoriz:
-
-@	ldr r0, =delaySF
-@	str r1, [r0]
 	
 	ldr r0, =delaySB						@ Delay Starback for every 4 updates
 	ldr r1, [r0]

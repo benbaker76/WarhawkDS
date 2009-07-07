@@ -50,7 +50,7 @@
 	.global playSteelSound						@ used = eol counter, alien/player collide, alien fire
 	.global playBossExplodeSound				@ used = Player explode
 	.global playFireworksSound					@ used = fireworks
-	.global playPowerupCollect					@*used = for powerup collection
+	.global playPowerupCollect					@ used = for powerup collection
 	.global playIdentShipExplode				@ used = for when a multi-sprite ship is destroyed
 	.global playKeyboardClickSound				@ used = for menu navigation/options
 	.global playBossExplode2Sound				@ used = Boss Explosion
@@ -64,6 +64,7 @@
 	.global playDefeatMeSound					@ user = End of Level
 	.global playFedUpSound						@ user = End of Level
 	.global playLastWarningSound				@ user = End of Level
+	.global playLaVeyScream						@ used = big boss death
 	
 	@ ones with "*" i feel need to be redone/improved
 
@@ -80,7 +81,28 @@ stopSound:
 	strh r1, [r0] 
 	
 	ldmfd sp!, {r0-r1, pc} 							@ restore registers and return
+	
+	@ ---------------------------------------------
 
+playLaVeyScream:
+
+	stmfd sp!, {r0-r2, lr}
+	
+	ldr r0, =IPC_SOUND_LEN(SOUND_CHANNEL)				@ Get the IPC sound length address
+	ldr r1, =laveyScream_raw_end							@ Get the sample end
+	ldr r2, =laveyScream_raw								@ Get the same start
+	sub r1, r2											@ Sample end - start = size
+	str r1, [r0]										@ Write the sample size
+	
+	ldr r0, =IPC_SOUND_DATA(SOUND_CHANNEL)				@ Get the IPC sound data address
+	ldr r1, =laveyScream_raw								@ Get the sample address
+	str r1, [r0]										@ Write the value
+	
+	ldr r0, =REG_IPC_SYNC
+	ldr r1, =IPC_SEND_SYNC(0)
+	strh r1, [r0] 
+	
+	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
 	@ ---------------------------------------------
 
@@ -105,7 +127,7 @@ playPowershotSound:
 	ldmfd sp!, {r0-r2, pc} 							@ restore registers and return
 	
 	@ ---------------------------------------------
-	
+		
 playBlasterSound:
 
 	stmfd sp!, {r0-r2, lr}

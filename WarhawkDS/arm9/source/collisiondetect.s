@@ -823,7 +823,6 @@ alienCollideCheck:
 					subs r7,#8						@ -8 units - PENALTY
 					movmi r7,#0						@ if less than 0 make 0
 					str r7,[r6]					
-					@bl powerupCollectSound	@ PLAY a nice sound for COLLECTION	
 				
 				notDropShip:
 				ldr r6,=spriteBloom

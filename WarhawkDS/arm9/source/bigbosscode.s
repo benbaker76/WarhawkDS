@@ -496,8 +496,7 @@ bigBossInitExplode:
 	mov r1,#BIGBOSSMODE_EXPLODE_INIT						@ set bossmode to DEAD and scroll of screen quickly
 	str r1,[r0]
 
-	@bl playLaVeyScream										@ big scream sound????????????????
-	bl playLastWarningSound @ JUST A TEST!!! (though it seams to play really slow)
+	bl playLaVeyScream										@ need "your" Scream here
 
 	ldmfd sp!, {r0-r10, pc}
 

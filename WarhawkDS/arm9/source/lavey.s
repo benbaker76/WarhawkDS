@@ -265,7 +265,7 @@ laVeyTalk3:									@ laugh
 laVeyTalk4:									@ youll never defeat me
 	.word 2,2,3,3,2,2,3,1,2,0,0,0,3,3,2,2,2,0,0,0,2,2,2,2,2,2,2,255
 laVeyTalk5:									@ i dont have time for this
-	.word 2,2,3,0,2,2,3,3,0,0,0,3,2,2,0,0,0,0,3,3,1,2,2,3,3,255
+	.word 2,2,3,0,2,2,3,3,0,0,0,3,2,2,0,0,0,0,3,3,2,2,2,2,2,255
 laVeyTalk6:									@ try and try again
 	.word 2,2,3,3,0,0,0,0,0,0,0,0,0,0,3,2,0,0,0,2,2,3,3,0,2,2,2,2,2,2,255
 laVeyTalk7:									@ im getting a little fed up with you

@@ -35,6 +35,7 @@
 	.global showIntro2
 	.global showIntro3
 	.global updateIntro
+	.global introMonkey
 
 showIntro1:
 
@@ -272,8 +273,22 @@ updateIntro:
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
 	tst r2, #BUTTON_START
-	bleq stopTimer
-	bleq showGameStart								@ Start the game
+	
+	ldr r1,=introMonkey
+	
+	bne introSkipper
+		mov r2,#1
+		str r2,[r1]
+		b introSkipper2
+		
+	introSkipper:
+		ldr r2,[r1]
+		cmp r2,#1
+		
+		bleq stopTimer
+		bleq showGameStart								@ Start the game
+	
+	introSkipper2:
 	
 	ldr r1, =REG_KEYINPUT
 	ldr r2, [r1]
@@ -287,6 +302,9 @@ updateIntro:
 	
 	.data
 	.align
+	
+	introMonkey:
+	.word 0
 	
 	.pool
 	.end

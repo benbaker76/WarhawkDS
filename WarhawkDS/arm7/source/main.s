@@ -145,8 +145,8 @@ playMusic:
 	ldr r2, =SCHANNEL_LENGTH(0)
 	ldr r3, =SCHANNEL_LENGTH(1)
 	bic r1, #3									@ & ~0x7
-	lsr r1, #2									@ Right shift (LEN >> 2)
 	and r1, #0x7FFFFFFF							@ & 0x7FFFFFFF
+	lsr r1, #2									@ Right shift (LEN >> 2)
 	str r1, [r2]								@ Write the value
 	str r1, [r3]								@ Write the value
 	
@@ -217,8 +217,8 @@ playSoundContinue:
 	
 	ldr r4, =SCHANNEL_LENGTH(0)
 	bic r1, #3									@ & ~0x7
-	lsr r1, #2									@ Right shift (LEN >> 2)
 	and r1, #0x7FFFFFFF							@ & 0x7FFFFFFF
+	lsr r1, #2									@ Right shift (LEN >> 2)
 	str r1, [r4, r0]							@ Write the value
 	
 	ldr r4, =SCHANNEL_REPEAT_POINT(0)

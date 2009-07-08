@@ -257,7 +257,7 @@ laVeyWait:
 laVeyTalk:
 	.word 0
 laVeyTalk1:									@ big boss (now you must defeat me)
-	.word 3,2,2,0,0,2,3,3,1,2,2,2,0,0,0,2,2,3,3,2,2,0,0,2,2,2,2,2,2,255
+	.word 3,2,2,0,0,2,3,3,1,3,3,3,0,0,3,2,2,2,2,0,0,0,0,2,2,2,2,2,2,2,2,255
 laVeyTalk2:									@ Well done mortal
 	.word 3,3,2,2,2,2,2,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,3,3,2,2,1,1,2,2,2,2,255
 laVeyTalk3:									@ laugh

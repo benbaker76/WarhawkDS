@@ -713,7 +713,7 @@ bigBossMovementPhase5:
 	
 		bl getRandom
 		and r8,#0xf
-		cmp r8,#2
+		cmp r8,#3
 		bllt playExplosionSound
 	
 ldr r0,=bigBossExpHigh

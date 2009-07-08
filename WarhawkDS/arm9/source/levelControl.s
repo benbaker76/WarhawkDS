@@ -47,6 +47,8 @@ checkLevelControl:
 
 	ldr r1,=REG_KEYINPUT
 	ldr r2,[r1]
+	tst r2,#BUTTON_SELECT
+	bleq showBossJump
 	tst r2,#BUTTON_L
 	bleq showLevelBack
 	beq checkLevelControlDone
@@ -56,8 +58,6 @@ checkLevelControl:
 	tst r2,#BUTTON_START
 	bleq initLevel
 	bne checkLevelControlDone
-	tst r2,#BUTTON_SELECT
-	bleq showBossJump
 	
 	checkLevelControlDone:
 	

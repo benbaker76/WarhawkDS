@@ -363,7 +363,7 @@ initLargeShipFly:
 	
 	bl updateLargeShipFly
 	
-	ldr r0, =6000								@ 5 seconds
+	ldr r0, =5000								@ 5 seconds
 	ldr r1, =initSmallShipFly					@ Callback function address
 	
 	bl startTimer

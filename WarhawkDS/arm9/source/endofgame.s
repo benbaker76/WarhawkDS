@@ -556,13 +556,8 @@ initGameOverFadeOut:
 	
 	bl fxFadeBlackInit
 	
-	ldr r1, =optionGameModeCurrent
-	ldr r1,[r1]
-	cmp r1,#0
-	
 	ldr r0, =fxFadeCallbackAddress
-	ldrne r1, =showCredits
-	ldreq r1, =showHiScoreEntry
+	ldr r1, =showCredits
 	str r1, [r0]
 	
 	bl fxFadeOut

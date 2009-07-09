@@ -83,8 +83,13 @@ main:
 	bl drawLoadingText
 	
 	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
-	mov r1, #0
+	mov r1, #0									@ This is for the EFS version
+	@ldr r1, =warhawkText						@ This is for the libfat version
 	bl EFS_Init
+	
+	@ldr r0, =fatText							@ This is for the libfat version
+	@bl chdir
+	
 	bl readOptions
 	bl readHiScore
 	

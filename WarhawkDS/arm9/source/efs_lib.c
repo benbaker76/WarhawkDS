@@ -51,6 +51,7 @@
 #include <ctype.h>
 #include <sys/iosupport.h>
 #include <fat.h>
+#include <dirent.h>
 
 #include "efs_lib.h"
 
@@ -365,36 +366,36 @@ bool CheckFile(char *path, bool save) {
 
 // search in directory for the NDS file
 bool SearchDirectory() {
-    DIR_ITER *dir;
-    bool found = false;
-    char path[EFS_MAXPATHLEN];
-    char filename[EFS_MAXPATHLEN];
-    struct stat st; 
- 
-    dir = diropen(".");
-    while((dirnext(dir, filename, &st) == 0) && (!found)) {
-        if(st.st_mode & S_IFDIR) {
-            if(((strlen(filename) == 1) && (filename[0]!= '.')) ||
-                ((strlen(filename) == 2) && (strcasecmp(filename, "..")))  ||
-                (strlen(filename) > 2))
-            {
-                chdir(filename);
-                found = SearchDirectory();
-                chdir("..");
-            }
-        } else {
-            getcwd(path, EFS_MAXPATHLEN-1);
-            strcat(path, filename);
-        
-            if(CheckFile(path, true)) {
-                found = true;
-                break;
-            }
-        }
-    }
-    dirclose(dir);
-    
-    return found;
+	DIR *pdir;
+	struct dirent *pent;
+	struct stat statbuf;
+	bool found = false;
+	char path[EFS_MAXPATHLEN];
+
+	pdir = opendir(".");
+	while (((pent=readdir(pdir))!=NULL) && (!found)) {
+		stat(pent->d_name, &statbuf);
+		if(strcmp(".", pent->d_name) == 0 || strcmp("..", pent->d_name) == 0)
+			continue;
+
+		if(S_ISDIR(statbuf.st_mode)) {
+			chdir(pent->d_name);
+			found = SearchDirectory();
+			chdir("..");
+		}
+		else if(!(S_ISDIR(statbuf.st_mode))) {
+			getcwd(path, EFS_MAXPATHLEN-1);
+			strcat(path, pent->d_name);
+
+			if(CheckFile(path, true)) {
+				found = true;
+				break;
+				}
+		}
+	}
+	closedir(pdir);
+
+	return found;
 }
 
 // parse a unix-style path

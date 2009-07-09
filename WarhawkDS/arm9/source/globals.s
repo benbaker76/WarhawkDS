@@ -143,6 +143,9 @@
 	.global titleRawText
 	.global ppotRawText
 	.global bossRawText
+	.global warhawkText
+	.global efsText
+	.global fatText
 	.global nowYouMustText
 	.global defeatMeText
 	.global gameOverRawText
@@ -458,34 +461,45 @@ gameOverText:
 	
 	.align
 inGameRawText:
-	.asciz "/InGame.raw"
+	.asciz "/Warhawk/InGame.raw"
 	
 	.align
 titleRawText:
-	.asciz "/Title.raw"
+	.asciz "/Warhawk/Title.raw"
 	
 	.align
 gameOverRawText:
-	.asciz "/GameOver.raw"
+	.asciz "/Warhawk/GameOver.raw"
 	
 	.align
 hiScoreRawText:
-	.asciz "/HiScore.raw"
+	.asciz "/Warhawk/HiScore.raw"
 	
 	.align
 endOfGameRawText:
-	.asciz "/EndOfGame.raw"
+	.asciz "/Warhawk/EndOfGame.raw"
 	
 	.align
 ppotRawText:
-	.asciz "/PPOT.raw"
+	.asciz "/Warhawk/PPOT.raw"
 	
 	.align
 bossRawText:
-	.asciz "/Boss.raw"
+	.asciz "/Warhawk/Boss.raw"
+	
+	.align
+warhawkText:
+	.asciz "/Warhawk"
+	
+	.align
+efsText:
+	.asciz "efs:/"
+	
+	.align
+fatText:
+	.asciz "fat:/"
 
 	.align
-
 spriteDataStart:								@ Start of sprite data
 
 spriteActive:

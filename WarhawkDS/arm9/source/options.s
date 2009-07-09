@@ -148,7 +148,7 @@ optionLevelNum:
 	
 	.align
 optionsBuffer:
-	.incbin "../../efsroot/Options.dat"
+	.incbin "../../efsroot/Warhawk/Options.dat"
 
 optionsDatText:
-	.asciz "/Options.dat"
+	.asciz "/Warhawk/Options.dat"

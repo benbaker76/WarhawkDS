@@ -1,12 +1,13 @@
 #include <nds.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/stat.h>
+#include <malloc.h>
+#include <fat.h>
+#include <unistd.h>
+
 
 #include "efs_lib.h"    // include EFS lib
 
-char *pfileBuffer = NULL;
+char *pFileBuffer = NULL;
 FILE *pFileStream = NULL;
 
 int readFile(char *fileName)
@@ -15,29 +16,29 @@ int readFile(char *fileName)
 	struct stat fileStat;
 	size_t result;
 	
-	if(pfileBuffer != NULL)
-		free(pfileBuffer);
+	if(pFileBuffer != NULL)
+		free(pFileBuffer);
 
 	pFile = fopen(fileName, "rb");
 	
 	if(pFile == NULL)
 		return 0;
 
-	if(fstat(pFile->_file, &fileStat) != 0)
+	if(stat(fileName, &fileStat) != 0)
 	{
 		fclose(pFile);
 		return 0;
 	}
 
-	pfileBuffer = (char *) malloc(fileStat.st_size);
+	pFileBuffer = (char *) malloc(fileStat.st_size);
 	
-	if(pfileBuffer == NULL)
+	if(pFileBuffer == NULL)
 	{
 		fclose(pFile);
 		return 0;
 	}
-
-	result = fread(pfileBuffer, 1, fileStat.st_size, pFile);
+	
+	result = fread(pFileBuffer, 1, fileStat.st_size, pFile);
 	
 	if(result != fileStat.st_size)
 	{
@@ -61,7 +62,7 @@ int readFileBuffer(char *fileName, char *pBuffer)
 	if(pFile == NULL)
 		return 0;
 
-	if(fstat(pFile->_file, &fileStat) != 0)
+	if(stat(fileName, &fileStat) != 0)
 	{
 		fclose(pFile);
 		return 0;
@@ -91,7 +92,7 @@ int writeFileBuffer(char *fileName, char *pBuffer)
 	if(pFile == NULL)
 		return 0;
 		
-	if(fstat(pFile->_file, &fileStat) != 0)
+	if(stat(fileName, &fileStat) != 0)
 	{
 		fclose(pFile);
 		return 0;
@@ -145,12 +146,8 @@ int initFileStream(char *fileName)
 	if(pFileStream == NULL)
 		return 0;
 
-	if(fstat(pFileStream->_file, &fileStat) != 0)
-	{
-		fclose(pFileStream);
-		
+	if(stat(fileName, &fileStat) != 0)
 		return 0;
-	}
 
 	return fileStat.st_size;
 }

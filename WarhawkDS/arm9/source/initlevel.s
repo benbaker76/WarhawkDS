@@ -595,6 +595,8 @@ initLevel:
 			
 	levelDone:
 	
+	bl loadLevelData			@ <<< Loading external files
+	
 	@ ok, using r9 as source, copy data to colMapStore
 	@ and if we find a non-zero value, add to basesLeft
 	
@@ -615,16 +617,16 @@ initLevel:
 
 		@ Load the palette into the palette subscreen area and main
 
-		ldr r0, =levelPal
-		ldr r0,[r0]
-		ldr r1, =BG_PALETTE
-		ldr r2, =512
-		bl dmaCopy
-		mov r3, #0
-		strh r3, [r1]
-		ldr r1, =BG_PALETTE_SUB
-		bl dmaCopy
-		strh r3, [r1]
+		@ldr r0, =levelPal
+		@ldr r0,[r0]
+		@ldr r1, =BG_PALETTE
+		@ldr r2, =512
+		@bl dmaCopy
+		@mov r3, #0
+		@strh r3, [r1]
+		@ldr r1, =BG_PALETTE_SUB
+		@bl dmaCopy
+		@strh r3, [r1]
 		
 		@ Load the star back palette
 
@@ -641,14 +643,14 @@ initLevel:
 
 		@ Write the tile data to VRAM Level BG1
 		
-		ldr r0, =levelTiles
-		ldr r0, [r0]
-		ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
-		bl decompressToVRAM
-		ldr r0, =levelTiles
-		ldr r0, [r0]
-		ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
-		bl decompressToVRAM
+		@ldr r0, =levelTiles
+		@ldr r0, [r0]
+		@ldr r1, =BG_TILE_RAM(BG1_TILE_BASE)
+		@bl decompressToVRAM
+		@ldr r0, =levelTiles
+		@ldr r0, [r0]
+		@ldr r1, =BG_TILE_RAM_SUB(BG1_TILE_BASE_SUB)
+		@bl decompressToVRAM
 	
 		bl DC_FlushAll
 	

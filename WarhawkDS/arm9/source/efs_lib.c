@@ -390,7 +390,7 @@ bool SearchDirectory() {
 			if(CheckFile(path, true)) {
 				found = true;
 				break;
-				}
+			}
 		}
 	}
 	closedir(pdir);
@@ -642,7 +642,7 @@ int EFS_Read(struct _reent *r, int fd, char *ptr, int len) {
         memcpy(ptr, file->pos + (void*)GBAROM, len);
     }
     if (len > 0)
-        file->pos += len;        
+        file->pos += len;
         
     return len;
 }

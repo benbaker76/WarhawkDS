@@ -82,23 +82,10 @@ checkGameContinue:
 	ldr r3, [r2]
 	
 	cmp r1, r3
-	ble checkGameContinueDone
+	strgt r1, [r2]
 	
-	ldr r3, =LEVEL_2
-	
-checkGameContinueLoop:
-
-	cmp r1, r3
-	strge r3, [r2]
-	
-	add r3, #1
-	cmp r3, #LEVEL_16
-	ble checkGameContinueLoop
-	
-	bl writeOptions
 	bl setLevelNum
-	
-checkGameContinueDone:
+	bl writeOptions
 	
 	ldmfd sp!, {r0-r3, pc}
 

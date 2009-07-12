@@ -84,11 +84,12 @@ main:
 	
 	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
 	mov r1, #0
-	@ldr r1, =warhawkText						@ This is where it will look for the .nds
 	bl EFS_Init
 	
 	@ldr r0, =fatText							@ This is for the libfat version
 	@bl chdir
+	
+	@bl fatInitDefault							@ Init FAT (use this instead to make FAT version)
 	
 	bl readOptions
 	bl readHiScore

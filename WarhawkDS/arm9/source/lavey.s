@@ -69,6 +69,13 @@ initLaVey:
 	beq initLaVeySkip
 	
 		ldr r0,=laVayPhrase
+		
+		ldr r2,=levelNum				@ This is just to make sure that level complete on 16
+		ldr r3,[r2]						@ always says "well done mortal"
+		cmp r3,#16
+		moveq r1,#0
+		streq r1,[r0]
+		
 		ldr r1,[r0]	
 		cmp r1,#0
 		ldreq r4,=laVeyTalk2

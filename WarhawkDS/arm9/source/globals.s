@@ -40,6 +40,7 @@
 	.global bossX
 	.global bossY
 	.global bossHits
+	.global haveIShot
 	.global pixelOffsetMain
 	.global pixelOffsetSub
 	.global pixelOffsetSFMain
@@ -189,13 +190,22 @@
 	.global shipAnimDelay
 	.global firePower
 	.global trackDelay
+	.global huntersGen
+	.global huntersShot
 	
 gameMode:
 	.word 0
 fxMode:
 	.word 0
+haveIShot:
+	.word 0
 	
 cheatMode:
+	.word 0
+
+huntersGen:
+	.word 0
+huntersShot:
 	.word 0
 	
 explodeSpriteBossCount:

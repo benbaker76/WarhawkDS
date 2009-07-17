@@ -102,6 +102,10 @@ checkBossInit:
 			cmp r1,#16
 			addeq r1,#1
 		not32Boss:
+		ldr r3,=haveIShot
+		ldr r3,[r3]
+		cmp r3,#0
+		moveq r1,#18
 		sub r1,#1				@ now 0-15
 		mov r2,#9
 		mul r1,r2				@ *9 sprites per boss (level*9)*512

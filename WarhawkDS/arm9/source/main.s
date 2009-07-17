@@ -210,7 +210,7 @@ gameLoop:
 	bl drawSprite								@ drawsprites and do update bloom effect
 	bl animateAliens							@ animate the alien sprites
 	bl checkGameOver							@ check if the game is over
-@	bl checkLevelControl						@ check to see if we want to change level
+	bl checkLevelControl						@ check to see if we want to change level
 	bl playerDeathCheck							@ check and do DEATH stuff
 	bl useCheat									@ a call to restore health if cheat is active
 	bl checkGamePause							@ check if the game is paused

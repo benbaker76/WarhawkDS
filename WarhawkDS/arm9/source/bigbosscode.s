@@ -618,6 +618,14 @@ bigBossMovementPhase3:
 
 		bigbossDeathNo:
 	
+		ldr r8,=adder+7				@ add 21 to the score for each scroll
+		mov r6,#1
+		strb r6,[r8]
+		sub r8,#1
+		mov r6,#2
+		strb r6,[r8]
+		bl addScore	
+	
 		ldmfd sp!, {r0-r10, pc}
 		
 bigBossMovementPhase4:
@@ -715,6 +723,18 @@ bigBossMovementPhase5:
 		and r8,#0xf
 		cmp r8,#3
 		bllt playExplosionSound
+		
+		ldr r8,=adder+7				@ add 321 to the score for each explosion line
+		mov r6,#1
+		strb r6,[r8]
+		sub r8,#1
+		mov r6,#2
+		strb r6,[r8]
+		sub r8,#1
+		mov r6,#3
+		strb r6,[r8]
+		bl addScore		
+		
 	
 ldr r0,=bigBossExpHigh
 ldr r1,[r0]
@@ -765,7 +785,7 @@ bigBossAllDone:
 	bl fxFadeBlackInit
 	
 	ldr r0, =fxFadeCallbackAddress
-	ldr r1, =showLevelNext
+	ldr r1, =showEndOfLevel
 	str r1, [r0]
 	
 	bl fxFadeOut

@@ -607,7 +607,7 @@ drawSprite:
 	ldmfd sp!, {pc}
 	
 generateExplosion:
-	@ pass xxx as x and y of explosion
+	@ pass r0,r1 as x and y of explosion
 	stmfd sp!, {r0-r8, lr}
 	mov r7,#111
 	ldr r6,=spriteActive+68
@@ -653,8 +653,6 @@ generateExplosion:
 	str r3,[r6,r7]
 
 	bl playExplosionSound	
-	
-
 	
 	ldmfd sp!, {r0-r8, pc}	
 	.pool

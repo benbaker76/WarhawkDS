@@ -108,6 +108,10 @@ checkWave:		@ CHECK AND INITIALISE ANY ALIEN WAVES AS NEEDED
 				ldr r4,=hunterDelay
 				mov r6,#0
 				str r6,[r4]									@ set delay to 0 (the hunter code handles the rest)
+				ldr r4,=huntersGen
+				str r6,[r4]
+				ldr r4,=huntersShot
+				str r6,[r4]
 				b initWaveAliensDone	
 	noHunter:
 		@ from here on in, we know that it is a normal attack
@@ -1015,6 +1019,12 @@ initHunterMine:
 	str r1,[r0]
 	cmp r1,#0
 	bpl initNothing			@ not time yet
+		@ generate a hunter
+		ldr r7,=huntersGen
+		ldr r1,[r7]
+		add r1,#1
+		str r1,[r7]			@ count number generated
+		
 		ldr r7,=levelNum
 		ldr r7,[r7]
 		mov r1,#40			@ set the duration for the next hunter based on level
@@ -1080,17 +1090,6 @@ initHunterMine:
 					mov r1,#0				@ set it to never fire (for now)
 					str r1,[r3,r0]
 					
-			@		ldr r0,=levelNum
-			@		ldr r0,[r0]
-			@		cmp r0,#16
-			@		moveq r0,#SPRITE_EXPLODE_TYPE_OFFS
-			@		moveq r1,#3
-			@		streq r1,[r3,r0]
-			@		moveq r0,#SPRITE_FIRE_SPEED_OFFS
-			@		moveq r1,#5
-			@		streq r1,[r3,r0]
-
-
 
 	initNothing:
 	initHunterMineFail:

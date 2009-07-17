@@ -426,10 +426,6 @@ detectALN:						@ OUR CODE TO CHECK IF BULLET (OFFSET R0) IS IN COLLISION WITH A
 	stmfd sp!, {r0-r8, lr}
 	@ First we need to grab the X and Y of the bullet and cycle trough the aliens to find a hit
 	
-@	ldr r1, =deathMode			@ we use some sprites in death with bullet values
-@	ldr r1,[r1]					@ so, we need to make sure this is not used to detect against
-@	cmp r1,#DEATHMODE_MAIN_EXPLODE	@ aliens!
-@	blt detectALNActive
 	ldr r1, =deathMode			@ we use some sprites in death with bullet values
 	ldr r1,[r1]					@ so, we need to make sure this is not used to detect against
 	cmp r1,#0
@@ -661,6 +657,44 @@ explodeSNoIdent:				@ this is to destroy a single alien
 	cmp r6,#2							@ 2=drop on death (1=vortex)
 	beq initDroppingShip				@ ok, lets drop it!!! :)
 	
+	@ ok, destroy a single/no ident alien
+	
+	
+	@ first, is the alien shot a Hunter?
+	ldr r6,[r4]
+	cmp r6,#3					@ spriteActive 3 = Hunter
+	bne notShotHunter
+	
+		@ ok, if hunterTimeCounter is 0, check for a match with gen/shot
+		@ if not, add the shot counter
+				
+		ldr r8,=huntersShot
+		ldr r6,[r8]
+		add r6,#1					@ add to hunters shot
+		str r6,[r8]	
+	
+		ldr r8,=hunterTimerCounter
+		ldr r6,[r8]
+		cmp r6,#0
+		bne notShotHunter			@ hunters are still being generated
+		
+			@ this perhaps the last hunter (check shot against gen)
+			
+			ldr r8,=huntersShot
+			ldr r6,[r8]
+			ldr r8,=huntersGen
+			ldr r9,[r8]
+			cmp r6,r9
+			bne notShotHunter
+			
+			@ last hunter shot
+			@ we need to add a big score bonus and an explosion to show the bonus??
+			
+			bl hunterBonus
+			b dropCheck
+
+	notShotHunter:
+	
 	mov r6,#4					@ set to explosion type
 	str r6,[r4]
 	mov r6,#6					@ set the frame to start
@@ -697,7 +731,7 @@ explodeSIdent:					@ this is to explode an alien that is part of a bigger ship
 	strb r6,[r8]
 
 	bl addScore		
-	bl playIdentShipExplode	@ HK - we really need a meatier explode here?
+	bl playIdentShipExplode
 	
 	b dropCheck	
 
@@ -1289,6 +1323,62 @@ addEnergy:
 	bl drawAllEnergyBars
 	bl playPowerupCollect
 ldmfd sp!, {r0-r1, pc}
+
+hunterBonus:					@ do a bonus thing for all hunters shot
+stmfd sp!, {r0-r10, lr}
+
+	mov r6,#4					@ set to explosion type
+	str r6,[r4]
+	mov r6,#6					@ set the frame to start
+	mov r8,#SPRITE_OBJ_OFFS
+	str r6,[r4,r8]
+	mov r6,#4					@ set initial delay for explosion
+	mov r8,#SPRITE_EXP_DELAY_OFFS
+	str r6,[r4,r8]
+	bl getRandom
+	and r8,#0x1					@ randomly flip the explosion
+	mov r9,#SPRITE_HORIZ_FLIP_OFFS
+	str r8,[r4,r9]
+
+	ldr r8,=adder+7				@ add 8888 to the score
+	mov r6,#8
+	strb r6,[r8]
+	sub r8,#1
+	strb r6,[r8]
+	sub r8,#1
+	strb r6,[r8]
+	sub r8,#1
+	strb r6,[r8]
+	bl addScore	
+
+	@ ok, now we want some way to show it???
+	@ r4 is still the index to the alien
+	mov r2,#SPRITE_X_OFFS
+	ldr r5,[r4,r2]				@ r5=x
+	mov r2,#SPRITE_Y_OFFS
+	ldr r6,[r4,r2]				@ r6=y
+
+	mov r9,#10
+	
+	hunterExplodeLoop:
+	
+		bl getRandom
+		and r8,#47
+		subs r8,#24
+		mov r0,r5
+		adds r0,r8
+		bl getRandom
+		and r8,#47
+		subs r8,#24
+		mov r1,r6
+		adds r1,r8
+
+		bl generateExplosion
+
+	subs r9,#1
+	bne  hunterExplodeLoop
+
+ldmfd sp!, {r0-r10, pc}
 
 pullCount:
 	.word 0

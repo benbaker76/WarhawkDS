@@ -121,6 +121,10 @@ fireCheck:			@ OUR CODE TO CHECK FOR FIRE (A) AND RELEASE A BULLET
 		@ and set the image and coords for the bullet to start
 		@ the bullet code will take care of the rest
 		@ r8 tells us if normal or POWER (1)
+		
+		ldr r1,=haveIShot
+		mov r2,#1
+		str r2,[r1]
 	
 		ldr r1,=spriteActive+4
 		mov r2,#1

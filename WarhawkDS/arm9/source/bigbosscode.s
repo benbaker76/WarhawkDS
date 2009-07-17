@@ -212,7 +212,7 @@ bigBossInitAllSpriteData:
 	ldreq r9,=bigBossFlipTable1				@ set flip data
 	ldrne r9,=bigBossFlipTable2				@ set flip data
 	moveq r7,#180							@ hits for normal and mental mode (240 is good)
-	movne r7,#200
+	movne r7,#240
 	mov r0,#0								@ sprite number
 	bigBossInitLoop:
 		ldr r5,=spriteActive+BIGBOSS_OFFSET

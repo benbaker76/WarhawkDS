@@ -447,6 +447,21 @@ showEndOfLevel:
 			bl drawText	
 			mov r12,#70
 	notLevel15:
+	cmp r4,#16
+	bne notLevel16
+			ldr r0, =levelCompletionSuckerText43			@ Load out text pointer
+			ldr r1, =1									@ x pos
+			ldr r2, =6									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+
+			ldr r0, =levelCompletionSuckerText44			@ Load out text pointer
+			ldr r1, =6									@ x pos
+			ldr r2, =8									@ y pos
+			ldr r3, =0									@ Draw on sub screen
+			bl drawText
+			mov r12,#70
+	notLevel16:
 	
 	mov r0, r12
 	bl initLaVey
@@ -923,7 +938,13 @@ levelCompletionSuckerText39:
 levelCompletionSuckerText40:
 	.asCiz "I MUST WARN YOU, I STILL HAVE,"	@30	
 levelCompletionSuckerText41:
-	.asCiz "'A COUPLE OF BIG SUPRISES'"	@26		
+	.asCiz "'A COUPLE OF BIG SUPRISES'"	@26	
+
+	.align 	@ LEV 16
+levelCompletionSuckerText43:
+	.asCiz "YOU HAVE DEFEATED ME THIS TIME"	@30	
+levelCompletionSuckerText44:
+	.asCiz "'BUT I WILL BE BACK'"	@20	
 	.pool
 	.end
 

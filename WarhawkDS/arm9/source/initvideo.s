@@ -60,7 +60,7 @@ initVideo:
 	strb r1, [r0]
 
 	ldr r0, =VRAM_B_CR				@ Use this for sprite data
-	ldr r1, =(VRAM_ENABLE | VRAM_A_MAIN_SPRITE)
+	ldr r1, =(VRAM_ENABLE | VRAM_B_MAIN_SPRITE_0x06400000)
 	strb r1, [r0]
 	
 	ldr r0, =VRAM_C_CR				@ Set VRAM C to be sub bg address 0x06200000

@@ -29,6 +29,8 @@
 #include "ipc.h"
 #include "efs.h"
 
+	#define EFS			1
+
 	.arm
 	.align
 	.text

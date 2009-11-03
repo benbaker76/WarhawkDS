@@ -82,14 +82,13 @@ main:
 	
 	bl drawLoadingText
 	
-	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)
+#if (EFS == 1)
+	mov r0, #(EFS_AND_FAT | EFS_DEFAULT_DEVICE)	@ Init EFS
 	mov r1, #0
 	bl EFS_Init
-	
-	@ldr r0, =fatText							@ This is for the libfat version
-	@bl chdir
-	
-	@bl fatInitDefault							@ Init FAT (use this instead to make FAT version)
+#else
+	bl fatInitDefault							@ Init FAT
+#endif
 	
 	bl readOptions
 	bl readHiScore

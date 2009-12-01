@@ -841,6 +841,8 @@ initLevelSpecialSprites:
 	noRings:	
 	bl playDinkDinkSound
 	
+	bl swiWaitForVBlank
+	
 	ldmfd sp!, {r0-r8, pc}
 	
 	@ ------------------------------------

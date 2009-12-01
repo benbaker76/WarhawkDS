@@ -55,9 +55,12 @@ showIntro1:
 	ldr r0, =ProteusPal
 	ldr r1, =BG_PALETTE
 	ldr r2, =ProteusPalLen
+	mov r3, #0
 	bl dmaCopy
+	strh r3, [r1]
 	ldr r1, =BG_PALETTE_SUB
 	bl dmaCopy
+	strh r3, [r1]
 
 	@ Write the tile data
 	

@@ -471,35 +471,35 @@ gameOverText:
 	
 	.align
 inGameRawText:
-	.asciz "/Warhawk/Music/InGame.raw"
+	.asciz "/Data/Warhawk/Music/InGame.raw"
 	
 	.align
 titleRawText:
-	.asciz "/Warhawk/Music/Title.raw"
+	.asciz "/Data/Warhawk/Music/Title.raw"
 	
 	.align
 gameOverRawText:
-	.asciz "/Warhawk/Music/GameOver.raw"
+	.asciz "/Data/Warhawk/Music/GameOver.raw"
 	
 	.align
 hiScoreRawText:
-	.asciz "/Warhawk/Music/HiScore.raw"
+	.asciz "/Data/Warhawk/Music/HiScore.raw"
 	
 	.align
 endOfGameRawText:
-	.asciz "/Warhawk/Music/EndOfGame.raw"
+	.asciz "/Data/Warhawk/Music/EndOfGame.raw"
 	
 	.align
 ppotRawText:
-	.asciz "/Warhawk/Music/PPOT.raw"
+	.asciz "/Data/Warhawk/Music/PPOT.raw"
 	
 	.align
 bossRawText:
-	.asciz "/Warhawk/Music/Boss.raw"
+	.asciz "/Data/Warhawk/Music/Boss.raw"
 	
 	.align
 warhawkText:
-	.asciz "/Warhawk/WarhawkDS.nds"
+	.asciz "/Data/Warhawk/WarhawkDS.nds"
 	
 	.align
 efsText:

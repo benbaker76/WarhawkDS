@@ -166,159 +166,159 @@ loadLevelData:
 	
 	.align
 Level1Map:
-	.asciz "/Warhawk/Levels/Level1.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level1.map.bin"
 	.align
 Level2Map:
-	.asciz "/Warhawk/Levels/Level2.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level2.map.bin"
 	.align
 Level3Map:
-	.asciz "/Warhawk/Levels/Level3.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level3.map.bin"
 	.align
 Level4Map:
-	.asciz "/Warhawk/Levels/Level4.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level4.map.bin"
 	.align
 Level5Map:
-	.asciz "/Warhawk/Levels/Level5.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level5.map.bin"
 	.align
 Level6Map:
-	.asciz "/Warhawk/Levels/Level6.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level6.map.bin"
 	.align
 Level7Map:
-	.asciz "/Warhawk/Levels/Level7.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level7.map.bin"
 	.align
 Level8Map:
-	.asciz "/Warhawk/Levels/Level8.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level8.map.bin"
 	.align
 Level9Map:
-	.asciz "/Warhawk/Levels/Level9.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level9.map.bin"
 	.align
 Level10Map:
-	.asciz "/Warhawk/Levels/Level10.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level10.map.bin"
 	.align
 Level11Map:
-	.asciz "/Warhawk/Levels/Level11.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level11.map.bin"
 	.align
 Level12Map:
-	.asciz "/Warhawk/Levels/Level12.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level12.map.bin"
 	.align
 Level13Map:
-	.asciz "/Warhawk/Levels/Level13.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level13.map.bin"
 	.align
 Level14Map:
-	.asciz "/Warhawk/Levels/Level14.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level14.map.bin"
 	.align
 Level15Map:
-	.asciz "/Warhawk/Levels/Level15.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level15.map.bin"
 	.align
 Level16Map:
-	.asciz "/Warhawk/Levels/Level16.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level16.map.bin"
 	.align
 Level32Map:
-	.asciz "/Warhawk/Levels/Level32.map.bin"
+	.asciz "/Data/Warhawk/Levels/Level32.map.bin"
 
 	.align
 Level1Tiles:
-	.asciz "/Warhawk/Levels/Level1.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level1.img.bin"
 	.align
 Level2Tiles:
-	.asciz "/Warhawk/Levels/Level2.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level2.img.bin"
 	.align
 Level3Tiles:
-	.asciz "/Warhawk/Levels/Level3.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level3.img.bin"
 	.align
 Level4Tiles:
-	.asciz "/Warhawk/Levels/Level4.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level4.img.bin"
 	.align
 Level5Tiles:
-	.asciz "/Warhawk/Levels/Level5.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level5.img.bin"
 	.align
 Level6Tiles:
-	.asciz "/Warhawk/Levels/Level6.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level6.img.bin"
 	.align
 Level7Tiles:
-	.asciz "/Warhawk/Levels/Level7.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level7.img.bin"
 	.align
 Level8Tiles:
-	.asciz "/Warhawk/Levels/Level8.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level8.img.bin"
 	.align
 Level9Tiles:
-	.asciz "/Warhawk/Levels/Level9.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level9.img.bin"
 	.align
 Level10Tiles:
-	.asciz "/Warhawk/Levels/Level10.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level10.img.bin"
 	.align
 Level11Tiles:
-	.asciz "/Warhawk/Levels/Level11.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level11.img.bin"
 	.align
 Level12Tiles:
-	.asciz "/Warhawk/Levels/Level12.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level12.img.bin"
 	.align
 Level13Tiles:
-	.asciz "/Warhawk/Levels/Level13.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level13.img.bin"
 	.align
 Level14Tiles:
-	.asciz "/Warhawk/Levels/Level14.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level14.img.bin"
 	.align
 Level15Tiles:
-	.asciz "/Warhawk/Levels/Level15.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level15.img.bin"
 	.align
 Level16Tiles:
-	.asciz "/Warhawk/Levels/Level16.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level16.img.bin"
 	.align
 Level32Tiles:
-	.asciz "/Warhawk/Levels/Level32.img.bin"
+	.asciz "/Data/Warhawk/Levels/Level32.img.bin"
 	
 	.align
 Level1Pal:
-	.asciz "/Warhawk/Levels/Level1.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level1.pal.bin"
 	.align
 Level2Pal:
-	.asciz "/Warhawk/Levels/Level2.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level2.pal.bin"
 	.align
 Level3Pal:
-	.asciz "/Warhawk/Levels/Level3.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level3.pal.bin"
 	.align
 Level4Pal:
-	.asciz "/Warhawk/Levels/Level4.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level4.pal.bin"
 	.align
 Level5Pal:
-	.asciz "/Warhawk/Levels/Level5.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level5.pal.bin"
 	.align
 Level6Pal:
-	.asciz "/Warhawk/Levels/Level6.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level6.pal.bin"
 	.align
 Level7Pal:
-	.asciz "/Warhawk/Levels/Level7.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level7.pal.bin"
 	.align
 Level8Pal:
-	.asciz "/Warhawk/Levels/Level8.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level8.pal.bin"
 	.align
 Level9Pal:
-	.asciz "/Warhawk/Levels/Level9.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level9.pal.bin"
 	.align
 Level10Pal:
-	.asciz "/Warhawk/Levels/Level10.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level10.pal.bin"
 	.align
 Level11Pal:
-	.asciz "/Warhawk/Levels/Level11.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level11.pal.bin"
 	.align
 Level12Pal:
-	.asciz "/Warhawk/Levels/Level12.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level12.pal.bin"
 	.align
 Level13Pal:
-	.asciz "/Warhawk/Levels/Level13.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level13.pal.bin"
 	.align
 Level14Pal:
-	.asciz "/Warhawk/Levels/Level14.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level14.pal.bin"
 	.align
 Level15Pal:
-	.asciz "/Warhawk/Levels/Level15.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level15.pal.bin"
 	.align
 Level16Pal:
-	.asciz "/Warhawk/Levels/Level16.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level16.pal.bin"
 	.align
 Level32Pal:
-	.asciz "/Warhawk/Levels/Level32.pal.bin"
+	.asciz "/Data/Warhawk/Levels/Level32.pal.bin"
 	
 	.align
 Level1TilesLen:

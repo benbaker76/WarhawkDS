@@ -704,7 +704,7 @@ nameAAAAA:
 	
 	.align
 hiScoreDatText:
-	.asciz "/Warhawk/Data/HiScore.dat"
+	.asciz "/Data/Warhawk/Data/HiScore.dat"
 	
 	.align
 wellDoneText:
@@ -724,7 +724,7 @@ highInstruct2:
 
 	.align
 hiScoreBuffer:
-	.incbin "../../efsroot/Warhawk/Data/HiScore.dat"
+	.incbin "../../efsroot/Data/Warhawk/Data/HiScore.dat"
 	
 	.align
 hiScoreChars:

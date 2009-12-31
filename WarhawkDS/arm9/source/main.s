@@ -78,8 +78,10 @@ initSystem:
 
 main:
 	bl showGameStop
-	bl initVideo
 	bl tileClear
+	bl initVideo
+	bl clearBG0
+	bl clearBG1
 	
 	bl initInterruptHandler						@ initialize the interrupt handler
 	
@@ -97,6 +99,8 @@ main:
 	bl readHiScore
 	
 	bl clearBG0
+	bl clearBG1
+	bl tileClear
 	
 	@ ----
 	
